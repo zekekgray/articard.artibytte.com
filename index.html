@@ -630,6 +630,12 @@
     opacity:.7;
   }
 
+  /* ── PILL AVATAR ── */
+  .glass-pill { padding: 0 44px 0 66px; }
+  .pill-avatar { position:absolute; left:12px; top:50%; transform:translateY(-50%); width:46px; height:46px; border-radius:50%; background:#8E8E93; display:flex; align-items:center; justify-content:center; cursor:pointer; pointer-events:all; z-index:3; -webkit-tap-highlight-color:transparent; transition:transform .12s, opacity .12s; }
+  .pill-avatar:active { transform:translateY(-50%) scale(0.90); opacity:.8; }
+  .pill-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; }
+  .pill-avatar-plus { position:absolute; right:-2px; bottom:-2px; width:18px; height:18px; border-radius:50%; background:#1c1c1e; border:2px solid #F3EDE4; display:flex; align-items:center; justify-content:center; }
   /* ── THEME SWITCHER ── */
   .theme-switcher{display:flex;gap:8px;align-items:center;justify-content:flex-start;flex-wrap:nowrap;width:100%;max-width:184px;padding:12px 16px;background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.1);border-radius:30px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);margin-top:12px;overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right, transparent 0, #000 22px, #000 calc(100% - 22px), transparent 100%);mask-image:linear-gradient(to right, transparent 0, #000 22px, #000 calc(100% - 22px), transparent 100%);}
   .theme-switcher::-webkit-scrollbar{display:none;}
@@ -823,6 +829,29 @@
 </style>
 </head>
 <body>
+<script>
+(function(){
+  var box=document.createElement('pre');
+  box.style.cssText='position:fixed;left:0;right:0;top:0;z-index:2147483647;margin:0;padding:8px;background:#000;color:#0f0;font:11px/1.4 monospace;white-space:pre-wrap;max-height:60vh;overflow:auto;';
+  function log(m){ box.textContent+=m+'\n'; if(!box.parentNode)(document.body||document.documentElement).appendChild(box); }
+  window.addEventListener('error',function(e){
+    if(e.target && (e.target.src||e.target.href)){ log('LOAD FAIL: '+(e.target.src||e.target.href)); return; }
+    log('ERR: '+e.message+' @'+(e.lineno||'?')+':'+(e.colno||'?'));
+  },true);
+  window.addEventListener('unhandledrejection',function(e){ log('REJ: '+(e.reason&&e.reason.message||e.reason)); });
+  window.addEventListener('load',function(){
+    setTimeout(function(){
+      var c=document.getElementById('screenCard');
+      log('QRCode='+(typeof QRCode)+' html2canvas='+(typeof html2canvas)+' storage='+(typeof window.storage));
+      log('screenCard.active='+(c&&c.classList.contains('active'))+' display='+(c&&getComputedStyle(c).display));
+      var s=document.querySelector('.scene');
+      if(s){var r=s.getBoundingClientRect();log('scene '+Math.round(r.width)+'x'+Math.round(r.height)+' at '+Math.round(r.left)+','+Math.round(r.top));}
+      log('win '+innerWidth+'x'+innerHeight+' body '+document.body.scrollWidth+'x'+document.body.scrollHeight);
+      log('script marker='+(typeof showCard)+' currentEntry='+(typeof currentEntry!=='undefined'&&currentEntry?'set':'null'));
+    },1500);
+  });
+})();
+</script>
 
 <!-- ══ SCREEN 1: SETUP ══ -->
   <div class="screen active" id="screenSetup" style="justify-content:flex-start;padding-top:64px;min-height:100vh;">
@@ -931,6 +960,7 @@
           <div id="qrOverlay" style="position:absolute;border-radius:50%;overflow:hidden;background:#0b0b0b;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:20;"></div>
           <div class="card-top-line"></div>
           <div class="glass-pill" id="glassPill">
+            <div class="pill-avatar" id="pillAvatar" onclick="event.stopPropagation();haptic('light');triggerPhotoUpload();"></div>
             <div class="pill-name" id="pillName">—</div>
             <div class="pill-pos" id="pillPos">—</div>
             <div id="pillVisToggleTrack" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:30px;height:18px;border-radius:9px;background:#34C759;cursor:pointer;z-index:3;pointer-events:all;touch-action:none;">
@@ -2963,6 +2993,20 @@
 </div>
 
 <script>
+  /* ── STORAGE SHIM (localStorage → memory fallback) ── */
+  (function () {
+    if (window.storage && typeof window.storage.get === 'function') return;
+    const mem = {}, P = 'athna:';
+    let store = null;
+    try { localStorage.setItem('__t', '1'); localStorage.removeItem('__t'); store = localStorage; } catch (e) {}
+    window.storage = {
+      async get(k)    { const v = store ? store.getItem(P + k) : mem[k]; if (v == null) throw new Error('not found'); return { key:k, value:v, shared:false }; },
+      async set(k, v) { if (store) store.setItem(P + k, v); else mem[k] = v; return { key:k, value:v, shared:false }; },
+      async delete(k) { if (store) store.removeItem(P + k); else delete mem[k]; return { key:k, deleted:true, shared:false }; },
+      async list(pre = '') { const keys = store ? Object.keys(store).filter(x => x.startsWith(P + pre)).map(x => x.slice(P.length)) : Object.keys(mem).filter(x => x.startsWith(pre)); return { keys, prefix:pre, shared:false }; }
+    };
+  })();
+
   /* ── THEMES ── */
   // Building colorway definitions — only affects skyline fills, windows, street glow
   const BUILDING_COLORWAYS = {
@@ -3590,7 +3634,7 @@
   loadDraft();
 
   /* ── SURGICAL: auto-skip straight to card with default identity ── */
-  (function autoLoadDefaultCard() {
+  setTimeout(function autoLoadDefaultCard() {
     const entry = {
       no: 1,
       name: 'Ephraim Nasser E. Tambiga',
@@ -3601,8 +3645,12 @@
     };
     currentEntry = entry;
     entries.push(entry);
-    showCard(entry);
-  })();
+    try { showCard(entry); }
+    catch (err) {
+      console.error('showCard failed:', err);
+      document.getElementById('screenCard').classList.add('active');
+    }
+  }, 0);
 
   /* ── OS APPLE-STYLE TOGGLE SWITCH (click + drag, HIG-style haptics) ── */
   (function initOsToggleSwitch() {
@@ -4013,6 +4061,7 @@
     document.getElementById('pillPos').textContent  = entry.pos.toUpperCase() + (entry.company ? ' | ' + entry.company.toUpperCase() : '');
 
     document.getElementById('backAthId').textContent = entry.athid;
+    renderPillAvatar();
 
     renderQR(activeTheme);
 
@@ -4040,7 +4089,7 @@
     el.style.whiteSpace = 'nowrap';
     el.style.letterSpacing = '3px';
 
-    const maxW = pill.clientWidth - 32;
+    const maxW = pill.clientWidth - 114;
     // only shrink letter-spacing, never font-size
     let spacing = 3;
     while (el.scrollWidth > maxW && spacing > 0.5) {
@@ -5149,7 +5198,21 @@
     });
     renderConnectAvatarInto(document.getElementById('cpFolCircle'), 40);
     renderConnectAvatarInto(document.getElementById('csFolCircle'), 52);
+    renderPillAvatar();
   }
+
+  function renderPillAvatar() {
+    const el = document.getElementById('pillAvatar');
+    if (!el) return;
+    if (profilePhotoB64) {
+      el.innerHTML = `<img src="${profilePhotoB64}" alt="Profile"/>`;
+    } else {
+      el.innerHTML = `<svg width="26" height="26" viewBox="0 0 24 24" fill="#ECE4D6"><circle cx="12" cy="8.5" r="4"/><path d="M4 21c0-4.2 3.6-7.5 8-7.5s8 3.3 8 7.5"/></svg>
+        <span class="pill-avatar-plus"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ECE4D6" stroke-width="3.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>`;
+    }
+  }
+  renderPillAvatar();
+  loadProfilePhoto();
 
   /* ── Reusable Connect-modal avatar circle — mirrors the same profilePhotoB64 used everywhere else.
      Uploading here (via triggerPhotoUpload) updates the single shared profile photo. ── */
