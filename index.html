@@ -1914,7 +1914,7 @@
   <div class="share-sheet" style="max-height:88vh;overflow-y:auto;">
     <div class="share-handle"></div>
     <div style="padding:0 20px 4px;">
-      <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:21px;font-weight:700;color:#1c1c1e;margin-bottom:4px;">Add Meeting</div>
+      <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:21px;font-weight:700;color:#1c1c1e;margin-bottom:4px;" id="amTitle">Add Meeting</div>
 
       <div class="am-field-label">Name *</div>
       <input type="text" class="am-input" id="amName" placeholder="Juan dela Cruz"/>
@@ -1953,7 +1953,7 @@
           onpointerdown="haptic('medium');this.style.transition='transform .08s cubic-bezier(0.34,1.56,0.64,1),opacity .08s';this.style.transform='scale(0.94)';this.style.opacity='.75';"
           onpointerup="this.style.transform='scale(1.04)';this.style.opacity='1';setTimeout(()=>{this.style.transform='';},130);"
           onpointerleave="this.style.transform='';this.style.opacity='';"
-          onclick="submitAddMeeting()">+ Add Meeting</button>
+          id="amSubmitBtn" onclick="submitAddMeeting()">+ Add Meeting</button>
       </div>
     </div>
   </div>
@@ -6281,7 +6281,7 @@
 
   function meetingRowHtml(m) {
     return `
-      <div class="up-row" id="mrow-${m.id}">
+      <div class="up-row" id="mrow-${m.id}" style="cursor:pointer;" onclick="if(!event.target.closest('.up-row-del'))openMeetingDetail('${m.id}')">
         <div class="up-row-time">${formatTime12(m.time)}</div>
         <div class="up-row-text">
           <div class="up-row-name">${m.name}</div>
@@ -6314,7 +6314,7 @@
 
     document.getElementById('upWeekWrap').innerHTML = week.length
       ? `<div class="up-list">${week.map(m => `
-          <div class="up-row">
+          <div class="up-row" style="cursor:pointer;" onclick="if(!event.target.closest('.up-row-del'))openMeetingDetail('${m.id}')">
             <div class="up-row-time">${new Date(m.date+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>
             <div class="up-row-text">
               <div class="up-row-name">${m.name}</div>
@@ -6427,6 +6427,9 @@
     document.getElementById('amName').value = '';
     document.getElementById('amTime').value = '';
     document.getElementById('amType').value = 'Discovery Call';
+    editingMeetingId = null;
+    document.getElementById('amTitle').textContent = 'Add Meeting';
+    document.getElementById('amSubmitBtn').textContent = '+ Add Meeting';
     document.getElementById('addMeetingOverlay').classList.add('show');
   }
 
@@ -6441,12 +6444,89 @@
     const type = document.getElementById('amType').value;
     if (!name || !date || !time) { haptic('error'); showToast('Fill in all required fields', 'error'); return; }
 
-    MEETINGS.push({ id:'m'+Date.now(), name, date, time, type });
+    const wasEdit = !!editingMeetingId;
+    if (wasEdit) {
+      const mt = MEETINGS.find(x => x.id === editingMeetingId);
+      if (mt) Object.assign(mt, { name, date, time, type });
+    } else {
+      MEETINGS.push({ id:'m'+Date.now(), name, date, time, type });
+    }
+    editingMeetingId = null;
     await saveMeetings();
     closeAddMeeting();
     renderUpcoming();
     haptic('success');
-    showToast('Meeting added', 'success');
+    showToast(wasEdit ? 'Meeting updated' : 'Meeting added', 'success');
+  }
+
+  /* ── MEETING DETAIL (click a meeting → contact / edit / rebook / delete) ── */
+  let editingMeetingId = null;
+
+  function openMeetingDetail(id) {
+    const m = MEETINGS.find(x => x.id === id);
+    if (!m) return;
+    haptic('light');
+    const c = ADDRESS_BOOK.find(x => x.name.toLowerCase() === m.name.toLowerCase());
+    const when = new Date(m.date + 'T00:00:00').toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+    const bs = "width:100%;padding:14px;border-radius:14px;border:none;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14.5px;font-weight:700;cursor:pointer;margin-bottom:8px;";
+    const ini = initials2(m.name);
+    const bg = c ? c.avatarBg : avatarColorFromName(m.name);
+    auMakeSheet('meetingDetailOverlay', 'Meeting', `
+      <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.72);border-radius:16px;padding:14px 16px;margin-bottom:14px;">
+        <div style="width:48px;height:48px;border-radius:50%;background:${bg};display:flex;align-items:center;justify-content:center;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:17px;font-weight:700;color:#fff;flex-shrink:0;">${auEsc(ini)}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:16px;font-weight:700;color:#1c1c1e;">${auEsc(m.name)}</div>
+          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12.5px;color:rgba(60,60,67,0.6);margin-top:2px;">${auEsc(m.type)}</div>
+          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12.5px;color:rgba(60,60,67,0.6);margin-top:1px;">${auEsc(when)} · ${formatTime12(m.time)}</div>
+        </div>
+      </div>
+      ${c ? `<button onclick="meetingViewContact('${m.id}',${c.id})" style="${bs}background:#1c1c1e;color:#ECE4D6;">View Contact</button>` : ''}
+      <button onclick="meetingEdit('${m.id}')" style="${bs}background:rgba(255,255,255,0.72);color:#1c1c1e;border:1px solid rgba(0,0,0,0.1);">Edit Meeting</button>
+      <button onclick="meetingRebook()" style="${bs}background:rgba(255,255,255,0.72);color:#1c1c1e;border:1px solid rgba(0,0,0,0.1);">Book Again · Artimeet</button>
+      <button onclick="meetingDelete('${m.id}')" style="${bs}background:rgba(255,69,58,0.08);color:#FF453A;border:1px solid rgba(255,69,58,0.22);margin-bottom:0;">Delete Meeting</button>
+    `);
+  }
+
+  function meetingViewContact(mid, cid) {
+    closeAuGenericModal('meetingDetailOverlay');
+    setTimeout(() => openContactDetail(cid), 260);
+  }
+
+  function meetingEdit(id) {
+    closeAuGenericModal('meetingDetailOverlay');
+    setTimeout(() => openEditMeeting(id), 260);
+  }
+
+  function openEditMeeting(id) {
+    const m = MEETINGS.find(x => x.id === id);
+    if (!m) return;
+    openAddMeeting();
+    editingMeetingId = id;
+    document.getElementById('amTitle').textContent = 'Edit Meeting';
+    document.getElementById('amSubmitBtn').textContent = 'Save Changes';
+    document.getElementById('amName').value = m.name;
+    const dateInp = document.getElementById('amDate');
+    dateInp.removeAttribute('min');
+    dateInp.value = m.date;
+    document.getElementById('amTime').value = m.time;
+    const sel = document.getElementById('amType');
+    if (![...sel.options].some(o => o.value === m.type)) {
+      const opt = document.createElement('option');
+      opt.textContent = m.type;
+      sel.appendChild(opt);
+    }
+    sel.value = m.type;
+  }
+
+  function meetingRebook() {
+    closeAuGenericModal('meetingDetailOverlay');
+    haptic('medium');
+    window.open(artimeetLink(), '_blank');
+  }
+
+  function meetingDelete(id) {
+    closeAuGenericModal('meetingDetailOverlay');
+    setTimeout(() => deleteMeeting(id), 260);
   }
 
   loadMeetings();
