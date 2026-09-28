@@ -828,6 +828,27 @@
     0%,100%{box-shadow:0 8px 20px rgba(181,88,58,0.5),0 2px 8px rgba(0,0,0,0.18),0 0 10px 4px rgba(243,217,153,0.42);}
     50%{box-shadow:0 8px 20px rgba(181,88,58,0.6),0 2px 8px rgba(0,0,0,0.18),0 0 22px 8px rgba(243,217,153,0.62);}
   }
+  /* ── PERSONAL INFO — inline editing ── */
+  .pi-meter{background:rgba(255,255,255,0.72);border-radius:16px;padding:12px 14px;margin:2px 0 12px;}
+  .pi-meter-top{display:flex;justify-content:space-between;align-items:baseline;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(60,60,67,0.5);}
+  .pi-meter-track{height:5px;background:rgba(0,0,0,0.08);border-radius:3px;overflow:hidden;margin:8px 0;}
+  .pi-meter-fill{height:100%;border-radius:3px;transition:width .25s,background .25s;}
+  .pi-meter-note{font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11.5px;line-height:1.5;color:rgba(60,60,67,0.55);}
+  .pi-group{background:rgba(255,255,255,0.72);border-radius:20px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,0.04);margin-bottom:8px;}
+  .pi-row{display:flex;align-items:center;gap:12px;padding:0 16px;min-height:48px;position:relative;}
+  .pi-row + .pi-row::before,.pi-block + .pi-row::before,.pi-row + .pi-block::before,.pi-block + .pi-block::before{content:'';position:absolute;top:0;left:16px;right:0;height:1px;background:rgba(0,0,0,0.07);}
+  .pi-block{padding:12px 16px;position:relative;}
+  .pi-lbl{font-family:-apple-system,'SF Pro Text',sans-serif;font-size:16px;color:#1c1c1e;flex-shrink:0;max-width:44%;}
+  .pi-block .pi-lbl{max-width:none;font-size:13px;font-weight:600;color:rgba(60,60,67,0.6);margin-bottom:6px;}
+  .pi-inp{flex:1;min-width:0;background:none;border:none;outline:none;text-align:right;text-align-last:right;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:16px;color:rgba(60,60,67,0.8);padding:13px 0;-webkit-appearance:none;appearance:none;border-radius:0;}
+  .pi-inp:focus{color:#1c1c1e;}
+  .pi-inp::placeholder{color:rgba(60,60,67,0.3);}
+  .pi-area{width:100%;background:none;border:none;outline:none;resize:none;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:16px;line-height:1.45;color:#1c1c1e;padding:0;box-sizing:border-box;}
+  .pi-area::placeholder{color:rgba(60,60,67,0.3);}
+  .pi-qrdot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#E8CC7A;margin-left:6px;vertical-align:middle;}
+  .pi-chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .pi-chip{padding:9px 14px;border-radius:12px;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.72);color:#1c1c1e;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s;}
+  .pi-chip.on{background:#1c1c1e;color:#ECE4D6;border-color:#1c1c1e;}
 </style>
 </head>
 <body>
@@ -8627,6 +8648,322 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
     if (!idTosAgreed) toggleIdTos();
     closeTosScreen();
   }
+
+  /* ═══════════════════════════════════════════════════════════════
+     PERSONAL INFO — INLINE EDIT + LIVE QR   (overrides earlier defs)
+     ═══════════════════════════════════════════════════════════════ */
+  const QR_MAX_BYTES = 230;           // qrcodejs 1.0.0 hard limit at level L = 271 bytes
+  let _qrReport = { bytes: 0, inc: [], skip: [] };
+  let _piSeeded = false, _piT = null, _qrT = null;
+
+  function utf8Len(s) { return new TextEncoder().encode(s).length; }
+
+  /* seed empty PI fields once from the card / profileExtra */
+  function piSeed() {
+    if (_piSeeded || !currentEntry) return;
+    _piSeeded = true;
+    const P = PERSONAL_INFO, X = (typeof profileExtra !== 'undefined') ? profileExtra : {};
+    if (!P.displayName) P.displayName = currentEntry.name || '';
+    if (!P.title)       P.title       = currentEntry.pos || '';
+    if (!P.company)     P.company     = currentEntry.company || X.company || '';
+    if (!(P.emails || []).length && X.email)   P.emails = [X.email];
+    if (!(P.phones || []).length && X.mobile)  P.phones = [X.mobile];
+    if (!P.website && X.linkedin)              P.website = X.linkedin;
+  }
+
+  /* PERSONAL_INFO is now the single source of truth for QR + card */
+  function ownerInfo() {
+    const P = (typeof PERSONAL_INFO !== 'undefined') ? PERSONAL_INFO : {};
+    const X = (typeof profileExtra !== 'undefined') ? profileExtra : {};
+    const clean = a => (a || []).map(s => String(s).trim()).filter(Boolean);
+    const phones = clean(P.phones); if (!phones.length && X.mobile) phones.push(X.mobile);
+    const emails = clean(P.emails); if (!emails.length && X.email)  emails.push(X.email);
+    const full = [P.firstName, P.middleName, P.lastName].map(s => (s || '').trim()).filter(Boolean).join(' ');
+    return {
+      name:    (P.displayName || '').trim() || full || currentEntry?.name || '',
+      first:   (P.firstName || '').trim(),
+      last:    (P.lastName || '').trim(),
+      pos:     (P.title || '').trim() || currentEntry?.pos || '',
+      company: (P.company || '').trim() || currentEntry?.company || X.company || '',
+      phone:   phones[0] || '', email: emails[0] || '',
+      phones, emails,
+      website: (P.website || X.linkedin || '').trim(),
+      address: (P.address || '').trim(),
+      bio:     (P.bio || '').trim(),
+      socials: clean(P.socialLinks),
+      athid:   currentEntry?.athid || ''
+    };
+  }
+
+  /* vCard builder — adds fields by priority until the byte budget is full */
+  function buildVcardPayload() {
+    const o = ownerInfo();
+    const nice = /^[^a-z]*$/.test(o.name) ? o.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()) : o.name;
+    let first = o.first, last = o.last;
+    if (!first && !last) { const p = nice.trim().split(/\s+/).filter(Boolean); last = p.length > 1 ? p.pop() : ''; first = p.join(' '); }
+
+    const tail = ['END:VCARD'], out = ['BEGIN:VCARD', 'VERSION:3.0'], inc = [], skip = [];
+    const size = () => utf8Len(out.concat(tail).join('\n'));
+    const add = (label, line) => {
+      out.push(line);
+      if (size() <= QR_MAX_BYTES) { inc.push(label); return true; }
+      out.pop(); skip.push(label); return false;
+    };
+
+    if (nice)          add('Name', 'FN:' + vcfEsc(nice));
+    if (last || first) add('Name', 'N:' + vcfEsc(last) + ';' + vcfEsc(first) + ';;;');
+    if (o.phones[0])   add('Phone', 'TEL:' + o.phones[0].replace(/\s/g, ''));
+    if (o.emails[0])   add('Email', 'EMAIL:' + o.emails[0]);
+    if (o.company)     add('Company', 'ORG:' + vcfEsc(o.company));
+    if (o.pos)         add('Title', 'TITLE:' + vcfEsc(o.pos));
+    if (o.website)     add('Website', 'URL:' + o.website);
+    o.phones.slice(1).forEach(p => add('Extra phones', 'TEL:' + p.replace(/\s/g, '')));
+    o.emails.slice(1).forEach(e => add('Extra emails', 'EMAIL:' + e));
+    if (o.address)     add('Address', 'ADR:;;' + vcfEsc(o.address) + ';;;;');
+    o.socials.forEach(s => add('Social links', 'URL:' + s));
+    if (o.athid)       add('ATH ID', 'X-ATHID:' + o.athid);
+    if (o.bio) {
+      let b = o.bio, ok = false;
+      while (b.length) {
+        out.push('NOTE:' + vcfEsc(b) + (b.length < o.bio.length ? '…' : ''));
+        if (size() <= QR_MAX_BYTES) { inc.push(b.length < o.bio.length ? 'Bio (trimmed)' : 'Bio'); ok = true; break; }
+        out.pop();
+        b = b.slice(0, -Math.max(1, Math.ceil(b.length * 0.1))).trimEnd();
+      }
+      if (!ok) skip.push('Bio');
+    }
+    _qrReport = { bytes: size(), inc: [...new Set(inc)], skip: [...new Set(skip)] };
+    return out.concat(tail).join('\n');
+  }
+
+  /* debounced QR re-render (html2canvas prewarm is heavy) */
+  function refreshQrPayload() {
+    updatePiQrMeter();
+    if (!currentEntry) return;
+    clearTimeout(_qrT);
+    _qrT = setTimeout(() => { renderQR(activeTheme); prewarmShareCache(); }, 450);
+  }
+
+  /* card pill + labels follow Personal Information */
+  function piSyncCard() {
+    if (!currentEntry) return;
+    piSeed();
+    const P = PERSONAL_INFO;
+    const full = [P.firstName, P.middleName, P.lastName].map(s => (s || '').trim()).filter(Boolean).join(' ');
+    const nm = (P.displayName || '').trim() || full;
+    if (nm) currentEntry.name = nm.toUpperCase();
+    if ((P.title || '').trim()) currentEntry.pos = P.title.trim();
+    currentEntry.company = (P.company || '').trim();
+    const pn = document.getElementById('pillName'), pp = document.getElementById('pillPos');
+    if (pn) pn.textContent = formatPillName(currentEntry.name);
+    if (pp) pp.textContent = currentEntry.pos.toUpperCase() + (currentEntry.company ? ' | ' + currentEntry.company.toUpperCase() : '');
+    fitPillName();
+    const tc = currentEntry.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+    const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+    set('osProfileName', currentEntry.name);
+    set('osProfileSub', currentEntry.pos + ' · ' + currentEntry.athid);
+    set('acctName', tc);
+    set('acctSub', currentEntry.pos);
+  }
+
+  async function savePI() {
+    try { await window.storage.set(PI_KEY, JSON.stringify(PERSONAL_INFO), false); } catch (e) {}
+    piSyncCard();
+    refreshQrPayload();
+  }
+
+  /* ── live QR meter ── */
+  function updatePiQrMeter() {
+    const el = document.getElementById('piQrMeter');
+    if (!el) return;
+    buildVcardPayload();
+    const r = _qrReport, pct = Math.min(100, Math.round(r.bytes / QR_MAX_BYTES * 100));
+    const col = r.skip.length ? '#FF9F0A' : pct > 90 ? '#FF9F0A' : '#34C759';
+    el.innerHTML = `
+      <div class="pi-meter-top"><span>QR payload<span class="pi-qrdot"></span></span><span>${r.bytes} / ${QR_MAX_BYTES} bytes</span></div>
+      <div class="pi-meter-track"><div class="pi-meter-fill" style="width:${pct}%;background:${col};"></div></div>
+      <div class="pi-meter-note"><b style="color:#1c1c1e;">In QR:</b> ${r.inc.join(' · ') || '—'}${r.skip.length ? `<br><b style="color:#FF9F0A;">Di kasya:</b> ${r.skip.join(' · ')}` : ''}</div>`;
+  }
+
+  /* ── inline field handlers ── */
+  function piQueue() {
+    updatePiQrMeter();
+    clearTimeout(_piT);
+    _piT = setTimeout(() => savePI(), 350);
+  }
+  function piSet(key, val) { PERSONAL_INFO[key] = val; piQueue(); }
+  function piSetList(key, val) {
+    PERSONAL_INFO[key] = val.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean);
+    piQueue();
+  }
+  function piToggleChip(key, btn) {
+    haptic('light');
+    if (!PERSONAL_INFO[key]) PERSONAL_INFO[key] = [];
+    const arr = PERSONAL_INFO[key], o = btn.dataset.o, i = arr.indexOf(o);
+    if (i === -1) arr.push(o); else arr.splice(i, 1);
+    btn.classList.toggle('on', i === -1);
+    piQueue();
+  }
+
+  /* ── inline field builders (q = ● goes into QR) ── */
+  const piQ = q => q ? '<span class="pi-qrdot"></span>' : '';
+  function piIn(key, label, type, ph, q) {
+    const v = PERSONAL_INFO[key] || '';
+    return `<div class="pi-row"><label class="pi-lbl">${label}${piQ(q)}</label><input class="pi-inp" type="${type || 'text'}" value="${auEsc(v)}" placeholder="${ph || 'Add'}" autocomplete="off" oninput="piSet('${key}',this.value)"/></div>`;
+  }
+  function piArea(key, label, ph, max, q) {
+    const v = PERSONAL_INFO[key] || '';
+    return `<div class="pi-block"><div class="pi-lbl">${label}${piQ(q)}</div><textarea class="pi-area" rows="3" ${max ? `maxlength="${max}"` : ''} placeholder="${ph || ''}" oninput="piSet('${key}',this.value);this.style.height='auto';this.style.height=this.scrollHeight+'px'">${auEsc(v)}</textarea></div>`;
+  }
+  function piListArea(key, label, ph, q) {
+    const v = (PERSONAL_INFO[key] || []).join('\n');
+    return `<div class="pi-block"><div class="pi-lbl">${label}${piQ(q)}</div><textarea class="pi-area" rows="2" placeholder="${ph || 'One per line'}" oninput="piSetList('${key}',this.value);this.style.height='auto';this.style.height=this.scrollHeight+'px'">${auEsc(v)}</textarea></div>`;
+  }
+  function piSel(key, label, opts) {
+    const cur = PERSONAL_INFO[key] || '';
+    const all = cur && !opts.includes(cur) ? [cur, ...opts] : opts;
+    return `<div class="pi-row"><label class="pi-lbl">${label}</label><select class="pi-inp" onchange="piSet('${key}',this.value)"><option value="">Select</option>${all.map(o => `<option value="${auEsc(o)}" ${o === cur ? 'selected' : ''}>${auEsc(o)}</option>`).join('')}</select></div>`;
+  }
+  function piChips(key, label, opts) {
+    const sel = PERSONAL_INFO[key] || [];
+    return `<div class="pi-block"><div class="pi-lbl">${label}</div><div class="pi-chips">${opts.map(o => `<button type="button" class="pi-chip${sel.includes(o) ? ' on' : ''}" data-o="${auEsc(o)}" onclick="piToggleChip('${key}',this)">${auEsc(o)}</button>`).join('')}</div></div>`;
+  }
+
+  /* ── the screen: everything open + editable ── */
+  function renderPersonalInfoScreen() {
+    const wrap = document.getElementById('piBody');
+    if (!wrap) return;
+    const P = PERSONAL_INFO;
+    let h = `<div id="piQrMeter" class="pi-meter"></div>`;
+
+    h += `<div class="acct-group" style="margin-bottom:8px;">
+      <div class="os-row" style="cursor:pointer;" onclick="triggerPhotoUpload()">
+        <div style="width:40px;height:40px;border-radius:50%;overflow:hidden;background:#8E8E93;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          ${profilePhotoB64 ? `<img src="${profilePhotoB64}" style="width:100%;height:100%;object-fit:cover;"/>` : `<svg width="20" height="20" viewBox="0 0 24 24" fill="#ECE4D6"><circle cx="12" cy="8.5" r="4"/><path d="M4 21c0-4.2 3.6-7.5 8-7.5s8 3.3 8 7.5"/></svg>`}
+        </div>
+        <div class="os-row-text"><div class="os-row-title">Profile Photo</div></div>
+        <span class="os-row-value">${profilePhotoB64 ? 'Change' : 'Add'}</span>
+      </div></div>`;
+
+    h += piSectionLabel('Identity');
+    h += `<div class="pi-group">
+      ${piIn('displayName', 'Display Name', 'text', 'Add', 1)}
+      ${piIn('firstName', 'First Name', 'text', 'Add', 1)}
+      ${piIn('middleName', 'Middle Name')}
+      ${piIn('lastName', 'Last Name', 'text', 'Add', 1)}
+      ${piIn('preferredName', 'Preferred Name')}
+      ${piIn('username', 'Username')}
+      ${piArea('bio', 'Bio', 'Short bio (max 300)', 300, 1)}
+    </div>`;
+
+    h += `<div style="background:linear-gradient(135deg,rgba(232,204,122,0.16),rgba(232,204,122,0.06));border:1px solid rgba(201,162,39,0.3);border-radius:16px;padding:14px 16px;margin:8px 0;">
+      <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;color:#8a6e1a;text-transform:uppercase;margin-bottom:6px;">✨ AI Notes / Bio</div>
+      <textarea class="pi-area" rows="3" maxlength="300" placeholder="Describe what you're looking for or offering — powers SpotSense AI matching." oninput="piSet('aiBio',this.value)">${auEsc(P.aiBio || '')}</textarea>
+    </div>`;
+
+    h += piSectionLabel('Contact Information');
+    h += `<div class="pi-group">
+      ${piListArea('phones', 'Phone Numbers', 'One per line — 09XX XXX XXXX', 1)}
+      ${piListArea('emails', 'Email Addresses', 'One per line', 1)}
+      ${piIn('website', 'Website / LinkedIn', 'url', 'https://…', 1)}
+      ${piArea('address', 'Address', 'Street, barangay, city', 0, 1)}
+      ${piListArea('socialLinks', 'Social Links', 'One link per line', 1)}
+    </div>`;
+
+    h += piSectionLabel('Professional');
+    h += `<div class="pi-group">
+      ${piIn('title', 'Title', 'text', 'Add', 1)}
+      ${piSel('seniority', 'Seniority Level', ['Entry', 'Mid', 'Senior', 'Director', 'C-Level / Founder'])}
+      ${piSel('yearsExperience', 'Years of Experience', ['<1 year', '1 year', '2 years', '3 years', '4 years', '5 years', '6 years', '7 years', '8 years', '9 years', '10 years', '10+ years'])}
+      ${piIn('department', 'Department')}
+      ${piIn('occupation', 'Occupation')}
+    </div>`;
+
+    h += piSectionLabel('Company');
+    h += `<div class="pi-group">
+      ${piIn('company', 'Company Name', 'text', 'Add', 1)}
+      ${piIn('industry', 'Industry')}
+      ${piSel('companySize', 'Company Size', ['Solo / Freelance', '2–10', '11–50', '51–200', '200+'])}
+    </div>`;
+
+    h += piSectionLabel('Interests & Skills');
+    h += `<div class="pi-group">
+      ${piChips('interests', 'Looking To', ['Buying', 'Selling', 'Hiring', 'Investing', 'Networking', 'Learning', 'Mentoring'])}
+      ${piListArea('skills', 'Skills', 'One per line')}
+    </div>`;
+
+    h += piSectionLabel('Budget & Capacity');
+    h += `<div class="pi-group">
+      ${piSel('budgetRange', 'Typical Budget Range', ['Under ₱50k', '₱50k–₱200k', '₱200k–₱500k', '₱500k–₱1M', '₱1M+'])}
+      ${piSel('buyingFrequency', 'Buying Frequency', ['One-time', 'Occasional', 'Monthly', 'Ongoing / Recurring'])}
+      ${piIn('projectSize', 'Project Size')}
+    </div>`;
+
+    h += piSectionLabel('Preferences');
+    h += `<div class="pi-group">${piChips('preferences', 'Meetup & Comms', ['Meetup', 'Delivery', 'Online Only', 'Call', 'Chat/Text', 'Email'])}</div>`;
+
+    h += piSectionLabel('Location');
+    h += `<div class="pi-group">
+      ${piIn('country', 'Country')}
+      ${piSel('travelRadius', 'Travel Radius', ['City only', 'Within province', 'Nationwide', 'International'])}
+    </div>`;
+
+    h += piSectionLabel('Personal');
+    h += `<div class="pi-group">
+      ${piIn('dob', 'Date of Birth', 'date')}
+      ${piSel('gender', 'Gender', ['Male', 'Female', 'Non-binary', 'Prefer not to say'])}
+      ${piIn('nationality', 'Nationality')}
+      ${piSel('language', 'Language', ['English', 'Filipino', 'Taglish', 'Other'])}
+      ${piSel('timezone', 'Time Zone', ['Asia/Manila (GMT+8)', 'UTC', 'America/New_York (GMT-5)', 'Europe/London (GMT+0)', 'Asia/Singapore (GMT+8)'])}
+    </div>`;
+
+    h += piSectionLabel('AI Context (hidden from other users)');
+    h += `<div class="pi-group">
+      ${piSel('aiBusinessStyle', 'Business Style', ['Corporate', 'Casual', 'Startup'])}
+      ${piSel('aiDecisionLevel', 'Decision Maker Level', ['Final Decision Maker', 'Influencer', 'Researcher / Gatekeeper'])}
+      ${piSel('aiRiskAppetite', 'Risk Appetite', ['Conservative', 'Balanced', 'Aggressive'])}
+    </div>`;
+
+    h += piSectionLabel('Identity');
+    h += `<div class="acct-group">
+      <div class="os-row" style="cursor:pointer;" onclick="copyPIAthId()">
+        <div class="os-row-text" style="flex:1;"><div class="os-row-title">OpenKEY ID</div></div>
+        <span class="os-row-value" style="font-family:'Space Mono',monospace;font-size:12px;">${currentEntry?.athid || '—'}</span>
+      </div></div>`;
+
+    wrap.innerHTML = h;
+    wrap.querySelectorAll('textarea.pi-area').forEach(t => { t.style.height = 'auto'; t.style.height = Math.max(t.scrollHeight, 24) + 'px'; });
+    updatePiQrMeter();
+
+    const sub = document.getElementById('acctPersonalSub');
+    if (sub) {
+      const full = [P.firstName, P.middleName, P.lastName].filter(Boolean).join(' ');
+      const parts = [P.displayName || full, P.title, P.company].filter(Boolean);
+      sub.textContent = parts.length ? parts.join(' · ') : 'Name, title, company';
+    }
+  }
+
+  function openPersonalInfoScreen() {
+    haptic('medium');
+    piSeed();
+    renderPersonalInfoScreen();
+    const scr = document.getElementById('personalInfoScreen');
+    scr.style.display = 'flex';
+    scr.style.animation = 'screenFadeIn .3s cubic-bezier(0.16,1,0.3,1) forwards';
+  }
+
+  function closePersonalInfoScreen() {
+    haptic('light');
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+    clearTimeout(_piT);
+    savePI();                                   // flush pending edits → card + QR
+    const scr = document.getElementById('personalInfoScreen');
+    scr.style.animation = 'osShellOut .25s cubic-bezier(0.4,0,0.2,1) forwards';
+    setTimeout(() => { scr.style.display = 'none'; scr.style.animation = ''; }, 260);
+  }
+
+  /* re-apply saved Personal Info to card + QR on reload (after default card is up) */
+  setTimeout(() => { loadPI().then(() => { piSeed(); piSyncCard(); refreshQrPayload(); }); }, 60);
 </script>
 </body>
 </html>
