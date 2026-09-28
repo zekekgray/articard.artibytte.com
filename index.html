@@ -162,6 +162,7 @@
   .os-row + .os-row::before { content:''; position:absolute; top:0; left:54px; right:0; height:1px; background:rgba(0,0,0,0.07); }
   .os-row-icon { width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
   .os-row-text { flex:1; min-width:0; }
+  .os-row[style*="display:none"] + .os-row::before { display:none; }
   .os-row-title { font-family:-apple-system,'SF Pro Text',sans-serif; font-size:16px; font-weight:400; color:#1c1c1e; letter-spacing:0; }
   .os-row-sub { font-family:-apple-system,'SF Pro Text',sans-serif; font-size:12.5px; color:rgba(60,60,67,0.6); margin-top:2px; }
   .os-row-value { font-family:-apple-system,'SF Pro Text',sans-serif; font-size:15px; color:rgba(60,60,67,0.55); margin-right:2px; }
@@ -1507,7 +1508,7 @@
 
       <!-- ══ MODULES (formerly bottom tabbar) ══ -->
       <div class="os-group">
-        <div class="os-row" onclick="openConnectForm()" style="cursor:pointer;">
+        <div class="os-row" style="display:none;">
           <div class="os-row-icon" style="background:#1c1c1e;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8CC7A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7L11 12"/><path d="M4 17L11 12"/><path d="M10 12H19"/><path d="M15 8L19 12L15 16"/></svg></div>
           <div class="os-row-text"><div class="os-row-title">Contact Profile</div><div class="os-row-sub">Save contact · Book a meeting</div></div>
           <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
@@ -3441,6 +3442,33 @@
   const BASE_URL  = "https://articard.artibytte.com";
   const ARTIMEET_URL = "https://artimeet.artibytte.com";
 
+  /* ── QR PAYLOAD = vCard (compact, para scannable sa maliit na bilog) ── */
+  function buildVcardPayload() {
+    const o = ownerInfo();
+    const nice = o.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+    const parts = nice.trim().split(/\s+/).filter(Boolean);
+    const last = parts.length > 1 ? parts.pop() : '';
+    const first = parts.join(' ');
+    return [
+      'BEGIN:VCARD', 'VERSION:3.0',
+      'FN:' + vcfEsc(nice),
+      'N:' + vcfEsc(last) + ';' + vcfEsc(first) + ';;;',
+      o.company ? 'ORG:' + vcfEsc(o.company) : '',
+      o.pos ? 'TITLE:' + vcfEsc(o.pos) : '',
+      o.phone ? 'TEL;TYPE=CELL:' + o.phone.replace(/\s/g, '') : '',
+      o.email ? 'EMAIL:' + o.email : '',
+      'URL:' + artimeetLink(),
+      'NOTE:' + vcfEsc(o.athid),
+      'END:VCARD'
+    ].filter(Boolean).join('\n');
+  }
+
+  function refreshQrPayload() {
+    if (!currentEntry) return;
+    renderQR(activeTheme);
+    prewarmShareCache();
+  }
+
   /* ── ARTICARD → ARTIMEET bridge ── */
   function artimeetLink() {
     const id = currentEntry?.athid || '';
@@ -3824,7 +3852,7 @@
       btn.style.opacity = '.7';
       setTimeout(() => { btn.style.transform = 'translateY(-50%) scale(1)'; btn.style.opacity = ''; }, 140);
     }
-    openConnectForm();
+    enterOS('address'); setTimeout(() => openAddContactModal(), 320);
   }
 
   /* ── PILL NAME/POSITION VISIBILITY TOGGLE (small Apple-style switch, right side of glass pill) ── */
@@ -4082,11 +4110,13 @@
     overlay.style.height = `${r*2}px`;
     overlay.style.left   = `${cx-r}px`;
     overlay.style.top    = `${cy-r+5.15}px`;
-    new QRCode(overlay, {
-      text: currentEntry.qrLink, width: qrHiResPx, height: qrHiResPx,
-      colorDark: "#FFFFFF", colorLight: theme.bg,
-      correctLevel: QRCode.CorrectLevel.H
-    });
+    const qrOpts = { width: qrHiResPx, height: qrHiResPx, colorDark: "#FFFFFF", colorLight: theme.bg, correctLevel: QRCode.CorrectLevel.L };
+    try { new QRCode(overlay, Object.assign({ text: buildVcardPayload() }, qrOpts)); }
+    catch (err) {
+      console.warn('vCard QR failed, fallback to link', err);
+      overlay.innerHTML = '';
+      new QRCode(overlay, Object.assign({ text: currentEntry.qrLink }, qrOpts));
+    }
     const qrCanvas = overlay.querySelector('canvas');
     if (qrCanvas) {
       qrCanvas.style.width  = `${qrSize}px`;
@@ -8063,6 +8093,21 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
       document.getElementById('acctName').textContent = titleCase;
       document.getElementById('acctSub').textContent = currentEntry.pos;
     }
+    if (currentEntry && profileExtra.company) currentEntry.company = profileExtra.company;
+    if (typeof PERSONAL_INFO !== 'undefined') {
+      if (profileExtra.company)  PERSONAL_INFO.company = profileExtra.company;
+      if (profileExtra.email)    PERSONAL_INFO.emails = [profileExtra.email, ...(PERSONAL_INFO.emails||[]).filter(e => e !== profileExtra.email)];
+      if (profileExtra.mobile)   PERSONAL_INFO.phones = [profileExtra.mobile, ...(PERSONAL_INFO.phones||[]).filter(p => p !== profileExtra.mobile)];
+      if (profileExtra.linkedin) PERSONAL_INFO.website = profileExtra.linkedin;
+      savePI(); // nagri-refresh din ng QR
+    } else {
+      refreshQrPayload();
+    }
+    if (currentEntry) {
+      document.getElementById('pillName').textContent = formatPillName(currentEntry.name);
+      document.getElementById('pillPos').textContent  = currentEntry.pos.toUpperCase() + (currentEntry.company ? ' | ' + currentEntry.company.toUpperCase() : '');
+      fitPillName();
+    }
     renderProfileCompletion(calcProfileCompletion());
     haptic('success');
     showToast('Profile updated', 'success');
@@ -8085,8 +8130,8 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
   async function loadPI() {
     try { const r = await window.storage.get(PI_KEY, false); if (r && r.value) PERSONAL_INFO = Object.assign(PERSONAL_INFO, JSON.parse(r.value)); } catch(e) {}
   }
-  async function savePI() { try { await window.storage.set(PI_KEY, JSON.stringify(PERSONAL_INFO), false); } catch(e) {} }
-  loadPI();
+  async function savePI() { try { await window.storage.set(PI_KEY, JSON.stringify(PERSONAL_INFO), false); } catch(e) {} refreshQrPayload(); }
+  loadPI().then(() => refreshQrPayload());
 
   function openPersonalInfoScreen() {
     haptic('medium');
