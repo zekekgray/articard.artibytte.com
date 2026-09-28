@@ -633,6 +633,8 @@
 
   /* ── PILL AVATAR ── */
   .glass-pill { padding: 0 44px 0 75px; }
+  .pill-avatar { position:absolute; left:12px; top:50%; transform:translateY(-50%); width:52px; height:52px; border-radius:50%; background:#8E8E93; display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; pointer-events:all; z-index:3; transition:transform .12s, opacity .12s; -webkit-tap-highlight-color:transparent; }
+  .pill-avatar svg { flex-shrink:0; }
   .pill-avatar:active { transform:translateY(-50%) scale(0.90); opacity:.8; }
   .pill-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; }
   .pill-avatar-plus { position:absolute; right:-2px; bottom:-2px; width:18px; height:18px; border-radius:50%; background:#1c1c1e; border:2px solid #F3EDE4; display:flex; align-items:center; justify-content:center; }
