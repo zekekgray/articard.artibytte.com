@@ -19,8 +19,9 @@
   *.scroll-active::-webkit-scrollbar-thumb { background: rgba(60,60,67,0.28); }
   * { scrollbar-width: thin; scrollbar-color: transparent transparent; }
   *.scroll-active { scrollbar-color: rgba(60,60,67,0.28) transparent; }
-  body { background: #ECE4D6; color: var(--gold); font-family: -apple-system, 'Helvetica Neue', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+  body { background: #ECE4D6; color: var(--gold); font-family: -apple-system, 'Helvetica Neue', sans-serif; min-height: max(100vh, 700px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
   html { background: #ECE4D6; }
+  html, body { overflow-x: clip; }
 
   .screen { width: 100%; display: none; flex-direction: column; align-items: center; }
   .screen.active { display: flex; }
@@ -557,9 +558,9 @@
   #qrOverlay { position: absolute; border-radius: 50%; overflow: hidden; background: #0b0b0b; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 20; }
   .scene::before { content:'';position:absolute;width:420px;height:680px;left:50%;top:50%;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(232,204,122,0.12) 0%,transparent 70%);filter:blur(50px);pointer-events:none;animation:ambientPulse 5s ease-in-out infinite; }
   @keyframes ambientPulse{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:.9;transform:translate(-50%,-50%) scale(1.04)}}
-  .flip-card{width:100%;height:100%;transform-style:preserve-3d;animation:cardReveal 1.4s cubic-bezier(0.23,1,0.32,1) forwards;opacity:0;cursor:pointer;}
+  .flip-card{width:100%;height:100%;transform-style:preserve-3d;animation:cardReveal 1.4s cubic-bezier(0.23,1,0.32,1) forwards;opacity:1;cursor:pointer;}
   @keyframes cardReveal{0%{opacity:0;transform:translateY(50px) rotateX(10deg)}100%{opacity:1;transform:translateY(0) rotateX(0deg)}}
-  .face{position:absolute;inset:0;border-radius:24px;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;border:none;box-shadow:0 0 0 .5px rgba(255,255,255,0.08),0 60px 120px rgba(0,0,0,.95),0 24px 60px rgba(0,0,0,.75),0 8px 24px rgba(0,0,0,.6),0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,0.09);transition:transform 0.9s cubic-bezier(0.23,1,0.32,1);-webkit-mask-image:-webkit-radial-gradient(white,black);mask-image:radial-gradient(white,black);}
+  .face{position:absolute;inset:0;border-radius:24px;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;border:none;box-shadow:0 0 0 .5px rgba(255,255,255,0.08),0 60px 120px rgba(0,0,0,.95),0 24px 60px rgba(0,0,0,.75),0 8px 24px rgba(0,0,0,.6),0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,0.09);transition:transform 0.9s cubic-bezier(0.23,1,0.32,1);}
   .face::after{content:'';position:absolute;inset:0;border-radius:24px;border:1px solid rgba(255,255,255,0.15);pointer-events:none;z-index:100;}
   .face-back{transform:rotateY(180deg);background-color:#2F343A;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.012) 0px,rgba(255,255,255,0.012) 1px,transparent 1px,transparent 7px),repeating-linear-gradient(-45deg,rgba(255,255,255,0.012) 0px,rgba(255,255,255,0.012) 1px,transparent 1px,transparent 7px);}
   .face-front{background-color:#2F343A;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.012) 0px,rgba(255,255,255,0.012) 1px,transparent 1px,transparent 7px),repeating-linear-gradient(-45deg,rgba(255,255,255,0.012) 0px,rgba(255,255,255,0.012) 1px,transparent 1px,transparent 7px);}
@@ -833,7 +834,7 @@
 (function(){
   var box=document.createElement('pre');
   box.style.cssText='position:fixed;left:0;right:0;top:0;z-index:2147483647;margin:0;padding:8px;background:#000;color:#0f0;font:11px/1.4 monospace;white-space:pre-wrap;max-height:60vh;overflow:auto;';
-  function log(m){ box.textContent+=m+'\n'; if(!box.parentNode)(document.body||document.documentElement).appendChild(box); }
+  function log(m){}
   window.addEventListener('error',function(e){
     if(e.target && (e.target.src||e.target.href)){ log('LOAD FAIL: '+(e.target.src||e.target.href)); return; }
     log('ERR: '+e.message+' @'+(e.lineno||'?')+':'+(e.colno||'?'));
