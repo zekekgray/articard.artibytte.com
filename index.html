@@ -20,7 +20,6 @@
   * { scrollbar-width: thin; scrollbar-color: transparent transparent; }
   *.scroll-active { scrollbar-color: rgba(60,60,67,0.28) transparent; }
   body { background: #ECE4D6; color: var(--gold); font-family: -apple-system, 'Helvetica Neue', sans-serif; min-height: max(100vh, 700px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
-  html { background: #ECE4D6; }
   html, body { overflow-x: clip; }
 
   .screen { width: 100%; display: none; flex-direction: column; align-items: center; }
@@ -633,8 +632,7 @@
   }
 
   /* ── PILL AVATAR ── */
-  .glass-pill { padding: 0 44px 0 70px; }
-  .pill-avatar { position:absolute; left:10px; top:50%; transform:translateY(-50%); width:52px; height:52px; border-radius:50%; background:#8E8E93; display:flex; align-items:center; justify-content:center; cursor:pointer; pointer-events:all; z-index:3; -webkit-tap-highlight-color:transparent; transition:transform .12s, opacity .12s; }
+  .glass-pill { padding: 0 44px 0 75px; }
   .pill-avatar:active { transform:translateY(-50%) scale(0.90); opacity:.8; }
   .pill-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; }
   .pill-avatar-plus { position:absolute; right:-2px; bottom:-2px; width:18px; height:18px; border-radius:50%; background:#1c1c1e; border:2px solid #F3EDE4; display:flex; align-items:center; justify-content:center; }
@@ -831,30 +829,6 @@
 </style>
 </head>
 <body>
-<script>
-(function(){
-  var box=document.createElement('pre');
-  box.style.cssText='position:fixed;left:0;right:0;top:0;z-index:2147483647;margin:0;padding:8px;background:#000;color:#0f0;font:11px/1.4 monospace;white-space:pre-wrap;max-height:60vh;overflow:auto;';
-  function log(m){}
-  window.addEventListener('error',function(e){
-    if(e.target && (e.target.src||e.target.href)){ log('LOAD FAIL: '+(e.target.src||e.target.href)); return; }
-    log('ERR: '+e.message+' @'+(e.lineno||'?')+':'+(e.colno||'?'));
-  },true);
-  window.addEventListener('unhandledrejection',function(e){ log('REJ: '+(e.reason&&e.reason.message||e.reason)); });
-  window.addEventListener('load',function(){
-    setTimeout(function(){
-      var c=document.getElementById('screenCard');
-      log('QRCode='+(typeof QRCode)+' html2canvas='+(typeof html2canvas)+' storage='+(typeof window.storage));
-      log('screenCard.active='+(c&&c.classList.contains('active'))+' display='+(c&&getComputedStyle(c).display));
-      var s=document.querySelector('.scene');
-      if(s){var r=s.getBoundingClientRect();log('scene '+Math.round(r.width)+'x'+Math.round(r.height)+' at '+Math.round(r.left)+','+Math.round(r.top));}
-      log('win '+innerWidth+'x'+innerHeight+' body '+document.body.scrollWidth+'x'+document.body.scrollHeight);
-      log('script marker='+(typeof showCard)+' currentEntry='+(typeof currentEntry!=='undefined'&&currentEntry?'set':'null'));
-    },1500);
-  });
-})();
-</script>
-
 <!-- ══ SCREEN 1: SETUP ══ -->
   <div class="screen active" id="screenSetup" style="justify-content:flex-start;padding-top:64px;min-height:100vh;">
   <div style="width:100%;max-width:390px;padding:0 20px 40px;">
@@ -1376,30 +1350,25 @@
             
 
                           <!-- bottom pill -->
-            <!-- Bottom pill 1: Add Person, ArtiCard Account, Calendar, Cash -->
+            <!-- Bottom pill 1: ArtiCard Account (Contacts), Calendar, Cash -->
             <g>
-              <rect x="27.52" y="502.64" width="193.2" height="53.13" rx="26.57" fill="#F3EDE4"/>
-              <rect x="27.52" y="502.64" width="193.2" height="53.13" rx="26.57" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="0.6"/>
+              <rect x="27.52" y="502.64" width="144.9" height="53.13" rx="26.57" fill="#F3EDE4"/>
+              <rect x="27.52" y="502.64" width="144.9" height="53.13" rx="26.57" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="0.6"/>
 
               <g transform="translate(41.53,519.06) scale(0.845)" stroke="#1c1c1e" stroke-width="2.17" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="17" y1="11" x2="23" y2="11"/>
-              </g>
-              <rect x="27.52" y="502.64" width="48.3" height="53.13" fill="transparent" style="cursor:pointer;" onclick="event.stopPropagation();pillAddBtnAction();"/>
-
-              <g transform="translate(89.83,519.06) scale(0.845)" stroke="#1c1c1e" stroke-width="2.17" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="10" r="2.5"/><path d="M8 17c.6-2 2-3 4-3s3.4 1 4 3"/>
               </g>
-              <rect x="75.82" y="502.64" width="48.3" height="53.13" fill="transparent" style="cursor:pointer;" onclick="event.stopPropagation();enterOS('address');"/>
+              <rect x="27.52" y="502.64" width="48.3" height="53.13" fill="transparent" style="cursor:pointer;" onclick="event.stopPropagation();enterOS('address');"/>
 
-              <g transform="translate(138.13,519.06) scale(0.845)" stroke="#1c1c1e" stroke-width="2.17" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <g transform="translate(89.83,519.06) scale(0.845)" stroke="#1c1c1e" stroke-width="2.17" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/>
               </g>
-              <rect x="124.12" y="502.64" width="48.3" height="53.13" fill="transparent" style="cursor:pointer;" onclick="event.stopPropagation();enterOS('upcoming');setTimeout(()=>switchUpcomingView('calendar'),50);"/>
+              <rect x="75.82" y="502.64" width="48.3" height="53.13" fill="transparent" style="cursor:pointer;" onclick="event.stopPropagation();enterOS('upcoming');setTimeout(()=>switchUpcomingView('calendar'),50);"/>
 
-              <g transform="translate(186.43,519.06) scale(0.845)">
+              <g transform="translate(138.13,519.06) scale(0.845)">
                 <circle cx="12" cy="12" r="9" fill="none" stroke="#1c1c1e" stroke-width="2.3"/>
               </g>
-              <rect x="172.42" y="502.64" width="48.3" height="53.13" fill="transparent" style="cursor:pointer;" onclick="event.stopPropagation();haptic('medium');openAuSearch();"/>
+              <rect x="124.12" y="502.64" width="48.3" height="53.13" fill="transparent" style="cursor:pointer;" onclick="event.stopPropagation();haptic('medium');openAuSearch();"/>
             </g>
 
             <!-- Bottom pill 2: Rate This Card, Share -->
@@ -1582,7 +1551,6 @@
       <div style="position:relative;padding-right:20px;">
         <div id="abList"></div>
       </div>
-      <div class="ab-scrubber-bubble" id="abScrubberBubble"></div>
       <div id="abEmptyState" style="display:none;"></div>
 
 <!-- ══ DUPLICATES SHEET ══ -->
@@ -3844,17 +3812,6 @@
     window.addEventListener('touchend', onUp);
   })();
 
-  function pillAddBtnAction() {
-    haptic('light');
-    const btn = document.getElementById('pillAddBtn');
-    if (btn) {
-      btn.style.transform = 'translateY(-50%) scale(0.85)';
-      btn.style.opacity = '.7';
-      setTimeout(() => { btn.style.transform = 'translateY(-50%) scale(1)'; btn.style.opacity = ''; }, 140);
-    }
-    enterOS('address'); setTimeout(() => openAddContactModal(), 320);
-  }
-
   /* ── PILL NAME/POSITION VISIBILITY TOGGLE (small Apple-style switch, right side of glass pill) ── */
   let pillInfoVisible = true;
   function applyPillInfoVisibility() {
@@ -4053,45 +4010,6 @@
     setTimeout(() => cardScreen.classList.remove('entering'), 480);
   }
 
-  /* ── CONGRATS SCREEN ── */
-  function editDetails() {
-    entries.pop(); // remove the just-added entry
-    currentEntry = null;
-    document.getElementById('screenCongrats').classList.remove('active');
-    document.getElementById('screenSetup').classList.add('active');
-    // restore step indicator
-    document.querySelectorAll('.step-dot')[0].classList.add('on');
-    document.querySelectorAll('.step-dot')[1].classList.remove('on');
-  }
-
-  function showCongrats(entry) {
-    document.getElementById('congratsName').textContent = entry.name;
-    spawnParticles();
-    document.getElementById('screenSetup').classList.remove('active');
-    document.getElementById('screenCongrats').classList.add('active');
-  }
-
-  function spawnParticles() {
-    const wrap = document.getElementById('particles');
-    wrap.innerHTML = '';
-    for (let i = 0; i < 28; i++) {
-      const p = document.createElement('div');
-      p.className = 'p';
-      p.style.left = Math.random() * 100 + '%';
-      p.style.bottom = (Math.random() * 30) + '%';
-      p.style.animationDuration = (3 + Math.random() * 5) + 's';
-      p.style.animationDelay    = (Math.random() * 4) + 's';
-      p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
-      p.style.opacity = 0;
-      wrap.appendChild(p);
-    }
-  }
-
-  function revealCard() {
-    document.getElementById('screenCongrats').classList.remove('active');
-    showCard(currentEntry);
-  }
-
   /* ── CARD SCREEN ── */
   function renderQR(theme) {
     if (!currentEntry) return;
@@ -4247,32 +4165,6 @@
     setTimeout(() => { overlay.style.display = 'none'; }, 480);
   }
   /* ── GLOBAL SEARCH — searches all modal content live, no separate data copy ── */
-  function openGlobalSearch() {
-    haptic('light');
-    document.getElementById('gsInput').value = '';
-    document.getElementById('gsBody').innerHTML = `<div class="gs-empty">Search contacts, meetings, and notes.</div>`;
-    document.getElementById('gsOverlay').classList.add('show');
-    setTimeout(() => document.getElementById('gsInput').focus(), 200);
-  }
-  // sidebar search box — typing here live-opens the global search overlay and carries the query over
-  function sidebarSearchFocused() {
-    const overlay = document.getElementById('gsOverlay');
-    if (!overlay.classList.contains('show')) {
-      document.getElementById('gsInput').value = '';
-      document.getElementById('gsBody').innerHTML = `<div class="gs-empty">Search contacts, meetings, and notes.</div>`;
-      overlay.classList.add('show');
-    }
-    closeCardMenu();
-  }
-  function sidebarSearchTyped(val) {
-    sidebarSearchFocused();
-    document.getElementById('gsInput').value = val;
-    runGlobalSearch(val);
-  }
-  // placeholder — connector function to be wired up later
-  function connectorPlusAction() {
-    haptic('light');
-  }
   function closeGlobalSearch() {
     haptic('light');
     document.getElementById('gsOverlay').classList.remove('show');
@@ -4506,32 +4398,6 @@
     const sheet  = overlay.querySelector(`#${id}-sheet`);
     const handle = overlay.querySelector(`#${id}-handle`);
     if (handle && sheet) initSheetDragHandle(handle, sheet, id, () => overlay.remove());
-  }
-
-  function openAuInlineSearch() {
-    haptic('light');
-    const body = document.getElementById('auBody');
-    if (body) body.innerHTML = `<div style="padding:44px 10px;text-align:center;"><div style="font-size:26px;margin-bottom:10px;">🔍</div><div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13.5px;color:rgba(60,60,67,0.45);">Type to search people, opportunities, or businesses</div></div>`;
-    setTimeout(() => document.getElementById('auInput')?.focus(), 150);
-  }
-  function closeAuInlineSearch() {
-    haptic('light');
-    const inp = document.getElementById('auInput');
-    if (inp) inp.value = '';
-    renderAuHome();
-  }
-
-  function openAuInlineSearch() {
-    haptic('light');
-    const body = document.getElementById('auBody');
-    if (body) body.innerHTML = `<div style="padding:44px 10px;text-align:center;"><div style="font-size:26px;margin-bottom:10px;">🔍</div><div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13.5px;color:rgba(60,60,67,0.45);">Type to search people, opportunities, or businesses</div></div>`;
-    setTimeout(() => document.getElementById('auInput')?.focus(), 150);
-  }
-  function closeAuInlineSearch() {
-    haptic('light');
-    const inp = document.getElementById('auInput');
-    if (inp) inp.value = '';
-    renderAuHome();
   }
 
   function openAuNotifications() {
@@ -4800,16 +4666,6 @@
       </div>`);
   }
 
-  function openAuScan() {
-    haptic('light');
-    auMakeSheet('auScanOverlay', 'Scan to Connect', `
-      <div style="text-align:center;">
-        <div style="font-size:34px;margin:6px 0 12px;">📷</div>
-        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.5);line-height:1.5;margin-bottom:18px;">Scan a QR code or business card to instantly find and connect with someone on OpenKey.</div>
-        <button onclick="closeAuGenericModal('auScanOverlay');showToast('Camera scan — coming soon','neutral')" style="width:100%;padding:14px;border-radius:14px;border:none;background:#1c1c1e;color:#ECE4D6;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14.5px;font-weight:700;cursor:pointer;">Open Camera</button>
-      </div>`);
-  }
-
   /* ── OPPORTUNITIES (SmartMatch AI) ── */
   const OPPORTUNITIES = [
     { id:'op1', type:'Hotel Developer', tag:'Marketplace', match:96, title:'Looking for Interior Designer', meta:[['Budget','₱1.8M'],['Location','Makati'],['Timeline','Needs supplier within 7 days']], reasons:['Industry','Same Location','CEO','Budget Match','Long-term Project'], revenue:'₱1.8M', icon:'🏨', color:'#B5583A' },
@@ -4874,23 +4730,6 @@
   }
   function closeAuOpportunities() {
     dismissSheet('auOppOverlay', '#auOppSheet');
-  }
-
-  function refreshOppScan(e) {
-    haptic('medium');
-    const btn = e?.currentTarget;
-    if (btn) {
-      const orig = btn.textContent;
-      btn.textContent = '⏳ Scanning…';
-      btn.disabled = true;
-      setTimeout(() => {
-        btn.textContent = orig;
-        btn.disabled = false;
-        haptic('success');
-        showToast('Opportunities refreshed', 'success');
-        renderAuOpportunities();
-      }, 900);
-    }
   }
 
   function openOppDetail(id) {
@@ -4977,13 +4816,6 @@
     });
   }
   auBindDelegatedEvents();
-
-  const AU_INTENTS = [
-    { icon:'💼', label:'Hiring',     q:'I need an employee' },
-    { icon:'🛒', label:'Buying',     q:'I need a supplier' },
-    { icon:'💰', label:'Investors',  q:'I need an investor' },
-    { icon:'🤝', label:'Networking', q:'I need a business partner' },
-  ];
 
   function renderAuHome() {
     loadAuRecent().then(() => {
@@ -5212,11 +5044,7 @@
     if (tabId === 'tag') renderNotes();
     currentOSPane = tabId;
     document.getElementById('osBackBtn')?.classList.toggle('os-back-home', tabId === 'home');
-    if (tabId === 'home') {
-      requestAnimationFrame(handleOsBodyScroll);
-    } else {
-      document.getElementById('osInlineTitleBar')?.classList.remove('show');
-    }
+    if (tabId === 'home') requestAnimationFrame(handleOsBodyScroll);
   }
 
   function osBackTapped() {
@@ -5401,30 +5229,6 @@
   }
 
   /* ── ATH•NA ACCOUNT PAGE ── */
-  function openAccountFromMenu() {
-    haptic('light');
-    cardMenuOpen = false;
-
-    // 1) Kill the dropdown/overlay INSTANTLY — no fade wait, no dependency on classList.
-    const overlay = document.getElementById('cardMenuOverlay');
-    if (overlay) overlay.style.setProperty('display', 'none', 'important');
-    const scene = document.querySelector('#screenCard .scene');
-    if (scene) { scene.style.filter = ''; scene.style.pointerEvents = ''; }
-
-    // 2) Force the Account screen visible using cssText + !important so NOTHING
-    // (stale classes, stacking contexts, other z-index rules) can hide it.
-    const acctScreen = document.getElementById('screenAccount');
-    if (!acctScreen) { console.error('screenAccount element not found in DOM'); return; }
-    acctScreen.style.cssText =
-      'position:fixed !important; inset:0 !important; top:0 !important; left:0 !important; right:0 !important; bottom:0 !important;' +
-      'width:100% !important; height:100% !important; z-index:999998 !important;' +
-      'background:#ECE4D6 !important; display:flex !important; flex-direction:column !important; opacity:1 !important; visibility:visible !important;';
-    acctScreen.classList.add('active');
-
-    // 3) THEN populate its content — wrapped so a data error can never hide the screen.
-    try { openAccountPage(); } catch (err) { console.error('Account page content error:', err); }
-  }
-
   function openAccountPage() {
     haptic('medium');
     const hasIdentity = !!(currentEntry?.name && currentEntry.name !== '—');
@@ -5744,13 +5548,6 @@
     inp.placeholder = activeTagFilter ? `Filtering: ${activeTagFilter}` : 'Search';
   }
 
-  /* ── SWIPE-LEFT GESTURE ENGINE ── */
-  const SWIPE_THRESHOLD = 40;   // px before tray starts revealing
-  const TRAY_OPEN_W    = 216;  // 3 × 72px actions
-  const TRAY_SNAP      = 100;   // snap open if released past this
-
-  function abSwipeAction(action, id) {}
-
   /* ── SEARCH CANCEL ── */
   let _abCancelTimer = null;
   function showAbCancel() {
@@ -6022,32 +5819,6 @@
     imessage: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="9" y2="10"/><line x1="12" y1="10" x2="12" y2="10"/><line x1="15" y1="10" x2="15" y2="10"/></svg>`,
   };
 
-  function cdQuickBtn(icon, label, action) {
-    const svg = CD_QUICK_ICONS[action] || '';
-    return `<button onclick="cdfsAction('${action}')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;background:rgba(255,255,255,0.06);border:0.6px solid rgba(255,255,255,0.10);border-radius:16px;padding:13px 4px 11px;cursor:pointer;-webkit-tap-highlight-color:transparent;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);transition:transform .12s,opacity .12s;" onpointerdown="this.style.transform='scale(0.93)';this.style.opacity='.75'" onpointerup="this.style.transform='';this.style.opacity=''" onpointerleave="this.style.transform='';this.style.opacity=''">
-      <div style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.07);border:0.6px solid rgba(255,255,255,0.14);display:flex;align-items:center;justify-content:center;color:var(--gold);">${svg}</div>
-      <span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:10.5px;font-weight:500;color:rgba(255,255,255,0.55);white-space:nowrap;letter-spacing:.01em;">${label}</span>
-    </button>`;
-  }
-
-  function cdInfoRow(icon, label, value, field) {
-    return `<div style="display:flex;align-items:center;gap:12px;padding:13px 16px;position:relative;cursor:pointer;transition:background .12s;" onclick="copyField('${field}')" onpointerdown="this.style.background='rgba(255,255,255,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''">
-      <div style="width:22px;text-align:center;font-size:15px;flex-shrink:0;opacity:.8;">${icon}</div>
-      <div style="flex:1;min-width:0;">
-        <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(232,204,122,0.45);margin-bottom:3px;">${label}</div>
-        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14.5px;color:#ffffff;word-break:break-word;">${value||'—'}</div>
-      </div>
-      <button onclick="event.stopPropagation();copyField('${field}')" style="background:rgba(232,204,122,0.10);border:0.6px solid rgba(232,204,122,0.22);border-radius:10px;padding:6px 12px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12px;font-weight:600;color:rgba(232,204,122,0.8);cursor:pointer;flex-shrink:0;">Copy</button>
-    </div>`;
-  }
-
-  function cdEditRow(label, inputId, value, type) {
-    return `<div style="display:flex;align-items:center;padding:0 16px;border-bottom:0.6px solid rgba(255,255,255,0.07);">
-      <span style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(232,204,122,0.45);width:70px;flex-shrink:0;">${label}</span>
-      <input id="${inputId}" type="${type}" value="${value||''}" style="flex:1;background:none;border:none;outline:none;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;color:#ffffff;padding:14px 0 14px 8px;" placeholder="—"/>
-    </div>`;
-  }
-
   // ── Light-mode helpers for the system-colored contact detail screen ──
   function cdQuickBtnLight(action, label) {
     const svg = CD_QUICK_ICONS[action] || '';
@@ -6145,13 +5916,13 @@
 
     // refresh info rows
     const vm = document.getElementById('cdfs-view-mode');
-    const oldGroup = vm.querySelector('div[style*="border-radius:16px"]');
-    if (oldGroup) oldGroup.outerHTML = `<div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:14px;">
-      ${cdInfoRow('📱','Mobile',mobile,'mobile')}
-      ${cdInfoRow('✉️','Email',email,'email')}
-      ${cdInfoRow('🏢','Company',company,'company')}
-      ${cdInfoRow('💼','Position',role,'role')}
-      ${cdInfoRow('📍','Address',address,'address')}
+    const oldGroup = vm.querySelector('div[style*="border-radius:18px"]');
+    if (oldGroup) oldGroup.outerHTML = `<div style="background:rgba(255,255,255,0.72);border-radius:18px;overflow:hidden;margin-bottom:16px;">
+      ${cdInfoRowLight('📱','Mobile',mobile,'mobile')}
+      ${cdInfoRowLight('✉️','Email',email,'email')}
+      ${cdInfoRowLight('🏢','Company',company,'company')}
+      ${cdInfoRowLight('💼','Position',role,'role')}
+      ${cdInfoRowLight('📍','Address',address,'address')}
     </div>`;
 
     haptic('success');
@@ -7196,21 +6967,6 @@
     }
   }
 
-  function copyQrLink() {
-    if (!currentEntry) return;
-    const btn = document.querySelector('.btn-action');
-    const link = currentEntry.qrLink;
-    const done = () => {
-      haptic('success');
-      showToast('Link copied', 'success');
-    };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(link).then(done).catch(() => fallbackCopy(link));
-    } else {
-      fallbackCopy(link);
-    }
-  }
-
   function fallbackCopy(text) {
     const ta = document.createElement('textarea');
     ta.value = text;
@@ -7225,14 +6981,6 @@
       showToast('Copy failed', 'error');
     }
     document.body.removeChild(ta);
-  }
-
-  function goBack() {
-    document.getElementById('screenCard').classList.remove('active');
-    document.getElementById('screenSetup').classList.add('active');
-    ['f-name','f-pos','f-athid'].forEach(id => { document.getElementById(id).value = ''; document.getElementById(id).classList.remove('error'); });
-    ['err-name','err-pos','err-athid'].forEach(id => document.getElementById(id).classList.remove('show'));
-    updateSubmitState();
   }
 
   let fbStarVal = 0;
@@ -8125,7 +7873,10 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
     budgetRange:'', buyingFrequency:'', projectSize:'',
     preferences:[], country:'', travelRadius:'',
     aiBio:'',
-    aiBusinessStyle:'', aiDecisionLevel:'', aiRiskAppetite:'',
+        aiBusinessStyle:'', aiDecisionLevel:'', aiRiskAppetite:'',
+    /* === START: SOCIAL PROOF FIELDS === */
+    bytteScore:'', trustLevel:'', completedTx:'', yearsPlatform:'',
+    /* === END: SOCIAL PROOF FIELDS === */
   };
   async function loadPI() {
     try { const r = await window.storage.get(PI_KEY, false); if (r && r.value) PERSONAL_INFO = Object.assign(PERSONAL_INFO, JSON.parse(r.value)); } catch(e) {}
@@ -8286,13 +8037,15 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
       ${piRowSimple('Time Zone', P.timezone, "openPIPickerEditor('timezone','Time Zone',['Asia/Manila (GMT+8)','UTC','America/New_York (GMT-5)','Europe/London (GMT+0)','Asia/Singapore (GMT+8)'])")}
     </div>`;
 
+        /* === START: SOCIAL PROOF EDITABLE === */
     html += piSectionLabel('Social Proof');
     html += `<div class="acct-group">
-      <div class="os-row"><div class="os-row-text" style="flex:1;"><div class="os-row-title">BytteSense Score</div></div><span class="os-row-value">—</span></div>
-      <div class="os-row"><div class="os-row-text" style="flex:1;"><div class="os-row-title">Trust Level</div></div><span class="os-row-value">Unverified</span></div>
-      <div class="os-row"><div class="os-row-text" style="flex:1;"><div class="os-row-title">Completed Transactions</div></div><span class="os-row-value">0</span></div>
-      <div class="os-row"><div class="os-row-text" style="flex:1;"><div class="os-row-title">Years on Platform</div></div><span class="os-row-value">New</span></div>
+      ${piRowSimple('BytteSense Score', P.bytteScore, "openPIFieldEditor('bytteScore','BytteSense Score','text')")}
+      ${piRowSimple('Trust Level', P.trustLevel, "openPIPickerEditor('trustLevel','Trust Level',['Unverified','Verified','Trusted','Premium'])")}
+      ${piRowSimple('Completed Transactions', P.completedTx, "openPIFieldEditor('completedTx','Completed Transactions','text')")}
+      ${piRowSimple('Years on Platform', P.yearsPlatform, "openPIFieldEditor('yearsPlatform','Years on Platform','text')")}
     </div>`;
+    /* === END: SOCIAL PROOF EDITABLE === */
 
     html += `<div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;color:rgba(60,60,67,0.4);text-transform:uppercase;margin:20px 4px 4px;">AI Context <span style="font-weight:400;text-transform:none;letter-spacing:0;opacity:.8;">(hidden from other users)</span></div>
     <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11.5px;color:rgba(60,60,67,0.45);line-height:1.5;margin:0 4px 8px;">Used only by SpotSense AI for smarter matching — never shown on your public card.</div>`;
@@ -8312,7 +8065,25 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
       sub.textContent = parts.length ? parts.join(' · ') : 'Name, title, company';
     }
   }
-
+  /* === START: PI SYNC TO CARD === */
+  function piSyncToCard() {
+    const P = PERSONAL_INFO;
+    if (currentEntry) {
+      if (P.displayName) currentEntry.name = P.displayName.toUpperCase();
+      if (P.title)       currentEntry.pos  = P.title;
+      if (P.company)     currentEntry.company = P.company;
+      document.getElementById('pillName').textContent = formatPillName(currentEntry.name);
+      document.getElementById('pillPos').textContent  = currentEntry.pos.toUpperCase() + (currentEntry.company ? ' | ' + currentEntry.company.toUpperCase() : '');
+      fitPillName();
+      const nm = document.getElementById('acctName');
+      if (nm) nm.textContent = currentEntry.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+      const sb = document.getElementById('acctSub');
+      if (sb) sb.textContent = currentEntry.pos;
+    }
+    if (typeof profileExtra !== 'undefined' && P.company) profileExtra.company = P.company;
+    refreshQrPayload();
+  }
+  /* === END: PI SYNC TO CARD === */
   /* generic single-field editor */
   function openPIFieldEditor(key, label, type) {
     haptic('light');
@@ -8355,6 +8126,9 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
     if (!inp) return;
     PERSONAL_INFO[key] = inp.value.trim();
     await savePI();
+    /* === START: SYNC AFTER SAVE === */
+    piSyncToCard();
+    /* === END: SYNC AFTER SAVE === */
     closePIFieldEditor();
     renderPersonalInfoScreen();
     haptic('success');
@@ -8418,7 +8192,7 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
     haptic('light');
   }
   function closePIListEditor() {
-    dismissSheet('piListOverlay', '#piListSheet', () => { document.getElementById('piListOverlay')?.remove(); renderPersonalInfoScreen(); });
+    dismissSheet('piListOverlay', '#piListSheet', () => { document.getElementById('piListOverlay')?.remove(); piSyncToCard(); renderPersonalInfoScreen(); });
   }
 
   /* chip picker editor (gender / language / timezone) */
