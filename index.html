@@ -2819,15 +2819,6 @@
 
 <div class="toast" id="toast" style="z-index:9999;"></div>
 
-<!-- ══ GOLD — independent floating orb, outside the card ══ -->
-<nav class="global-bottom-nav" id="globalBottomNav" style="justify-content:center;">
-  <button class="gbn-item gbn-gold-wrap" onclick="haptic('medium');openAuSearch();" aria-label="Gold" style="margin-top:0;">
-    <span class="gbn-gold" id="gbnGoldOrb">
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff" opacity=".85"><circle cx="12" cy="12" r="12"/></svg>
-    </span>
-  </button>
-</nav>
-
 <!-- ══ GLOBAL SEARCH (searches all modal content — surgical, no data duplication) ══ -->
 <div class="gs-overlay" id="gsOverlay" onclick="if(event.target===this)closeGlobalSearch()">
   <div class="gs-panel">
@@ -3402,7 +3393,7 @@
     window.visualViewport.addEventListener('scroll', onViewport);
   })();
 
-  const BASE_URL  = "https://script.google.com/macros/s/AKfycbxb2G5G-XMGuCyxYq2Sw0cGRzxEgCre8xl4hvSZh7TXwZEiHvcXlIDtJb9DxD0C5QhspQ/exec";
+  const BASE_URL  = "https://articard.artibytte.com";
 
   /* ── Apple-like seamless sheet dismiss: haptic + slide-down + delayed unmount ── */
   function dismissSheet(overlayId, sheetSelector, after) {
@@ -3963,6 +3954,7 @@
   /* ── CARD SCREEN ── */
   function renderQR(theme) {
     if (!currentEntry) return;
+    if (typeof QRCode === 'undefined') { console.warn('QRCode lib not loaded'); return; }
     const overlay = document.getElementById('qrOverlay');
     if (!overlay) return;
     overlay.innerHTML = '';
