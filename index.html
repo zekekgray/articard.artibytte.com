@@ -856,7 +856,7 @@
 (function(){
   var box=document.createElement('pre');
   box.style.cssText='position:fixed;left:0;right:0;top:0;z-index:2147483647;margin:0;padding:8px;background:#000;color:#0f0;font:11px/1.4 monospace;white-space:pre-wrap;max-height:60vh;overflow:auto;';
-  function log(m){}
+    function log(m){ if(!box.parentNode) document.documentElement.appendChild(box); box.textContent += m + '\n'; }
   window.addEventListener('error',function(e){
     if(e.target && (e.target.src||e.target.href)){ log('LOAD FAIL: '+(e.target.src||e.target.href)); return; }
     log('ERR: '+e.message+' @'+(e.lineno||'?')+':'+(e.colno||'?'));
