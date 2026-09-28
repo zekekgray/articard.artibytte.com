@@ -828,6 +828,11 @@
     0%,100%{box-shadow:0 8px 20px rgba(181,88,58,0.5),0 2px 8px rgba(0,0,0,0.18),0 0 10px 4px rgba(243,217,153,0.42);}
     50%{box-shadow:0 8px 20px rgba(181,88,58,0.6),0 2px 8px rgba(0,0,0,0.18),0 0 22px 8px rgba(243,217,153,0.62);}
   }
+  /* ── Z-INDEX FIX: sheets/modals opened from Account (9600) & Personal Info (9700) must sit above them ── */
+  .share-overlay, .cf-overlay, .fb-overlay { z-index: 9800; }
+  #identityScreen { z-index: 9750; }
+  #licenseScreen  { z-index: 9750; }
+  #tosScreen      { z-index: 9760; }
 </style>
 </head>
 <body>
