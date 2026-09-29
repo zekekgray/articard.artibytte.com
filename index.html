@@ -405,13 +405,9 @@
   .cf-success-icon { font-size:40px; text-align:center; margin-bottom:12px; }
   /* ── ACCESSIBILITY ── */
   button:focus-visible,[role="button"]:focus-visible,[role="switch"]:focus-visible,[role="checkbox"]:focus-visible,a:focus-visible,[tabindex="0"]:focus-visible { outline:2px solid #1c1c1e !important; outline-offset:2px !important; box-shadow:0 0 0 4px #E8CC7A !important; }
-   input:focus-visible,textarea:focus-visible,select:focus-visible { outline:none !important; }
+  input:focus-visible,textarea:focus-visible,select:focus-visible { outline:2px solid #1c1c1e !important; outline-offset:-2px !important; }
   .os-row:focus-visible,.ab-row:focus-visible,.up-row:focus-visible,.gs-row:focus-visible,.au-recent-row:focus-visible { outline-offset:-3px !important; box-shadow:none !important; }
-    rect[role="button"], rect[role="button"]:focus, rect[role="button"]:focus-visible { outline:none !important; box-shadow:none !important; -webkit-tap-highlight-color:transparent; }
-  rect[role="button"]:focus-visible { stroke:none !important; fill:transparent !important; }
-  svg [onclick], svg [tabindex] { outline:none !important; -webkit-tap-highlight-color:transparent; }
-  /* Apple-style: no focus ring on tap/click, keep it for real keyboard use only */
-  [role="button"]:focus:not(:focus-visible), button:focus:not(:focus-visible), [tabindex]:focus:not(:focus-visible) { outline:none !important; box-shadow:none !important; }
+  rect[role="button"]:focus-visible { outline:none !important; box-shadow:none !important; stroke:#1c1c1e !important; stroke-width:2 !important; fill:rgba(28,28,30,.1) !important; }
   [role="dialog"]:focus { outline:none !important; box-shadow:none !important; }
   .a11y-flip { position:absolute; left:50%; top:100%; transform:translateX(-50%); margin-top:10px; padding:10px 18px; border:none; border-radius:20px; background:#1c1c1e; color:#ECE4D6; font:600 13px -apple-system,'SF Pro Text',sans-serif; opacity:0; pointer-events:none; z-index:30; }
   .a11y-flip:focus-visible { opacity:1; pointer-events:auto; }
@@ -587,7 +583,6 @@
   .vcard-wrap { width: 100%; max-width: 460px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
   .vcard-label { font-size: 10px; letter-spacing: 2px; font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif; font-weight: 600; }
   .scene { perspective: 1200px; width: 340px; height: 580px; position: relative; flex-shrink: 0; }
-  #qrOverlay { position: absolute; border-radius: 50%; overflow: hidden; background: #0b0b0b; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 20; }
   .scene::before { content:'';position:absolute;width:420px;height:680px;left:50%;top:50%;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(232,204,122,0.12) 0%,transparent 70%);filter:blur(50px);pointer-events:none;animation:ambientPulse 5s ease-in-out infinite; }
   @keyframes ambientPulse{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:.9;transform:translate(-50%,-50%) scale(1.04)}}
   .flip-card{width:100%;height:100%;transform-style:preserve-3d;animation:cardReveal 1.4s cubic-bezier(0.23,1,0.32,1) forwards;opacity:1;cursor:pointer;}
@@ -972,7 +967,6 @@
       <div class="flip-card" id="card" onclick="flipCard()">
         <!-- FRONT -->
         <div class="face face-front" style="overflow:hidden;display:flex;flex-direction:column;">
-          <div id="qrOverlay" style="position:absolute;border-radius:50%;overflow:hidden;background:#0b0b0b;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:20;"></div>
           <div class="card-top-line"></div>
           <div class="glass-pill" id="glassPill">
             <div class="pill-avatar" id="pillAvatar" onclick="event.stopPropagation();haptic('light');triggerPhotoUpload();"></div>
@@ -1041,7 +1035,6 @@
                 </feComponentTransfer>
                 <feComposite in="scratch" in2="SourceGraphic" operator="in"/>
               </filter>
-              <clipPath id="qrClip"><circle cx="88" cy="220" r="72"/></clipPath>
               <filter id="fp" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceGraphic" stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
               <filter id="fg" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceGraphic" stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
               <filter id="neonGlow" x="-100%" y="-200%" width="300%" height="500%">
@@ -1959,9 +1952,6 @@
     </div>
   </div>
 </div>
-
-</template>
-<!-- === END: LEGACY CONTACT DETAIL === -->
 
 <div class="share-overlay" id="addMeetingOverlay" onclick="if(event.target===this)closeAddMeeting()">
   <div class="share-sheet" style="max-height:88vh;overflow-y:auto;">
@@ -3300,14 +3290,12 @@
       document.documentElement.style.setProperty('--gold', '#E8CC7A');
       document.documentElement.style.setProperty('--border', 'rgba(232,204,122,0.18)');
       recolorCardSVG(t);
-      renderQR(t);
       return;
     }
     document.documentElement.style.setProperty('--gold', t.accent);
     document.documentElement.style.setProperty('--border', t.border);
     document.querySelectorAll('.face').forEach(f => f.style.backgroundColor = t.bg);
     recolorCardSVG(t);
-    renderQR(t);
   }
 
   function recolorCardSVG(t) {
@@ -4143,8 +4131,6 @@
     document.getElementById('backAthId').textContent = entry.athid;
     renderPillAvatar();
 
-    renderQR(activeTheme);
-
     document.getElementById('card').classList.remove('flipped');
     document.getElementById('screenCard').classList.add('active');
     requestAnimationFrame(() => { fitPillName(); });
@@ -4182,7 +4168,6 @@
   function flipCard() {
     isFlipped = !isFlipped;
     document.getElementById('card').classList.toggle('flipped', isFlipped);
-    document.getElementById('qrOverlay').style.opacity = isFlipped ? '0' : '1';
   }
 
   /* ── CARD SCREEN HAMBURGER MENU ── */
@@ -5560,7 +5545,7 @@
 
   function csvEscape(val) {
     val = String(val ?? ''); if (/^[=@\t\r]/.test(val)) val = "'" + val;
-    if (/[",\r\n]/.test(val)) return '"' + val.replace(/"/g, '""') + '"';
+    : if (/[",\r\n]/.test(val)) return '"' + val.replace(/"/g, '""') + '"';
     return val;
   }
 
@@ -6912,6 +6897,9 @@ function toggleContactEdit() {
       'END:VCARD'
     ].filter(Boolean).join('\r\n');
 
+    // try native contacts API first (iOS Safari 17+)
+    if ('contacts' in navigator && 'ContactsManager' in window) {
+    }
     const blob = new Blob([vcf], { type: 'text/vcard;charset=utf-8' });
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
@@ -8920,15 +8908,6 @@ function toggleContactEdit() {
     clone.style.height = '580px';
     clone.style.overflow = 'hidden';
     clone.style.pointerEvents = 'none';
-    // reuse QR from main card — clone its children into the clone's qr overlay
-    const srcQr = document.getElementById('qrOverlay');
-    const dstQr = clone.querySelector('#qrOverlay');
-    if (srcQr && dstQr) {
-      dstQr.innerHTML = srcQr.innerHTML;
-      dstQr.style.cssText = srcQr.style.cssText;
-      // give cloned qr a unique id so it doesn't conflict
-      dstQr.id = 'cfm-qrOverlay';
-    }
     wrap.innerHTML = '';
     wrap.appendChild(clone);
   }
@@ -9467,9 +9446,7 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
       if (profileExtra.email)    PERSONAL_INFO.emails = [profileExtra.email, ...(PERSONAL_INFO.emails||[]).filter(e => e !== profileExtra.email)];
       if (profileExtra.mobile)   PERSONAL_INFO.phones = [profileExtra.mobile, ...(PERSONAL_INFO.phones||[]).filter(p => p !== profileExtra.mobile)];
       if (profileExtra.linkedin) PERSONAL_INFO.website = profileExtra.linkedin;
-      savePI(); // nagri-refresh din ng QR
-    } else {
-      refreshQrPayload();
+      savePI();
     }
     if (currentEntry) {
       document.getElementById('pillName').textContent = formatPillName(currentEntry.name);
@@ -9501,8 +9478,8 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
   async function loadPI() {
     try { const r = await window.storage.get(PI_KEY, false); if (r && r.value) PERSONAL_INFO = Object.assign(PERSONAL_INFO, JSON.parse(r.value)); } catch(e) {}
   }
- async function savePI() { let ok = false; try { ok = !!(await window.storage.set(PI_KEY, JSON.stringify(PERSONAL_INFO), false)); } catch(e) {} refreshQrPayload(); return ok; }
-  loadPI().then(() => refreshQrPayload());
+ async function savePI() { let ok = false; try { ok = !!(await window.storage.set(PI_KEY, JSON.stringify(PERSONAL_INFO), false)); } catch(e) {} return ok; }
+  loadPI();
 
   function openPersonalInfoScreen() {
     haptic('medium');
@@ -9638,10 +9615,6 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
         <div class="os-row-text" style="flex:1;"><div class="os-row-title">OpenKEY ID</div></div>
         <span class="os-row-value" style="font-family:'Space Mono',monospace;font-size:12px;">${currentEntry?.athid || '—'}</span>
       </div>
-      <div class="os-row" style="cursor:pointer;" onclick="closePersonalInfoScreen();setTimeout(()=>{const c=document.getElementById('card');if(c)c.classList.remove('flipped');const q=document.getElementById('qrOverlay');if(q)q.style.opacity='1';exitOS();},260);" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''">
-        <div class="os-row-text" style="flex:1;"><div class="os-row-title">QR Code</div></div>
-        <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
       <div class="os-row" style="cursor:pointer;" onclick="closePersonalInfoScreen();setTimeout(()=>exitOS(),260);" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''">
         <div class="os-row-text" style="flex:1;"><div class="os-row-title">Digital Card</div></div>
         <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
@@ -9701,7 +9674,6 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
       if (sb) sb.textContent = currentEntry.pos;
     }
     if (typeof profileExtra !== 'undefined' && P.company) profileExtra.company = P.company;
-    refreshQrPayload();
   }
   /* === END: PI SYNC TO CARD === */
   /* generic single-field editor */
@@ -9746,7 +9718,7 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
     if (!inp) return;
      const prevPI = PERSONAL_INFO[key];
     PERSONAL_INFO[key] = inp.value.trim();
-    if (!(await savePI())) { PERSONAL_INFO[key] = prevPI; refreshQrPayload(); haptic('error'); showToast("Couldn't save", 'error'); return; }
+    if (!(await savePI())) { PERSONAL_INFO[key] = prevPI; haptic('error'); showToast("Couldn't save", 'error'); return; }
     /* === START: SYNC AFTER SAVE === */
     piSyncToCard();
     /* === END: SYNC AFTER SAVE === */
