@@ -5543,12 +5543,12 @@
   }
 
 
-  function csvEscape(val) {
-    val = String(val ?? ''); if (/^[=@\t\r]/.test(val)) val = "'" + val;
-    : if (/[",\r\n]/.test(val)) return '"' + val.replace(/"/g, '""') + '"';
+   function csvEscape(val) {
+    val = String(val ?? '');
+    if (/^[=@\t\r]/.test(val)) val = "'" + val;
+    if (/[",\r\n]/.test(val)) return '"' + val.replace(/"/g, '""') + '"';
     return val;
   }
-
   /* ── SYNC CONTACTS ── */
   function openSyncContactsSheet() {
     haptic('light');
