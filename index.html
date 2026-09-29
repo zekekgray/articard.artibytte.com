@@ -202,6 +202,12 @@
   .acct-sub { font-family:-apple-system,'SF Pro Text',sans-serif; font-size:15px; color:rgba(60,60,67,0.55); margin-top:4px; margin-bottom:28px; }
   .acct-group { width:100%; background:rgba(255,255,255,0.72); border-radius:20px; overflow:hidden; box-shadow:0 1px 2px rgba(0,0,0,0.04); margin-bottom:16px; flex-shrink:0; }
 
+  /* === START: CONTACTS HIERARCHY EDIT === */
+  #abSyncBtn, #abExportBtn, #abDupBanner { display:none !important; }
+  #abMoreBtn { position:relative; }
+  #abMoreBadge { position:absolute; top:2px; right:2px; width:9px; height:9px; border-radius:50%; background:#FF453A; border:2px solid #ECE4D6; display:none; }
+  /* === END: CONTACTS HIERARCHY EDIT === */
+
   /* ── ADDRESS BOOK ── */
   .ab-pane-header { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
   .ab-count { font-family:-apple-system,'SF Pro Display',sans-serif; font-size:16px; font-weight:600; color:rgba(60,60,67,0.5); margin-left:6px; }
@@ -252,10 +258,12 @@
   .ab-scrubber-letter:hover { color:#007AFF; }
   .ab-scrubber-letter.active { color:#fff; background:#007AFF; border-radius:5px; }
   .ab-scrubber-letter.inactive { color:rgba(60,60,67,0.2); cursor:default; }
+  .ab-scrubber.ab-scrubber-off { display:none !important; }
   .ab-scrubber-letter.inactive.active { color:rgba(255,255,255,0.7); background:rgba(0,122,255,0.35); }
   .ab-scrubber-bubble { position:fixed; right:32px; background:#007AFF; color:#fff; font-family:-apple-system,'SF Pro Display',sans-serif; font-size:26px; font-weight:700; width:50px; height:50px; border-radius:14px; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .1s; z-index:999; transform:translateY(-50%); box-shadow:0 4px 14px rgba(0,122,255,0.35); }
   .ab-scrubber-bubble.show { opacity:1; }
 
+  /* === START: LEGACY CONTACT DETAIL CSS (DELETE) === */
   /* ── CONTACT DETAIL MODAL ── */
   /* ── CONTACT DETAIL OVERLAY ── */
   .cd-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); display:none; align-items:flex-end; justify-content:center; z-index:900; }
@@ -331,6 +339,8 @@
   .cd-action-btn { flex:1; display:flex; align-items:center; justify-content:center; gap:7px; background:rgba(255,255,255,0.72); border:none; border-radius:14px; padding:13px 10px; font-family:-apple-system,'SF Pro Text',sans-serif; font-size:13.5px; font-weight:600; color:#1c1c1e; cursor:pointer; transition:transform .12s, opacity .12s; }
   .cd-action-btn:active { transform:scale(0.96); opacity:.8; }
 
+  /* === END: LEGACY CONTACT DETAIL CSS === */
+
   /* ── UPCOMING ── */
   .up-pane-header { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:16px; flex-wrap:wrap; margin-top:6px; }
   .up-toggle { display:flex; gap:6px; }
@@ -393,6 +403,24 @@
   .cf-submit { width:100%; margin-top:8px; padding:16px; border-radius:14px; border:none; cursor:pointer; background:linear-gradient(135deg,#E8CC7A,#C9A84C); color:#1c1c1e; font-family:-apple-system,'SF Pro Text',sans-serif; font-size:15.5px; font-weight:700; box-shadow:0 4px 14px rgba(232,204,122,0.3); }
   .cf-cancel { width:100%; margin-top:10px; padding:14px; border-radius:14px; border:none; cursor:pointer; background:rgba(0,0,0,0.06); color:#1c1c1e; font-family:-apple-system,'SF Pro Text',sans-serif; font-size:15px; font-weight:600; }
   .cf-success-icon { font-size:40px; text-align:center; margin-bottom:12px; }
+  /* ── ACCESSIBILITY ── */
+  button:focus-visible,[role="button"]:focus-visible,[role="switch"]:focus-visible,[role="checkbox"]:focus-visible,a:focus-visible,[tabindex="0"]:focus-visible { outline:2px solid #1c1c1e !important; outline-offset:2px !important; box-shadow:0 0 0 4px #E8CC7A !important; }
+  input:focus-visible,textarea:focus-visible,select:focus-visible { outline:2px solid #1c1c1e !important; outline-offset:-2px !important; }
+  .os-row:focus-visible,.ab-row:focus-visible,.up-row:focus-visible,.gs-row:focus-visible,.au-recent-row:focus-visible { outline-offset:-3px !important; box-shadow:none !important; }
+  rect[role="button"]:focus-visible { outline:none !important; box-shadow:none !important; stroke:#1c1c1e !important; stroke-width:2 !important; fill:rgba(28,28,30,.1) !important; }
+  [role="dialog"]:focus { outline:none !important; box-shadow:none !important; }
+  .a11y-flip { position:absolute; left:50%; top:100%; transform:translateX(-50%); margin-top:10px; padding:10px 18px; border:none; border-radius:20px; background:#1c1c1e; color:#ECE4D6; font:600 13px -apple-system,'SF Pro Text',sans-serif; opacity:0; pointer-events:none; z-index:30; }
+  .a11y-flip:focus-visible { opacity:1; pointer-events:auto; }
+  @media (prefers-reduced-motion: reduce) {
+    *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; }
+    .spinner,.share-thumb-spinner { animation-duration:1.2s !important; animation-iteration-count:infinite !important; }
+  }
+  /* ── ADD CONTACT INLINE VALIDATION ── */
+  .ac-err { display:none; font-family:-apple-system,'SF Pro Text',sans-serif; font-size:12px; line-height:1.4; color:#FF453A; padding:0 16px; margin:-3px 0 10px; }
+  .ac-err.show { display:block; animation: errSlide .18s cubic-bezier(.4,0,.2,1) forwards; }
+  .ac-err.warn { color:#B36B00; }
+  .ac-row-err  { box-shadow: inset 0 0 0 1.5px #FF453A; }
+  .ac-row-warn { box-shadow: inset 0 0 0 1.5px #FF9F0A; }
 
   /* ── CONNECT PREVIEW (step A) ── */
   .cp-fol-wrap { display:flex; justify-content:center; margin-bottom:14px; }
@@ -1497,6 +1525,17 @@
           <div class="os-title" style="padding:6px 0 0 4px;">Contacts</div>
           <span class="ab-count" id="abCount">(5)</span>
         </div>
+        <!-- === START: CONTACTS MORE BUTTON === -->
+        <button id="abMoreBtn" aria-label="More actions"
+          onpointerdown="this.style.transition='transform .08s cubic-bezier(0.34,1.56,0.64,1),opacity .08s';this.style.transform='scale(0.88)';this.style.opacity='.7';"
+          onpointerup="this.style.transform='';this.style.opacity='1';"
+          onpointerleave="this.style.transform='';this.style.opacity='';"
+          onclick="openContactsMoreMenu()"
+          style="width:40px;height:40px;background:rgba(255,255,255,0.72);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex-shrink:0;margin-right:8px;-webkit-tap-highlight-color:transparent;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#1c1c1e"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>
+          <span id="abMoreBadge"></span>
+        </button>
+        <!-- === END: CONTACTS MORE BUTTON === -->
         <button id="abSyncBtn"
           onpointerdown="haptic('light');this.style.transition='transform .08s cubic-bezier(0.34,1.56,0.64,1),opacity .08s';this.style.transform='scale(0.88)';this.style.opacity='.7';"
           onpointerup="this.style.transform='scale(1.06)';this.style.opacity='1';setTimeout(()=>{this.style.transform='';},120);"
@@ -1541,7 +1580,8 @@
         <button onclick="event.stopPropagation();openDupSheet()" style="background:#FF9F0A;border:none;border-radius:10px;padding:7px 13px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12.5px;font-weight:700;color:#fff;cursor:pointer;flex-shrink:0;">View</button>
       </div>
 
-      <div style="position:relative;padding-right:20px;">
+      <div id="abListWrap" style="position:relative;padding-right:0;">
+        <div id="abFilterBar"></div>
         <div id="abList"></div>
       </div>
       <div id="abEmptyState" style="display:none;"></div>
@@ -1556,7 +1596,7 @@
         <button onclick="closeDupSheet()" onpointerdown="this.style.transform='translateY(-8px) scale(0.88)';this.style.opacity='.7'" onpointerup="this.style.transform='translateY(-8px)';this.style.opacity=''" onpointerleave="this.style.transform='translateY(-8px)';this.style.opacity=''" style="width:40px;height:40px;background:#fff;border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.08);padding:0;flex-shrink:0;-webkit-appearance:none;appearance:none;transform:translateY(-8px);transition:transform .15s cubic-bezier(0.34,1.56,0.64,1),opacity .12s;-webkit-tap-highlight-color:transparent;">          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-      <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.55);line-height:1.5;margin-bottom:16px;">Merging duplicates combines cards for a contact, keeping all unique information in a single card.</div>
+      <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.55);line-height:1.5;margin-bottom:16px;">Review each pair before merging. When two records disagree, you choose which value wins. "Merge Safe Only" combines just the pairs with no conflicts.</div>
     </div>
 
     <!-- duplicate pairs list -->
@@ -1566,7 +1606,7 @@
     <div style="padding:12px 20px max(20px,env(safe-area-inset-bottom));flex-shrink:0;background:#ECE4D6;border-top:0.6px solid rgba(0,0,0,0.07);">
       <div style="display:flex;gap:10px;">
         <button onclick="ignoreAllDuplicates()" style="flex:1;padding:14px;border-radius:14px;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.72);font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;color:#1c1c1e;cursor:pointer;">Ignore All</button>
-        <button onclick="mergeAllDuplicates()" style="flex:2;padding:14px;border-radius:14px;border:none;background:#1c1c1e;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:700;color:#ECE4D6;cursor:pointer;">Merge All</button>
+        <button onclick="mergeAllDuplicates()" style="flex:2;padding:14px;border-radius:14px;border:none;background:#1c1c1e;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:700;color:#ECE4D6;cursor:pointer;">Merge Safe Only</button>
       </div>
     </div>
   </div>
@@ -1580,32 +1620,36 @@
         <div style="width:56px;height:56px;border-radius:16px;background:rgba(52,199,89,0.12);display:flex;align-items:center;justify-content:center;margin:4px auto 16px;">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="10" r="2.5"/><path d="M8 17c.6-2 2-3 4-3s3.4 1 4 3"/></svg>
         </div>
-        <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:19px;font-weight:700;color:#1c1c1e;margin-bottom:6px;">Sync Contacts</div>
-        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.55);line-height:1.5;margin-bottom:20px;">Import your device contacts into ATH•NA OS.</div>
-        <button onclick="attemptContactsSync()" style="width:100%;padding:14px;border-radius:14px;border:none;background:#1c1c1e;color:#ECE4D6;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14.5px;font-weight:700;cursor:pointer;margin-bottom:8px;">Open</button>
+        <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:19px;font-weight:700;color:#1c1c1e;margin-bottom:6px;">Import Contacts</div>
+        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.55);line-height:1.5;margin-bottom:20px;">Pick contacts from your phone or a .vcf / .csv file. You'll review them first. Nothing is added until you confirm, and duplicates are detected automatically.</div>
+        <button onclick="attemptContactsSync()" style="width:100%;padding:14px;border-radius:14px;border:none;background:#1c1c1e;color:#ECE4D6;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14.5px;font-weight:700;cursor:pointer;margin-bottom:8px;">Choose Contacts</button>
+        <!-- === START: IMPORT FROM FILE BUTTON === -->
+        <button onclick="importFromFile()" style="width:100%;padding:13px;border-radius:14px;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.72);color:#1c1c1e;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px;">Import from .vcf / .csv File</button>
+        <!-- === END: IMPORT FROM FILE BUTTON === -->
         <button onclick="closeSyncContactsSheet()" style="width:100%;padding:13px;border-radius:14px;border:none;background:rgba(0,0,0,0.06);color:rgba(60,60,67,0.6);font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Cancel</button>
       </div>
       <div id="syncStepPermission" style="display:none;">
         <div style="width:56px;height:56px;border-radius:16px;background:rgba(255,159,10,0.12);display:flex;align-items:center;justify-content:center;margin:4px auto 16px;">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FF9F0A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
         </div>
-        <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:17px;font-weight:700;color:#1c1c1e;margin-bottom:8px;">Contacts Access Needed</div>
-        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.6);line-height:1.55;margin-bottom:20px;">Please allow the app to access your contacts in System Settings.</div>
+        <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:17px;font-weight:700;color:#1c1c1e;margin-bottom:8px;">Can't Access Contacts</div>
+        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.6);line-height:1.55;margin-bottom:20px;"><span id="syncFallbackMsg">Your browser doesn't support direct contact import. You can add contacts manually, or use a supported device or browser.</span>
+        <br><button onclick="closeSyncContactsSheet();setTimeout(()=>importFromFile(),280);" style="background:none;border:none;padding:10px 0 0;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:600;color:#1c6ef3;cursor:pointer;">Import from .vcf / .csv file instead</button></div>
         <div style="display:flex;gap:8px;">
-          <button onclick="closeSyncContactsSheet()" style="flex:1;padding:13px;border-radius:14px;border:none;background:rgba(0,0,0,0.06);color:#1c1c1e;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Cancel</button>
-          <button onclick="openSystemContactsSettings()" style="flex:1;padding:13px;border-radius:14px;border:none;background:#1c6ef3;color:#fff;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">Settings</button>
+          <button onclick="contactsFallbackAddManually()" style="flex:1;padding:13px;border-radius:14px;border:none;background:rgba(0,0,0,0.06);color:#1c1c1e;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Add Manually</button>
+          <button id="syncTryAgainBtn" onclick="retryContactsPicker()" style="flex:1;padding:13px;border-radius:14px;border:none;background:#1c1c1e;color:#ECE4D6;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">Try Again</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div id="addContactScreen" style="position:fixed;inset:0;z-index:960;background:#ECE4D6;display:none;flex-direction:column;">
+<div id="addContactScreen" role="dialog" aria-modal="true" aria-labelledby="acTitle" tabindex="-1" style="position:fixed;inset:0;z-index:960;background:#ECE4D6;display:none;flex-direction:column;">
   <!-- top bar -->
   <div style="display:flex;align-items:center;justify-content:space-between;padding:max(16px,env(safe-area-inset-top)) 16px 10px;flex-shrink:0;background:#ECE4D6;">
-    <button onclick="haptic('light');closeAddContactModal()" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;font-weight:500;color:#1c1c1e;background:none;border:none;cursor:pointer;padding:6px 4px;">Cancel</button>
-    <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:17px;font-weight:600;color:#1c1c1e;">New Contact</div>
-    <button id="acSaveBtn" onclick="haptic('success');submitNewContact()" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;font-weight:600;color:#1c1c1e;background:none;border:none;cursor:pointer;padding:6px 4px;opacity:.4;">Save</button>
+    <button onclick="haptic('light');requestCloseAddContact()" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;font-weight:500;color:#1c1c1e;background:none;border:none;cursor:pointer;padding:6px 4px;">Cancel</button>
+    <div id="acTitle" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:17px;font-weight:600;color:#1c1c1e;">New Contact</div>
+    <button id="acSaveBtn" onclick="haptic('light');submitNewContact()" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;font-weight:600;color:#1c1c1e;background:none;border:none;cursor:pointer;padding:6px 4px;opacity:.4;">Save</button>
   </div>
 
   <!-- scroll body -->
@@ -1645,7 +1689,7 @@
     <!-- phone -->
     <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:8px;">
       <div style="display:flex;align-items:center;padding:0 14px;">
-        <span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:16px;color:rgba(60,60,67,0.5);width:72px;flex-shrink:0;">add phone</span>
+        <span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:16px;color:rgba(60,60,67,0.5);width:72px;flex-shrink:0;">Phone</span>
         <input id="acPhone" type="tel" inputmode="tel" placeholder="09XX XXX XXXX" autocomplete="tel"
           style="flex:1;background:none;border:none;outline:none;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:16px;color:#1c1c1e;padding:14px 0;"/>
       </div>
@@ -1654,8 +1698,8 @@
     <!-- email -->
     <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:8px;">
       <div style="display:flex;align-items:center;padding:0 14px;">
-        <span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:16px;color:rgba(60,60,67,0.5);width:72px;flex-shrink:0;">add email</span>
-        <input id="acEmail" type="email" inputmode="email" placeholder="example@email.com" autocomplete="email"
+        <span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:16px;color:rgba(60,60,67,0.5);width:72px;flex-shrink:0;">Email</span>
+        <input id="acEmail" type="email" inputmode="email" placeholder="name@example.com" autocomplete="email"
           style="flex:1;background:none;border:none;outline:none;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:16px;color:#1c1c1e;padding:14px 0;"/>
       </div>
     </div>
@@ -1664,7 +1708,7 @@
     <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:8px;">
       <div style="display:flex;align-items:center;gap:10px;padding:0 14px;">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="#0A66C2" style="flex-shrink:0;"><path d="M20.447 20.452H17.01v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.589V9h3.292v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a1.912 1.912 0 1 1 0-3.824 1.912 1.912 0 0 1 0 3.824zm1.648 13.019H3.69V9h3.295v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        <input id="acLinkedin" type="text" placeholder="linkedin.com/in/yourname"
+        <input id="acLinkedin" type="text" placeholder="linkedin.com/in/name" autocomplete="url" autocapitalize="none" autocorrect="off" spellcheck="false"
           style="flex:1;background:none;border:none;outline:none;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:16px;color:#1c1c1e;padding:14px 0;"/>
       </div>
     </div>
@@ -1743,7 +1787,7 @@
     <!-- ══ NOTE EDITOR (full screen) ══ -->
     <div id="noteEditorScreen" style="position:fixed;inset:0;z-index:960;background:#ECE4D6;display:none;flex-direction:column;">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:max(16px,env(safe-area-inset-top)) 16px 10px;flex-shrink:0;background:#ECE4D6;">
-        <button onclick="haptic('light');closeNoteEditor()" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;font-weight:500;color:#1c1c1e;background:none;border:none;cursor:pointer;padding:6px 4px;">Cancel</button>
+        <button onclick="haptic('light');requestCloseNoteEditor()" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;font-weight:500;color:#1c1c1e;background:none;border:none;cursor:pointer;padding:6px 4px;">Cancel</button>
         <button id="notePinBtn" onclick="haptic('light');springPress(this);toggleNotePin()" style="background:none;border:none;cursor:pointer;padding:6px;color:rgba(60,60,67,0.4);transition:transform .12s,opacity .12s;">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a1 1 0 0 0 0-2H8a1 1 0 0 0 0 2h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24z"/></svg>
         </button>
@@ -1793,6 +1837,8 @@
 </div>
 
 <!-- ══ CONTACT DETAIL MODAL ══ -->
+<!-- === START: LEGACY CONTACT DETAIL (DELETE) === -->
+<template id="legacyContactDetail">
 <div class="cd-overlay" id="cdOverlay" onclick="if(event.target===this)closeContactDetail()">
   <div class="cd-sheet" id="cdSheet">
     <div class="cd-handle" id="cdHandle"></div>
@@ -1865,11 +1911,6 @@
               <div class="cd-info-label">Address</div>
               <div class="cd-info-value" id="cdAddress">—</div>
             </div>
-          </div>
-          <!-- map thumbnail -->
-          <div class="cd-map-thumb" onclick="openMapForContact()" style="width:100%;">
-            <div class="cd-map-streets"></div>
-            <div class="cd-map-pin">📍</div>
           </div>
         </div>
       </div>
@@ -2074,7 +2115,7 @@
         </div>
 
         <button class="cs-checkbar" style="cursor:default;user-select:none;">✓ CONNECTED</button>
-        <button class="cp-save-btn" style="margin-top:0;margin-bottom:10px;" onclick="haptic('light');showToast('CONTACT SAVED','success')">
+        <button class="cp-save-btn" style="margin-top:0;margin-bottom:10px;"onclick="saveConnectVisitorVcf()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 15V3"/><path d="M7 10l5 5 5-5"/><path d="M3 18h18v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1z"/>
           </svg>
@@ -2146,8 +2187,8 @@
     <div class="lic-divider"></div>
 
     <button class="btn-lic-proceed" id="licBtnProceed" onclick="closeLicenseScreen()" style="display:none;">▶ Enter ATH•NA OS</button>
-    <button class="btn-lic-trial" id="licBtnTrial" onclick="    haptic('light');showToast('Trial started','success');renderLicenseState('trial')" style="display:none;">🎁 Start 7-Day Free Trial</button>
-    <button class="btn-lic-renew" id="licBtnRenew" onclick="    haptic('light');showToast('Renewal request sent','success')" style="display:none;">🔄 Request License Renewal</button>
+    <button class="btn-lic-trial" id="licBtnTrial" onclick="    haptic('light');showToast('Free trial: coming soon','neutral')" style="display:none;">🎁 Start 7-Day Free Trial</button>
+    <button class="btn-lic-renew" id="licBtnRenew" onclick="    haptic('light');showToast('Renewal: coming soon','neutral')" style="display:none;">🔄 Request License Renewal</button>
     <button class="btn-lic-logout" onclick="closeLicenseScreen()">← Back</button>
   </div>
   </div>
@@ -2899,7 +2940,7 @@
         <div class="share-app-icon" style="background:#34c759;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
         </div>
-        <div class="share-app-label">iMessage</div>
+        <div class="share-app-label">Messages</div>
       </button>
       <button class="share-app" onclick="shareVia('messenger')">
         <div class="share-app-icon" style="background:linear-gradient(135deg,#00b2ff,#a033ff);">
@@ -3485,7 +3526,7 @@
     a.click();
     setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
     haptic('success');
-    showToast('Contact saved — open .vcf to add to Contacts', 'success');
+    showToast('.vcf downloaded. Open it to add to Contacts', 'neutral');
   }
 
   function bookMeetingArtimeet() {
@@ -3564,6 +3605,11 @@
 
       { overlayId:'shareOverlay',         closeFn:() => closeShare() },
       { overlayId:'colorwaySheetOverlay', closeFn:() => closeColorwaySheet() },
+      { overlayId:'syncContactsOverlay',  closeFn:() => closeSyncContactsSheet() },
+      { overlayId:'redeemOverlay' },
+      { overlayId:'editProfileOverlay',   closeFn:() => closeEditProfileSheet() },
+      { overlayId:'securitySheetOverlay', closeFn:() => closeSecuritySheet() },
+      { overlayId:'myProfileCardOverlay', closeFn:() => closeMyProfileCard() },
       { overlayId:'dupSheetOverlay',      closeFn:() => closeDupSheet() },
     ];
 
@@ -3685,7 +3731,28 @@
     try { await window.storage.delete(DRAFT_KEY, false); } catch (e) {}
   }
 
-  loadDraft();
+ loadDraft();
+
+  const APPEARANCE_KEY = 'appearance-default-v1';
+  async function saveAppearanceDefault() {
+    try { return !!(await window.storage.set(APPEARANCE_KEY, JSON.stringify({ theme: activeTheme.id, cw: activeCW }), false)); }
+    catch (e) { return false; }
+  }
+  async function commitAppearanceDefault() {
+    if (await saveAppearanceDefault()) { haptic('success'); showToast('Appearance saved as default', 'success'); }
+    else { haptic('error'); showToast("Couldn't save appearance", 'error'); }
+  }
+  (async () => {
+    try {
+      const r = await window.storage.get(APPEARANCE_KEY, false);
+      const s = r && r.value ? JSON.parse(r.value) : null;
+      if (!s) return;
+      const t = THEMES.find(x => x.id === s.theme);
+      if (t) activeTheme = t;
+      if (BUILDING_COLORWAYS[s.cw]) activeCW = s.cw;
+      if (currentEntry) { applyTheme(activeTheme); applyBuildingColorway(activeCW); }
+    } catch (e) {}
+  })();
 
   /* ── SURGICAL: auto-skip straight to card with default identity ── */
   setTimeout(function autoLoadDefaultCard() {
@@ -4383,7 +4450,10 @@
       <div class="share-sheet" id="${id}-sheet" style="max-height:80vh;overflow-y:auto;-webkit-overflow-scrolling:touch;">
         <div class="share-handle" id="${id}-handle" style="cursor:grab;touch-action:none;"></div>
         <div style="padding:0 20px 22px;">
-          <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:20px;font-weight:700;color:#1c1c1e;margin-bottom:14px;">${titleHtml}</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;">
+            <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:20px;font-weight:700;color:#1c1c1e;">${titleHtml}</div>
+            <button type="button" aria-label="Close" onclick="closeAuGenericModal('${id}')" style="width:32px;height:32px;flex-shrink:0;border:none;border-radius:50%;background:rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;color:#1c1c1e;-webkit-tap-highlight-color:transparent;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
           ${bodyHtml}
         </div>
       </div>`;
@@ -4559,11 +4629,14 @@
     if (!text) { haptic('error'); showToast('Please describe it first', 'error'); return; }
     haptic('success');
     const payload = { athid: currentEntry?.athid || '', name: currentEntry?.name || '', type: kind, text, ts: new Date().toISOString() };
-    try { await window.storage.set(kind + ':' + Date.now(), JSON.stringify(payload), false); } catch(e) {}
+   let fbOk = false;
+    try { fbOk = !!(await window.storage.set(kind + ':' + Date.now(), JSON.stringify(payload), false)); } catch(e) {}
     try {
       const p = new URLSearchParams({ type: kind, athid: payload.athid, name: payload.name, remarks: text, ts: payload.ts });
       await fetch(SHEET_URL + '?' + p.toString(), { method: 'GET', mode: 'no-cors' });
+      fbOk = true;
     } catch(e) {}
+    if (!fbOk) { haptic('error'); showToast("Couldn't send. Try again", 'error'); return; }
     closeAuGenericModal(overlayId);
     showToast(kind === 'bug' ? 'Bug report sent — thank you' : 'Feature request submitted', 'success');
   }
@@ -4799,11 +4872,11 @@
       const back = e.target.closest('[data-au-back]');
       if (back) { renderAuHome(); return; }
       const confirmBtn = e.target.closest('[data-au-confirm]');
-      if (confirmBtn) { haptic('success'); showToast('Preferences saved', 'success'); return; }
+       if (confirmBtn) { haptic('light'); showToast('Search expansion: coming soon', 'neutral'); return; }
       const viewBtn = e.target.closest('[data-au-view]');
       if (viewBtn) { haptic('light'); showToast(viewBtn.getAttribute('data-au-view') + ' profile — coming soon', 'neutral'); return; }
       const connectBtn = e.target.closest('[data-au-connect]');
-      if (connectBtn) { haptic('success'); showToast('Connect request sent to ' + connectBtn.getAttribute('data-au-connect'), 'success'); return; }
+      if (connectBtn) { haptic('light'); showToast('Connect: coming soon', 'neutral'); return; }
       const nomatch = e.target.closest('.au-nomatch-row');
       if (nomatch) { auToggleNoMatchOpt(nomatch); return; }
     });
@@ -5005,7 +5078,7 @@
     if (bottomSearch) bottomSearch.style.display = pane === 'address' ? 'block' : 'none';
     const scrubber = document.getElementById('abScrubber');
     if (scrubber) scrubber.style.display = pane === 'address' ? 'flex' : 'none';
-    if (pane === 'address') renderAddressBook(ADDRESS_BOOK);
+    if (pane === 'address') filterAddressBook(document.getElementById('abSearchInput')?.value || '');
     if (currentEntry) {
       document.getElementById('osProfileName').textContent = currentEntry.name;
       document.getElementById('osProfileSub').textContent = currentEntry.pos + ' · ' + currentEntry.athid;
@@ -5033,7 +5106,7 @@
     if (bottomSearch) bottomSearch.style.display = tabId === 'address' ? 'block' : 'none';
     const scrubber = document.getElementById('abScrubber');
     if (scrubber) scrubber.style.display = tabId === 'address' ? 'flex' : 'none';
-    if (tabId === 'address') renderAddressBook(ADDRESS_BOOK);
+    if (tabId === 'address') filterAddressBook(document.getElementById('abSearchInput')?.value || '');
     if (tabId === 'tag') renderNotes();
     currentOSPane = tabId;
     document.getElementById('osBackBtn')?.classList.toggle('os-back-home', tabId === 'home');
@@ -5086,9 +5159,13 @@
   }
 
   async function saveProfilePhoto(b64) {
+    const prev = profilePhotoB64;
     profilePhotoB64 = b64;
-    try { await window.storage.set(PROFILE_PHOTO_KEY, b64, false); } catch(e) {}
+    let ok = false;
+    try { ok = !!(await window.storage.set(PROFILE_PHOTO_KEY, b64, false)); } catch(e) {}
+    if (!ok) profilePhotoB64 = prev;
     applyAvatarEverywhere();
+    return ok;
   }
 
   function applyAvatarEverywhere() {
@@ -5180,9 +5257,10 @@
           const s = Math.min(img.width, img.height);
           const ox = (img.width - s) / 2, oy = (img.height - s) / 2;
           ctx.drawImage(img, ox, oy, s, s, 0, 0, 200, 200);
-          saveProfilePhoto(canvas.toDataURL('image/jpeg', 0.85));
-          haptic('success');
-          showToast('Photo updated', 'success');
+         saveProfilePhoto(canvas.toDataURL('image/jpeg', 0.85)).then(ok => {
+            if (ok) { haptic('success'); showToast('Photo updated', 'success'); }
+            else { haptic('error'); showToast("Couldn't save photo", 'error'); }
+          });
         };
         img.src = ev.target.result;
       };
@@ -5263,6 +5341,118 @@
   }
 
   /* ── ADDRESS BOOK ── */
+  /* === START: CONTACT MODEL (single canonical schema) === */
+  const CONTACT_SCHEMA_VERSION = 2;
+  const TAG_STYLES = {
+    Lead:{ bg:'#E8CC7A', fg:'#1c1c1e' }, Client:{ bg:'#34C759', fg:'#fff' },
+    Partner:{ bg:'#4A9DE0', fg:'#fff' }, New:{ bg:'#9B59B6', fg:'#fff' }
+  };
+  const tagStyle = t => TAG_STYLES[t] || { bg:'#8E8E93', fg:'#fff' };
+
+  const ctClean = s => String(s == null ? '' : s).replace(/\s+/g, ' ').trim();
+  const ctBlank = s => { const v = ctClean(s); return (v === '—' || v === 'Contact') ? '' : v; };
+  const ctFlat  = v => [v].flat(Infinity).filter(x => x != null).flatMap(x => String(x).split(/[;\n]/)).map(ctClean).filter(x => x && x !== '—');
+  const ctSplitList = s => String(s || '').split(/[,;\n]/).map(ctClean).filter(Boolean);
+  function ctUniqPhones(v) { const seen = new Set(); return ctFlat(v).filter(p => { const k = abPhoneKey(p) || p.toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; }); }
+  function ctUniqEmails(v) { const seen = new Set(); return ctFlat(v).map(e => e.toLowerCase()).filter(e => !seen.has(e) && seen.add(e)); }
+  const ctIso = v => { if (!v) return ''; const d = new Date(v); return isNaN(d) ? '' : d.toISOString(); };
+  const ctFmtDate = iso => iso ? new Date(iso).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '';
+  const ctLatest   = (a, b) => [a, b].filter(Boolean).sort().pop() || '';
+  const ctEarliest = (a, b) => [a, b].filter(Boolean).sort()[0] || '';
+  function ctSplitName(full) {
+    const p = ctClean(full).split(' ').filter(Boolean);
+    return p.length <= 1 ? { first: p[0] || '', last: '' } : { first: p.slice(0, -1).join(' '), last: p[p.length - 1] };
+  }
+
+  class Contact {
+    constructor(d) { Object.assign(this, d); }
+    /* legacy aliases: read/write canonical fields, never serialized */
+    get name() { return this.displayName; }
+    set name(v) { v = ctClean(v) || this.displayName; const p = ctSplitName(v); this.displayName = v; this.firstName = p.first; this.lastName = p.last; }
+    get mobile() { return this.phones[0] || ''; }
+    set mobile(v) { this.phones = ctUniqPhones([v, ...this.phones.slice(1)]); }
+    get email() { return this.emails[0] || ''; }
+    set email(v) { this.emails = ctUniqEmails([v, ...this.emails.slice(1)]); }
+    get tag() { return this.tags[0] || ''; }
+    set tag(v) { v = ctClean(v); const rest = this.tags.slice(1).filter(t => t !== v); this.tags = v ? [v, ...rest] : rest; }
+    get tagBg() { return tagStyle(this.tag).bg; }
+    set tagBg(v) {}
+    get tagFg() { return tagStyle(this.tag).fg; }
+    set tagFg(v) {}
+    get avatarBg() { return this.avatar.bg; }
+    set avatarBg(v) { this.avatar = Object.assign({}, this.avatar, { bg: v }); }
+    get linkedin() { return this.socials.linkedin || ''; }
+    set linkedin(v) { const s = Object.assign({}, this.socials); v = ctClean(v); if (v) s.linkedin = v; else delete s.linkedin; this.socials = s; }
+    get subline() { return [this.role, this.company].filter(Boolean).join(' · '); }
+  }
+
+  /* accepts legacy OR canonical shape, always returns a Contact */
+  function normalizeContact(raw) {
+    if (raw instanceof Contact) return raw;
+    raw = raw || {};
+    let first = ctClean(raw.firstName), last = ctClean(raw.lastName);
+    let display = ctClean(raw.displayName || raw.name) || [first, last].filter(Boolean).join(' ');
+    if (!first && !last && display) { const p = ctSplitName(display); first = p.first; last = p.last; }
+    display = display || 'Unnamed';
+    const socials = Object.assign({}, raw.socials);
+    if (raw.linkedin && !socials.linkedin) socials.linkedin = raw.linkedin;
+    Object.keys(socials).forEach(k => { socials[k] = ctClean(socials[k]); if (!socials[k]) delete socials[k]; });
+    return new Contact({
+      id: raw.id,
+      firstName: first, lastName: last, displayName: display,
+      company: ctBlank(raw.company), role: ctBlank(raw.role),
+      phones: ctUniqPhones([raw.mobile, raw.phones]),
+      emails: ctUniqEmails([raw.email, raw.emails]),
+      address: ctClean(raw.address).replace(/^—$/, ''),
+      socials,
+      tags: [...new Set(ctFlat(raw.tags && raw.tags.length ? raw.tags : raw.tag))],
+      notes: String(raw.notes || '').trim(),
+      avatar: { bg: (raw.avatar && raw.avatar.bg) || raw.avatarBg || avatarColorFromName(display) },
+      source: raw.source || '',
+      createdAt: ctIso(raw.createdAt), updatedAt: ctIso(raw.updatedAt),   /* '' = unknown, never a made-up date */
+      lastContactedAt: ctIso(raw.lastContactedAt || raw.lastContacted),
+      metAt: ctClean(raw.metAt)
+    });
+  }
+  function newContact(raw) {
+    const now = new Date().toISOString();
+    return normalizeContact(Object.assign({ createdAt: now, updatedAt: now }, raw));
+  }
+
+  /* fill blanks + union phones/emails/socials into dst (used by import, add-duplicate, merge) */
+  function ctMergeInto(dst, src) {
+    ['company', 'role', 'address', 'metAt'].forEach(k => { if (!dst[k] && src[k]) dst[k] = src[k]; });
+    dst.phones = ctUniqPhones([...dst.phones, ...src.phones]);
+    dst.emails = ctUniqEmails([...dst.emails, ...src.emails]);
+    dst.socials = Object.assign({}, src.socials, dst.socials);
+    dst.tags = [...new Set([...dst.tags, ...src.tags.filter(t => t !== 'New')])];
+    dst.notes = abMergeNotes(dst.notes, src.notes);
+    dst.lastContactedAt = ctLatest(dst.lastContactedAt, src.lastContactedAt);
+  }
+
+  /* updatedAt is stamped only for contacts whose data really changed since the last successful save */
+  const _abHash = new Map();
+  const abHashOf = c => { const o = Object.assign({}, c); delete o.updatedAt; return JSON.stringify(o); };
+  function abStampChanged() { const now = new Date().toISOString(); ADDRESS_BOOK.forEach(c => { if (_abHash.get(c.id) !== abHashOf(c)) c.updatedAt = now; }); }
+  function abRememberHashes() { _abHash.clear(); ADDRESS_BOOK.forEach(c => _abHash.set(c.id, abHashOf(c))); }
+
+  /* detail-screen helpers */
+  function ctCopyMap(c) {
+    const m = { mobile: c.mobile, email: c.email, company: c.company, role: c.role, address: c.address, linkedin: c.linkedin, metAt: c.metAt, lastContactedAt: ctFmtDate(c.lastContactedAt) };
+    c.phones.forEach((p, i) => { m['phone:' + i] = p; });
+    c.emails.forEach((e, i) => { m['email:' + i] = e; });
+    Object.keys(c.socials || {}).forEach(k => { m['social:' + k] = c.socials[k]; });
+    return m;
+  }
+  function cdExtraRows(c) {
+    let h = '';
+    Object.keys(c.socials || {}).forEach(k => { h += cdInfoRowLightBase('🔗', k.charAt(0).toUpperCase() + k.slice(1), c.socials[k], 'social:' + k); });
+    h += cdInfoRowLightBase('🗓', 'Met at', c.metAt, 'metAt');
+    h += cdInfoRowLightBase('⏱', 'Last reached out', ctFmtDate(c.lastContactedAt), 'lastContactedAt');
+    return h;
+  }
+  /* === END: CONTACT MODEL === */
+
   const ADDRESS_BOOK = [
     { id:1, name:'Juan dela Cruz',  role:'CEO',          company:'Acme Corp',     tag:'Lead',    tagBg:'#E8CC7A', tagFg:'#1c1c1e', avatarBg:'#3B6FB6', mobile:'+63 917 000 0001', email:'juan@acme.ph',     address:'BGC, Taguig City',  notes:'Met at StartupQC April 2026.' },
     { id:2, name:'Maria Santos',    role:'Designer',     company:'Freelance',     tag:'Client',  tagBg:'#34C759', tagFg:'#fff',    avatarBg:'#A8326B', mobile:'+63 917 000 0002', email:'maria@design.ph',  address:'Makati City',       notes:'Referred by Carlo. Working on the new card visuals.' },
@@ -5270,6 +5460,7 @@
     { id:4, name:'Ana Lim',         role:'COO',          company:'LimGroup',      tag:'New',     tagBg:'#9B59B6', tagFg:'#fff',    avatarBg:'#C9A227', mobile:'+63 917 000 0004', email:'ana@limgroup.ph',  address:'Pasig City',        notes:'Introduced last week — exploring a loyalty pilot.' },
     { id:5, name:'Pio Reyes',       role:'CFO',          company:'StarVentures',  tag:'Client',  tagBg:'#34C759', tagFg:'#fff',    avatarBg:'#8E44AD', mobile:'+63 917 000 0005', email:'pio@starv.ph',     address:'Ortigas Center',    notes:'Reviewing the lifetime seat pricing model.' },
   ];
+  ADDRESS_BOOK.splice(0, ADDRESS_BOOK.length, ...ADDRESS_BOOK.map(c => normalizeContact(Object.assign({ source: 'seed' }, c))));
   let activeContact = null;
 
   function renderAddressBookProfileCard() {
@@ -5361,8 +5552,8 @@
 
 
   function csvEscape(val) {
-    val = String(val ?? '');
-    if (/[",\n]/.test(val)) return '"' + val.replace(/"/g, '""') + '"';
+    val = String(val ?? ''); if (/^[=@\t\r]/.test(val)) val = "'" + val;
+    : if (/[",\r\n]/.test(val)) return '"' + val.replace(/"/g, '""') + '"';
     return val;
   }
 
@@ -5376,7 +5567,233 @@
   function closeSyncContactsSheet() {
     dismissSheet('syncContactsOverlay', '.share-sheet');
   }
+  /* === START: IMPORT CONTACTS FLOW === */
+  const AB_STORE_KEY = 'address-book-v2';
+  const AB_LEGACY_KEY = 'address-book-v1';
+  let importCandidates = [];
+
+  async function saveAddressBook() {
+    try {
+      abStampChanged();
+      const r = await window.storage.set(AB_STORE_KEY, JSON.stringify({ v: CONTACT_SCHEMA_VERSION, contacts: ADDRESS_BOOK.map(normalizeContact) }), false);
+      if (r) abRememberHashes();
+      return !!r; // storage.set returns null on failure
+    } catch (e) { console.error('saveAddressBook failed', e); return false; }
+  }
+  async function loadAddressBook() {
+    let raw = null;
+    for (const key of [AB_STORE_KEY, AB_LEGACY_KEY]) {
+      try { const r = await window.storage.get(key, false); if (r && r.value) { raw = JSON.parse(r.value); break; } } catch (e) {}
+    }
+    const list = Array.isArray(raw) ? raw : (raw && Array.isArray(raw.contacts) ? raw.contacts : null);
+    if (list) { ADDRESS_BOOK.length = 0; list.forEach(c => ADDRESS_BOOK.push(normalizeContact(c))); }
+    abRememberHashes();
+    if (currentOSPane === 'address') filterAddressBook(document.getElementById('abSearchInput')?.value || '');
+  }
+  async function loadAddressBookUnused() {
+    try {
+      const r = await window.storage.get(AB_STORE_KEY, false);
+      if (r && r.value) {
+        const saved = JSON.parse(r.value);
+        if (Array.isArray(saved) && saved.length) {
+          ADDRESS_BOOK.length = 0;
+          saved.forEach(c => ADDRESS_BOOK.push(c));
+        }
+      }
+    } catch (e) { /* nothing saved yet — keep seed data */ }
+    if (currentOSPane === 'address') filterAddressBook(document.getElementById('abSearchInput')?.value || '');
+  }
+
+  function abDigits(s) { return String(s || '').replace(/\D/g, ''); }
+  function abPhoneKey(s) { const d = abDigits(s); return d.length >= 10 ? d.slice(-10) : d; }
+  function abNorm(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+
+  function abBuildCandidate(name, tel, email, company, role) {
+    name = (name || '').trim(); tel = (tel || '').trim(); email = (email || '').trim();
+    if (!name && !tel && !email) return null;
+    const label = name || email || tel;
+    return { name: label, role: (role || '').trim(), company: (company || '').trim(), mobile: acNormalizePhone(tel), email: email,
+             address: '', notes: '', tag: 'New', tagBg: '#9B59B6', tagFg: '#fff', avatarBg: avatarColorFromName(label) };
+  }
+
+  function abFindMatch(c) {
+    const pk = abPhoneKey(c.mobile), em = (c.email || '').toLowerCase(), nm = abNorm(c.name);
+    return ADDRESS_BOOK.find(x =>
+       (pk && x.phones.some(p => abPhoneKey(p) === pk)) ||
+      (em && x.emails.some(e => e.toLowerCase() === em)) ||
+      (nm && abNorm(x.name) === nm)) || null;
+  }
+
+  function abParseVcf(text) {
+    const out = [];
+    text.replace(/\r?\n[ \t]/g, '').split(/BEGIN:VCARD/i).slice(1).forEach(block => {
+      const line = re => { const m = block.match(re); return m ? m[1].trim() : ''; };
+      let name = line(/^FN(?:;[^:\n]*)?:(.+)$/im);
+      if (!name) { const n = line(/^N(?:;[^:\n]*)?:(.+)$/im).split(';'); name = ((n[1] || '') + ' ' + (n[0] || '')).trim(); }
+      const c = abBuildCandidate(
+        name,
+        line(/^TEL(?:;[^:\n]*)?:(.+)$/im),
+        line(/^EMAIL(?:;[^:\n]*)?:(.+)$/im),
+        line(/^ORG(?:;[^:\n]*)?:(.+)$/im).replace(/;/g, ' '),
+        line(/^TITLE(?:;[^:\n]*)?:(.+)$/im)
+      );
+      if (c) out.push(c);
+    });
+    return out;
+  }
+
+  function abParseCsv(text) {
+    const rows = []; let row = [], cur = '', q = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (q) { if (ch === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += ch; }
+      else if (ch === '"') q = true;
+      else if (ch === ',') { row.push(cur); cur = ''; }
+      else if (ch === '\n' || ch === '\r') { if (ch === '\r' && text[i + 1] === '\n') i++; row.push(cur); cur = ''; if (row.some(x => x.trim())) rows.push(row); row = []; }
+      else cur += ch;
+    }
+    row.push(cur); if (row.some(x => x.trim())) rows.push(row);
+    if (rows.length < 2) return [];
+    const h = rows[0].map(x => x.trim().toLowerCase());
+    const idx = (...keys) => h.findIndex(x => keys.some(k => x.includes(k)));
+    const iN = idx('name'), iM = idx('mobile', 'phone', 'tel'), iE = idx('email'), iC = idx('company', 'org'), iR = idx('role', 'title', 'position');
+    return rows.slice(1).map(r => abBuildCandidate(r[iN] || '', r[iM] || '', r[iE] || '', r[iC] || '', r[iR] || '')).filter(Boolean);
+  }
+
   async function attemptContactsSync() {
+    haptic('medium');
+    if ('contacts' in navigator && 'ContactsManager' in window) {
+      try {
+        const picked = await navigator.contacts.select(['name', 'tel', 'email'], { multiple: true });
+        if (!picked || !picked.length) return; // user cancelled the picker
+        const list = picked.map(p => abBuildCandidate((p.name || [])[0], (p.tel || [])[0], (p.email || [])[0])).filter(Boolean);
+        closeSyncContactsSheet();
+        setTimeout(() => openImportPreview(list), 280);
+        return;
+      } catch (e) { showContactsFallback('denied'); return; }
+      document.getElementById('syncStepInitial').style.display = 'none';
+      document.getElementById('syncStepPermission').style.display = 'block';
+      return;
+    }
+    haptic('error');
+    showContactsFallback('unsupported');
+  }
+
+  function importFromFile() {
+    haptic('light');
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = '.vcf,.csv,text/vcard,text/csv';
+    inp.onchange = async e => {
+      const f = e.target.files[0]; if (!f) return;
+      let text = '';
+      try { text = await f.text(); } catch (err) { haptic('error'); showToast("Couldn't read that file", 'error'); return; }
+      const list = /\.csv$/i.test(f.name) ? abParseCsv(text) : abParseVcf(text);
+      if (!list.length) { haptic('error'); showToast('No contacts found in that file', 'error'); return; }
+      closeSyncContactsSheet();
+      setTimeout(() => openImportPreview(list), 280);
+    };
+    inp.click();
+  }
+
+  function openImportPreview(list) {
+    const seen = new Set();
+    importCandidates = [];
+    list.forEach(c => {
+      const keys = [abPhoneKey(c.mobile), (c.email || '').toLowerCase(), abNorm(c.name)].filter(Boolean);
+      if (keys.some(k => seen.has(k))) return; // duplicate inside the import itself
+      keys.forEach(k => seen.add(k));
+      const match = abFindMatch(c);
+      const pk = abPhoneKey(c.mobile), em = (c.email || '').toLowerCase();
+      const strong = match && ((pk && match.phones.some(p => abPhoneKey(p) === pk)) || (em && match.emails.some(e => e.toLowerCase() === em)));
+      importCandidates.push({ c, match, action: strong ? 'merge' : 'add' });
+    });
+    auMakeSheet('importPreviewOverlay', 'Review Import', `<div id="importPreviewBody"></div>`);
+    renderImportPreview();
+  }
+
+  function importChip(i, val, label, active) {
+    return `<button onclick="setImportAction(${i},'${val}')" style="padding:6px 12px;border-radius:14px;border:${active ? '1.5px solid #1c1c1e' : '1px solid rgba(0,0,0,0.1)'};background:${active ? '#1c1c1e' : 'rgba(255,255,255,0.9)'};color:${active ? '#ECE4D6' : '#1c1c1e'};font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11.5px;font-weight:600;cursor:pointer;">${label}</button>`;
+  }
+
+  function setImportAction(i, val) {
+    haptic('light');
+    importCandidates[i].action = val;
+    renderImportPreview();
+  }
+
+  function renderImportPreview() {
+    const wrap = document.getElementById('importPreviewBody');
+    if (!wrap) return;
+    const sheet = document.getElementById('importPreviewOverlay-sheet');
+    const keep = sheet ? sheet.scrollTop : 0;
+    const nDup = importCandidates.filter(x => x.match).length;
+    const nNew = importCandidates.length - nDup;
+    const total = importCandidates.filter(x => x.action === 'add' || x.action === 'merge').length;
+
+    const rows = importCandidates.map((x, i) => {
+      const c = x.c;
+      const sub = [c.mobile, c.email].filter(Boolean).join(' · ') || 'No phone or email';
+      const ctrl = x.match
+        ? `<div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11.5px;color:#B5583A;margin:8px 0 8px 52px;">Already saved as ${auEsc(x.match.name)}</div>
+           <div style="display:flex;gap:6px;flex-wrap:wrap;margin-left:52px;">${importChip(i, 'merge', 'Merge', x.action === 'merge')}${importChip(i, 'skip', 'Skip', x.action === 'skip')}${importChip(i, 'add', 'Keep both', x.action === 'add')}</div>`
+        : `<div style="display:flex;gap:6px;margin:8px 0 0 52px;">${importChip(i, 'add', 'Add', x.action === 'add')}${importChip(i, 'skip', 'Skip', x.action === 'skip')}</div>`;
+      return `<div style="padding:12px 14px;${i ? 'border-top:1px solid rgba(0,0,0,0.07);' : ''}">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:${c.avatarBg};display:flex;align-items:center;justify-content:center;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;color:#fff;flex-shrink:0;">${auEsc(initials2(c.name))}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14.5px;font-weight:600;color:#1c1c1e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${auEsc(c.name)}</div>
+            <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12px;color:rgba(60,60,67,0.55);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${auEsc(sub)}</div>
+          </div>
+        </div>${ctrl}</div>`;
+    }).join('');
+
+    wrap.innerHTML = `
+      <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.55);line-height:1.5;margin:-6px 2px 14px;">${nNew} new${nDup ? ` · ${nDup} possible duplicate${nDup > 1 ? 's' : ''}` : ''}. Nothing is added until you confirm.</div>
+      <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:16px;">${rows}</div>
+      <button ${total ? '' : 'disabled'} onclick="confirmImportContacts()" style="width:100%;padding:14px;border-radius:14px;border:none;background:#1c1c1e;color:#ECE4D6;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14.5px;font-weight:700;cursor:pointer;margin-bottom:8px;${total ? '' : 'opacity:.35;cursor:not-allowed;'}">${total ? `Import ${total} Contact${total > 1 ? 's' : ''}` : 'Nothing to Import'}</button>
+      <button onclick="closeAuGenericModal('importPreviewOverlay')" style="width:100%;padding:13px;border-radius:14px;border:none;background:rgba(0,0,0,0.06);color:rgba(60,60,67,0.6);font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Cancel</button>`;
+    if (sheet) sheet.scrollTop = keep;
+  }
+
+  async function confirmImportContacts() {
+   let added = 0, merged = 0, skipped = 0;
+    const impRec = abNewRec(), impAdded = [];
+    let nextId = ADDRESS_BOOK.reduce((m, c) => Math.max(m, c.id || 0), 0) + 1;
+    importCandidates.forEach(({ c, match, action }) => {
+      if (action === 'skip') { skipped++; return; }
+      if (action === 'merge' && match) {
+        if (!impRec.journal.has(match)) impRec.journal.set(match, Object.assign({}, match)); ctMergeInto(match, normalizeContact(c));
+        merged++; return;
+      }
+     const fresh = newContact(Object.assign({}, c, { id: nextId++, source: 'import' }));
+      ADDRESS_BOOK.push(fresh); impAdded.push(fresh);
+      added++;
+    });
+   const impOk = await saveAddressBook();
+    if (!impOk) {
+      impAdded.forEach(o => { const i = ADDRESS_BOOK.indexOf(o); if (i !== -1) ADDRESS_BOOK.splice(i, 1); });
+      abRestore(impRec);
+      haptic('error'); showToast("Couldn't import contacts", 'error'); return;
+    }
+    haptic('success');
+    closeAuGenericModal('importPreviewOverlay');
+    filterAddressBook(document.getElementById('abSearchInput')?.value || '');
+    setTimeout(() => {
+      auMakeSheet('importDoneOverlay', 'Import Complete', `
+        <div style="text-align:center;padding:6px 0 4px;">
+          <div style="width:56px;height:56px;border-radius:50%;background:rgba(52,199,89,0.14);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;color:rgba(60,60,67,0.65);line-height:1.7;margin-bottom:18px;">${added} added${merged ? ` · ${merged} merged` : ''}${skipped ? ` · ${skipped} skipped` : ''}</div>
+          <button onclick="closeAuGenericModal('importDoneOverlay')" style="width:100%;padding:14px;border-radius:14px;border:none;background:#1c1c1e;color:#ECE4D6;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14.5px;font-weight:700;cursor:pointer;">Done</button>
+        </div>`);
+    }, 280);
+  }
+
+  loadAddressBook();
+  /* === END: IMPORT CONTACTS FLOW === */
+
+  async function attemptContactsSyncLegacy() {
     haptic('medium');
     if ('contacts' in navigator && 'ContactsManager' in window) {
       try {
@@ -5393,6 +5810,33 @@
     document.getElementById('syncStepInitial').style.display = 'none';
     document.getElementById('syncStepPermission').style.display = 'block';
   }
+  /* === START: CONTACTS FALLBACK === */
+  function showContactsFallback(reason) {
+    const msg = document.getElementById('syncFallbackMsg');
+    const retry = document.getElementById('syncTryAgainBtn');
+    if (reason === 'unsupported') {
+      if (msg) msg.textContent = "Your browser doesn't support direct contact import. You can add contacts manually, or use a supported device or browser.";
+      if (retry) retry.style.display = 'none'; // walang saysay ang retry kung unsupported
+    } else {
+      if (msg) msg.textContent = "We couldn't access your contacts. You can try again, or add contacts manually.";
+      if (retry) retry.style.display = '';
+    }
+    document.getElementById('syncStepInitial').style.display = 'none';
+    document.getElementById('syncStepPermission').style.display = 'block';
+  }
+
+  function retryContactsPicker() {
+    haptic('light');
+    attemptContactsSync();
+  }
+
+  function contactsFallbackAddManually() {
+    haptic('light');
+    closeSyncContactsSheet();
+    setTimeout(() => openAddContactModal(), 280);
+  }
+  /* === END: CONTACTS FALLBACK === */
+
   function openSystemContactsSettings() {
     haptic('light');
     closeSyncContactsSheet();
@@ -5402,13 +5846,35 @@
     }, 300);
   }
 
+  /* === START: CONTACTS MORE MENU === */
+  function abUpdateMoreBadge() {
+    abRefreshDups(); /* === REAL DETECTION === */
+    const b = document.getElementById('abMoreBadge');
+    if (b) b.style.display = (typeof remainingDups !== 'undefined' && remainingDups.length) ? 'block' : 'none';
+  }
+
+  function openContactsMoreMenu() {
+    haptic('light');
+    const icSync = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>`;
+    const icCsv  = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+    const icDup  = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"><rect x="8" y="2" width="13" height="13" rx="2"/><rect x="3" y="9" width="13" height="13" rx="2"/></svg>`;
+    abRefreshDups(); /* === REAL DETECTION === */
+    const n = remainingDups.length;
+    let rows = '';
+    rows += auInviteRow('#34C759', icSync, 'Import Contacts', "closeAuGenericModal('abMoreOverlay');setTimeout(()=>openSyncContactsSheet(),260);");
+    rows += auInviteRow('#4A9DE0', icCsv,  'Export as CSV',          "closeAuGenericModal('abMoreOverlay');setTimeout(()=>exportAddressBookCSV(),260);");
+    if (n) rows += auInviteRow('#FF9F0A', icDup, `Review Duplicates (${n})`, "closeAuGenericModal('abMoreOverlay');setTimeout(()=>openDupSheet(),260);");
+    auMakeSheet('abMoreOverlay', 'Contact Options', `<div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;">${rows}</div>`);
+  }
+  /* === END: CONTACTS MORE MENU === */
+
   function exportAddressBookCSV() {
     haptic('medium');
     if (!ADDRESS_BOOK.length) { haptic('error'); showToast('No contacts to export', 'error'); return; }
-    const headers = ['Name','Role','Company','Tag','Mobile','Email','Address','Notes'];
-    const rows = ADDRESS_BOOK.map(c => [c.name, c.role, c.company, c.tag, c.mobile, c.email, c.address, c.notes || ''].map(csvEscape).join(','));
+    const headers = ['Name','First Name','Last Name','Role','Company','Tags','Phones','Emails','LinkedIn','Address','Met At','Last Reached Out','Notes'];
+    const rows = ADDRESS_BOOK.map(c => [c.name, c.firstName, c.lastName, c.role, c.company, c.tags.join('; '), c.phones.join('; '), c.emails.join('; '), c.linkedin, c.address, c.metAt, c.lastContactedAt, c.notes].map(csvEscape).join(','));
     const csv = [headers.join(','), ...rows].join('\r\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -5427,7 +5893,11 @@
   }
 
   // tracks recently tapped contacts (last 4, by id)
-  const RECENT_IDS_KEY = 'ab-recent-ids';
+  /* "Recents" = recently OPENED contacts (contact detail viewed), most recent first.
+   Tracks the last 10; the strip shows 3, "See All" shows the rest.
+   It is NOT "recently contacted". Don't label it "Recent Contacts" / "Last Contacted"
+   unless real interaction data is recorded (see lastContactedAt idea). */
+const RECENT_IDS_KEY = 'ab-recent-ids';
   let recentIds = [];
   (async () => {
     try { const r = await window.storage.get(RECENT_IDS_KEY, false); if (r) recentIds = JSON.parse(r.value); } catch(e) {}
@@ -5443,7 +5913,7 @@
     const items = recents.slice(0, 3).map(c => `
       <div class="ab-recent-item" onclick="openContactDetail(${c.id})">
         <div class="ab-recent-avatar" style="background:${c.avatarBg};">${initials2(c.name)}</div>
-        <div class="ab-recent-name">${c.name.split(' ')[0]}</div>
+        <div class="ab-recent-name">${auEsc(c.name.split(' ')[0])}</div>
       </div>`).join('');
     const seeAll = recents.length > 3
       ? `<button onclick="openRecentsAll()" style="background:none;border:none;padding:0;cursor:pointer;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:600;color:#007AFF;text-transform:none;letter-spacing:0;">See All</button>`
@@ -5458,7 +5928,7 @@
     const rows = recents.map(c => `
       <div class="os-row" style="cursor:pointer;" onclick="closeAuGenericModal('recentsAllOverlay');setTimeout(()=>openContactDetail(${c.id}),260);" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''">
         <div class="ab-avatar" style="background:${c.avatarBg};width:36px;height:36px;font-size:13px;">${initials2(c.name)}</div>
-        <div class="os-row-text"><div class="os-row-title">${c.name}</div><div class="os-row-sub">${c.role} · ${c.company}</div></div>
+        <div class="os-row-text"><div class="os-row-title">${auEsc(c.name)}</div><div class="os-row-sub">${auEsc(c.subline)}</div></div>
         <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>`).join('');
     auMakeSheet('recentsAllOverlay', 'Recents', `<div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;">${rows}</div>`);
@@ -5467,13 +5937,17 @@
   let activeTagFilter = null;
 
   function renderAddressBook(list, scrubbing = false) {
+    abUpdateMoreBadge();
     renderAddressBookProfileCard();
+    if (activeTagFilter) list = list.filter(c => c.tag === activeTagFilter);   /* list and pill can't disagree, whatever the call site */
+    renderAbFilterBar(list.length);
     const wrap  = document.getElementById('abList');
     const empty = document.getElementById('abEmptyState');
     if (!scrubbing) document.getElementById('abCount').textContent = `(${ADDRESS_BOOK.length})`;
 
     if (!list.length) {
       wrap.innerHTML = ''; wrap.style.display = 'none';
+      empty.innerHTML = `<div class="ab-empty-search">${ADDRESS_BOOK.length ? 'No contacts match your search or filter.' : 'No contacts yet. Tap + to add one.'}</div>`;
       empty.style.display = 'block';
       if (!scrubbing) buildScrubber([]);
       return;
@@ -5482,12 +5956,13 @@
     empty.style.display = 'none';
 
     const grouped = {};
-    list.forEach(c => {
-      const letter = c.name[0].toUpperCase();
+    [...list].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })).forEach(c => {
+      const ch = (c.name || '').trim().charAt(0).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+      const letter = /^[A-Z]$/.test(ch) ? ch : '#';
       if (!grouped[letter]) grouped[letter] = [];
       grouped[letter].push(c);
     });
-    const letters = Object.keys(grouped).sort();
+    const letters = Object.keys(grouped).sort((a, b) => a === '#' ? 1 : b === '#' ? -1 : a.localeCompare(b));
 
     // recents strip only when showing full list and not scrubbing
     const isFiltered = list.length !== ADDRESS_BOOK.length || activeTagFilter;
@@ -5502,11 +5977,11 @@
           <div class="ab-row" data-id="${c.id}" style="display:flex;align-items:center;gap:13px;padding:12px 14px;background:#fff;position:relative;cursor:pointer;will-change:transform;">
             <div class="ab-avatar" style="background:${c.avatarBg};width:36px;height:36px;font-size:13px;flex-shrink:0;">${initials2(c.name)}</div>
             <div style="flex:1;min-width:0;">
-              <div class="ab-row-name" style="font-size:15px;">${c.name}</div>
+              <div class="ab-row-name" style="font-size:15px;">${auEsc(c.name)}</div>
             </div>
             <span class="ab-tag${activeTagFilter===c.tag?' filtering':''}"
               style="background:${c.tagBg};color:${c.tagFg};font-family:-apple-system,'SF Pro Text',sans-serif;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;flex-shrink:0;cursor:pointer;letter-spacing:.02em;"
-              data-tag="${c.tag}">${c.tag}</span>
+              data-tag="${c.tag}" title="Filter by ${c.tag}" role="button">${c.tag}</span>
           </div>
         </div>`;
       });
@@ -5533,12 +6008,13 @@
 
   function filterAddressBook(q) {
     const term = (q || '').trim().toLowerCase();
+    const td = abDigits(term).replace(/^0+/, '');
     let filtered = !term ? ADDRESS_BOOK : ADDRESS_BOOK.filter(c =>
       c.name.toLowerCase().includes(term) ||
       c.company.toLowerCase().includes(term) ||
       c.role.toLowerCase().includes(term) ||
-      (c.mobile || '').toLowerCase().includes(term) ||
-      (c.email  || '').toLowerCase().includes(term));
+      c.emails.some(e => e.toLowerCase().includes(term)) ||
+      c.phones.some(p => p.toLowerCase().includes(term) || (td.length >= 3 && abDigits(p).includes(td))));
     if (activeTagFilter) filtered = filtered.filter(c => c.tag === activeTagFilter);
     renderAddressBook(filtered);
     // hide scrubber while searching
@@ -5547,13 +6023,43 @@
   }
 
   /* ── TAG TAP-TO-FILTER ── */
-  function toggleTagFilter(tag) {
+  /* === START: TAG FILTER PILL === */
+function renderAbFilterBar(count) {
+  const bar = document.getElementById('abFilterBar');
+  if (!bar) return;
+  if (!activeTagFilter) { bar.innerHTML = ''; return; }
+  const src = ADDRESS_BOOK.find(c => c.tag === activeTagFilter);
+  const bg = src ? src.tagBg : '#1c1c1e', fg = src ? src.tagFg : '#ECE4D6';
+  const t = auEsc(activeTagFilter);
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  bar.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 2px 12px;">
+    <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+      <span style="${F}font-size:12.5px;color:rgba(60,60,67,0.55);flex-shrink:0;">Filtered by</span>
+      <button onclick="clearTagFilter()" aria-label="Clear ${t} filter" style="display:inline-flex;align-items:center;gap:6px;background:${bg};color:${fg};border:none;border-radius:20px;padding:5px 9px 5px 12px;${F}font-size:12px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;">
+        ${t}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <span style="${F}font-size:12px;color:rgba(60,60,67,0.45);flex-shrink:0;">${count ? count + ' contact' + (count === 1 ? '' : 's') : 'No matches'}</span>
+  </div>`;
+}
+
+function clearTagFilter() {
+  haptic('light');
+  activeTagFilter = null;
+  const inp = document.getElementById('abSearchInput');
+  if (inp) inp.placeholder = 'Search';
+  filterAddressBook(inp ? inp.value : '');
+}
+/* === END: TAG FILTER PILL === */
+
+function toggleTagFilter(tag) {
     haptic('light');
     activeTagFilter = activeTagFilter === tag ? null : tag;
     filterAddressBook(document.getElementById('abSearchInput').value);
     // surface filter state in search placeholder
     const inp = document.getElementById('abSearchInput');
-    inp.placeholder = activeTagFilter ? `Filtering: ${activeTagFilter}` : 'Search';
+    inp.placeholder = 'Search';
   }
 
   /* ── SEARCH CANCEL ── */
@@ -5585,7 +6091,29 @@
   /* ── INDEX SCRUBBER ── */
   const SCRUBBER_ALL = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','#'];
 
-  function buildScrubber(activeLetters) {
+  /* === START: SCRUBBER GATING === */
+const AB_SCRUBBER_MIN_CONTACTS = 30;   /* only for big address books */
+const AB_SCRUBBER_MIN_SECTIONS = 5;    /* and only when there are enough letters to jump between */
+
+function buildScrubber(activeLetters) {
+  /* swap in a clean node: drops listeners bound by earlier builds (they used to stack up on every render) */
+  const old = document.getElementById('abScrubber');
+  if (old) old.replaceWith(old.cloneNode(false));
+  const scrubber = document.getElementById('abScrubber');
+  if (!scrubber) return;
+
+  const show = ADDRESS_BOOK.length >= AB_SCRUBBER_MIN_CONTACTS &&
+               new Set(activeLetters).size >= AB_SCRUBBER_MIN_SECTIONS;
+  scrubber.classList.toggle('ab-scrubber-off', !show);
+  const wrap = document.getElementById('abListWrap');
+  if (wrap) wrap.style.paddingRight = show ? '20px' : '0';
+  if (!show) return;
+
+  buildScrubberRaw(activeLetters);
+}
+/* === END: SCRUBBER GATING === */
+
+function buildScrubberRaw(activeLetters) {
     const scrubber = document.getElementById('abScrubber');
     const activeSet = new Set(activeLetters);
 
@@ -5687,6 +6215,9 @@
     haptic('light');
     trackRecent(id);
 
+    /* === START: CONTACT DETAIL SINGLE SOURCE === */
+    _cdEditMode = false; /* laging view mode ang bukas ng bawat contact */
+    /* === END: CONTACT DETAIL SINGLE SOURCE === */
     const existing = document.getElementById('contactDetailScreen');
     if (existing) existing.remove();
 
@@ -5707,59 +6238,38 @@
 
     screen.innerHTML = `
       <!-- FLOATING BACK + EDIT — absolute overlay, NOT a topbar block. Scroll content passes seamlessly underneath. -->
-      <button onclick="haptic('light');closeContactDetailScreen()" style="position:absolute;top:max(14px,env(safe-area-inset-top));left:14px;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.82);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:0.6px solid rgba(255,255,255,0.9);border-radius:50%;width:54px;height:54px;box-shadow:0 2px 8px rgba(0,0,0,0.10),inset 0 1px 0 rgba(255,255,255,0.7);cursor:pointer;padding:0;color:#1c1c1e;transition:transform .12s,opacity .12s;-webkit-tap-highlight-color:transparent;">
+      <button onclick="haptic('light');requestCloseContactDetail()" style="position:absolute;top:max(14px,env(safe-area-inset-top));left:14px;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.82);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:0.6px solid rgba(255,255,255,0.9);border-radius:50%;width:54px;height:54px;box-shadow:0 2px 8px rgba(0,0,0,0.10),inset 0 1px 0 rgba(255,255,255,0.7);cursor:pointer;padding:0;color:#1c1c1e;transition:transform .12s,opacity .12s;-webkit-tap-highlight-color:transparent;">
         <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
-      <button id="cdEditToggleBtn" onclick="toggleContactEdit()" style="position:absolute;top:max(14px,env(safe-area-inset-top));right:16px;z-index:50;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;color:#1c1c1e;background:rgba(255,255,255,0.82);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:0.6px solid rgba(255,255,255,0.9);border-radius:20px;padding:7px 16px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.10),inset 0 1px 0 rgba(255,255,255,0.7);">Edit</button>
+      <button id="cdEditToggleBtn" onclick="cdTopBtnTap()" aria-label="More actions" style="position:absolute;top:max(14px,env(safe-area-inset-top));right:14px;z-index:50;display:flex;align-items:center;justify-content:center;width:54px;height:54px;padding:0;color:#1c1c1e;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;font-weight:600;background:rgba(255,255,255,0.82);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:0.6px solid rgba(255,255,255,0.9);border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.10),inset 0 1px 0 rgba(255,255,255,0.7);cursor:pointer;-webkit-tap-highlight-color:transparent;"><svg width="22" height="22" viewBox="0 0 24 24" fill="#1c1c1e"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button>
 
       <!-- SCROLL BODY -->
       <div style="position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:87px;padding-left:16px;padding-right:16px;padding-bottom:max(40px,env(safe-area-inset-bottom));">
 
         <!-- AVATAR + NAME -->
         <div style="display:flex;flex-direction:column;align-items:center;margin:0 0 24px;gap:12px;">
-          <div id="cdfs-avatar" style="width:92px;height:92px;border-radius:50%;background:${c.avatarBg};display:flex;align-items:center;justify-content:center;font-family:-apple-system,'SF Pro Display',sans-serif;font-size:34px;font-weight:700;color:#fff;user-select:none;">${ini}</div>
+          <div id="cdfs-avatar" style="width:92px;height:92px;border-radius:50%;background:${c.avatarBg};display:flex;align-items:center;justify-content:center;font-family:-apple-system,'SF Pro Display',sans-serif;font-size:34px;font-weight:700;color:#fff;user-select:none;">${auEsc(ini)}</div>
           <div style="text-align:center;">
-            <div id="cdfs-name" style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:22px;font-weight:700;color:${textPrimary};letter-spacing:.01em;">${c.name}</div>
-            <div id="cdfs-role" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:${textSecondary};margin-top:4px;">${c.role} · ${c.company}</div>
+            <div id="cdfs-name" style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:22px;font-weight:700;color:${textPrimary};letter-spacing:.01em;">${auEsc(c.name)}</div>
+            <div id="cdfs-role" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:${textSecondary};margin-top:4px;">${auEsc(c.subline)}</div>
             <span id="cdfs-tag" style="display:inline-block;margin-top:10px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 14px;border-radius:20px;background:${c.tagBg};color:${c.tagFg};">${c.tag}</span>
           </div>
         </div>
 
         <!-- QUICK ACTIONS -->
-        <div style="display:flex;gap:8px;margin-bottom:22px;">
+        <div id="cdfs-quick-row" style="display:flex;gap:8px;margin-bottom:22px;">
           ${cdQuickBtnLight('message','Message')}
           ${cdQuickBtnLight('call','Call')}
           ${cdQuickBtnLight('email','Mail')}
-          ${cdQuickBtnLight('imessage','iMessage')}
         </div>
 
-        <!-- BOOK / EDIT / DELETE ROW -->
-        <div style="display:flex;gap:8px;margin-bottom:22px;">
-          <button onclick="cdfsAction('book')"
-            onpointerdown="this.style.opacity='.7'" onpointerup="this.style.opacity=''" onpointerleave="this.style.opacity=''"
-            style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;background:rgba(255,255,255,0.72);border:none;border-radius:14px;padding:12px 4px;cursor:pointer;">
-            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,69,58,0.10);display:flex;align-items:center;justify-content:center;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF453A" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg>
-            </div>
-            <span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:600;color:rgba(60,60,67,0.6);">Book</span>
-          </button>
-          <button onclick="toggleContactEdit()"
-            onpointerdown="this.style.opacity='.7'" onpointerup="this.style.opacity=''" onpointerleave="this.style.opacity=''"
-            style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;background:rgba(255,255,255,0.72);border:none;border-radius:14px;padding:12px 4px;cursor:pointer;">
-            <div style="width:36px;height:36px;border-radius:50%;background:rgba(60,60,67,0.08);display:flex;align-items:center;justify-content:center;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
-            </div>
-            <span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:600;color:rgba(60,60,67,0.6);">Edit</span>
-          </button>
-          <button onclick="confirmDeleteContact(${c.id})"
-            onpointerdown="this.style.opacity='.7'" onpointerup="this.style.opacity=''" onpointerleave="this.style.opacity=''"
-            style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;background:rgba(255,255,255,0.72);border:none;border-radius:14px;padding:12px 4px;cursor:pointer;">
-            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,69,58,0.10);display:flex;align-items:center;justify-content:center;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF453A" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-            </div>
-            <span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:600;color:#FF453A;">Delete</span>
-          </button>
-        </div>
+        <!-- BOOK MEETING (single primary CTA) -->
+        <button onclick="cdfsAction('book')"
+          onpointerdown="this.style.transform='scale(0.98)';this.style.opacity='.85'" onpointerup="this.style.transform='';this.style.opacity=''" onpointerleave="this.style.transform='';this.style.opacity=''"
+          style="width:100%;display:flex;align-items:center;justify-content:center;gap:9px;background:#1c1c1e;border:none;border-radius:14px;padding:14px;margin-bottom:22px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;font-weight:700;color:#ECE4D6;cursor:pointer;transition:transform .12s,opacity .12s;-webkit-tap-highlight-color:transparent;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ECE4D6" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+          Book Meeting
+        </button>
 
         <!-- VIEW MODE -->
         <div id="cdfs-view-mode">
@@ -5773,7 +6283,17 @@
           </div>
 
           <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:${goldMid};margin:0 4px 8px;">Notes</div>
-          <div id="cdfs-notes-view" style="background:${surface};border-radius:14px;padding:14px 16px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;color:${c.notes?textPrimary:textTertiary};line-height:1.6;margin-bottom:20px;">${c.notes||'No notes'}</div>
+          <div id="cdfs-notes-wrap" style="margin-bottom:20px;">
+            <div id="cdfs-notes-view" onclick="startInlineNotesEdit()" style="background:${surface};border-radius:14px;padding:14px 16px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;color:${c.notes?textPrimary:textTertiary};line-height:1.6;white-space:pre-wrap;word-break:break-word;cursor:pointer;">${auEsc(c.notes)||'No notes'}</div>
+            <div id="cdfs-notes-hint" onclick="startInlineNotesEdit()" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11.5px;color:${textTertiary};margin:6px 4px 0;cursor:pointer;">Tap to edit</div>
+            <div id="cdfs-notes-editor" style="display:none;">
+              <textarea id="cdfs-notes-inline" placeholder="Add notes…" style="width:100%;background:${surface};border:1.5px solid #1c1c1e;border-radius:14px;padding:14px 16px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;line-height:1.6;color:${textPrimary};outline:none;resize:vertical;box-sizing:border-box;min-height:96px;"></textarea>
+              <div style="display:flex;gap:8px;margin-top:8px;">
+                <button onclick="cancelInlineNotesEdit()" style="flex:1;padding:12px;border-radius:12px;border:none;background:rgba(0,0,0,0.06);font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;color:#1c1c1e;cursor:pointer;">Cancel</button>
+                <button id="cdfs-notes-save" onclick="saveInlineNotes()" style="flex:1;padding:12px;border-radius:12px;border:none;background:#1c1c1e;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:700;color:#ECE4D6;cursor:pointer;">Save</button>
+              </div>
+            </div>
+          </div>
 
           <div style="display:flex;gap:8px;margin-bottom:24px;">
             <button onclick="cdfsShare()" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:${surface};border-radius:14px;padding:13px 10px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:600;color:${textPrimary};cursor:pointer;border:none;">
@@ -5797,36 +6317,125 @@
             ${cdEditRowLight('Mobile','cdfs-edit-mobile',c.mobile,'tel')}
             ${cdEditRowLight('Email','cdfs-edit-email',c.email,'email')}
             ${cdEditRowLight('Address','cdfs-edit-address',c.address,'text')}
+           ${cdEditRowLight('LinkedIn','cdfs-edit-linkedin',c.linkedin,'text')}
+            ${cdEditRowLight('Alt phones','cdfs-edit-morePhones',c.phones.slice(1).join(', '),'text')}
+            ${cdEditRowLight('Alt emails','cdfs-edit-moreEmails',c.emails.slice(1).join(', '),'text')}
+            ${cdEditRowLight('Met at','cdfs-edit-metAt',c.metAt,'text')}
           </div>
           <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:${goldMid};margin:0 4px 8px;">Notes</div>
-          <textarea id="cdfs-edit-notes" style="width:100%;background:${surface};border:none;border-radius:14px;padding:14px 16px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;color:${textPrimary};outline:none;resize:vertical;box-sizing:border-box;min-height:88px;margin-bottom:16px;">${c.notes||''}</textarea>
+          <textarea id="cdfs-edit-notes" style="width:100%;background:${surface};border:none;border-radius:14px;padding:14px 16px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;color:${textPrimary};outline:none;resize:vertical;box-sizing:border-box;min-height:88px;margin-bottom:16px;">${auEsc(c.notes||'')}</textarea>
           <button onclick="saveContactEdits(${c.id})" style="width:100%;background:#1c1c1e;border:none;border-radius:14px;padding:15px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;font-weight:700;color:#ECE4D6;cursor:pointer;margin-bottom:8px;">Save Changes</button>
-          <button onclick="toggleContactEdit()" style="width:100%;background:${surface};border:none;border-radius:14px;padding:14px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;color:${textSecondary};cursor:pointer;">Cancel</button>
+          <button onclick="cdRequestCancelEdit()" style="width:100%;background:${surface};border:none;border-radius:14px;padding:14px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;color:${textSecondary};cursor:pointer;">Cancel</button>
         </div>
 
       </div>`;
 
     document.body.appendChild(screen);
+    cdRefreshContactActions();
   }
 
   const CD_QUICK_ICONS = {
     message:  `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`,
     call:     `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`,
     email:    `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 8.97 6a2 2 0 0 0 2.06 0L22 7"/></svg>`,
-    imessage: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="9" y2="10"/><line x1="12" y1="10" x2="12" y2="10"/><line x1="15" y1="10" x2="15" y2="10"/></svg>`,
   };
 
   // ── Light-mode helpers for the system-colored contact detail screen ──
-  function cdQuickBtnLight(action, label) {
+  /* === START: DATA-AWARE CONTACT ACTIONS === */
+function cdActionEnabled(action) {
+  const c = activeContact;
+  if (!c) return false;
+  if (action === 'call' || action === 'message') { const n = abDigits(c.mobile).length; return n >= 7 && n <= 15; }
+  if (action === 'email') return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(c.email || '').trim());
+  return true;
+}
+
+function cdIsEmptyField(field, value) {
+  const v = String(value == null ? '' : value).trim();
+  return !v || v === '—' || (field === 'role' && v === 'Contact');
+}
+
+/* re-render quick row + show/hide the info group (idempotent) */
+function cdRefreshContactActions() {
+  const q = document.getElementById('cdfs-quick-row');
+  if (q) q.innerHTML = cdQuickBtnLight('message', 'Message') + cdQuickBtnLight('call', 'Call') + cdQuickBtnLight('email', 'Mail');
+
+  const vm = document.getElementById('cdfs-view-mode');
+  const group = vm && vm.querySelector('div[style*="border-radius:18px"]');
+  if (!group) return;
+  const empty = !group.querySelector('[data-cdrow]');
+  group.style.display = empty ? 'none' : '';
+  if (group.previousElementSibling) group.previousElementSibling.style.display = empty ? 'none' : ''; /* "Contact Info" label */
+
+  let hint = document.getElementById('cdfs-empty-hint');
+  if (empty && !hint) {
+    hint = document.createElement('div');
+    hint.id = 'cdfs-empty-hint';
+    hint.style.cssText = "background:rgba(255,255,255,0.72);border-radius:14px;padding:14px 16px;margin-bottom:16px;text-align:center;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;line-height:1.5;color:rgba(60,60,67,0.5);";
+    hint.textContent = 'No contact details yet. Tap ••• then Edit Contact to add a phone, email or address.';
+    group.parentNode.insertBefore(hint, group.nextSibling);
+  } else if (!empty && hint) {
+    hint.remove();
+  }
+}
+
+function cdQuickBtnLight(action, label) {
+  const html = cdQuickBtnLightRaw(action, label);
+  if (cdActionEnabled(action)) return html;
+  return html.replace('<button ', '<button disabled aria-disabled="true" ')
+             .replace('style="', 'style="opacity:.38;pointer-events:none;cursor:default;');
+}
+/* === END: DATA-AWARE CONTACT ACTIONS === */
+
+function cdQuickBtnLightRaw(action, label) {
     const svg = CD_QUICK_ICONS[action] || '';
-    const iconBg = { message:'#34C759', call:'#34C759', email:'#4A9DE0', imessage:'#34C759' }[action] || '#8E8E93';
+    const iconBg = { message:'#34C759', call:'#34C759', email:'#4A9DE0' }[action] || '#8E8E93';
     return `<button onclick="cdfsAction('${action}')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;background:rgba(255,255,255,0.72);border:none;border-radius:16px;padding:13px 4px 11px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .12s,opacity .12s;" onpointerdown="this.style.transform='scale(0.93)';this.style.opacity='.75'" onpointerup="this.style.transform='';this.style.opacity=''" onpointerleave="this.style.transform='';this.style.opacity=''">
       <div style="width:42px;height:42px;border-radius:50%;background:${iconBg};display:flex;align-items:center;justify-content:center;color:#fff;">${svg}</div>
       <span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:10.5px;font-weight:500;color:rgba(60,60,67,0.55);white-space:nowrap;">${label}</span>
     </button>`;
   }
 
-  function cdInfoRowLight(icon, label, value, field) {
+  /* === START: LINKEDIN ROW === */
+  function cdLinkedinRow(c) {
+    return '';   /* socials now render inside cdInfoRowLight('address') */
+  }
+  /* === END: LINKEDIN ROW === */
+
+  /* === START: OPEN IN MAPS === */
+function cdOpenMaps() {
+  const addr = String(activeContact?.address || '').trim();
+  if (!addr || addr === '—') { haptic('error'); showToast('No address added', 'neutral'); return; }
+  haptic('medium');
+  const q = encodeURIComponent(addr);
+  const isApple = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const url = isApple
+    ? `https://maps.apple.com/?q=${q}`
+    : `https://www.google.com/maps/search/?api=1&query=${q}`;
+  window.open(url, '_blank', 'noopener');
+}
+/* === END: OPEN IN MAPS === */
+
+function cdInfoRowLight(icon, label, value, field) {
+  const c = activeContact;
+  if (c && field === 'mobile')  return c.phones.map((p, i) => cdInfoRowLightBase('📱', i ? 'Mobile ' + (i + 1) : 'Mobile', p, i ? 'phone:' + i : 'mobile')).join('');
+  if (c && field === 'email')   return c.emails.map((e, i) => cdInfoRowLightBase('✉️', i ? 'Email ' + (i + 1) : 'Email', e, i ? 'email:' + i : 'email')).join('');
+  if (c && field === 'address') return cdInfoRowLightBase(icon, label, value, field) + cdExtraRows(c);
+  return cdInfoRowLightBase(icon, label, value, field);
+}
+function cdInfoRowLightBase(icon, label, value, field) {
+  if (cdIsEmptyField(field, value)) return '';   /* empty = no row, no dead Copy button */
+  const safe = auEsc(value);   /* was injected raw before */
+  if (field === 'address') {
+    const link = `<div style="margin-top:4px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12.5px;font-weight:600;color:#1c6ef3;">Open in Maps →</div>`;
+    return cdInfoRowLightRaw(icon, label, safe + link, field)
+      .replace(`onclick="copyField('address')"`, `onclick="cdOpenMaps()"`)   /* row tap = maps; Copy button keeps working */
+      .replace('<div ', '<div data-cdrow="1" ');
+  }
+  return cdInfoRowLightRaw(icon, label, safe, field).replace('<div ', '<div data-cdrow="1" ');
+}
+function cdInfoRowLightRaw(icon, label, value, field) {
     return `<div style="display:flex;align-items:center;gap:12px;padding:13px 16px;position:relative;cursor:pointer;transition:background .12s;" onclick="copyField('${field}')" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''">
       <div style="width:22px;text-align:center;font-size:15px;flex-shrink:0;">${icon}</div>
       <div style="flex:1;min-width:0;">
@@ -5840,11 +6449,21 @@
   function cdEditRowLight(label, inputId, value, type) {
     return `<div style="display:flex;align-items:center;padding:0 16px;border-bottom:0.6px solid rgba(0,0,0,0.07);">
       <span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:rgba(60,60,67,0.4);width:74px;flex-shrink:0;">${label}</span>
-      <input id="${inputId}" type="${type}" value="${value||''}" style="flex:1;background:none;border:none;outline:none;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;color:#1c1c1e;padding:14px 0 14px 8px;" placeholder="—"/>
+     <input id="${inputId}" type="${type}" value="${auEsc(value)}" style="flex:1;background:none;border:none;outline:none;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;color:#1c1c1e;padding:14px 0 14px 8px;" placeholder="—"/>
     </div>`;
   }
 
   function confirmDeleteContact(id) {
+    const c = ADDRESS_BOOK.find(x => x.id === id); if (!c) return;
+    haptic('error');
+    confirmDialog({
+      title: 'Delete ' + c.name + '?',
+      message: 'This contact will be removed from your address book. You can undo for a few seconds after deleting.',
+      confirmLabel: 'Delete', danger: true,
+      onConfirm: () => executeDeleteContact(id)
+    });
+  }
+  function confirmDeleteContactLegacy(id) {
     haptic('error');
     const c = ADDRESS_BOOK.find(x => x.id === id);
     if (!c) return;
@@ -5854,7 +6473,8 @@
     box.id = 'cdDeleteConfirm';
     box.style.cssText = 'margin:12px 0 0;background:rgba(255,69,58,0.07);border:1px solid rgba(255,69,58,0.22);border-radius:14px;padding:14px;animation:screenFadeIn .18s ease;';
     box.innerHTML = `
-      <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.65);margin-bottom:12px;">Delete <b>${c.name}</b> from your address book?</div>
+      <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:700;color:#1c1c1e;margin-bottom:4px;">Delete ${auEsc(c.name)}?</div>
+      <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12.5px;color:rgba(60,60,67,0.65);line-height:1.5;margin-bottom:12px;">This contact will be removed from your address book. You can undo for a few seconds after deleting.</div>
       <div style="display:flex;gap:8px;">
         <button onclick="document.getElementById('cdDeleteConfirm').remove()" style="flex:1;padding:10px;border-radius:12px;border:none;background:rgba(0,0,0,0.07);font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:600;color:#1c1c1e;cursor:pointer;">Cancel</button>
         <button onclick="executeDeleteContact(${id})" style="flex:1;padding:10px;border-radius:12px;border:none;background:#FF453A;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:700;color:#fff;cursor:pointer;">Delete</button>
@@ -5863,10 +6483,96 @@
     box.scrollIntoView({ behavior:'smooth', block:'end' });
   }
 
-  function executeDeleteContact(id) {
+  /* === START: DELETE CONTACT SAVE + UNDO === */
+  let _cdDeleting = false;
+  let _undoTimer = null;
+
+  function hideUndoToast() {
+    clearTimeout(_undoTimer);
+    const t = document.getElementById('undoToast');
+    if (!t) return;
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%) translateY(20px)';
+    setTimeout(() => t.remove(), 300);
+  }
+
+  function showUndoToast(msg, onUndo) {
+    document.getElementById('undoToast')?.remove();
+    clearTimeout(_undoTimer);
+    const t = document.createElement('div');
+    t.id = 'undoToast';
+    t.style.cssText = "position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;z-index:9999;display:flex;align-items:center;gap:14px;background:rgba(28,28,30,0.92);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:0.8px solid rgba(255,255,255,0.12);color:#fff;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:500;padding:11px 12px 11px 18px;border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,0.25);transition:opacity .3s,transform .3s cubic-bezier(0.23,1,0.32,1);white-space:nowrap;";
+    t.innerHTML = `<span>${auEsc(msg)}</span><button id="undoToastBtn" style="background:rgba(232,204,122,0.16);border:none;border-radius:9px;padding:6px 12px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:700;color:#E8CC7A;cursor:pointer;">Undo</button>`;
+    document.body.appendChild(t);
+    requestAnimationFrame(() => { t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)'; });
+    document.getElementById('undoToastBtn').onclick = () => { hideUndoToast(); onUndo(); };
+    _undoTimer = setTimeout(hideUndoToast, 7000);
+  }
+
+  async function undoDeleteContact(removed, idx) {
+    haptic('light');
+    if (ADDRESS_BOOK.some(c => c.id === removed.id)) {
+      removed.id = ADDRESS_BOOK.reduce((m, c) => Math.max(m, c.id || 0), 0) + 1; // iwas id collision
+    }
+    ADDRESS_BOOK.splice(Math.min(idx, ADDRESS_BOOK.length), 0, removed);
+    const ok = await saveAddressBook();
+    if (!ok) {
+      const i = ADDRESS_BOOK.indexOf(removed);
+      if (i !== -1) ADDRESS_BOOK.splice(i, 1);
+      haptic('error');
+      showToast("Couldn't restore contact", 'error');
+      return;
+    }
+    haptic('success');
+    filterAddressBook(document.getElementById('abSearchInput')?.value || '');
+    showToast('Contact restored', 'success');
+  }
+
+  async function executeDeleteContact(id) {
+    if (_cdDeleting) return;
+    const idx = ADDRESS_BOOK.findIndex(x => x.id === id);
+    if (idx === -1) return;
+    const removed = ADDRESS_BOOK[idx];
+
+    // lock ang confirm buttons habang nagse-save
+    _cdDeleting = true;
+    const btns = document.querySelectorAll('#cdDeleteConfirm button');
+    btns.forEach(b => { b.style.pointerEvents = 'none'; b.style.opacity = '.6'; });
+    if (btns[1]) btns[1].textContent = 'Deleting…';
+    const unlock = () => {
+      btns.forEach(b => { b.style.pointerEvents = ''; b.style.opacity = ''; });
+      if (btns[1]) btns[1].textContent = 'Delete';
+    };
+
+    // 1. apply sa memory, 2. persist (hintayin ang totoong resulta)
+    ADDRESS_BOOK.splice(idx, 1);
+    const ok = await saveAddressBook();
+    _cdDeleting = false;
+
+    // 3. failed: ibalik ang contact, walang success, bukas pa rin ang confirm
+    if (!ok) {
+      ADDRESS_BOOK.splice(idx, 0, removed);
+      unlock();
+      haptic('error');
+      showToast("Couldn't delete contact", 'error');
+      return;
+    }
+
+    // 4. saka pa lang: linisin ang recents, i-render, at magpakita ng success
+    if (activeContact && activeContact.id === id) activeContact = null;
+    recentIds = recentIds.filter(x => x !== id);
+    try { window.storage.set(RECENT_IDS_KEY, JSON.stringify(recentIds), false); } catch (e) {}
+    haptic('success');
+    closeContactDetailScreen(); // ire-render ang list pagkatapos ng animation
+    setTimeout(() => showUndoToast((removed.name.length > 22 ? removed.name.slice(0, 21) + '…' : removed.name) + ' deleted', () => undoDeleteContact(removed, idx)), 300);
+  }
+  /* === END: DELETE CONTACT SAVE + UNDO === */
+
+  function executeDeleteContactLegacy(id) {
     haptic('success');
     const idx = ADDRESS_BOOK.findIndex(x => x.id === id);
     if (idx !== -1) ADDRESS_BOOK.splice(idx, 1);
+    saveAddressBook(); /* === PERSIST: DELETE === */
     closeContactDetailScreen();
     showToast('Contact deleted', 'neutral');
   }
@@ -5876,20 +6582,223 @@
     const screen = document.getElementById('contactDetailScreen');
     if (!screen) return;
     screen.style.animation = 'osShellOut .25s cubic-bezier(0.4,0,0.2,1) forwards';
-    setTimeout(() => { screen.remove(); renderAddressBook(ADDRESS_BOOK); }, 260);
+    setTimeout(() => { screen.remove(); filterAddressBook(document.getElementById('abSearchInput')?.value || ''); }, 260);
   }
 
-  let _cdEditMode = false;
-  function toggleContactEdit() {
+  /* === START: EDIT FIELDS REFILL === */
+  function cdfsFillEditFields() {
+    const c = activeContact;
+    if (!c) return;
+    const set = (k, v) => { const el = document.getElementById('cdfs-edit-' + k); if (el) el.value = v || ''; };
+    const clean = v => (v === '—' || v === 'Contact') ? '' : v;
+    set('name', c.name);
+    set('role', clean(c.role));
+    set('company', clean(c.company));
+    set('mobile', c.mobile);
+    set('email', c.email);
+    set('address', c.address);
+    set('linkedin', c.linkedin);
+    set('morePhones', c.phones.slice(1).join(', '));
+    set('moreEmails', c.emails.slice(1).join(', '));
+    set('metAt', c.metAt);
+    set('notes', c.notes);
+  }
+  /* === END: EDIT FIELDS REFILL === */
+
+  /* === START: CONTACT NOTES INLINE EDIT ===
+   Contact Notes live on the contact record (ADDRESS_BOOK[i].notes).
+   They are NOT the app-level Notes/Captures (NOTES array). */
+let _cdNotesSaving = false;
+
+function startInlineNotesEdit() {
+  if (_cdEditMode || !activeContact) return;
+  const ed = document.getElementById('cdfs-notes-editor');
+  if (!ed || ed.style.display === 'block') return;
+  haptic('light');
+  const ta = document.getElementById('cdfs-notes-inline');
+  ta.value = activeContact.notes || '';
+  document.getElementById('cdfs-notes-view').style.display = 'none';
+  document.getElementById('cdfs-notes-hint').style.display = 'none';
+  ed.style.display = 'block';
+  ta.focus();
+  ta.setSelectionRange(ta.value.length, ta.value.length);
+}
+
+function cancelInlineNotesEdit(silent) {
+  if (_cdNotesSaving) return;
+  const ed = document.getElementById('cdfs-notes-editor');
+  if (!ed) return;
+  if (!silent) haptic('light');
+  ed.style.display = 'none';
+  document.getElementById('cdfs-notes-view').style.display = 'block';
+  document.getElementById('cdfs-notes-hint').style.display = 'block';
+}
+
+async function saveInlineNotes() {
+  if (_cdNotesSaving || !activeContact) return;
+  const c = activeContact;
+  const notes = (document.getElementById('cdfs-notes-inline')?.value || '').trim();
+  if (notes === String(c.notes || '').trim()) { cancelInlineNotesEdit(); return; } // walang binago
+
+  const prev = c.notes;
+  c.notes = notes;
+  _cdNotesSaving = true;
+  const btn = document.getElementById('cdfs-notes-save');
+  if (btn) { btn.textContent = 'Saving…'; btn.style.pointerEvents = 'none'; btn.style.opacity = '.6'; }
+  const ok = await saveAddressBook();
+  _cdNotesSaving = false;
+  if (btn) { btn.textContent = 'Save'; btn.style.pointerEvents = ''; btn.style.opacity = ''; }
+
+  if (!ok) { // rollback, iwanang bukas ang editor para hindi mawala ang tinype
+    c.notes = prev;
+    haptic('error');
+    showToast("Couldn't save notes", 'error');
+    return;
+  }
+  const v = document.getElementById('cdfs-notes-view');
+  v.textContent = notes || 'No notes';
+  v.style.color = notes ? '#1c1c1e' : 'rgba(60,60,67,0.35)';
+  cancelInlineNotesEdit(true);
+  haptic('success');
+  showToast('Notes saved', 'success');
+}
+/* === END: CONTACT NOTES INLINE EDIT === */
+
+let _cdEditMode = false;
+  /* === START: CONTACT ACTIONS MENU (•••) === */
+function cdTopBtnTap() {
+  if (_cdEditMode) cdRequestCancelEdit();   /* nasa edit mode: ang button ay "Cancel" */
+  else openContactActionsMenu();
+}
+
+function cdUpdateTopBtn() {
+  const b = document.getElementById('cdEditToggleBtn');
+  if (!b) return;
+  if (_cdEditMode) {
+    b.setAttribute('aria-label', 'Cancel editing');
+    b.style.width = 'auto'; b.style.borderRadius = '27px'; b.style.padding = '0 20px';
+    b.textContent = 'Cancel';
+  } else {
+    b.setAttribute('aria-label', 'More actions');
+    b.style.width = '54px'; b.style.borderRadius = '50%'; b.style.padding = '0';
+    b.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="#1c1c1e"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>';
+  }
+}
+
+function openContactActionsMenu() {
+  if (!activeContact) return;
+  haptic('light');
+  const c = activeContact;
+  const icEdit  = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>`;
+  const icTrash = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
+  const row = (bg, icon, label, js, color) => `<div class="os-row" style="cursor:pointer;" onclick="${js}" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''">
+      <div class="os-row-icon" style="background:${bg};">${icon}</div>
+      <div class="os-row-text"><div class="os-row-title"${color ? ` style="color:${color};"` : ''}>${label}</div></div>
+    </div>`;
+  auMakeSheet('cdActionsOverlay', auEsc(c.name), `
+    <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:12px;">
+      ${row('#8E8E93', icEdit, 'Edit Contact', "closeAuGenericModal('cdActionsOverlay');setTimeout(()=>toggleContactEdit(),260);")}
+    </div>
+    <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;">
+      ${row('#FF453A', icTrash, 'Delete Contact', "closeAuGenericModal('cdActionsOverlay');setTimeout(()=>confirmDeleteContact(${c.id}),260);", '#FF453A')}
+    </div>`);
+}
+/* === END: CONTACT ACTIONS MENU === */
+
+function toggleContactEdit() {
     _cdEditMode = !_cdEditMode;
+    if (typeof cancelInlineNotesEdit === 'function') cancelInlineNotesEdit(true);
     haptic('light');
     document.getElementById('cdfs-view-mode').style.display = _cdEditMode ? 'none' : 'block';
     document.getElementById('cdfs-edit-mode').style.display = _cdEditMode ? 'block' : 'none';
-    document.getElementById('cdEditToggleBtn').textContent = _cdEditMode ? 'Done' : 'Edit';
-    if (_cdEditMode) setTimeout(() => document.getElementById('cdfs-edit-name')?.focus(), 120);
+    cdUpdateTopBtn();
+    if (_cdEditMode) { cdfsFillEditFields(); setTimeout(() => document.getElementById('cdfs-edit-name')?.focus(), 120); }
   }
 
-  function saveContactEdits(id) {
+  /* === START: EDIT CONTACT SAVE === */
+  let _cdSaving = false;
+
+  async function saveContactEdits(id) {
+    if (_cdSaving) return;
+    const c = ADDRESS_BOOK.find(x => x.id === id);
+    if (!c) return;
+
+    // 1. collect (walang `|| c.field`, para mabura ang optional fields)
+    const v = k => (document.getElementById('cdfs-edit-' + k)?.value || '').replace(/\s+/g, ' ').trim();
+    const name = v('name'), role = v('role'), company = v('company');
+    const mobileRaw = v('mobile'), email = v('email').toLowerCase(), address = v('address');
+    const linkedin = acNormalizeLinkedin(v('linkedin'));
+    const notes = (document.getElementById('cdfs-edit-notes')?.value || '').trim();
+
+    // 2. validate
+    let err = null;
+    if (!name) err = { f: 'name', m: 'Name is required' };
+    else if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) err = { f: 'email', m: 'Enter a valid email address' };
+    else if (mobileRaw && (!/^[+\d\s().-]+$/.test(mobileRaw) || abDigits(mobileRaw).length < 7 || abDigits(mobileRaw).length > 15)) err = { f: 'mobile', m: 'Enter a valid phone number' };
+    else if (ctSplitList(v('morePhones')).some(p => abDigits(p).length < 7 || abDigits(p).length > 15)) err = { f: 'morePhones', m: 'Check the additional phone numbers' };
+    else if (ctSplitList(v('moreEmails')).some(e => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))) err = { f: 'moreEmails', m: 'Check the additional emails' };
+    if (err) { haptic('error'); showToast(err.m, 'error'); document.getElementById('cdfs-edit-' + err.f)?.focus(); return; }
+
+    // 3. snapshot para sa rollback, 4. apply sa memory
+    const snapshot = Object.assign({}, c);
+    c.name = name;
+    c.role = role;
+    c.company = company;
+    c.linkedin = linkedin;
+    c.mobile = acNormalizePhone(mobileRaw);
+    c.email = email;
+    c.address = address;
+    c.notes = notes;
+
+    // 5. persist: hintayin ang totoong resulta
+   c.phones = ctUniqPhones([acNormalizePhone(mobileRaw), ...ctSplitList(v('morePhones')).map(acNormalizePhone)]);
+    c.emails = ctUniqEmails([email, ...ctSplitList(v('moreEmails'))]);
+    c.metAt = v('metAt');
+    _cdSaving = true;
+    const btn = document.querySelector('#cdfs-edit-mode button[onclick^="saveContactEdits"]');
+    if (btn) { btn.textContent = 'Saving…'; btn.style.pointerEvents = 'none'; btn.style.opacity = '.6'; }
+    const ok = await saveAddressBook();
+    _cdSaving = false;
+    if (btn) { btn.textContent = 'Save Changes'; btn.style.pointerEvents = ''; btn.style.opacity = ''; }
+
+    // 6. failed: ibalik ang luma, HUWAG mag-success, iwanang bukas ang form
+    if (!ok) {
+      Object.assign(c, snapshot);
+      haptic('error');
+      showToast("Couldn't save changes", 'error');
+      return;
+    }
+
+    // 7. saka pa lang i-update ang view
+    activeContact = c;
+    document.getElementById('cdfs-name').textContent = c.name;
+    if (snapshot.displayName && snapshot.displayName.toLowerCase() !== c.name.toLowerCase()) {
+      let renamed = false;
+      MEETINGS.forEach(m => { if (m.name.toLowerCase() === snapshot.displayName.toLowerCase()) { m.name = c.name; renamed = true; } });
+      if (renamed) saveMeetings();
+    }
+    document.getElementById('cdfs-role').textContent = `${c.subline}`;
+    document.getElementById('cdfs-avatar').textContent = initials2(c.name);
+    const nv = document.getElementById('cdfs-notes-view');
+    nv.textContent = c.notes || 'No notes';
+    nv.style.color = c.notes ? '#1c1c1e' : 'rgba(60,60,67,0.35)';
+    const oldGroup = document.getElementById('cdfs-view-mode').querySelector('div[style*="border-radius:18px"]');
+    if (oldGroup) oldGroup.outerHTML = `<div style="background:rgba(255,255,255,0.72);border-radius:18px;overflow:hidden;margin-bottom:16px;">
+      ${cdInfoRowLight('📱','Mobile',c.mobile,'mobile')}
+      ${cdInfoRowLight('✉️','Email',c.email,'email')}
+      ${cdInfoRowLight('🏢','Company',c.company,'company')}
+      ${cdInfoRowLight('💼','Position',c.role,'role')}
+      ${cdInfoRowLight('📍','Address',c.address,'address')}
+      ${cdLinkedinRow(c)}
+    </div>`;
+    cdRefreshContactActions();
+    haptic('success');
+    showToast('Contact updated', 'success');
+    toggleContactEdit();
+  }
+  /* === END: EDIT CONTACT SAVE === */
+
+  function saveContactEditsLegacy(id) {
     const c = ADDRESS_BOOK.find(x => x.id === id);
     if (!c) return;
     const name    = document.getElementById('cdfs-edit-name')?.value.trim()    || c.name;
@@ -5904,6 +6813,7 @@
     c.mobile = mobile; c.email = email; c.address = address; c.notes = notes;
     activeContact = c;
 
+    saveAddressBook(); /* === PERSIST: EDIT === */
     // refresh view fields
     document.getElementById('cdfs-name').textContent = name;
     document.getElementById('cdfs-role').textContent = `${role} · ${company}`;
@@ -5931,25 +6841,32 @@
     if (!activeContact) return;
     haptic('medium');
     const c = activeContact;
-    const mobile = c.mobile.replace(/\s/g,'');
+    /* === START: CONTACT ACTION GUARDS === */
+    const first = (c.name || 'contact').split(' ')[0];
+    if ((type === 'call' || type === 'message') && !String(c.mobile || '').trim()) {
+      haptic('error'); showToast('No phone number for ' + first, 'neutral'); return;
+    }
+    if (type === 'email' && !String(c.email || '').trim()) {
+      haptic('error'); showToast('No email for ' + first, 'neutral'); return;
+    }
+    /* === END: CONTACT ACTION GUARDS === */
+    if (type === 'call' || type === 'message' || type === 'email') { c.lastContactedAt = new Date().toISOString(); saveAddressBook(); }
+    const mobile = String(c.mobile || '').replace(/\s/g,'');
     const intlMobile = mobile.startsWith('+') ? mobile : '+63' + mobile.replace(/^0/,'');
 
     if      (type === 'call')     { window.location.href = `tel:${intlMobile}`; }
     else if (type === 'message')  { window.location.href = `sms:${intlMobile}`; }
     else if (type === 'email')    { window.location.href = `mailto:${c.email}`; }
-    else if (type === 'imessage') {
-      // iMessage deeplink — falls back gracefully on Android/non-Apple
-      window.location.href = `imessage://+${intlMobile.replace(/[^0-9+]/g,'')}`;
-    }
     else if (type === 'book') {
       closeContactDetailScreen();
-      setTimeout(() => { switchOSTab('upcoming'); openAddMeeting(); }, 300);
+      const who = c.name; /* prefill ang pangalan ng contact sa meeting */
+      setTimeout(() => { switchOSTab('upcoming'); openAddMeeting(); document.getElementById('amName').value = who; }, 300);
     }
   }
 
   function copyField(field) {
     if (!activeContact) return;
-    const map = { mobile: activeContact.mobile, email: activeContact.email, company: activeContact.company, role: activeContact.role, address: activeContact.address };
+    const map = ctCopyMap(activeContact);
     const value = map[field] || '';
     if (!value) return;
     if (navigator.clipboard?.writeText) {
@@ -5961,9 +6878,9 @@
     if (!activeContact) return;
     haptic('light');
     const c = activeContact;
-    const text = `${c.name}\n${c.role} · ${c.company}\n${c.mobile}\n${c.email}`;
+    const text = [c.name, c.subline, ...c.phones, ...c.emails].filter(Boolean).join('\n');
     if (navigator.share) {
-      navigator.share({ title: c.name, text, url: `mailto:${c.email}` })
+      navigator.share({ title: c.name, text })
         .catch(e => { if (e?.name !== 'AbortError') { fallbackCopy(text); showToast('Info copied — paste to share', 'success'); } });
     } else {
       fallbackCopy(text);
@@ -5977,20 +6894,19 @@
     const c = activeContact;
     const vcf = [
       'BEGIN:VCARD','VERSION:3.0',
-      `FN:${c.name}`,
-      `N:${(c.name.split(' ').slice(1).join(' '))||''};${c.name.split(' ')[0]};;;`,
-      `ORG:${c.company}`,
-      `TITLE:${c.role}`,
-      `TEL;TYPE=CELL:${c.mobile}`,
-      `EMAIL;TYPE=WORK:${c.email}`,
-      `ADR;TYPE=WORK:;;${c.address};;;;`,
-      c.notes ? `NOTE:${c.notes}` : '',
+      `FN:${vcfEsc(c.name)}`,
+       `N:${vcfEsc(c.lastName)};${vcfEsc(c.firstName)};;;`,      (c.company ? `ORG:${vcfEsc(c.company)}` : ''),
+      (c.role ? `TITLE:${vcfEsc(c.role)}` : ''),
+     ...c.phones.map(p => `TEL;TYPE=CELL:${p.replace(/\s/g, '')}`),
+      ...c.emails.map(e => `EMAIL;TYPE=WORK:${e}`),
+      c.linkedin ? `URL:${c.linkedin}` : '',
+      (c.address ? `ADR;TYPE=WORK:;;${vcfEsc(c.address)};;;;` : ''),
+      c.notes ? `NOTE:${vcfEsc(c.notes)}` : '',
       'END:VCARD'
     ].filter(Boolean).join('\r\n');
 
     // try native contacts API first (iOS Safari 17+)
     if ('contacts' in navigator && 'ContactsManager' in window) {
-      showToast('Opening Contacts…', 'neutral');
     }
     const blob = new Blob([vcf], { type: 'text/vcard;charset=utf-8' });
     const url  = URL.createObjectURL(blob);
@@ -6000,9 +6916,10 @@
     document.body.appendChild(a);
     a.click();
     setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
-    showToast('.vcf saved — open to add to Contacts', 'success');
+    showToast('.vcf downloaded. Open it to add to Contacts', 'neutral');
   }
 
+  /* === START: LEGACY CONTACT DETAIL JS (DELETE) === */
   function closeContactDetail() {
     document.getElementById('cdOverlay').classList.remove('show');
   }
@@ -6037,9 +6954,10 @@
       b: { name:'Carlo A. Reyes',  role:'Art Director', company:'QC Studio', mobile:'+63 917 000 0003', email:'carlo@qcstudio.ph',avatarBg:'#D2691E' },
     },
   ];
-  let remainingDups = [...DUPLICATE_PAIRS];
+  let remainingDups = []; /* === REAL DETECTION: kinukuwenta sa abRefreshDups() === */
 
   function openDupSheet() {
+    abRefreshDups(); /* === REAL DETECTION === */
     haptic('light');
     renderDupPairs();
     // move overlay to body so it sits above the blurred OS shell
@@ -6064,7 +6982,7 @@
     }
     list.innerHTML = remainingDups.map(pair => `
       <div id="dupCard-${pair.id}" style="background:rgba(255,255,255,0.72);border-radius:18px;padding:16px;margin-bottom:12px;">
-        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(60,60,67,0.4);margin-bottom:12px;">Possible Match</div>
+        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(60,60,67,0.4);margin-bottom:12px;">Possible Match · ${pair.reason}</div>
 
         ${dupContactRow(pair.a, 'A')}
         <div style="display:flex;align-items:center;gap:8px;margin:10px 0;">
@@ -6076,7 +6994,7 @@
 
         <div style="display:flex;gap:8px;margin-top:14px;">
           <button onclick="ignoreDup('${pair.id}')" style="flex:1;padding:11px;border-radius:12px;border:1px solid rgba(0,0,0,0.1);background:rgba(236,228,214,0.8);font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:600;color:rgba(60,60,67,0.7);cursor:pointer;">Ignore</button>
-          <button onclick="mergeDup('${pair.id}')" style="flex:2;padding:11px;border-radius:12px;border:none;background:#1c1c1e;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:700;color:#ECE4D6;cursor:pointer;">Merge</button>
+          <button onclick="mergeDup('${pair.id}')" style="flex:2;padding:11px;border-radius:12px;border:none;background:#1c1c1e;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:700;color:#ECE4D6;cursor:pointer;">Review &amp; Merge</button>
         </div>
       </div>`).join('');
   }
@@ -6086,14 +7004,300 @@
       <div style="display:flex;align-items:center;gap:12px;">
         <div style="width:42px;height:42px;border-radius:50%;background:${c.avatarBg};display:flex;align-items:center;justify-content:center;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;font-weight:600;color:#fff;flex-shrink:0;">${initials2(c.name)}</div>
         <div style="flex:1;min-width:0;">
-          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;font-weight:600;color:#1c1c1e;">${c.name}</div>
-          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12px;color:rgba(60,60,67,0.55);margin-top:1px;">${c.role} · ${c.company}</div>
-          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11.5px;color:rgba(60,60,67,0.45);margin-top:2px;">${c.mobile} · ${c.email}</div>
+          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;font-weight:600;color:#1c1c1e;">${auEsc(c.name)}</div>
+          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12px;color:rgba(60,60,67,0.55);margin-top:1px;">${auEsc(c.subline)}</div>
+          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11.5px;color:rgba(60,60,67,0.45);margin-top:2px;">${auEsc([c.mobile, c.email].filter(Boolean).join(' · '))}</div>
         </div>
       </div>`;
   }
 
+  /* === START: REAL DUPLICATE DETECTION + MERGE === */
+  const AB_IGNORE_KEY = 'address-book-ignored-dups-v1';
+  const AB_MERGE_FIELDS = [
+    { k:'name', label:'Name' }, { k:'mobile', label:'Phone' }, { k:'email', label:'Email' },
+    { k:'company', label:'Company' }, { k:'role', label:'Role' }, { k:'address', label:'Address' }
+  ];
+  let abIgnoredDups = new Set();
+  let _mergeDraft = null, _mergeBusy = false;
+
+  async function abLoadIgnoredDups() {
+    try {
+      const r = await window.storage.get(AB_IGNORE_KEY, false);
+      if (r && r.value) abIgnoredDups = new Set(JSON.parse(r.value));
+    } catch (e) {}
+    abUpdateMoreBadge();
+  }
+  async function abSaveIgnoredDups() {
+    try { return !!(await window.storage.set(AB_IGNORE_KEY, JSON.stringify([...abIgnoredDups]), false)); }
+    catch (e) { return false; }
+  }
+
+  /* detection: phone (huling 10 digits) > email > pangalan */
+  function abDetectDuplicates() {
+    const buckets = new Map();
+    const put = (k, why, c) => { if (!buckets.has(k)) buckets.set(k, { why, list: [] }); buckets.get(k).list.push(c); };
+    ADDRESS_BOOK.forEach(c => {
+       c.phones.forEach(p => { const ph = abPhoneKey(p); if (ph.length >= 7) put('1:' + ph, 'Same phone', c); });
+     c.emails.forEach(e => { const em = e.toLowerCase(); if (em) put('2:' + em, 'Same email', c); });
+      const nm = abNorm(c.name); if (nm) put('3:' + nm, 'Same name', c);
+    });
+    const found = new Map();
+    [...buckets.keys()].sort().forEach(k => {
+      const { why, list } = buckets.get(k);
+      for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) {
+        let a = list[i], b = list[j];
+        if (a.id > b.id) { const t = a; a = b; b = t; }
+        const id = a.id + '_' + b.id;
+        if (!found.has(id) && !abIgnoredDups.has(id)) found.set(id, { id, a, b, reason: why });
+      }
+    });
+    return [...found.values()];
+  }
+  function abRefreshDups() { remainingDups = abDetectDuplicates(); }
+
+  /* merge model */
+  function abMval(c, k) {
+    const v = String(c[k] == null ? '' : c[k]).replace(/\s+/g, ' ').trim();
+    return (v === '—' || (k === 'role' && v === 'Contact')) ? '' : v;
+  }
+  function abMeq(k, a, b) {
+    if (k === 'mobile') return abPhoneKey(a) === abPhoneKey(b);
+    if (k === 'email') return a.toLowerCase() === b.toLowerCase();
+    const x = abNorm(a), y = abNorm(b);
+    return x && y ? x === y : a.toLowerCase() === b.toLowerCase();
+  }
+  function abMergeNotes(a, b) {
+    a = String(a || '').trim(); b = String(b || '').trim();
+    if (!a) return b; if (!b) return a;
+    if (a.includes(b)) return a; if (b.includes(a)) return b;
+    return a + '\n' + b;
+  }
+  function abBuildMergePlan(x, y) {
+    const score = c => AB_MERGE_FIELDS.filter(f => abMval(c, f.k)).length + (String(c.notes || '').trim() ? 1 : 0);
+    const p = score(y) > score(x) ? y : x, s = (p === x) ? y : x;
+    const fields = AB_MERGE_FIELDS.map(f => {
+      const pv = abMval(p, f.k), sv = abMval(s, f.k);
+      let status = 'conflict';
+      if (!pv && !sv) status = 'empty';
+      else if (!pv || !sv) status = 'fill';
+      else if (abMeq(f.k, pv, sv)) status = 'same';
+      return { k: f.k, label: f.label, pv, sv, status, chosen: 'p' };
+    });
+    return { p, s, fields };
+  }
+  function abApplyMerge(plan, rec) {
+    const p = plan.p, s = plan.s, val = {}, extras = [];
+    if (!rec.journal.has(p)) rec.journal.set(p, Object.assign({}, p));
+    plan.fields.forEach(f => {
+      val[f.k] = f.status === 'conflict' ? (f.chosen === 's' ? f.sv : f.pv) : (f.pv || f.sv || '');
+      // isang slot lang ang phone/email: ang hindi napili ay ise-save sa Notes para walang mawala
+      if (f.status === 'conflict' && (f.k === 'mobile' || f.k === 'email')) {
+        extras.push((f.k === 'mobile' ? 'Other number: ' : 'Other email: ') + (f.chosen === 's' ? f.pv : f.sv));
+      }
+    });
+    const allPhones = [...p.phones, ...s.phones], allEmails = [...p.emails, ...s.emails];
+    p.name = val.name || p.name;
+    p.address = val.address;
+    p.company = val.company; p.role = val.role;
+    p.phones = ctUniqPhones([val.mobile, ...allPhones]);
+    p.emails = ctUniqEmails([val.email, ...allEmails]);
+    p.socials = Object.assign({}, s.socials, p.socials);
+    p.tags = [...new Set([...p.tags, ...s.tags])];
+    p.metAt = p.metAt || s.metAt;
+    p.lastContactedAt = ctLatest(p.lastContactedAt, s.lastContactedAt);
+    p.createdAt = ctEarliest(p.createdAt, s.createdAt);
+    p.notes = abMergeNotes(p.notes, s.notes);
+    const idx = ADDRESS_BOOK.indexOf(s);
+    if (idx !== -1) { ADDRESS_BOOK.splice(idx, 1); rec.removed.push({ obj: s, idx }); }
+    rec.pairs.push({ p, s });
+  }
+  function abRestore(rec) {
+    rec.journal.forEach((snap, obj) => {
+      Object.keys(obj).forEach(k => { if (!(k in snap)) delete obj[k]; });
+      Object.assign(obj, snap);
+    });
+    const inserted = [];
+    for (let i = rec.removed.length - 1; i >= 0; i--) {
+      const { obj, idx } = rec.removed[i];
+      if (ADDRESS_BOOK.includes(obj)) continue;
+      if (ADDRESS_BOOK.some(c => c.id === obj.id)) obj.id = ADDRESS_BOOK.reduce((m, c) => Math.max(m, c.id || 0), 0) + 1;
+      ADDRESS_BOOK.splice(Math.min(idx, ADDRESS_BOOK.length), 0, obj);
+      inserted.push(obj);
+    }
+    return inserted;
+  }
+  function abNewRec() { return { journal: new Map(), removed: [], pairs: [], renamed: [] }; }
+
+  function abRefreshDupUI() {
+    abRefreshDups();
+    if (document.getElementById('dupPairsList')) renderDupPairs();
+    updateDupBanner();
+    filterAddressBook(document.getElementById('abSearchInput')?.value || '');
+  }
+
+  function abAfterMerge(rec, msg) {
+    // recents: tanggalin ang mga nawalang contact
+    const gone = new Set(rec.removed.map(r => r.obj.id));
+    recentIds = recentIds.filter(x => !gone.has(x));
+    try { window.storage.set(RECENT_IDS_KEY, JSON.stringify(recentIds), false); } catch (e) {}
+    // meetings: naka-link sa pangalan, kaya sundan ang pangalan ng natirang contact
+    rec.pairs.forEach(({ p, s }) => MEETINGS.forEach(m => {
+      const mn = m.name.toLowerCase();
+      if (mn === s.name.toLowerCase() && mn !== p.name.toLowerCase()) { rec.renamed.push({ m, old: m.name }); m.name = p.name; }
+    }));
+    if (rec.renamed.length) saveMeetings();
+    haptic('success');
+    closeAuGenericModal('mergePreviewOverlay');
+    _mergeDraft = null;
+    abRefreshDupUI();
+    showUndoToast(msg, () => abUndoMerge(rec));
+  }
+
+  async function abUndoMerge(rec) {
+    haptic('light');
+    const after = new Map([...rec.journal.keys()].map(o => [o, Object.assign({}, o)]));
+    const inserted = abRestore(rec);
+    const ok = await saveAddressBook();
+    if (!ok) { // hindi na-undo: ibalik sa merged state
+      after.forEach((snap, o) => Object.assign(o, snap));
+      inserted.forEach(o => { const i = ADDRESS_BOOK.indexOf(o); if (i !== -1) ADDRESS_BOOK.splice(i, 1); });
+      haptic('error'); showToast("Couldn't undo merge", 'error'); return;
+    }
+    if (rec.renamed.length) { rec.renamed.forEach(r => { r.m.name = r.old; }); saveMeetings(); }
+    haptic('success');
+    abRefreshDupUI();
+    showToast('Merge undone', 'success');
+  }
+
+  /* merge preview UI */
   function mergeDup(id) {
+    haptic('light');
+    const pair = remainingDups.find(p => p.id === id);
+    if (!pair) return;
+    _mergeDraft = { pairId: id, plan: abBuildMergePlan(pair.a, pair.b) };
+    auMakeSheet('mergePreviewOverlay', 'Merge Preview', `<div id="mergePreviewBody"></div>`);
+    renderMergePreview();
+  }
+
+  function setMergeChoice(i, who) {
+    if (!_mergeDraft || _mergeBusy) return;
+    haptic('light');
+    _mergeDraft.plan.fields[i].chosen = who;
+    renderMergePreview();
+  }
+
+  function closeMergePreview() { _mergeDraft = null; closeAuGenericModal('mergePreviewOverlay'); }
+
+  function renderMergePreview() {
+    const wrap = document.getElementById('mergePreviewBody');
+    if (!wrap || !_mergeDraft) return;
+    const sheet = document.getElementById('mergePreviewOverlay-sheet');
+    const keep = sheet ? sheet.scrollTop : 0;
+    const { p, s, fields } = _mergeDraft.plan;
+    const nConf = fields.filter(f => f.status === 'conflict').length;
+    const channelLost = fields.some(f => f.status === 'conflict' && (f.k === 'mobile' || f.k === 'email'));
+    const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+    const pill = (t, bg, fg) => `<span style="${F}font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:8px;background:${bg};color:${fg};">${t}</span>`;
+    const opt = (i, who, text, on) => `<button onclick="setMergeChoice(${i},'${who}')" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:10px 12px;margin-top:6px;border-radius:12px;border:${on ? '1.5px solid #1c1c1e' : '1px solid rgba(0,0,0,0.1)'};background:${on ? '#1c1c1e' : 'rgba(255,255,255,0.9)'};color:${on ? '#ECE4D6' : '#1c1c1e'};${F}font-size:13.5px;cursor:pointer;"><span style="font-weight:700;font-size:11px;opacity:.6;flex-shrink:0;">${who === 'p' ? 'A' : 'B'}</span><span style="flex:1;min-width:0;word-break:break-word;">${auEsc(text)}</span></button>`;
+
+    const rows = fields.map((f, i) => {
+      if (f.status === 'empty') return '';
+      const tag = f.status === 'conflict' ? pill('Conflict', 'rgba(255,159,10,0.16)', '#B36B00')
+                : f.status === 'same' ? pill('Same', 'rgba(0,0,0,0.06)', 'rgba(60,60,67,0.55)')
+                : pill('Combined', 'rgba(52,199,89,0.14)', '#1c8a3e');
+      const body = f.status === 'conflict'
+        ? opt(i, 'p', f.pv, f.chosen === 'p') + opt(i, 's', f.sv, f.chosen === 's')
+        : `<div style="${F}font-size:14.5px;color:#1c1c1e;word-break:break-word;">${auEsc(f.pv || f.sv)}</div>`;
+      return `<div style="padding:12px 14px;border-top:1px solid rgba(0,0,0,0.07);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:${f.status === 'conflict' ? '0' : '4px'};"><span style="${F}font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:rgba(60,60,67,0.45);">${f.label}</span>${tag}</div>${body}</div>`;
+    }).join('');
+
+    const notes = abMergeNotes(p.notes, s.notes);
+    const notesRow = notes ? `<div style="padding:12px 14px;border-top:1px solid rgba(0,0,0,0.07);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;"><span style="${F}font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:rgba(60,60,67,0.45);">Notes</span>${pill('Combined', 'rgba(52,199,89,0.14)', '#1c8a3e')}</div>
+      <div style="${F}font-size:13.5px;color:#1c1c1e;white-space:pre-wrap;word-break:break-word;">${auEsc(notes)}</div></div>` : '';
+
+    const foot = nConf
+      ? `Values you don't pick are discarded${channelLost ? ', except the phone/email, which is kept as an extra number/email on the contact' : ''}.`
+      : 'No conflicts. Everything is combined into one contact.';
+
+    wrap.innerHTML = `
+      <div style="${F}font-size:13px;color:rgba(60,60,67,0.6);line-height:1.55;margin:-6px 2px 14px;"><b>A</b> (${auEsc(p.name)}) is kept as the main record because it has more details filled in. <b>B</b> (${auEsc(s.name)}) is merged into it. ${nConf ? `Tap the value that should win for each of the ${nConf} conflict${nConf > 1 ? 's' : ''}.` : ''}</div>
+      <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:10px;">${rows.replace('border-top:1px solid rgba(0,0,0,0.07);', '')}${notesRow}</div>
+      <div style="${F}font-size:11.5px;color:rgba(60,60,67,0.5);line-height:1.5;margin:0 4px 16px;">${foot} You can undo for 5 seconds after merging.</div>
+      <button id="mergeConfirmBtn" onclick="confirmMerge()" style="width:100%;padding:14px;border-radius:14px;border:none;background:#1c1c1e;color:#ECE4D6;${F}font-size:14.5px;font-weight:700;cursor:pointer;margin-bottom:8px;">Merge into 1 Contact</button>
+      <button onclick="closeMergePreview()" style="width:100%;padding:13px;border-radius:14px;border:none;background:rgba(0,0,0,0.06);color:rgba(60,60,67,0.6);${F}font-size:14px;font-weight:600;cursor:pointer;">Back</button>`;
+    if (sheet) sheet.scrollTop = keep;
+  }
+
+  async function confirmMerge() {
+    if (_mergeBusy || !_mergeDraft) return;
+    _mergeBusy = true;
+    const btn = document.getElementById('mergeConfirmBtn');
+    if (btn) { btn.textContent = 'Merging…'; btn.style.pointerEvents = 'none'; btn.style.opacity = '.6'; }
+    const rec = abNewRec();
+    abApplyMerge(_mergeDraft.plan, rec);            // 1. apply sa memory
+    const ok = await saveAddressBook();             // 2. persist: hintayin ang totoong resulta
+    _mergeBusy = false;
+    if (!ok) {                                      // 3. failed: ibalik lahat, bukas pa rin ang preview
+      abRestore(rec);
+      if (btn) { btn.textContent = 'Merge into 1 Contact'; btn.style.pointerEvents = ''; btn.style.opacity = ''; }
+      haptic('error'); showToast("Couldn't merge contacts", 'error');
+      return;
+    }
+    abAfterMerge(rec, 'Contacts merged');           // 4. saka pa lang success + Undo
+  }
+
+  /* "Merge Safe Only": phone/email match LANG at walang conflict. Name-only match ay laging kailangan ng review */
+  async function mergeAllDuplicates() {
+    if (_mergeBusy) return;
+    _mergeBusy = true;
+    haptic('light');
+    const rec = abNewRec();
+    let merged = 0, guard = ADDRESS_BOOK.length;
+    while (guard-- > 0) {
+      const next = abDetectDuplicates()
+        .filter(d => d.reason !== 'Same name')
+        .map(d => abBuildMergePlan(d.a, d.b))
+        .find(pl => !pl.fields.some(f => f.status === 'conflict'));
+      if (!next) break;
+      abApplyMerge(next, rec); merged++;
+    }
+    const left = abDetectDuplicates().length;
+    if (!merged) {
+      _mergeBusy = false;
+      showToast(left ? `No safe merges. ${left} pair${left > 1 ? 's need' : ' needs'} your review` : 'Nothing to merge', 'neutral');
+      return;
+    }
+    const ok = await saveAddressBook();
+    _mergeBusy = false;
+    if (!ok) { abRestore(rec); haptic('error'); showToast("Couldn't merge contacts", 'error'); return; }
+    abAfterMerge(rec, `${merged} merged` + (left ? ` · ${left} need review` : ''));
+  }
+
+  async function ignoreDup(id) {
+    haptic('light');
+    const had = abIgnoredDups.has(id);
+    abIgnoredDups.add(id);
+    const ok = await abSaveIgnoredDups();
+    if (!ok) { if (!had) abIgnoredDups.delete(id); haptic('error'); showToast("Couldn't save your choice", 'error'); return; }
+    abRefreshDups(); renderDupPairs(); updateDupBanner();
+  }
+
+  async function ignoreAllDuplicates() {
+    haptic('light');
+    const added = remainingDups.map(p => p.id).filter(k => !abIgnoredDups.has(k));
+    added.forEach(k => abIgnoredDups.add(k));
+    const ok = await abSaveIgnoredDups();
+    if (!ok) { added.forEach(k => abIgnoredDups.delete(k)); haptic('error'); showToast("Couldn't save your choice", 'error'); return; }
+    abRefreshDups(); updateDupBanner(); closeDupSheet();
+    showToast('Duplicates dismissed', 'neutral');
+  }
+
+  abLoadIgnoredDups();
+  /* === END: REAL DUPLICATE DETECTION + MERGE === */
+
+  function mergeDupLegacy(id) {
     haptic('success');
     remainingDups = remainingDups.filter(p => p.id !== id);
     renderDupPairs();
@@ -6101,14 +7305,14 @@
     showToast('Contacts merged', 'success');
   }
 
-  function ignoreDup(id) {
+  function ignoreDupLegacy(id) {
     haptic('light');
     remainingDups = remainingDups.filter(p => p.id !== id);
     renderDupPairs();
     updateDupBanner();
   }
 
-  function mergeAllDuplicates() {
+  function mergeAllDuplicatesLegacy() {
     haptic('success');
     remainingDups = [];
     renderDupPairs();
@@ -6117,7 +7321,7 @@
     showToast('All duplicates merged', 'success');
   }
 
-  function ignoreAllDuplicates() {
+  function ignoreAllDuplicatesLegacy() {
     haptic('light');
     remainingDups = [];
     updateDupBanner();
@@ -6125,6 +7329,9 @@
   }
 
   function updateDupBanner() {
+    /* === START: MORE BADGE SYNC === */
+    abUpdateMoreBadge();
+    /* === END: MORE BADGE SYNC === */
     const banner = document.getElementById('abDupBanner');
     if (!banner) return;
     if (!remainingDups.length) {
@@ -6143,6 +7350,7 @@
     document.getElementById('acAvCircle').textContent = '?';
     document.getElementById('acAvCircle').style.background = '#8E8E93';
     document.getElementById('acSaveBtn').style.opacity = '.4';
+    acClearAllErrors();
 
     const osBackBtn = document.querySelector('.os-back');
     if (osBackBtn) osBackBtn.style.visibility = 'hidden';
@@ -6155,7 +7363,7 @@
 
     // find + button — passed directly or fallback to the fixed bottom-bar one
     const btn = triggerBtn instanceof Element ? triggerBtn
-      : document.querySelector('#osBottomSearch button:last-child');
+      : document.getElementById('abAddBtn');
 
     if (btn) {
       const r = btn.getBoundingClientRect();
@@ -6219,13 +7427,288 @@
     }
   }
 
-  function acCheckSave() {
-    const first = document.getElementById('acFirstName').value.trim();
-    const last  = document.getElementById('acLastName').value.trim();
-    document.getElementById('acSaveBtn').style.opacity = (first || last) ? '1' : '.4';
+  /* === START: ADD CONTACT INLINE VALIDATION === */
+  const AC_FIELDS = {
+    name:     { anchor:'acLastName', focus:'acFirstName' },
+    phone:    { anchor:'acPhone',    focus:'acPhone' },
+    email:    { anchor:'acEmail',    focus:'acEmail' },
+    linkedin: { anchor:'acLinkedin', focus:'acLinkedin' },
+  };
+  const acVal = id => (document.getElementById(id)?.value || '').replace(/\s+/g, ' ').trim();
+  const acCard = f => document.getElementById(AC_FIELDS[f].anchor)?.parentElement?.parentElement; // input → row → card
+
+  function acPhoneCheck(raw) {
+    if (!/^[+\d\s().-]+$/.test(raw)) return 'Phone can only contain numbers, spaces and + ( ) - .';
+    const intl = raw.startsWith('+');
+    let d = abDigits(raw);
+    if (!intl) {
+      if (d.startsWith('63') && d.length === 12) d = '0' + d.slice(2);
+      else if (/^9\d{9}$/.test(d)) d = '0' + d;
+    }
+    if (intl && !d.startsWith('63')) return (d.length >= 8 && d.length <= 15) ? null : 'International numbers need 8–15 digits after +.';
+    if (intl) d = '0' + d.slice(2);
+    if (/^09\d{9}$/.test(d)) return null;        // PH mobile
+    if (/^0[2-8]\d{7,9}$/.test(d)) return null;  // PH landline w/ area code
+    return 'Enter a PH mobile like 09XX XXX XXXX, or an international number starting with +.';
   }
 
-  function submitNewContact() {
+  function acCheckField(field) {
+    if (field === 'name') {
+      return (!acVal('acFirstName') && !acVal('acLastName')) ? { level:'error', msg:'Enter a first or last name.' } : null;
+    }
+    if (field === 'phone') {
+      const v = acVal('acPhone'); if (!v) return null;
+      const bad = acPhoneCheck(v); if (bad) return { level:'error', msg:bad };
+      const key = abPhoneKey(acNormalizePhone(v));
+      const dup = key && ADDRESS_BOOK.find(c => c.phones.some(p => abPhoneKey(p) === key));
+      return dup ? { level:'warn', msg:'Already saved under ' + dup.name + '. Saving lets you merge or keep both.' } : null;
+    }
+    if (field === 'email') {
+      const v = acVal('acEmail').toLowerCase(); if (!v) return null;
+      if (!/^[^\s@,;]+@[^\s@,;]+\.[^\s@.,;]{2,}$/.test(v) || v.includes('..')) return { level:'error', msg:'Enter a valid email, e.g. name@example.com.' };
+      const dup = ADDRESS_BOOK.find(c => c.emails.some(e => e.toLowerCase() === v));
+      return dup ? { level:'warn', msg:'Already saved under ' + dup.name + '. Saving lets you merge or keep both.' } : null;
+    }
+    if (field === 'linkedin') {
+      const v = acVal('acLinkedin'); if (!v) return null;
+      let u = null;
+      if (!/\s/.test(v)) { try { u = new URL(acNormalizeLinkedin(v)); } catch (e) {} }
+      const ok = u && /^([a-z0-9-]+\.)?linkedin\.com$/i.test(u.hostname) && /^\/(in|company|school|pub)\/[^\/]+/i.test(u.pathname);
+      return ok ? null : { level:'error', msg:'Use a LinkedIn link like linkedin.com/in/name.' };
+    }
+    return null;
+  }
+
+  function acRender(field, res) {
+    const card = acCard(field); if (!card) return;
+    let el = document.getElementById('acErr_' + field);
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'acErr_' + field; el.className = 'ac-err'; el.setAttribute('role', 'alert');
+      card.after(el);
+    }
+    card.classList.remove('ac-row-err', 'ac-row-warn');
+    if (!res) { el.classList.remove('show', 'warn'); el.textContent = ''; return; }
+    el.textContent = res.msg;
+    el.classList.add('show');
+    el.classList.toggle('warn', res.level === 'warn');
+    card.classList.add(res.level === 'warn' ? 'ac-row-warn' : 'ac-row-err');
+  }
+
+  function acHasBlocking() {
+    return Object.keys(AC_FIELDS).some(f => {
+      const el = document.getElementById('acErr_' + f);
+      return el && el.classList.contains('show') && !el.classList.contains('warn');
+    });
+  }
+  function acClearAllErrors() { Object.keys(AC_FIELDS).forEach(f => acRender(f, null)); }
+  function acValidateField(f) { const r = acCheckField(f); acRender(f, r); acCheckSave(); return r; }
+
+  function acCheckSave() {
+    const hasName = acVal('acFirstName') || acVal('acLastName');
+    if (hasName && document.getElementById('acErr_name')?.classList.contains('show')) acRender('name', null);
+    const b = document.getElementById('acSaveBtn');
+    if (b && !_acSaving) { const ready = hasName && !acHasBlocking(); b.style.opacity = ready ? '1' : '.4'; b.setAttribute('aria-disabled', String(!ready)); }
+  }
+
+  (function acBindValidation() {
+    [['acPhone','phone'], ['acEmail','email'], ['acLinkedin','linkedin']].forEach(([id, f]) => {
+      const el = document.getElementById(id); if (!el) return;
+      el.addEventListener('blur',  () => acValidateField(f));
+      el.addEventListener('input', () => { acRender(f, null); acCheckSave(); });
+    });
+  })();
+  /* === END: ADD CONTACT INLINE VALIDATION === */
+
+  /* === START: ADD CONTACT SAVE === */
+  let _acSaving = false;
+  let _acPending = null;
+
+  function acNormalizePhone(raw) {
+    raw = String(raw || '').trim();
+    let d = abDigits(raw);
+    if (!d) return '';
+    if (d.startsWith('63') && d.length === 12) d = '0' + d.slice(2);
+    else if (/^9\d{9}$/.test(d)) d = '0' + d;
+    if (/^09\d{9}$/.test(d)) return '+63 ' + d.slice(1, 4) + ' ' + d.slice(4, 7) + ' ' + d.slice(7);
+    return raw; // foreign / unusual format: keep as typed
+  }
+
+  function acNormalizeLinkedin(raw) {
+    raw = String(raw || '').trim();
+    if (!raw) return '';
+    return /^https?:\/\//i.test(raw) ? raw : 'https://' + raw.replace(/^\/+/, '');
+  }
+
+  function acCollect() {
+    const v = id => (document.getElementById(id)?.value || '').replace(/\s+/g, ' ').trim();
+    return {
+      first: v('acFirstName'), last: v('acLastName'), company: v('acCompany'), position: v('acPosition'),
+      phone: v('acPhone'), email: v('acEmail'), linkedin: v('acLinkedin'),
+      notes: (document.getElementById('acNotes')?.value || '').trim()
+    };
+  }
+
+  function acValidate(d) {
+    let firstErr = null;
+    ['name', 'phone', 'email', 'linkedin'].forEach(f => {
+      const r = acCheckField(f);
+      acRender(f, r);
+      if (r && r.level === 'error' && !firstErr) firstErr = { field: AC_FIELDS[f].focus, msg: r.msg };
+    });
+    acCheckSave();
+    return firstErr;
+  }
+
+  function acSetSaving(on) {
+    _acSaving = on;
+    const b = document.getElementById('acSaveBtn');
+    if (!b) return;
+    b.textContent = on ? 'Saving…' : 'Save';
+    b.style.pointerEvents = on ? 'none' : '';
+    b.style.opacity = on ? '.5' : '1';
+  }
+
+  async function acCommitContact(contact, mode, match) {
+    contact = newContact(Object.assign({ source: 'manual' }, contact));
+    if (_acSaving) return false;
+    acSetSaving(true);
+    let backup = null;
+    if (mode === 'merge' && match) {
+      backup = Object.assign({}, match);
+      ['mobile', 'email', 'company', 'role', 'linkedin'].forEach(k => {
+        const blank = !match[k] || match[k] === '—' || match[k] === 'Contact';
+        if (blank && contact[k] && contact[k] !== '—' && contact[k] !== 'Contact') match[k] = contact[k];
+      });
+       ctMergeInto(match, contact);
+    } else {
+      contact.id = ADDRESS_BOOK.reduce((m, c) => Math.max(m, c.id || 0), 0) + 1;
+      ADDRESS_BOOK.push(contact);
+    }
+    const ok = await saveAddressBook();
+    acSetSaving(false);
+    if (!ok) {
+      // rollback — walang success kung hindi na-save
+      if (backup) Object.assign(match, backup);
+      else { const i = ADDRESS_BOOK.indexOf(contact); if (i !== -1) ADDRESS_BOOK.splice(i, 1); }
+      haptic('error');
+      showToast("Couldn't save contact", 'error');
+      return false;
+    }
+    haptic('success');
+    closeAddContactModal();
+    // siguraduhing makikita agad ang bagong contact (tanggalin ang search / tag filter)
+    activeTagFilter = null;
+    const si = document.getElementById('abSearchInput');
+    if (si) { si.value = ''; si.placeholder = 'Search'; }
+    filterAddressBook('');
+    showToast(mode === 'merge' ? 'Contact updated' : 'Contact added', 'success');
+    return true;
+  }
+
+  /* === START: ADD CONTACT DUPLICATE SHEET v2 === */
+  function acFindMatch(c) {
+    const pk = abPhoneKey(c.mobile);
+    const em = String(c.email || '').toLowerCase();
+    const nm = abNorm(c.name);
+    let best = null, bestScore = 0, bestWhy = [];
+    ADDRESS_BOOK.forEach(x => {
+      const why = []; let s = 0;
+      if (pk.length >= 7 && x.phones.some(p => abPhoneKey(p) === pk)) { why.push('Same phone number'); s += 4; }
+      if ( em && x.emails.some(e => e.toLowerCase() === em)) { why.push('Same email'); s += 3; }
+      if (nm && abNorm(x.name) === nm) { why.push('Same name'); s += 1; }
+      if (s > bestScore) { best = x; bestScore = s; bestWhy = why; }
+    });
+    return best ? { match: best, reasons: bestWhy } : null;
+  }
+
+  function acViewExisting() {
+    haptic('light');
+    const id = _acPending && _acPending.match ? _acPending.match.id : null;
+    closeAuGenericModal('acDupOverlay');   // hindi ni-clear ang _acPending / ang form, buo pa ang tinype
+    if (id == null) return;
+    setTimeout(() => openContactDetail(id), 260);
+  }
+
+  function openAcDupSheet() {
+    const p = _acPending; if (!p) return;
+    const m = p.match, n = p.contact;
+    const found = acFindMatch(n);
+    const reasons = found ? found.reasons : [];
+    const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+    const bs = "width:100%;padding:14px;border-radius:14px;border:none;" + F + "font-size:14.5px;font-weight:700;cursor:pointer;margin-bottom:8px;";
+    const line = (t) => t ? `<div style="${F}font-size:12.5px;color:rgba(60,60,67,0.6);margin-top:2px;word-break:break-word;">${auEsc(t)}</div>` : '';
+    const chips = reasons.map(r => `<span style="${F}font-size:10.5px;font-weight:700;letter-spacing:.03em;padding:3px 9px;border-radius:10px;background:rgba(255,159,10,0.16);color:#B36B00;">${auEsc(r)}</span>`).join('');
+    const entered = [n.name, n.mobile, n.email].filter(Boolean).join(' · ');
+    auMakeSheet('acDupOverlay', 'Possible Existing Contact', `
+      <div style="background:rgba(255,255,255,0.72);border-radius:16px;padding:14px;margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:46px;height:46px;border-radius:50%;background:${m.avatarBg};display:flex;align-items:center;justify-content:center;${F}font-size:16px;font-weight:600;color:#fff;flex-shrink:0;">${auEsc(initials2(m.name))}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="${F}font-size:16px;font-weight:700;color:#1c1c1e;">${auEsc(m.name)}</div>
+            ${line((m.role && m.role !== 'Contact' ? m.role : '') + (m.company && m.company !== '—' ? (m.role && m.role !== 'Contact' ? ' · ' : '') + m.company : ''))}
+            ${line(m.mobile)}
+            ${line(m.email)}
+          </div>
+        </div>
+        ${chips ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;">${chips}</div>` : ''}
+      </div>
+      <div style="${F}font-size:12px;color:rgba(60,60,67,0.5);line-height:1.5;margin:0 4px 16px;">You're adding: ${auEsc(entered)}</div>
+      <button onclick="acViewExisting()" style="${bs}background:#1c1c1e;color:#ECE4D6;">View Existing</button>
+      <button onclick="acResolveDup('both')" style="${bs}background:rgba(255,255,255,0.72);color:#1c1c1e;border:1px solid rgba(0,0,0,0.1);">Add Anyway</button>
+      <button onclick="acResolveDup('merge')" style="${bs}background:rgba(255,255,255,0.72);color:#1c1c1e;border:1px solid rgba(0,0,0,0.1);">Merge into Existing</button>
+      <button onclick="acResolveDup('cancel')" style="${bs}background:rgba(0,0,0,0.06);color:rgba(60,60,67,0.6);font-weight:600;margin-bottom:0;">Back to Edit</button>
+    `);
+  }
+  /* === END: ADD CONTACT DUPLICATE SHEET v2 === */
+
+  function openAcDupSheetLegacy() {
+    const m = _acPending.match;
+    const sub = [m.mobile, m.email].filter(Boolean).join(' · ');
+    const bs = "width:100%;padding:14px;border-radius:14px;border:none;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14.5px;font-weight:700;cursor:pointer;margin-bottom:8px;";
+    auMakeSheet('acDupOverlay', 'Possible Duplicate', `
+      <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.55);line-height:1.5;margin:-6px 2px 14px;">This looks like a contact you already have.</div>
+      <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.72);border-radius:16px;padding:13px 14px;margin-bottom:14px;">
+        <div style="width:42px;height:42px;border-radius:50%;background:${m.avatarBg};display:flex;align-items:center;justify-content:center;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;font-weight:600;color:#fff;flex-shrink:0;">${auEsc(initials2(m.name))}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;font-weight:600;color:#1c1c1e;">${auEsc(m.name)}</div>
+          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12px;color:rgba(60,60,67,0.55);margin-top:1px;">${auEsc(sub || m.role + ' · ' + m.company)}</div>
+        </div>
+      </div>
+      <button onclick="acResolveDup('merge')" style="${bs}background:#1c1c1e;color:#ECE4D6;">Merge into Existing</button>
+      <button onclick="acResolveDup('both')" style="${bs}background:rgba(255,255,255,0.72);color:#1c1c1e;border:1px solid rgba(0,0,0,0.1);">Keep Both</button>
+      <button onclick="acResolveDup('cancel')" style="${bs}background:rgba(0,0,0,0.06);color:rgba(60,60,67,0.6);font-weight:600;margin-bottom:0;">Back to Edit</button>
+    `);
+  }
+
+  function acResolveDup(choice) {
+    haptic('light');
+    const p = _acPending;
+    closeAuGenericModal('acDupOverlay');
+    if (!p || choice === 'cancel') return; // bukas pa rin ang form, buo ang tinype
+    _acPending = null;
+    setTimeout(() => acCommitContact(p.contact, choice === 'merge' ? 'merge' : 'add', p.match), 280);
+  }
+
+  async function submitNewContact() {
+    if (_acSaving) return;
+    const d = acCollect();
+    const err = acValidate(d);
+    if (err) { haptic('error'); document.getElementById(err.field)?.focus(); return; }
+    const name = [d.first, d.last].filter(Boolean).join(' ');
+    const contact = {
+     name, firstName: d.first, lastName: d.last, role: d.position || 'Contact', company: d.company || '—',
+      mobile: acNormalizePhone(d.phone), email: d.email.toLowerCase(),
+      linkedin: acNormalizeLinkedin(d.linkedin), address: '', notes: d.notes,
+      tag: 'New', tagBg: '#9B59B6', tagFg: '#fff', avatarBg: avatarColorFromName(name)
+    };
+    const match = (acFindMatch(contact) || {}).match;
+    if (match) { _acPending = { contact, match }; openAcDupSheet(); return; }
+    await acCommitContact(contact, 'add', null);
+  }
+  /* === END: ADD CONTACT SAVE === */
+
+  function submitNewContactLegacy() {
     const first = document.getElementById('acFirstName').value.trim();
     const last  = document.getElementById('acLastName').value.trim();
     if (!first && !last) { haptic('error'); showToast('Enter at least a name', 'error'); return; }
@@ -6274,8 +7757,9 @@
     renderUpcoming();
   }
 
-  async function saveMeetings() {
-    try { await window.storage.set(MEETINGS_KEY, JSON.stringify(MEETINGS), false); } catch (e) {}
+   async function saveMeetings() {
+    try { return !!(await window.storage.set(MEETINGS_KEY, JSON.stringify(MEETINGS), false)); }
+    catch (e) { return false; }
   }
 
   function switchUpcomingView(view) {
@@ -6408,7 +7892,12 @@
       : `<div class="up-empty-card">No meetings</div>`;
   }
 
-  async function deleteMeeting(id) {
+  function deleteMeeting(id) {
+    const m = MEETINGS.find(x => x.id === id); if (!m) return;
+    haptic('medium');
+    confirmDialog({ title: 'Delete meeting with ' + m.name + '?', message: 'This meeting will be removed from your calendar.', confirmLabel: 'Delete', danger: true, onConfirm: () => deleteMeetingNow(id) });
+  }
+  async function deleteMeetingNow(id) {
     haptic('medium');
     // spring-pop the button before removing
     const btn = document.querySelector(`.up-row-del[data-del="${id}"]`);
@@ -6418,8 +7907,9 @@
       btn.style.opacity    = '0.4';
       await new Promise(r => setTimeout(r, 120));
     }
+   const prevMeetings = MEETINGS;
     MEETINGS = MEETINGS.filter(m => m.id !== id);
-    await saveMeetings();
+    if (!(await saveMeetings())) { MEETINGS = prevMeetings; renderUpcoming(); haptic('error'); showToast("Couldn't delete meeting", 'error'); return; }
     renderUpcoming();
     showToast('Meeting removed', 'neutral');
   }
@@ -6453,15 +7943,19 @@
     const type = document.getElementById('amType').value;
     if (!name || !date || !time) { haptic('error'); showToast('Fill in all required fields', 'error'); return; }
 
-    const wasEdit = !!editingMeetingId;
+     const wasEdit = !!editingMeetingId;
+    const meetingsBackup = JSON.stringify(MEETINGS);
     if (wasEdit) {
       const mt = MEETINGS.find(x => x.id === editingMeetingId);
       if (mt) Object.assign(mt, { name, date, time, type });
     } else {
       MEETINGS.push({ id:'m'+Date.now(), name, date, time, type });
     }
+    if (!(await saveMeetings())) {
+      MEETINGS = JSON.parse(meetingsBackup);
+      haptic('error'); showToast("Couldn't save meeting", 'error'); return;
+    }
     editingMeetingId = null;
-    await saveMeetings();
     closeAddMeeting();
     renderUpcoming();
     haptic('success');
@@ -6561,8 +8055,9 @@
     renderNotes();
   }
 
-  async function saveNotes() {
-    try { await window.storage.set(NOTES_KEY, JSON.stringify(NOTES), false); } catch(e) {}
+ async function saveNotes() {
+    try { return !!(await window.storage.set(NOTES_KEY, JSON.stringify(NOTES), false)); }
+    catch(e) { return false; }
   }
 
   function noteRelativeDate(ts) {
@@ -6673,22 +8168,33 @@
     const body  = document.getElementById('noteEditorBody').value.trim();
     if (!title && !body) { haptic('error'); showToast('Nothing to save', 'error'); return; }
 
+     const notesBackup = JSON.stringify(NOTES);
     if (noteEditMode === 'edit' && activeNoteId) {
       const note = NOTES.find(n => n.id === activeNoteId);
       if (note) { note.title = title || 'New Note'; note.body = body; note.pinned = _noteCurrentPinned; note.ts = Date.now(); }
     } else {
       NOTES.unshift({ id:'n'+Date.now(), title: title || 'New Note', body, pinned: _noteCurrentPinned, ts: Date.now() });
     }
-    await saveNotes();
+    if (!(await saveNotes())) {
+      NOTES = JSON.parse(notesBackup);
+      renderNotes();
+      haptic('error'); showToast("Couldn't save note", 'error'); return;
+    }
     renderNotes();
     closeNoteEditor();
     showToast('Note saved', 'success');
   }
 
-  async function deleteNoteEditor() {
+  function deleteNoteEditor() {
     if (!activeNoteId) return;
+    const n = NOTES.find(x => x.id === activeNoteId);
+    confirmDialog({ title: 'Delete "' + ((n && n.title) || 'this note') + '"?', message: 'This note will be permanently deleted.', confirmLabel: 'Delete', danger: true, onConfirm: deleteNoteNow });
+  }
+  async function deleteNoteNow() {
+    if (!activeNoteId) return;
+   const prevNotes = NOTES;
     NOTES = NOTES.filter(n => n.id !== activeNoteId);
-    await saveNotes();
+    if (!(await saveNotes())) { NOTES = prevNotes; renderNotes(); haptic('error'); showToast("Couldn't delete note", 'error'); return; }
     renderNotes();
     closeNoteEditor();
     showToast('Note deleted', 'neutral');
@@ -6964,12 +8470,14 @@
     const link = currentEntry?.qrLink || '';
     const text = `${name} · ${pos} · ${id}\n${link}`;
 
+   if ((method === 'save' || method === 'copy-img') && !capturedDataUrl) { haptic('error'); showToast('Card image not ready. Try again', 'error'); return; }
+
     if (method === 'save') {
       const a = document.createElement('a');
       a.href = capturedDataUrl;
       a.download = `ATHNA-${id}.png`;
       a.click();
-      haptic('success'); closeShare(); showToast('Saved to Photos', 'success'); return;
+      haptic('success'); closeShare(); showToast('Image downloaded', 'success'); return;
     }
 
     if (method === 'copy-link') {
@@ -7021,7 +8529,7 @@
       email:    `mailto:?subject=${encodeURIComponent('ATH•NA Card — ' + name)}&body=${encodedText}`,
       telegram: `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(name + ' · ' + pos)}`,
       whatsapp: `https://wa.me/?text=${encodedText}`,
-      imessage: `sms:&body=${encodedText}`,
+      imessage: `sms:${/iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent) ? '&' : '?'}body=${encodedText}`,
       messenger:`https://www.facebook.com/dialog/send?link=${encodeURIComponent(link)}&app_id=181477362219&redirect_uri=${encodeURIComponent(link)}`,
     };
 
@@ -7050,13 +8558,10 @@
     ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
     document.body.appendChild(ta);
     ta.focus(); ta.select();
-    try {
-      document.execCommand('copy');
-      haptic('success');
-      showToast('LINK COPIED', 'success');
-    } catch(e) {
-      showToast('Copy failed', 'error');
-    }
+    let copied = false;
+    try { copied = document.execCommand('copy'); } catch(e) {}
+    if (copied) { haptic('success'); showToast('Copied', 'success'); }
+    else { haptic('error'); showToast('Copy failed', 'error'); }
     document.body.removeChild(ta);
   }
 
@@ -7192,7 +8697,8 @@
       remarks,
       ts: new Date().toISOString(),
     };
-    queueFeedback(payload);
+    const fbSaved = await queueFeedback(payload);
+    if (!fbSaved) { haptic('error'); showToast("Couldn't send feedback. Try again", 'error'); return; }
     closeFeedback();
 
     if (ratingVal >= 4) {
@@ -7205,12 +8711,14 @@
   }
 
   async function queueFeedback(payload) {
-    const key = 'feedback:' + Date.now();
-    try { await window.storage.set(key, JSON.stringify(payload), false); } catch (e) {}
+    let local = false, sent = false;
+    try { local = !!(await window.storage.set('feedback:' + Date.now(), JSON.stringify(payload), false)); } catch (e) {}
     try {
       const p = new URLSearchParams({ type:'feedback', context: payload.context, category: payload.category || '', athid:payload.athid, name:payload.name, stars:String(payload.stars), remarks:payload.remarks, ts:payload.ts });
       await fetch(SHEET_URL + '?' + p.toString(), { method:'GET', mode:'no-cors' });
-    } catch (e) { /* still safely queued locally */ }
+      sent = true; // opaque response: dispatched, not confirmed
+    } catch (e) {}
+    return local || sent;
   }
 
   function showAppStoreGate() {
@@ -7334,7 +8842,7 @@
         cfmKnob.style.left = (on ? ON_LEFT : OFF_LEFT) + 'px';
         cfmTrack.style.background = on ? '#34C759' : '#ddd';
         window._cfmSaveDefault = on;
-        if (on) { haptic('success'); showToast('Appearance saved as default', 'success'); }
+        if (on) { commitAppearanceDefault(); }
         else { haptic('light'); }
       }
 
@@ -7740,7 +9248,7 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
 
     const opened = window.open(gmailUrl, '_blank');
     if (!opened) window.location.href = mailtoUrl;
-    showToast('Order request sent — check Gmail', 'success');
+    showToast('Gmail opened. Press Send to submit your order', 'neutral');
   }
 
   function showToast(msg, type = 'neutral') {
@@ -7843,9 +9351,37 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
       wrap.appendChild(s);
     }
   }
+  function saveConnectVisitorVcf() {
+  haptic('light');
+  const g = id => (document.getElementById(id)?.textContent || '').trim().replace(/^—$/, '');
+  const name = g('csName'); if (!name) return;
+  const vcf = ['BEGIN:VCARD','VERSION:3.0','FN:' + vcfEsc(name),
+    g('csRole') ? 'TITLE:' + vcfEsc(g('csRole')) : '',
+    g('csMobile') ? 'TEL;TYPE=CELL:' + g('csMobile') : '',
+    g('csEmail') ? 'EMAIL:' + g('csEmail') : '', 'END:VCARD'].filter(Boolean).join('\r\n');
+  const url = URL.createObjectURL(new Blob([vcf], { type: 'text/vcard;charset=utf-8' }));
+  const a = document.createElement('a'); a.href = url; a.download = name.replace(/\s+/g, '-') + '.vcf';
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+  showToast('.vcf downloaded', 'neutral');
+}
 
-  function submitConnectForm() {
+   async function submitConnectForm() {
     if (!validateConnectForm()) { haptic('error'); return; }
+    const sendBtn = document.querySelector('#connectFormBody .cf-submit');
+    if (sendBtn && sendBtn.dataset.busy) return;
+    if (sendBtn) { sendBtn.dataset.busy = '1'; sendBtn.textContent = 'Saving…'; sendBtn.style.opacity = '.6'; }
+    const vName = cfVal('cfName');
+   const visitor = newContact({ source: 'connect', name: vName, role: cfVal('cfTitle'), company: '—', mobile: acNormalizePhone(cfVal('cfMobile')), email: cfVal('cfEmail').toLowerCase(), address: '', notes: 'Via Connect form', tag: 'New', tagBg: '#9B59B6', tagFg: '#fff', avatarBg: avatarColorFromName(vName) });
+    let saved = true;
+    if (!(acFindMatch(visitor) || {}).match) {
+      visitor.id = ADDRESS_BOOK.reduce((m, c) => Math.max(m, c.id || 0), 0) + 1;
+      ADDRESS_BOOK.push(visitor);
+      saved = await saveAddressBook();
+      if (!saved) { const i = ADDRESS_BOOK.indexOf(visitor); if (i !== -1) ADDRESS_BOOK.splice(i, 1); }
+    }
+    if (sendBtn) { delete sendBtn.dataset.busy; sendBtn.textContent = 'Send & Connect'; sendBtn.style.opacity = ''; }
+    if (!saved) { haptic('error'); showToast("Couldn't save your info", 'error'); return; }
     haptic('success');
     document.getElementById('csName').textContent = cfVal('cfName');
     document.getElementById('csRole').textContent = cfVal('cfTitle');
@@ -7898,13 +9434,16 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
   async function saveProfileEdits() {
     const name = document.getElementById('epName').value.trim();
     const pos  = document.getElementById('epPosition').value.trim();
+    const prevExtra = profileExtra;
     profileExtra = {
       company:  document.getElementById('epCompany').value.trim(),
       email:    document.getElementById('epEmail').value.trim(),
       mobile:   document.getElementById('epMobile').value.trim(),
       linkedin: document.getElementById('epLinkedin').value.trim(),
     };
-    try { await window.storage.set(EP_STORE_KEY, JSON.stringify(profileExtra), false); } catch(e) {}
+    let epOk = false;
+    try { epOk = !!(await window.storage.set(EP_STORE_KEY, JSON.stringify(profileExtra), false)); } catch(e) {}
+    if (!epOk) { profileExtra = prevExtra; haptic('error'); showToast("Couldn't save profile", 'error'); return; }
 
     if (currentEntry) {
       if (name) currentEntry.name = name.toUpperCase();
@@ -7958,7 +9497,7 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
   async function loadPI() {
     try { const r = await window.storage.get(PI_KEY, false); if (r && r.value) PERSONAL_INFO = Object.assign(PERSONAL_INFO, JSON.parse(r.value)); } catch(e) {}
   }
-  async function savePI() { try { await window.storage.set(PI_KEY, JSON.stringify(PERSONAL_INFO), false); } catch(e) {} refreshQrPayload(); }
+ async function savePI() { let ok = false; try { ok = !!(await window.storage.set(PI_KEY, JSON.stringify(PERSONAL_INFO), false)); } catch(e) {} refreshQrPayload(); return ok; }
   loadPI().then(() => refreshQrPayload());
 
   function openPersonalInfoScreen() {
@@ -8201,8 +9740,9 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
   async function savePIField(key) {
     const inp = document.getElementById('piFieldInput');
     if (!inp) return;
+     const prevPI = PERSONAL_INFO[key];
     PERSONAL_INFO[key] = inp.value.trim();
-    await savePI();
+    if (!(await savePI())) { PERSONAL_INFO[key] = prevPI; refreshQrPayload(); haptic('error'); showToast("Couldn't save", 'error'); return; }
     /* === START: SYNC AFTER SAVE === */
     piSyncToCard();
     /* === END: SYNC AFTER SAVE === */
@@ -8365,6 +9905,10 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
   /* ── SIGN OUT ── */
   function confirmSignOut() {
     haptic('medium');
+    confirmDialog({ title: 'Sign out of ATH•NA OS?', confirmLabel: 'Sign Out', onConfirm: executeSignOut });
+  }
+  function confirmSignOutLegacy() {
+    haptic('medium');
     // minimal inline confirm — no blocking alert
     const existing = document.getElementById('signOutConfirm');
     if (existing) { existing.remove(); return; }
@@ -8382,13 +9926,17 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
   }
 
   function executeSignOut() {
-    haptic('success');
+   haptic('light');
     closeAccountPage();
-    setTimeout(() => showToast('Signed out successfully', 'success'), 320);
+    setTimeout(() => showToast("Sign-out isn't available yet", 'neutral'), 320);
   }
 
   /* ── DELETE ACCOUNT ── */
   function confirmDeleteAccount() {
+    haptic('error');
+    confirmDialog({ title: 'Delete account?', message: 'This will permanently delete your ATH•NA ID, card, contacts, and all data. This cannot be undone.', confirmLabel: 'Delete Forever', danger: true, onConfirm: executeDeleteAccount });
+  }
+  function confirmDeleteAccountLegacy() {
     haptic('error');
     const existing = document.getElementById('deleteAcctConfirm');
     if (existing) { existing.remove(); return; }
@@ -8406,10 +9954,17 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
     box.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }
 
-  function executeDeleteAccount() {
+ async function executeDeleteAccount() {
     haptic('error');
-    closeAccountPage();
-    setTimeout(() => showToast('Account deleted', 'error'), 320);
+    let failed = false;
+    try {
+      const res = await window.storage.list('', false);
+      for (const k of (res && res.keys) || []) {
+        try { await window.storage.delete(k, false); } catch (e) { failed = true; }
+      }
+    } catch (e) { failed = true; }
+    if (failed) { showToast("Couldn't delete all data", 'error'); return; }
+    location.reload();
   }
 
   /* ── CREATE YOUR IDENTITY (registration) ── */
@@ -8458,9 +10013,8 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
     if (!idTosAgreed) { document.getElementById('idTosErr').classList.add('on'); ok = false; }
 
     if (!ok) { haptic('error'); return; }
-    haptic('success');
-    closeIdentityScreen();
-    showToast('ATH•NA ID GENERATED', 'success');
+    haptic('light');
+    showToast('Registration is not available yet', 'neutral');
   }
 
   /* ── TERMS OF SERVICE DOCUMENT ── */
@@ -8472,6 +10026,461 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
   function closeTosScreen() {
     document.getElementById('tosScreen').classList.remove('show');
   }
+
+  /* === START: MODAL POLICY ===
+     sheet   → drag down · tap outside · X/Cancel
+     screen  → Back/Cancel lang · may confirm bago i-discard ang edits (pati Escape)
+     confirm → explicit Cancel + explicit action · hindi nadi-dismiss ng backdrop · Escape = Cancel */
+  let _confirmCb = null;
+
+  function confirmDialog(o) {
+    document.getElementById('confirmDialogOverlay')?.remove();
+    _confirmCb = o;
+    const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+    const bs = 'flex:1;padding:13px;border-radius:12px;border:none;' + F + 'font-size:14.5px;cursor:pointer;';
+    const ov = document.createElement('div');
+    ov.id = 'confirmDialogOverlay';
+    ov.className = 'fb-overlay show';
+    ov.style.zIndex = '9900';
+    ov.setAttribute('role', 'alertdialog');
+    ov.setAttribute('aria-modal', 'true');
+    ov.setAttribute('aria-labelledby', 'confirmDialogTitle');
+    if (o.message) ov.setAttribute('aria-describedby', 'confirmDialogMsg');
+    ov.innerHTML = `
+      <div class="fb-modal" style="background:#ECE4D6;border:1px solid rgba(0,0,0,0.06);box-shadow:0 24px 60px rgba(0,0,0,0.18);text-align:center;padding:24px 20px 18px;">
+        <div id="confirmDialogTitle" style="${F}font-size:17px;font-weight:700;color:#1c1c1e;line-height:1.3;word-break:break-word;">${auEsc(o.title)}</div>
+        ${o.message ? `<div id="confirmDialogMsg" style="${F}font-size:13px;color:rgba(60,60,67,0.6);line-height:1.55;margin-top:8px;">${auEsc(o.message)}</div>` : ''}
+        <div style="display:flex;gap:10px;margin-top:20px;">
+          <button type="button" id="confirmCancelBtn" onclick="cancelConfirmDialog()" style="${bs}background:rgba(0,0,0,0.07);color:#1c1c1e;font-weight:600;">${auEsc(o.cancelLabel || 'Cancel')}</button>
+          <button type="button" id="confirmOkBtn" onclick="acceptConfirmDialog()" style="${bs}background:${o.danger ? '#FF453A' : '#1c1c1e'};color:${o.danger ? '#fff' : '#ECE4D6'};font-weight:700;">${auEsc(o.confirmLabel || 'OK')}</button>
+        </div>
+      </div>`;
+    // backdrop tap ay hindi nagsasara. Nagsha-shake lang para malaman na kailangan ng explicit na sagot
+    ov.onclick = e => {
+      if (e.target !== ov) return;
+      const m = ov.querySelector('.fb-modal'); haptic('error');
+      m.style.animation = 'none'; void m.offsetWidth; m.style.animation = 'fbShake .4s';
+    };
+    document.body.appendChild(ov);
+    // nested rAF: pagkatapos ma-record ng a11y layer ang opener, saka ilipat ang focus sa Cancel (safe default)
+    requestAnimationFrame(() => requestAnimationFrame(() => document.getElementById('confirmCancelBtn')?.focus()));
+  }
+  function closeConfirmDialog() {
+    const ov = document.getElementById('confirmDialogOverlay'); if (!ov) return;
+    ov.style.transition = 'opacity .18s'; ov.style.opacity = '0'; ov.style.pointerEvents = 'none';
+    setTimeout(() => ov.remove(), 180);
+  }
+  function cancelConfirmDialog() {
+    const cb = _confirmCb; _confirmCb = null;
+    haptic('light'); closeConfirmDialog();
+    if (cb && cb.onCancel) cb.onCancel();
+  }
+  function acceptConfirmDialog() {
+    const cb = _confirmCb; _confirmCb = null;
+    closeConfirmDialog();
+    if (cb && cb.onConfirm) setTimeout(cb.onConfirm, 200);
+  }
+  function confirmDiscard(onDiscard) {
+    confirmDialog({ title: 'Discard changes?', message: "What you've entered won't be saved.", confirmLabel: 'Discard', cancelLabel: 'Keep Editing', danger: true, onConfirm: onDiscard });
+  }
+
+  /* ── full-screen editors: dirty checks + guarded close ── */
+  function acIsDirty() {
+    return ['acFirstName','acLastName','acCompany','acPosition','acPhone','acEmail','acLinkedin','acNotes']
+      .some(id => (document.getElementById(id)?.value || '').trim());
+  }
+  function requestCloseAddContact() {
+    if (_acSaving) return;
+    if (acIsDirty()) confirmDiscard(closeAddContactModal); else closeAddContactModal();
+  }
+
+  function noteIsDirty() {
+    const t = (document.getElementById('noteEditorTitle').value || '').trim();
+    const b = (document.getElementById('noteEditorBody').value || '').trim();
+    const n = activeNoteId ? NOTES.find(x => x.id === activeNoteId) : null;
+    if (!n) return !!(t || b);
+    const savedTitle = n.title === 'New Note' ? '' : (n.title || '');
+    return t !== savedTitle || b !== String(n.body || '').trim() || _noteCurrentPinned !== !!n.pinned;
+  }
+  function requestCloseNoteEditor() {
+    if (noteIsDirty()) confirmDiscard(closeNoteEditor); else closeNoteEditor();
+  }
+
+  function cdEditIsDirty() {
+    const c = activeContact; if (!c || !_cdEditMode) return false;
+    const v = k => (document.getElementById('cdfs-edit-' + k)?.value || '').trim();
+    const s = x => String(x == null ? '' : x).trim();
+    const blank = x => (x === '—' || x === 'Contact') ? '' : s(x);
+    return v('name') !== s(c.name) || v('role') !== blank(c.role) || v('company') !== blank(c.company) ||
+           v('mobile') !== s(c.mobile) || v('email') !== s(c.email) || v('address') !== s(c.address) ||
+           v('linkedin') !== s(c.linkedin) || v('notes') !== s(c.notes) || v('metAt') !== s(c.metAt) || v('morePhones') !== c.phones.slice(1).join(', ') || v('moreEmails') !== c.emails.slice(1).join(', ');
+  }
+  function cdRequestCancelEdit() {
+    if (_cdEditMode && cdEditIsDirty()) confirmDiscard(() => { if (_cdEditMode) toggleContactEdit(); });
+    else toggleContactEdit();
+  }
+  function requestCloseContactDetail() {
+    if (_cdEditMode && cdEditIsDirty()) confirmDiscard(closeContactDetailScreen);
+    else closeContactDetailScreen();
+  }
+
+  /* ── backdrop dismissal: kailangang sa backdrop din nagsimula ang press.
+     Kapag nag-select ka ng text sa loob ng sheet at binitawan sa labas, hindi na ito magsasara. ── */
+  (function backdropGuard() {
+    const BACKDROPS = '.share-overlay,.cf-overlay,.fb-overlay,.gs-overlay,#cardMenuOverlay,#cardFilterOverlay,#physOrderOverlay';
+    let down = null;
+    document.addEventListener('pointerdown', e => { down = e.target; }, true);
+    document.addEventListener('click', e => {
+      if (!e.isTrusted) return; // ang Escape ng a11y layer ay gumagamit ng el.click()
+      const t = e.target;
+      if (t.matches && t.matches(BACKDROPS) && down !== t) { e.stopImmediatePropagation(); e.preventDefault(); }
+    }, true);
+  })();
+  /* === END: MODAL POLICY === */
+
+  /* === START: ACCESSIBILITY LAYER === */
+  (function a11yLayer() {
+    const DIALOG_SEL = '.share-overlay,.cf-overlay,.fb-overlay,.gs-overlay,#cardMenuOverlay,#cardFilterOverlay,#physOrderOverlay,#addContactScreen,#noteEditorScreen,#contactDetailScreen,#screenAccount,#personalInfoScreen,#identityScreen,#licenseScreen,#tosScreen,#screenOS';
+    const CLICKABLE = '[onclick]:not(button):not(input):not(select):not(textarea):not(a[href]),.ab-row,.ab-tag,.theme-dot-wrap,.au-nomatch-row,.id-checkbox';
+    const ERR_SEL = '.ac-err,.cf-fe,.id-err-msg,.err-msg';
+    const KEEP = new Set(['toast', 'undoToast']);
+    const FOCUSABLE = 'a[href],button,input:not([type="hidden"]),select,textarea,[tabindex]';
+
+    const LABELS = {
+      addContactScreen:'New contact', noteEditorScreen:'Note editor', contactDetailScreen:'Contact details',
+      screenAccount:'ATH•NA Account', personalInfoScreen:'Personal information', identityScreen:'Create your identity',
+      licenseScreen:'License verification', tosScreen:'Terms of Service and Privacy Policy', screenOS:'ATH•NA OS',
+      cardMenuOverlay:'Card menu', gsOverlay:'Search', shareOverlay:'Share card', fbOverlay:'Rate this card',
+      reviewOverlay:'Review details', redeemOverlay:'Redeem code', dupSheetOverlay:'Duplicate contacts',
+      syncContactsOverlay:'Import contacts', addMeetingOverlay:'Meeting', connectFormOverlay:'Connect',
+      editProfileOverlay:'Edit profile', securitySheetOverlay:'Sign-in and security', colorwaySheetOverlay:'Card appearance',
+      myProfileCardOverlay:'My profile', auOverlay:'AU Human Discovery Engine', auAboutOverlay:'About AU',
+      auOppOverlay:'AU Opportunities', auOppDetailOverlay:'Opportunity details', cardFilterOverlay:'Card appearance',
+      physOrderOverlay:'Order physical NFC card', appStoreGateOverlay:'Rate on the App Store'
+    };
+    const CLOSERS = {
+      addContactScreen:'requestCloseAddContact', noteEditorScreen:'requestCloseNoteEditor', contactDetailScreen:'requestCloseContactDetail',
+      confirmDialogOverlay:'cancelConfirmDialog',
+      screenAccount:'closeAccountPage', personalInfoScreen:'closePersonalInfoScreen', identityScreen:'closeIdentityScreen',
+      licenseScreen:'closeLicenseScreen', tosScreen:'closeTosScreen', screenOS:'exitOS',
+      cardMenuOverlay:'closeCardMenu', gsOverlay:'closeGlobalSearch'
+    };
+    const CONTROL_LABELS = {
+      acFirstName:'First name', acLastName:'Last name', acCompany:'Company', acPosition:'Job title', acPhone:'Phone',
+      acEmail:'Email', acLinkedin:'LinkedIn profile URL', acNotes:'Notes', abSearchInput:'Search contacts',
+      gsInput:'Search everything', auInput:'Ask Gold', noteEditorTitle:'Note title', noteEditorBody:'Note text',
+      fbDetails:'Remarks (optional)', redeemCode:'Promo or gift code', physMobileInput:'Mobile number',
+      physAddressInput:'Delivery address', 'cdfs-notes-inline':'Contact notes', 'cdfs-edit-notes':'Contact notes'
+    };
+    const BTN_RULES = [
+      ['.os-back', 'Back to card'], ['.acct-back,.id-back', 'Back'], ['.lic-close', 'Close'],
+      ['#abAddBtn', 'Add contact'], ['#notePinBtn', 'Pin note'],
+      ['.up-cal-nav > button:first-child', 'Previous month'], ['.up-cal-nav > button:last-child', 'Next month'],
+      ['button[onclick*="addPIListItem"]', 'Add item']
+    ];
+    const ONCLICK_LABELS = [
+      [/enterOS\('address'\)/, 'Open contacts'], [/enterOS\('upcoming'\)/, 'Open calendar'],
+      [/AI is under development/, 'AI assistant, coming soon'], [/openFeedbackChoice/, 'Rate this card'],
+      [/shareCard\(\)/, 'Share card'], [/triggerPhotoUpload/, 'Change profile photo'],
+      [/removePIListItem/, 'Remove item'], [/addPIListItem/, 'Add item'],
+      [/closeContactDetailScreen|backToPreviewStep|closeAccountPage|closePersonalInfoScreen|closeIdentityScreen|closeTosScreen/, 'Back'],
+      [/closeDupSheet|closeLicenseScreen/, 'Close']
+    ];
+
+    const q = (root, sel) => (root.nodeType === 1 && root.matches(sel) ? [root] : []).concat([...root.querySelectorAll(sel)]);
+    let active = null, lastFocus = null, raf = 0, uid = 0, inerted = [];
+    const openers = new Map();
+
+    /* ── open/closed detection + which dialog is on top ── */
+    const isOpen = el => {
+      if (!el.isConnected) return false;
+      const cs = getComputedStyle(el);
+      return cs.display !== 'none' && cs.visibility !== 'hidden' && el.getClientRects().length > 0;
+    };
+    const zOf = el => parseInt(getComputedStyle(el).zIndex, 10) || 0;
+    function pickTop(list) {
+      return list.reduce((best, el) => {
+        if (!best) return el;
+        if (best.contains(el)) return el;
+        if (el.contains(best)) return best;
+        const zb = zOf(best), ze = zOf(el);
+        if (ze !== zb) return ze > zb ? el : best;
+        return (best.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) ? el : best;
+      }, null);
+    }
+
+    /* ── dialog semantics ── */
+    function guessTitle(el) {
+      let n = 0;
+      for (const d of el.querySelectorAll('div,span,h1,h2,h3')) {
+        if (++n > 150) break;
+        if (d.children.length) continue;
+        const t = d.textContent.trim();
+        if (t.length < 2 || t.length > 48) continue;
+        const cs = getComputedStyle(d);
+        if (parseFloat(cs.fontSize) >= 17 && parseInt(cs.fontWeight, 10) >= 600) return t;
+      }
+      return '';
+    }
+    function prep(el) {
+      if (el.getAttribute('role') !== 'alertdialog') el.setAttribute('role', 'dialog');
+      el.setAttribute('aria-modal', 'true');
+      if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1');
+      if (!el.hasAttribute('aria-label') && !el.hasAttribute('aria-labelledby')) {
+        let l = LABELS[el.id];
+        if (el.id === 'contactDetailScreen' && typeof activeContact !== 'undefined' && activeContact) l = 'Contact: ' + activeContact.name;
+        if (l) el.setAttribute('aria-label', l);
+      }
+    }
+
+    /* ── background inert (real modal behavior) ── */
+    function applyInert(top) {
+      inerted.forEach(e => e.removeAttribute('inert'));
+      inerted = [];
+      if (!top) return;
+      let node = top;
+      while (node && node !== document.body && node.parentElement) {
+        const parent = node.parentElement;
+        [...parent.children].forEach(sib => {
+          if (sib === node || KEEP.has(sib.id) || /^(SCRIPT|STYLE|TEMPLATE)$/.test(sib.tagName)) return;
+          if (!sib.hasAttribute('inert')) { sib.setAttribute('inert', ''); inerted.push(sib); }
+        });
+        node = parent;
+      }
+    }
+
+    /* ── focus helpers ── */
+    function focusables(root) {
+      return [...root.querySelectorAll(FOCUSABLE)].filter(el =>
+        !el.disabled && el.tabIndex >= 0 && el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden');
+    }
+    function resolveOpener(t) {
+      if (!t) return null;
+      if (t.isConnected) return t;
+      const d = t.dataset || {}, cls = t.classList && t.classList[0];
+      const key = d.id != null ? ['id', d.id] : d.noteid != null ? ['noteid', d.noteid] : null;
+      return key && cls ? document.querySelector('.' + cls + '[data-' + key[0] + '="' + key[1] + '"]') : null;
+    }
+
+    function sync() {
+      raf = 0;
+      const open = q(document, DIALOG_SEL).filter(isOpen);
+      const set = new Set(open);
+      let restore = null, closedActive = false;
+      openers.forEach((op, el) => {
+        if (!set.has(el)) { if (el === active) { closedActive = true; restore = op; } openers.delete(el); }
+      });
+      open.forEach(el => {
+        prep(el);
+        if (!el.hasAttribute('aria-label') && !el.hasAttribute('aria-labelledby')) el.setAttribute('aria-label', guessTitle(el) || 'Dialog');
+        if (!openers.has(el)) openers.set(el, lastFocus);
+      });
+      const top = open.length ? pickTop(open) : null;
+      applyInert(top);
+      if (top === active) return;
+      active = top;
+      const back = resolveOpener(restore);
+      if (!top) { if (back) back.focus({ preventScroll: true }); return; }
+      if (closedActive && back && top.contains(back)) { back.focus({ preventScroll: true }); return; }
+      if (!top.contains(document.activeElement)) top.focus({ preventScroll: true });
+    }
+
+    /* ── close (Escape) ── */
+    function closeTop() {
+      const el = active; if (!el) return;
+      if (typeof auMenuOpen !== 'undefined' && auMenuOpen) { closeAuMenu(); return; }
+      if (typeof auPlusMenuOpen !== 'undefined' && auPlusMenuOpen) { closeAuPlusMenu(); return; }
+      if (el.id === 'contactDetailScreen') {
+        const ed = document.getElementById('cdfs-notes-editor');
+        if (ed && ed.style.display === 'block') { cancelInlineNotesEdit(); return; }
+        if (typeof _cdEditMode !== 'undefined' && _cdEditMode) { cdRequestCancelEdit(); return; }
+      }
+      const fn = CLOSERS[el.id];
+      if (fn) { if (typeof window[fn] === 'function') window[fn](); else el.classList.remove('show'); return; }
+      el.click(); // overlays: same backdrop handler (event.target === overlay) na gamit ng mouse
+    }
+
+    function activate(el) {
+      if (el.getAttribute('role') === 'switch') {
+        el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, clientX: 0, clientY: 0 }));
+        window.dispatchEvent(new PointerEvent('pointerup', { bubbles: true }));
+        return;
+      }
+      el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.isComposing || e.defaultPrevented) return;
+      if (e.key === 'Escape' && active) { e.preventDefault(); closeTop(); return; }
+      if (e.key === 'Tab' && active) {
+        const f = focusables(active), cur = document.activeElement;
+        if (!f.length) { e.preventDefault(); active.focus({ preventScroll: true }); return; }
+        const first = f[0], last = f[f.length - 1];
+        if (!active.contains(cur)) { e.preventDefault(); first.focus(); }
+        else if (e.shiftKey && (cur === first || cur === active)) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && cur === last) { e.preventDefault(); first.focus(); }
+        return;
+      }
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.matches &&
+          e.target.matches('[role="button"],[role="checkbox"],[role="switch"]') &&
+          !e.target.matches('button,a[href],input,textarea,select')) {
+        e.preventDefault();
+        if (!e.repeat) activate(e.target);
+      }
+    });
+    document.addEventListener('focusin', e => { lastFocus = e.target; });
+    document.addEventListener('pointerdown', e => {
+      const t = e.target.closest && e.target.closest('button,[role="button"],[tabindex],a,input');
+      if (t) lastFocus = t; // Safari: hindi nafo-focus ang button pag na-click
+    }, true);
+
+    /* ── names / states ── */
+    function nameFor(el) {
+      const oc = el.getAttribute('onclick') || '';
+      if (el.matches('.up-cal-day')) {
+        const m = oc.match(/'(\d{4}-\d{2}-\d{2})'/);
+        if (m) {
+          let s = new Date(m[1] + 'T00:00:00').toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+          if (el.classList.contains('has-event')) s += ', has meetings';
+          return s;
+        }
+      }
+      if (el.matches('.ab-row')) {
+        const n = el.querySelector('.ab-row-name'), t = el.querySelector('.ab-tag');
+        return n ? n.textContent.trim() + (t ? ', ' + t.textContent.trim() : '') : '';
+      }
+      if (el.matches('.ab-tag')) return 'Filter by ' + el.textContent.trim();
+      if (el.matches('.id-checkbox')) return 'I agree to the Terms of Service and Privacy Policy';
+      if (el.matches('.theme-dot-wrap')) {
+        const d = el.querySelector('.theme-dot');
+        if (d && d.dataset.cw) return ((BUILDING_COLORWAYS[d.dataset.cw] || {}).label || d.dataset.cw) + ' skyline colorway';
+        if (d && d.dataset.id) return (THEME_LABELS[d.dataset.id] || d.dataset.id) + ' card theme';
+      }
+      const ct = oc.match(/cfmSelectTheme\('([\w-]+)'\)/);
+      if (ct) return (THEME_LABELS[ct[1]] || ct[1]) + ' card theme';
+      if (el.textContent.trim()) return '';
+      for (const [re, l] of ONCLICK_LABELS) if (re.test(oc)) return l;
+      return '';
+    }
+
+    function syncState(n) {
+      const el = n.closest && n.closest('.theme-dot-wrap,.au-nomatch-row,.id-checkbox,.up-toggle-btn,[role="switch"]');
+      if (!el) return;
+      if (el.matches('.theme-dot-wrap')) el.setAttribute('aria-pressed', String(!!el.querySelector('.theme-dot.active')));
+      else if (el.matches('.id-checkbox')) el.setAttribute('aria-checked', String(el.classList.contains('checked')));
+      else if (el.matches('.au-nomatch-row')) el.setAttribute('aria-checked', String(!!el.querySelector('.checked')));
+      else if (el.matches('.up-toggle-btn')) el.setAttribute('aria-pressed', String(el.classList.contains('active')));
+      else if (el.matches('[role="switch"]')) el.setAttribute('aria-checked', String(/52,\s*199,\s*89/.test(el.style.background)));
+    }
+
+    function wireError(el) {
+      if (!el.id) el.id = 'a11y-err-' + (++uid);
+      const prev = el.previousElementSibling; if (!prev) return;
+      const ins = prev.matches('input,textarea,select') ? [prev] : [...prev.querySelectorAll('input,textarea,select')];
+      const on = el.classList.contains('show') || el.classList.contains('on');
+      ins.forEach(i => {
+        if (on) { i.setAttribute('aria-invalid', 'true'); i.setAttribute('aria-describedby', el.id); }
+        else { i.removeAttribute('aria-invalid'); if (i.getAttribute('aria-describedby') === el.id) i.removeAttribute('aria-describedby'); }
+      });
+    }
+
+    function labelControl(c) {
+      if (c.type === 'hidden' || c.hasAttribute('aria-label') || c.hasAttribute('aria-labelledby') || (c.labels && c.labels.length)) return;
+      const clean = s => (s || '').replace(/\s*\(.*?\)/g, '').replace(/\*/g, '').replace(/\s+/g, ' ').trim();
+      const p = c.previousElementSibling;
+      const isFieldLabel = p && p.matches('.cf-fl,.am-field-label,.id-field-label');
+      let t = CONTROL_LABELS[c.id];
+      if (!t && p && (isFieldLabel || p.tagName === 'SPAN')) t = clean(p.textContent);
+      if (!t) t = clean(c.getAttribute('placeholder') || c.title);
+      if (t) c.setAttribute('aria-label', t);
+      if (isFieldLabel && /\*/.test(p.textContent)) c.setAttribute('aria-required', 'true');
+    }
+
+    /* ── enhance a subtree (runs at load + on every added node) ── */
+    function enhance(root) {
+      q(root, DIALOG_SEL).forEach(prep);
+
+      q(root, CLICKABLE).forEach(el => {
+        if (el.matches(DIALOG_SEL) || el.id === 'card') return;
+        const isCb = el.matches('.au-nomatch-row,.id-checkbox');
+        if (!el.hasAttribute('role')) el.setAttribute('role', isCb ? 'checkbox' : 'button');
+        if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+        const l = nameFor(el);
+        if (l && (!el.hasAttribute('aria-label') || el.matches('.ab-row,.ab-tag,.up-cal-day'))) el.setAttribute('aria-label', l);
+        syncState(el);
+      });
+
+      q(root, '#pillVisToggleTrack,#cfm-save-track,#phys-toggle-track').forEach(t => {
+        t.setAttribute('role', 'switch'); t.tabIndex = 0;
+        if (!t.hasAttribute('aria-label')) t.setAttribute('aria-label', t.id === 'pillVisToggleTrack' ? 'Show name and title on card' : 'Save as default');
+        syncState(t);
+      });
+      q(root, '.up-toggle-btn').forEach(syncState);
+
+      BTN_RULES.forEach(([sel, l]) => q(root, sel).forEach(b => { if (!b.hasAttribute('aria-label')) b.setAttribute('aria-label', l); }));
+      q(root, '.up-row-del').forEach(b => {
+        const n = b.closest('.up-row') && b.closest('.up-row').querySelector('.up-row-name');
+        b.setAttribute('aria-label', 'Delete meeting' + (n ? ' with ' + n.textContent.trim() : ''));
+      });
+      q(root, 'button').forEach(b => {
+        if (b.hasAttribute('aria-label') || b.textContent.trim() || b.title) return;
+        const l = nameFor(b); if (l) b.setAttribute('aria-label', l);
+      });
+
+      q(root, 'input,textarea,select').forEach(labelControl);
+      q(root, ERR_SEL).forEach(el => { if (!el.hasAttribute('role')) el.setAttribute('role', 'alert'); wireError(el); });
+      q(root, '#undoToast').forEach(t => t.setAttribute('role', 'alert'));
+
+      q(root, 'svg').forEach(s => { if (!s.hasAttribute('aria-label') && !s.querySelector('[onclick]')) s.setAttribute('aria-hidden', 'true'); });
+      q(root, '#acAvCircle,.ab-avatar,.ab-recent-avatar,.au-avatar,#cdfs-avatar,.os-profile-avatar').forEach(a => a.setAttribute('aria-hidden', 'true'));
+    }
+
+    /* ── observer: new nodes get enhanced; dialog open/close triggers sync ── */
+    const mo = new MutationObserver(list => {
+      let need = false;
+      for (const m of list) {
+        if (m.type === 'childList') {
+          m.addedNodes.forEach(n => {
+            if (n.nodeType !== 1) return;
+            enhance(n);
+            if (n.matches(DIALOG_SEL) || n.querySelector(DIALOG_SEL)) need = true;
+          });
+          m.removedNodes.forEach(n => {
+            if (n.nodeType === 1 && (n.matches(DIALOG_SEL) || n.querySelector(DIALOG_SEL))) need = true;
+          });
+        } else {
+          const t = m.target;
+          if (!t.matches) continue;
+          if (t.matches(DIALOG_SEL + ',.os-pane')) need = true;
+          if (t.matches(ERR_SEL)) wireError(t);
+          syncState(t);
+        }
+      }
+      if (need && !raf) raf = requestAnimationFrame(sync);
+    });
+    mo.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'style'] });
+
+    /* ── init ── */
+    const toast = document.getElementById('toast');
+    if (toast) { toast.setAttribute('role', 'status'); toast.setAttribute('aria-live', 'polite'); toast.setAttribute('aria-atomic', 'true'); }
+
+    // Ang card ay may nested controls, kaya group ito, at may hiwalay na keyboard "Flip card" button
+    const card = document.getElementById('card');
+    if (card) { card.setAttribute('role', 'group'); card.setAttribute('aria-label', 'Digital business card'); }
+    const scene = document.querySelector('.scene');
+    if (scene && !scene.querySelector('.a11y-flip')) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'a11y-flip'; b.textContent = 'Flip card';
+      b.setAttribute('aria-pressed', 'false');
+      b.addEventListener('focus', () => b.setAttribute('aria-pressed', String(isFlipped)));
+      b.addEventListener('click', e => { e.stopPropagation(); flipCard(); b.setAttribute('aria-pressed', String(isFlipped)); });
+      scene.appendChild(b);
+    }
+
+    enhance(document.body);
+    sync();
+  })();
+  /* === END: ACCESSIBILITY LAYER === */
 
   function agreeTosFromScreen() {
     haptic('success');
