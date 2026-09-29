@@ -5553,7 +5553,7 @@
 
   function csvEscape(val) {
     val = String(val ?? ''); if (/^[=@\t\r]/.test(val)) val = "'" + val;
-    : if (/[",\r\n]/.test(val)) return '"' + val.replace(/"/g, '""') + '"';
+    if (/[",\r\n]/.test(val)) return '"' + val.replace(/"/g, '""') + '"';
     return val;
   }
 
@@ -6905,9 +6905,6 @@ function toggleContactEdit() {
       'END:VCARD'
     ].filter(Boolean).join('\r\n');
 
-    // try native contacts API first (iOS Safari 17+)
-    if ('contacts' in navigator && 'ContactsManager' in window) {
-    }
     const blob = new Blob([vcf], { type: 'text/vcard;charset=utf-8' });
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
