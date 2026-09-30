@@ -10672,26 +10672,7 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
     };
     currentEntry = entry;
     entries.push(entry);
-    const vid = new URLSearchParams(location.search).get('id') ||
-                new URLSearchParams(location.hash.replace(/^#/, '')).get('id');
-    if (vid) {
-      /* VIEWER MODE: profile preview + Save Contact lang, walang card/OS */
-      window.__VIEWER__ = true;
-      document.getElementById('screenCard').style.setProperty('display', 'none', 'important');
-      openConnectForm();
-      const ov = document.getElementById('connectFormOverlay');
-      ov.style.background = '#ECE4D6';
-      ov.style.backdropFilter = 'none';
-      ov.style.webkitBackdropFilter = 'none';
-      ov.style.alignItems = 'center';
-      const bookBtn = document.querySelector('#connectStepPreview .cf-submit');
-      if (bookBtn) bookBtn.style.display = 'none';
-      const hd = document.getElementById('connectFormHandle');
-      if (hd) hd.style.display = 'none';
-      const fc = document.getElementById('cpFolCircle');
-      if (fc) fc.onclick = null;
-      return;
-    }
+    /* Ang articard.artibytte.com (may ?id= man o wala) ay laging bubukas sa card home. */
     showCard(entry);
   });
 
