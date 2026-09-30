@@ -3726,6 +3726,29 @@
     showToast('.vcf downloaded. Open it to add to Contacts', 'neutral');
   }
 
+   /* === START: API CONNECTOR === */
+  const API_URL = 'https://script.google.com/macros/s/AKfycby5-iXl1Mlz02091BDWODpdAj5S7qu0lj96U6Ffw1qaGmWj6Ua8_t_i23qgV1-4khHL/exec';
+
+  async function apiPost(action, payload) {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action, payload: payload || {} })
+    });
+    const j = await res.json();
+    if (!j.success) throw new Error(j.error || 'Request failed');
+    return j.data;
+  }
+
+  async function apiGet(action, params) {
+    const qs = new URLSearchParams(Object.assign({ action }, params || {})).toString();
+    const res = await fetch(API_URL + '?' + qs);
+    const j = await res.json();
+    if (!j.success) throw new Error(j.error || 'Request failed');
+    return j.data;
+  }
+  /* === END: API CONNECTOR === */
+
   /* === START: NATIVE ARTIMEET MODAL === */
   const AMX_URL = API_URL;
   const AMX_TYPES = ['Business / Partnership','Product Demo','Client Meeting','Technical Discussion','Career / Hiring','Sales Consultation','Project Kickoff','Project Status Update','Contract / Proposal Review','Investor Pitch','Vendor / Supplier Meeting','Onboarding Session','Training / Workshop','Strategy Planning','Budget / Finance Review','Marketing Consultation','Design Review','Legal Consultation','HR / Performance Review','Customer Support / Troubleshooting','Networking / Introduction','Mentorship / Coaching','Media / Press Interview','Speaking Engagement / Event','Real Estate Consultation','Financial Advisory','Medical / Health Consultation','Academic / Research Discussion','Volunteer / Community Meeting','Other'];
@@ -4162,28 +4185,6 @@
       timers.set(el, setTimeout(() => el.classList?.remove('scroll-active'), 1000));
     }, { capture: true, passive: true });
   })();
-  /* === START: API CONNECTOR === */
-  const API_URL = 'https://script.google.com/macros/s/AKfycby5-iXl1Mlz02091BDWODpdAj5S7qu0lj96U6Ffw1qaGmWj6Ua8_t_i23qgV1-4khHL/exec';
-
-  async function apiPost(action, payload) {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action, payload: payload || {} })
-    });
-    const j = await res.json();
-    if (!j.success) throw new Error(j.error || 'Request failed');
-    return j.data;
-  }
-
-  async function apiGet(action, params) {
-    const qs = new URLSearchParams(Object.assign({ action }, params || {})).toString();
-    const res = await fetch(API_URL + '?' + qs);
-    const j = await res.json();
-    if (!j.success) throw new Error(j.error || 'Request failed');
-    return j.data;
-  }
-  /* === END: API CONNECTOR === */
   const SHEET_URL = API_URL;
   let entries = [], currentEntry = null;
 
