@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ATH•NA — Card Setup</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   :root { --gold: #E8CC7A; --bg: #1a1a1a; --surface: #111; --border: rgba(232,204,122,0.18); }
   html, body { background: #ECE4D6 !important; }
@@ -409,6 +407,11 @@
   .os-row:focus-visible,.ab-row:focus-visible,.up-row:focus-visible,.gs-row:focus-visible,.au-recent-row:focus-visible { outline-offset:-3px !important; box-shadow:none !important; }
   rect[role="button"]:focus-visible { outline:none !important; box-shadow:none !important; stroke:#1c1c1e !important; stroke-width:2 !important; fill:rgba(28,28,30,.1) !important; }
   [role="dialog"]:focus { outline:none !important; box-shadow:none !important; }
+  /* hide focus rings for mouse/touch users; keyboard (Tab) users still see them */
+  html.using-pointer :focus,
+  html.using-pointer :focus-visible { outline:none !important; box-shadow:none !important; }
+  html.using-pointer rect[role="button"]:focus,
+  html.using-pointer rect[role="button"]:focus-visible { outline:none !important; stroke:none !important; fill:transparent !important; }
   .a11y-flip { position:absolute; left:50%; top:100%; transform:translateX(-50%); margin-top:10px; padding:10px 18px; border:none; border-radius:20px; background:#1c1c1e; color:#ECE4D6; font:600 13px -apple-system,'SF Pro Text',sans-serif; opacity:0; pointer-events:none; z-index:30; }
   .a11y-flip:focus-visible { opacity:1; pointer-events:auto; }
   @media (prefers-reduced-motion: reduce) {
@@ -585,7 +588,9 @@
   .scene { perspective: 1200px; width: 340px; height: 580px; position: relative; flex-shrink: 0; }
   .scene::before { content:'';position:absolute;width:420px;height:680px;left:50%;top:50%;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(232,204,122,0.12) 0%,transparent 70%);filter:blur(50px);pointer-events:none;animation:ambientPulse 5s ease-in-out infinite; }
   @keyframes ambientPulse{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:.9;transform:translate(-50%,-50%) scale(1.04)}}
-  .flip-card{width:100%;height:100%;transform-style:preserve-3d;animation:cardReveal 1.4s cubic-bezier(0.23,1,0.32,1) forwards;opacity:1;cursor:pointer;}
+  /* === START: FLIP CARD 3D FIX === */
+  .flip-card{width:100%;height:100%;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;animation:cardReveal 1.4s cubic-bezier(0.23,1,0.32,1) backwards;opacity:1;cursor:pointer;}
+  /* === END: FLIP CARD 3D FIX === */ 
   @keyframes cardReveal{0%{opacity:0;transform:translateY(50px) rotateX(10deg)}100%{opacity:1;transform:translateY(0) rotateX(0deg)}}
   .face{position:absolute;inset:0;border-radius:24px;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;border:none;box-shadow:0 0 0 .5px rgba(255,255,255,0.08),0 60px 120px rgba(0,0,0,.95),0 24px 60px rgba(0,0,0,.75),0 8px 24px rgba(0,0,0,.6),0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,0.09);transition:transform 0.9s cubic-bezier(0.23,1,0.32,1);}
   .face::after{content:'';position:absolute;inset:0;border-radius:24px;border:1px solid rgba(255,255,255,0.15);pointer-events:none;z-index:100;}
@@ -685,7 +690,18 @@
   .btn-action:active .icon-pill{transform:scale(0.90);opacity:.82;}
   .btn-tooltip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%) translateY(0);background:rgba(30,30,30,0.95);color:#fff;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:10px;font-weight:500;white-space:nowrap;padding:4px 8px;border-radius:6px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;letter-spacing:.02em;border:1px solid rgba(255,255,255,0.1);}
 
-  /* ── TOAST ── */
+  /* === START: HOLD TO OPEN === */
+.hold-open{position:relative;overflow:hidden;min-width:200px;height:48px;padding:0 28px;border-radius:24px;background:#F3EDE4;border:.6px solid rgba(0,0,0,0.08);box-shadow:0 4px 12px rgba(0,0,0,0.10);color:#1c1c1e;font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;font-size:12px;font-weight:700;letter-spacing:.22em;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+.hold-open-fill{position:absolute;inset:0;background:rgba(28,28,30,0.10);transform:scaleX(0);transform-origin:left center;transition:transform .2s ease-out;pointer-events:none;}
+.hold-open.holding .hold-open-fill{transform:scaleX(1);transition:transform var(--hold-ms,800ms) linear;}
+.hold-open-label{position:relative;}
+@media (prefers-reduced-motion: reduce){
+  .hold-open.holding .hold-open-fill{transform:scaleX(0);}
+  .hold-open.holding{opacity:.7;}
+}
+/* === END: HOLD TO OPEN === */
+
+/* ── TOAST ── */
   .nfc-icon-wrap:hover .nfc-tooltip{opacity:1;transform:translateY(0);}
   /* ── SHARE SHEET ── */
   .share-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;align-items:flex-end;justify-content:center;z-index:600;padding:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .28s cubic-bezier(0.4,0,0.2,1);}
@@ -940,7 +956,7 @@
 </div>
 
 <!-- ══ SCREEN 3: VCARD ══ -->
-<div class="screen" id="screenCard">
+<div class="screen active" id="screenCard" style="display:flex !important;">
   <div class="cardmenu-overlay" id="cardMenuOverlay" onclick="if(event.target===this)closeCardMenu()" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9500;display:none;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;">
     <div class="cardmenu-dropdown" id="cardMenuDropdown" style="position:relative;width:222px;max-width:calc(100vw - 48px);max-height:78vh;margin:0 auto;opacity:0;transform:scale(0.08);overflow-y:auto;overflow-x:hidden;box-sizing:border-box;">
       <button class="cardmenu-item" onclick="closeCardMenu();enterOS('address');">
@@ -968,10 +984,15 @@
         <!-- FRONT -->
         <div class="face face-front" style="overflow:hidden;display:flex;flex-direction:column;">
           <div class="card-top-line"></div>
+          <button type="button" id="holdOpenBtn" class="hold-open" aria-label="Hold to open my card link" style="position:absolute;left:170px;top:290px;transform:translate(-50%,-50%);z-index:6;">
+            <span class="hold-open-fill"></span>
+            <span class="hold-open-label">HOLD TO OPEN</span>
+            <a id="holdOpenLink" href="#" tabindex="-1" onclick="event.preventDefault();event.stopPropagation();" style="position:absolute;inset:0;overflow:hidden;white-space:nowrap;font-size:12px;line-height:48px;color:transparent;text-decoration:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;">link</a>
+          </button>
           <div class="glass-pill" id="glassPill">
             <div class="pill-avatar" id="pillAvatar" onclick="event.stopPropagation();haptic('light');triggerPhotoUpload();"></div>
-            <div class="pill-name" id="pillName">—</div>
-            <div class="pill-pos" id="pillPos">—</div>
+            <div class="pill-name" id="pillName">E. N. TAMBIGA</div>
+            <div class="pill-pos" id="pillPos">CEO | ARTIBYTE APOSTROPHE INC.</div>
             <div id="pillVisToggleTrack" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:30px;height:18px;border-radius:9px;background:#34C759;cursor:pointer;z-index:3;pointer-events:all;touch-action:none;">
               <div id="pillVisToggleKnob" style="position:absolute;top:2px;left:14px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.25);"></div>
             </div>
@@ -1363,11 +1384,11 @@
             <!-- KEY -->
             <g transform="translate(170,102.57) scale(0.7663) translate(-88, 24.6)">
               <g transform="translate(88,220) scale(1.725) translate(-88,-220)">
-              <circle cx="88" cy="220" r="88" fill="url(#gGold)" stroke="url(#gGoldH)" stroke-width="2"/>
-              <circle cx="88" cy="220" r="88" fill="url(#gBow)"/>
-              <circle cx="88" cy="220" r="88" fill="url(#gBowSpec)"/>
-              <circle cx="88" cy="220" r="72" fill="#0b0b0b" stroke="rgba(180,180,180,0.15)" stroke-width="1"/>
-              <circle cx="88" cy="220" r="72" fill="#0b0b0b"/>
+              <path fill-rule="evenodd" fill="url(#gGold)" d="M 0 220 A 88 88 0 1 0 176 220 A 88 88 0 1 0 0 220 Z M 16 220 A 72 72 0 1 0 160 220 A 72 72 0 1 0 16 220 Z"/>
+              <path fill-rule="evenodd" fill="url(#gBow)" d="M 0 220 A 88 88 0 1 0 176 220 A 88 88 0 1 0 0 220 Z M 16 220 A 72 72 0 1 0 160 220 A 72 72 0 1 0 16 220 Z"/>
+              <path fill-rule="evenodd" fill="url(#gBowSpec)" d="M 0 220 A 88 88 0 1 0 176 220 A 88 88 0 1 0 0 220 Z M 16 220 A 72 72 0 1 0 160 220 A 72 72 0 1 0 16 220 Z"/>
+              <circle cx="88" cy="220" r="88" fill="none" stroke="url(#gGoldH)" stroke-width="2"/>
+              <circle cx="88" cy="220" r="72" fill="none" stroke="rgba(180,180,180,0.15)" stroke-width="1"/>
               <path d="M 55 138 A 62 62 0 0 1 121 138" stroke="url(#gGoldH)" stroke-width="14" fill="none" stroke-linecap="round"/>
               <path d="M 150 193 A 62 62 0 0 1 150 247" stroke="url(#gGoldH)" stroke-width="14" fill="none" stroke-linecap="round"/>
               <path d="M 121 302 A 62 62 0 0 1 55 302" stroke="url(#gGoldH)" stroke-width="14" fill="none" stroke-linecap="round"/>
@@ -1952,6 +1973,8 @@
     </div>
   </div>
 </div>
+
+</template>
 
 <div class="share-overlay" id="addMeetingOverlay" onclick="if(event.target===this)closeAddMeeting()">
   <div class="share-sheet" style="max-height:88vh;overflow-y:auto;">
@@ -2993,6 +3016,116 @@
   </div>
 </div>
 
+<!-- === START: RESCUE + DIAGNOSTIC SCRIPT === -->
+<script>
+(function () {
+  var errs = [];
+  function banner(msg) {
+    errs.push(msg);
+    var b = document.getElementById('athnaErrBanner');
+    if (!b) {
+      b = document.createElement('div');
+      b.id = 'athnaErrBanner';
+      b.style.cssText = 'position:fixed;left:8px;right:8px;top:8px;z-index:2147483647;background:#FF453A;color:#fff;font:12px/1.4 -apple-system,monospace;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word;max-height:40vh;overflow:auto;';
+      b.onclick = function () { b.remove(); };
+      (document.body || document.documentElement).appendChild(b);
+    }
+    /* === START: SHOW FIRST ERRORS === */
+    b.textContent = 'ATH•NA JS error (tap to dismiss):\n' + errs.slice(0, 4).join('\n');
+    /* === END: SHOW FIRST ERRORS === */
+  }
+
+  /* 1. show the REAL error on screen */
+  /* === START: ERROR DEDUPE + SOURCE SNIPPET === */
+  /* === START: DIAGNOSE FUNCTION === */
+  function diagnose() {
+    var scripts = [].slice.call(document.scripts).filter(function (s) { return !s.src; });
+    scripts.sort(function (a, b) { return b.text.length - a.text.length; });
+    var main = scripts[0];
+    if (!main) return;
+    var lines = main.text.split('\n'), cand = [], starts = [], bad = [];
+
+    lines.forEach(function (l, i) {
+      if (l.indexOf('https') === 17) cand.push((i + 1) + ': ' + l.slice(0, 100));
+      if (/^ {0,2}(async\s+)?function\s+[\w$]+/.test(l)) starts.push(i);
+    });
+
+    for (var k = 0; k < starts.length; k++) {
+      var a = starts[k], b = (k + 1 < starts.length) ? starts[k + 1] : lines.length;
+      try { new Function(lines.slice(a, b).join('\n')); }
+      catch (err) {
+        if (/end of input|Unexpected token '[})\]]'/.test(err.message)) continue; /* false positives from chunk cuts */
+        bad.push('script line ' + (a + 1) + ' [' + lines[a].trim().slice(0, 55) + '] -> ' + err.message);
+      }
+    }
+    banner('CANDIDATES (https @ col 18):\n' + (cand.join('\n') || 'none'));
+    banner('BROKEN FUNCTIONS:\n' + (bad.slice(0, 6).join('\n') || 'none found by chunk test'));
+  }
+  /* === END: DIAGNOSE FUNCTION === */
+
+  var seen = {};
+  function showSource(line, col) {
+    if (!line) return;
+    fetch(location.href).then(function (r) { return r.text(); }).then(function (t) {
+      var L = t.split('\n'), out = [];
+      for (var i = Math.max(0, line - 3); i < Math.min(L.length, line + 2); i++) {
+        var s = L[i] || '';
+        s = (i === line - 1 && col > 90) ? s.slice(Math.max(0, col - 80), col + 80) : s.slice(0, 160);
+        out.push((i + 1) + (i === line - 1 ? ' >> ' : '    ') + s);
+      }
+      banner('SOURCE:\n' + out.join('\n'));
+    }).catch(function () {});
+  }
+  window.addEventListener('error', function (e) {
+    var msg = (e.message || 'error') + ' @ line ' + (e.lineno || '?') + ':' + (e.colno || '?');
+    if (seen[msg]) return;
+    seen[msg] = 1;
+    banner(msg);
+    /* === START: TRIGGER DIAGNOSE === */
+    if (/SyntaxError|Unexpected|Invalid|missing|Illegal/i.test(msg)) setTimeout(diagnose, 0);
+    /* === END: TRIGGER DIAGNOSE === */
+  });
+  /* === END: ERROR DEDUPE + SOURCE SNIPPET === */
+  window.addEventListener('unhandledrejection', function (e) {
+    banner('Promise: ' + ((e.reason && e.reason.message) || e.reason));
+  });
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      if (!window.__ATHNA_READY__) banner('Main script did not finish loading (syntax error, blocked script, or CSP).');
+    }, 1200);
+  });
+
+  /* 2. card flip fallback */
+  document.addEventListener('click', function (e) {
+    var card = document.getElementById('card');
+    if (!card || !card.contains(e.target)) return;
+    if (e.target.closest('[onclick]:not(#card),button,#pillVisToggleTrack,.a11y-flip')) return;
+    var before = card.classList.contains('flipped');
+    if (!window.__ATHNA_READY__) {
+      e.stopPropagation();
+      card.classList.toggle('flipped');
+      return;
+    }
+    setTimeout(function () {
+      if (card.classList.contains('flipped') === before) {
+        if (typeof window.flipCard === 'function') window.flipCard();
+        else card.classList.toggle('flipped');
+      }
+    }, 80);
+  }, true);
+
+  /* 3. un-stick "inert" if no dialog is actually open */
+  function dialogOpen() {
+    return !!document.querySelector('#screenOS.active,#screenAccount.active,.share-overlay.show,.cf-overlay.show,.fb-overlay.show,.gs-overlay.show,#licenseScreen.show,#identityScreen.show,#tosScreen.show,#contactDetailScreen,#confirmDialogOverlay,#addContactScreen[style*="flex"],#noteEditorScreen[style*="flex"],#personalInfoScreen[style*="flex"]');
+  }
+  document.addEventListener('pointerdown', function () {
+    if (!dialogOpen()) document.querySelectorAll('[inert]').forEach(function (n) { n.removeAttribute('inert'); });
+  }, true);
+})();
+</script>
+<!-- === END: RESCUE + DIAGNOSTIC SCRIPT === -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
   /* ── STORAGE SHIM (localStorage → memory fallback) ── */
   (function () {
@@ -3273,7 +3406,7 @@
   let activeTheme = THEMES.find(t => t.id === 'aurora') || THEMES[0];
 
   function applyTheme(t) {
-    activeTheme = t;
+    activeTheme = t; setTimeout(() => renderQR(t), 0);
     // switcher dots active state
     document.querySelectorAll('.theme-dot').forEach(d => {
       d.classList.toggle('active', d.dataset.id === t.id);
@@ -3749,25 +3882,6 @@
     } catch (e) {}
   })();
 
-  /* ── SURGICAL: auto-skip straight to card with default identity ── */
-  setTimeout(function autoLoadDefaultCard() {
-    const entry = {
-      no: 1,
-      name: 'Ephraim Nasser E. Tambiga',
-      pos: 'CEO',
-      company: 'ArtiByte Apostrophe Inc.',
-      athid: 'ARTICARD-000000',
-      qrLink: BASE_URL + '?id=ARTICARD-000000'
-    };
-    currentEntry = entry;
-    entries.push(entry);
-    try { showCard(entry); }
-    catch (err) {
-      console.error('showCard failed:', err);
-      document.getElementById('screenCard').classList.add('active');
-    }
-  }, 0);
-
   /* ── OS APPLE-STYLE TOGGLE SWITCH (click + drag, HIG-style haptics) ── */
   (function initOsToggleSwitch() {
     const track = document.getElementById('osSlideTrack');
@@ -4072,7 +4186,7 @@
     const overlay = document.getElementById('qrOverlay');
     if (!overlay) return;
     overlay.innerHTML = '';
-    overlay.style.background = theme.bg;
+    overlay.style.background = theme.bg; overlay.style.zIndex = '3'; overlay.style.borderRadius = '50%'; overlay.style.overflow = 'hidden'; overlay.style.display = 'flex'; overlay.style.alignItems = 'center'; overlay.style.justifyContent = 'center';
     const cx = 170, cy = 282.07, r = 84.18;
     const qrSize = 118.41;
     // Render at a much higher internal pixel resolution (10x display size)
@@ -4124,16 +4238,47 @@
     return (initials.join(' ') + ' ' + lastFormatted).toUpperCase();
   }
 
+  function initHoldToOpen() {
+    const btn  = document.getElementById('holdOpenBtn');
+    const link = document.getElementById('holdOpenLink');
+    if (!btn || !link) return;
+    const url = (currentEntry && currentEntry.qrLink) || BASE_URL;
+    link.href = url;
+    link.textContent = url;
+    if (btn.dataset.bound) return;
+    btn.dataset.bound = '1';
+    const HOLD = 800;
+    let t = null;
+    btn.style.setProperty('--hold-ms', HOLD + 'ms');
+    const start = e => {
+      e.stopPropagation();
+      haptic('light');
+      btn.classList.add('holding');
+      t = setTimeout(() => {
+        t = null;
+        btn.classList.remove('holding');
+        haptic('success');
+        window.location.href = link.href;
+      }, HOLD);
+    };
+    const cancel = () => { clearTimeout(t); t = null; btn.classList.remove('holding'); };
+    btn.addEventListener('pointerdown', start);
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => btn.addEventListener(ev, cancel));
+    btn.addEventListener('click', e => { e.stopPropagation(); e.preventDefault(); });
+    btn.addEventListener('contextmenu', e => e.preventDefault());
+  }
+
   function showCard(entry) {
     document.getElementById('pillName').textContent = formatPillName(entry.name);
     document.getElementById('pillPos').textContent  = entry.pos.toUpperCase() + (entry.company ? ' | ' + entry.company.toUpperCase() : '');
 
     document.getElementById('backAthId').textContent = entry.athid;
+    initHoldToOpen();
     renderPillAvatar();
 
-    document.getElementById('card').classList.remove('flipped');
+    isFlipped = false; document.getElementById('card').classList.remove('flipped');
     document.getElementById('screenCard').classList.add('active');
-    requestAnimationFrame(() => { fitPillName(); });
+    requestAnimationFrame(() => { fitPillName(); renderQR(activeTheme); });
     applyTheme(activeTheme);
     applyBuildingColorway(activeCW);
     // Force pill white AFTER theme application, in case anything else touched it
@@ -4166,8 +4311,9 @@
 
   let isFlipped = false;
   function flipCard() {
-    isFlipped = !isFlipped;
-    document.getElementById('card').classList.toggle('flipped', isFlipped);
+    const c = document.getElementById('card');
+    isFlipped = !c.classList.contains('flipped');
+    c.classList.toggle('flipped', isFlipped);
   }
 
   /* ── CARD SCREEN HAMBURGER MENU ── */
@@ -6402,9 +6548,12 @@ function cdOpenMaps() {
   const q = encodeURIComponent(addr);
   const isApple = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
                   (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  /* === START: NO-DOUBLE-SLASH MAPS URL === */
+  const P2 = 'https:' + String.fromCharCode(47, 47);
   const url = isApple
-    ? `https://maps.apple.com/?q=${q}`
-    : `https://www.google.com/maps/search/?api=1&query=${q}`;
+    ? P2 + 'maps.apple.com/?q=' + q
+    : P2 + 'www.google.com/maps/search/?api=1&query=' + q;
+  /* === END: NO-DOUBLE-SLASH MAPS URL === */
   window.open(url, '_blank', 'noopener');
 }
 /* === END: OPEN IN MAPS === */
@@ -8517,12 +8666,15 @@ function toggleContactEdit() {
 
     // URL-based apps — open then close sheet
     const encodedText = encodeURIComponent(text);
+    /* === START: NO-DOUBLE-SLASH SHARE URLS === */
+    const P2 = 'https:' + String.fromCharCode(47, 47);
+    /* === END: NO-DOUBLE-SLASH SHARE URLS === */
     const urls = {
       email:    `mailto:?subject=${encodeURIComponent('ATH•NA Card — ' + name)}&body=${encodedText}`,
-      telegram: `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(name + ' · ' + pos)}`,
-      whatsapp: `https://wa.me/?text=${encodedText}`,
+      telegram: P2 + 't.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(name + ' · ' + pos),
+      whatsapp: P2 + 'wa.me/?text=' + encodedText,
       imessage: `sms:${/iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent) ? '&' : '?'}body=${encodedText}`,
-      messenger:`https://www.facebook.com/dialog/send?link=${encodeURIComponent(link)}&app_id=181477362219&redirect_uri=${encodeURIComponent(link)}`,
+      messenger: P2 + 'www.facebook.com/dialog/send?link=' + encodeURIComponent(link) + '&app_id=181477362219&redirect_uri=' + encodeURIComponent(link),
     };
 
     const url = urls[method];
@@ -9226,7 +9378,9 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
 
 — ${name} · ${id}`;
 
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&to=phpx.migratex@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    /* === START: NO-DOUBLE-SLASH GMAIL URL === */
+    const gmailUrl = 'https:' + String.fromCharCode(47, 47) + 'mail.google.com/mail/?view=cm&to=phpx.migratex@gmail.com&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    /* === END: NO-DOUBLE-SLASH GMAIL URL === */
     const mailtoUrl = `mailto:phpx.migratex@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
     const opened = window.open(gmailUrl, '_blank');
@@ -10119,7 +10273,9 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
     const DIALOG_SEL = '.share-overlay,.cf-overlay,.fb-overlay,.gs-overlay,#cardMenuOverlay,#cardFilterOverlay,#physOrderOverlay,#addContactScreen,#noteEditorScreen,#contactDetailScreen,#screenAccount,#personalInfoScreen,#identityScreen,#licenseScreen,#tosScreen,#screenOS';
     const CLICKABLE = '[onclick]:not(button):not(input):not(select):not(textarea):not(a[href]),.ab-row,.ab-tag,.theme-dot-wrap,.au-nomatch-row,.id-checkbox';
     const ERR_SEL = '.ac-err,.cf-fe,.id-err-msg,.err-msg';
-    const KEEP = new Set(['toast', 'undoToast']);
+    /* === START: KEEP BANNER === */
+    const KEEP = new Set(['toast', 'undoToast', 'athnaErrBanner']);
+    /* === END: KEEP BANNER === */
     const FOCUSABLE = 'a[href],button,input:not([type="hidden"]),select,textarea,[tabindex]';
 
     const LABELS = {
@@ -10305,6 +10461,13 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
       }
     });
     document.addEventListener('focusin', e => { lastFocus = e.target; });
+    document.documentElement.classList.add('using-pointer');
+    document.addEventListener('pointerdown', () => document.documentElement.classList.add('using-pointer'), true);
+    document.addEventListener('click', e => {
+      const r = e.target.closest && e.target.closest('rect[role="button"]');
+      if (r && document.documentElement.classList.contains('using-pointer')) setTimeout(() => r.blur(), 0);
+    }, true);
+    document.addEventListener('keydown', e => { if (e.key === 'Tab') document.documentElement.classList.remove('using-pointer'); }, true);
     document.addEventListener('pointerdown', e => {
       const t = e.target.closest && e.target.closest('button,[role="button"],[tabindex],a,input');
       if (t) lastFocus = t; // Safari: hindi nafo-focus ang button pag na-click
@@ -10463,6 +10626,27 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
     if (!idTosAgreed) toggleIdTos();
     closeTosScreen();
   }
+
+  /* ── CARD BOOT: run only after the complete app script is initialized ── */
+  document.addEventListener('DOMContentLoaded', function bootCard() {
+    const screenCard = document.getElementById('screenCard');
+    if (!screenCard || currentEntry) return;
+    const entry = {
+      no: 1,
+      name: 'Ephraim Nasser E. Tambiga',
+      pos: 'CEO',
+      company: 'ArtiByte Apostrophe Inc.',
+      athid: 'ARTICARD-000000',
+      qrLink: BASE_URL + '?id=ARTICARD-000000'
+    };
+    currentEntry = entry;
+    entries.push(entry);
+    showCard(entry);
+  });
+
+  /* === START: READY FLAG === */
+  window.__ATHNA_READY__ = true;
+  /* === END: READY FLAG === */
 </script>
 </body>
 </html>
