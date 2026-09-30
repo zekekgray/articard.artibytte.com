@@ -3727,7 +3727,7 @@
   }
 
   /* === START: NATIVE ARTIMEET MODAL === */
-  const AMX_URL = API_URL;
+  /* AMX_URL removed: apiPost() already uses API_URL, and this line ran before API_URL was declared (TDZ crash). */
   const AMX_TYPES = ['Business / Partnership','Product Demo','Client Meeting','Technical Discussion','Career / Hiring','Sales Consultation','Project Kickoff','Project Status Update','Contract / Proposal Review','Investor Pitch','Vendor / Supplier Meeting','Onboarding Session','Training / Workshop','Strategy Planning','Budget / Finance Review','Marketing Consultation','Design Review','Legal Consultation','HR / Performance Review','Customer Support / Troubleshooting','Networking / Introduction','Mentorship / Coaching','Media / Press Interview','Speaking Engagement / Event','Real Estate Consultation','Financial Advisory','Medical / Health Consultation','Academic / Research Discussion','Volunteer / Community Meeting','Other'];
   const AMX_LOCS = ['Videocall / Virtual Call','Phone Call','In Person'];
   const AMX_ICONS = {
