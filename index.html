@@ -3624,9 +3624,7 @@
   /* ── QR PROFILE LINK: articard.artibytte.com?id=<ATH ID> ── */
   function profileLink() {
     const id = (currentEntry && currentEntry.athid) || '';
-    return id ? BASE_URL + '/?id=' + encodeURIComponent(id) + '#id=' + encodeURIComponent(id) : BASE_URL;
-  }
-
+       return id ? BASE_URL + '/?id=' + encodeURIComponent(id) : BASE_URL;
   /* ── ARTICARD → ARTIMEET bridge ── */
   function artimeetLink() {
     const id = currentEntry?.athid || '';
@@ -4166,7 +4164,7 @@
     const pos    = document.getElementById('f-pos').value.trim();
     const athid  = document.getElementById('f-athid').value.trim().toUpperCase();
     const no     = getNextNo();
-    const qrLink = BASE_URL + '?id=' + athid;
+    const qrLink = BASE_URL + '/?id=' + athid;
 
     // work starts immediately — no artificial delay before the request fires.
     // a minimum hold time runs in parallel so the spinner never just flashes
@@ -10668,7 +10666,7 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
       pos: 'CEO',
       company: 'ArtiByte Apostrophe Inc.',
       athid: 'ARTICARD-000000',
-      qrLink: BASE_URL + '?id=ARTICARD-000000'
+      qrLink: BASE_URL + '/?id=ARTICARD-000000'
     };
     currentEntry = entry;
     entries.push(entry);
