@@ -3624,7 +3624,9 @@
   /* ── QR PROFILE LINK: articard.artibytte.com?id=<ATH ID> ── */
   function profileLink() {
     const id = (currentEntry && currentEntry.athid) || '';
-       return id ? BASE_URL + '/?id=' + encodeURIComponent(id) : BASE_URL;
+    return id ? BASE_URL + '/?id=' + encodeURIComponent(id) : BASE_URL;
+  }
+
   /* ── ARTICARD → ARTIMEET bridge ── */
   function artimeetLink() {
     const id = currentEntry?.athid || '';
@@ -4270,7 +4272,7 @@
     const qrBox = document.getElementById('holdQr');
     if (qrBox && window.QRCode) {
       qrBox.innerHTML = '';
-      new QRCode(qrBox, { text: (currentEntry && currentEntry.qrLink) || BASE_URL, width: 152, height: 152, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.L });
+      new QRCode(qrBox, { text: profileLink(), width: 152, height: 152, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.L });
       qrBox.querySelectorAll('canvas,img').forEach(el => { el.style.width = '100%'; el.style.height = '100%'; });
     }
     if (btn.dataset.bound) return;
@@ -8636,7 +8638,7 @@ function toggleContactEdit() {
     const name = currentEntry?.name || '';
     const pos  = currentEntry?.pos || '';
     const id   = currentEntry?.athid || '';
-    const link = currentEntry?.qrLink || '';
+    const link = profileLink();
     const text = `${name} · ${pos} · ${id}\n${link}`;
 
    if ((method === 'save' || method === 'copy-img') && !capturedDataUrl) { haptic('error'); showToast('Card image not ready. Try again', 'error'); return; }
