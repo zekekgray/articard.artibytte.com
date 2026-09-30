@@ -665,7 +665,7 @@
 
   /* ── PILL AVATAR ── */
   .glass-pill { padding: 0 44px 0 75px; }
-  .pill-avatar { position:absolute; left:12px; top:50%; transform:translateY(-50%); width:52px; height:52px; border-radius:50%; background:#8E8E93; display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; pointer-events:all; z-index:3; transition:transform .12s, opacity .12s; -webkit-tap-highlight-color:transparent; }
+  .pill-avatar { position:absolute; left:12px; top:50%; transform:translateY(-50%); width:56px; height:56px; border-radius:50%; background:#8E8E93; display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; pointer-events:all; z-index:3; transition:transform .12s, opacity .12s; -webkit-tap-highlight-color:transparent; }
   .pill-avatar svg { flex-shrink:0; }
   .pill-avatar:active { transform:translateY(-50%) scale(0.90); opacity:.8; }
   .pill-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; }
@@ -984,10 +984,23 @@
         <!-- FRONT -->
         <div class="face face-front" style="overflow:hidden;display:flex;flex-direction:column;">
           <div class="card-top-line"></div>
-          <button type="button" id="holdOpenBtn" class="hold-open" aria-label="Hold to open my card link" style="position:absolute;left:170px;top:290px;transform:translate(-50%,-50%);z-index:6;">
-            <span class="hold-open-fill"></span>
-            <span class="hold-open-label">HOLD TO OPEN</span>
-            <a id="holdOpenLink" href="#" tabindex="-1" onclick="event.preventDefault();event.stopPropagation();" style="position:absolute;inset:0;overflow:hidden;white-space:nowrap;font-size:12px;line-height:48px;color:transparent;text-decoration:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;">link</a>
+          <button type="button" id="holdOpenBtn" class="hold-open" aria-label="Hold to open" style="position:absolute;left:170px;top:290px;transform:translate(-50%,-50%);z-index:6;border-radius:50%;width:72px;height:72px;min-width:0;padding:0;box-shadow:none;display:flex;align-items:center;justify-content:center;overflow:visible;background:transparent;border:none;">
+            <span class="hold-open-fill" style="display:none;"></span>
+            <div id="holdQrRing" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;width:68px;height:68px;background:#F3EDE4;border:.6px solid rgba(0,0,0,0.08);border-radius:50%;box-sizing:border-box;pointer-events:none;"></div>
+            <div id="holdQr" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;width:44px;height:44px;background:#fff;padding:3px;box-sizing:border-box;border-radius:4px;pointer-events:none;"></div>
+            <span class="hold-open-label" style="display:none;align-items:center;justify-content:center;pointer-events:none;">
+              <svg width="37" height="37" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/>
+                <path d="M14 13.12c0 2.38 0 6.38-1 8.88"/>
+                <path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/>
+                <path d="M2 12a10 10 0 0 1 18-6"/>
+                <path d="M2 16h.01"/>
+                <path d="M21.8 16c.2-2 .131-5.354 0-6"/>
+                <path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/>
+                <path d="M8.65 22c.21-.66.45-1.32.57-2"/>
+                <path d="M9 6.8a6 6 0 0 1 9 5.2v2"/>
+              </svg>
+            </span>
           </button>
           <div class="glass-pill" id="glassPill">
             <div class="pill-avatar" id="pillAvatar" onclick="event.stopPropagation();haptic('light');triggerPhotoUpload();"></div>
@@ -1382,7 +1395,7 @@
             </g>
             <rect x="0" y="0" width="340" height="580" fill="url(#skyFade)"/>
             <!-- KEY -->
-            <g transform="translate(170,102.57) scale(0.7663) translate(-88, 24.6)">
+            <g transform="translate(170,69.20) scale(0.9027) translate(-88, 24.6)">
               <g transform="translate(88,220) scale(1.725) translate(-88,-220)">
               <path fill-rule="evenodd" fill="url(#gGold)" d="M 0 220 A 88 88 0 1 0 176 220 A 88 88 0 1 0 0 220 Z M 16 220 A 72 72 0 1 0 160 220 A 72 72 0 1 0 16 220 Z"/>
               <path fill-rule="evenodd" fill="url(#gBow)" d="M 0 220 A 88 88 0 1 0 176 220 A 88 88 0 1 0 0 220 Z M 16 220 A 72 72 0 1 0 160 220 A 72 72 0 1 0 16 220 Z"/>
@@ -1403,6 +1416,12 @@
             
 
                           <!-- bottom pill -->
+            <!-- FOOTER: articardd. connect differently. -->
+            <g id="cardFooter" pointer-events="none">
+              <line x1="32" y1="569" x2="84" y2="569" stroke="#ffffff" stroke-width="0.6" opacity="0.22" stroke-linecap="round"/>
+              <line x1="256" y1="569" x2="308" y2="569" stroke="#ffffff" stroke-width="0.6" opacity="0.22" stroke-linecap="round"/>
+              <text id="bottomLabel" x="170" y="572" text-anchor="middle" font-family="-apple-system,'SF Pro Text','Helvetica Neue',sans-serif" font-size="8.5" letter-spacing="1.1" fill="#d0d0d0"><tspan font-weight="700" fill="#ffffff">articardd.</tspan><tspan dx="4" font-weight="300" opacity="0.75">connect differently.</tspan></text>
+            </g>
             <!-- Bottom pill 1: ArtiCard Account (Contacts), Calendar, Cash -->
             <g>
               <rect x="27.52" y="502.64" width="144.9" height="53.13" rx="26.57" fill="#F3EDE4"/>
@@ -3434,6 +3453,9 @@
   function recolorCardSVG(t) {
     // Update all stroke/fill references in both card faces
     const a = t.accent, b = t.accentB;
+    const hoLink = document.getElementById('holdOpenLink');
+    const hoFace = document.querySelector('.face-front');
+    if (hoLink && hoFace) hoLink.style.color = '#000';
     const svgEls = document.querySelectorAll('.face svg');
     svgEls.forEach(svg => {
       // text fills — skip cardLabel (locked white)
@@ -3597,6 +3619,12 @@
     if (!currentEntry) return;
     renderQR(activeTheme);
     prewarmShareCache();
+  }
+
+  /* ── QR PROFILE LINK: articard.artibytte.com?id=<ATH ID> ── */
+  function profileLink() {
+    const id = (currentEntry && currentEntry.athid) || '';
+    return id ? BASE_URL + '?id=' + encodeURIComponent(id) : BASE_URL;
   }
 
   /* ── ARTICARD → ARTIMEET bridge ── */
@@ -4240,11 +4268,13 @@
 
   function initHoldToOpen() {
     const btn  = document.getElementById('holdOpenBtn');
-    const link = document.getElementById('holdOpenLink');
-    if (!btn || !link) return;
-    const url = (currentEntry && currentEntry.qrLink) || BASE_URL;
-    link.href = url;
-    link.textContent = url;
+    if (!btn) return;
+    const qrBox = document.getElementById('holdQr');
+    if (qrBox && window.QRCode) {
+      qrBox.innerHTML = '';
+      new QRCode(qrBox, { text: (currentEntry && currentEntry.qrLink) || BASE_URL, width: 152, height: 152, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.L });
+      qrBox.querySelectorAll('canvas,img').forEach(el => { el.style.width = '100%'; el.style.height = '100%'; });
+    }
     if (btn.dataset.bound) return;
     btn.dataset.bound = '1';
     const HOLD = 800;
@@ -4258,7 +4288,7 @@
         t = null;
         btn.classList.remove('holding');
         haptic('success');
-        window.location.href = link.href;
+        openConnectForm();
       }, HOLD);
     };
     const cancel = () => { clearTimeout(t); t = null; btn.classList.remove('holding'); };
@@ -10642,6 +10672,7 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
     currentEntry = entry;
     entries.push(entry);
     showCard(entry);
+    if (new URLSearchParams(location.search).get('id')) setTimeout(openConnectForm, 400);
   });
 
   /* === START: READY FLAG === */
