@@ -3726,29 +3726,6 @@
     showToast('.vcf downloaded. Open it to add to Contacts', 'neutral');
   }
 
-   /* === START: API CONNECTOR === */
-  const API_URL = 'https://script.google.com/macros/s/AKfycby5-iXl1Mlz02091BDWODpdAj5S7qu0lj96U6Ffw1qaGmWj6Ua8_t_i23qgV1-4khHL/exec';
-
-  async function apiPost(action, payload) {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action, payload: payload || {} })
-    });
-    const j = await res.json();
-    if (!j.success) throw new Error(j.error || 'Request failed');
-    return j.data;
-  }
-
-  async function apiGet(action, params) {
-    const qs = new URLSearchParams(Object.assign({ action }, params || {})).toString();
-    const res = await fetch(API_URL + '?' + qs);
-    const j = await res.json();
-    if (!j.success) throw new Error(j.error || 'Request failed');
-    return j.data;
-  }
-  /* === END: API CONNECTOR === */
-
   /* === START: NATIVE ARTIMEET MODAL === */
   const AMX_URL = API_URL;
   const AMX_TYPES = ['Business / Partnership','Product Demo','Client Meeting','Technical Discussion','Career / Hiring','Sales Consultation','Project Kickoff','Project Status Update','Contract / Proposal Review','Investor Pitch','Vendor / Supplier Meeting','Onboarding Session','Training / Workshop','Strategy Planning','Budget / Finance Review','Marketing Consultation','Design Review','Legal Consultation','HR / Performance Review','Customer Support / Troubleshooting','Networking / Introduction','Mentorship / Coaching','Media / Press Interview','Speaking Engagement / Event','Real Estate Consultation','Financial Advisory','Medical / Health Consultation','Academic / Research Discussion','Volunteer / Community Meeting','Other'];
@@ -4185,6 +4162,28 @@
       timers.set(el, setTimeout(() => el.classList?.remove('scroll-active'), 1000));
     }, { capture: true, passive: true });
   })();
+  /* === START: API CONNECTOR === */
+  const API_URL = 'https://script.google.com/macros/s/AKfycby5-iXl1Mlz02091BDWODpdAj5S7qu0lj96U6Ffw1qaGmWj6Ua8_t_i23qgV1-4khHL/exec';
+
+  async function apiPost(action, payload) {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action, payload: payload || {} })
+    });
+    const j = await res.json();
+    if (!j.success) throw new Error(j.error || 'Request failed');
+    return j.data;
+  }
+
+  async function apiGet(action, params) {
+    const qs = new URLSearchParams(Object.assign({ action }, params || {})).toString();
+    const res = await fetch(API_URL + '?' + qs);
+    const j = await res.json();
+    if (!j.success) throw new Error(j.error || 'Request failed');
+    return j.data;
+  }
+  /* === END: API CONNECTOR === */
   const SHEET_URL = API_URL;
   let entries = [], currentEntry = null;
 
@@ -11053,7 +11052,85 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
     showCard(entry);
   });
 
-  /* === START: CARD GATE === */
+  /* === START: REMOTE CARD SYNC (gsheet → UI + localStorage cache) === */
+const CARD_CACHE_PREFIX = 'athna-card-cache-v1:';
+function cardCacheRead(kind) {
+  try { return JSON.parse(localStorage.getItem(CARD_CACHE_PREFIX + kind) || 'null'); } catch (e) { return null; }
+}
+function cardCacheWrite(d, owner) {
+  const kind = owner ? 'owner' : 'pub', rec = JSON.stringify({ d: d, at: Date.now() });
+  try { localStorage.setItem(CARD_CACHE_PREFIX + kind, rec); } catch (e) {}
+  try { Promise.resolve(window.storage.set('card-cache-' + kind, rec, false)).catch(function () {}); } catch (e) {}
+}
+
+function applyRemoteCard(d, owner, fromCache) {
+  try {
+    if (!d || !d.name) return false;
+    const P = PERSONAL_INFO, X = profileExtra;
+    const lead = function (arr, v) { return v ? [v].concat((arr || []).filter(function (x) { return x !== v; })) : (arr || []); };
+
+    currentEntry = {
+      no: Number(d.no) || 1,
+      name: String(d.name).toUpperCase(),
+      pos: d.position || '',
+      company: d.company || '',
+      athid: d.athId || '',
+      cardId: d.cardId || '',
+      qrLink: d.qrLink || (BASE_URL + '/c/' + encodeURIComponent(d.cardId || ''))
+    };
+    entries.length = 0; entries.push(currentEntry);
+
+    P.displayName = d.name;
+    P.title = d.position || '';
+    P.company = d.company || '';
+    P.phones = owner ? lead(P.phones, d.phone) : (d.phone ? [d.phone] : []);
+    P.emails = owner ? lead(P.emails, d.email) : (d.email ? [d.email] : []);
+    P.website = d.linkedin || d.website || (owner ? P.website : '');
+    X.company = d.company || ''; X.mobile = d.phone || ''; X.email = d.email || ''; X.linkedin = d.linkedin || d.website || '';
+
+    const t = THEMES.find(function (x) { return x.id === d.theme; }); if (t) activeTheme = t;
+    if (d.colorway && BUILDING_COLORWAYS[d.colorway]) activeCW = d.colorway;
+
+    showCard(currentEntry);
+    applyAvatarEverywhere();
+    if (owner) { savePI(); try { window.storage.set(EP_STORE_KEY, JSON.stringify(X), false); } catch (e) {} }
+    if (!fromCache) cardCacheWrite(d, owner);
+    return true;
+  } catch (e) { console.error('applyRemoteCard failed', e); return false; }
+}
+
+async function refreshRemoteCard(owner, id) {
+  try {
+    let d;
+    if (owner) {
+      const tok = sessionStorage.getItem('athna-owner-token'); if (!tok) return;
+      d = await apiPost('ownerGetCard', { token: tok });
+    } else {
+      if (!id) return;
+      d = await apiGet('card', { id: id });
+    }
+    const prev = cardCacheRead(owner ? 'owner' : 'pub');
+    if (prev && JSON.stringify(prev.d) === JSON.stringify(d) && currentEntry && currentEntry.cardId === d.cardId) return; // walang binago, huwag i-re-render
+    applyRemoteCard(d, owner, false);
+  } catch (e) {
+    if (owner && /session|sign in/i.test(String(e && e.message))) {
+      sessionStorage.removeItem('athna-owner-session'); sessionStorage.removeItem('athna-owner-token');
+      if (window.openGate) window.openGate();
+    }
+  }
+}
+
+function syncCardOnBoot(owner, id) {
+  const c = cardCacheRead(owner ? 'owner' : 'pub'); // instant render mula sa cache
+  if (c && c.d) {
+    const want = String(id || '').toUpperCase();
+    if (owner || !want || String(c.d.cardId).toUpperCase() === want || String(c.d.athId).toUpperCase() === want) applyRemoteCard(c.d, owner, true);
+  }
+  refreshRemoteCard(owner, id); // tapos i-refresh sa gsheet sa background
+}
+/* === END: REMOTE CARD SYNC === */
+
+/* === START: CARD GATE === */
 (function cardGate() {
   const $ = id => document.getElementById(id);
   const gate = $('screenGate'); if (!gate) return;
@@ -11066,14 +11143,14 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
   async function resolveCardId(id) {
     try {
       const d = await apiGet('card', { id });
-      if (d) { window.__PUBLIC_CARD__ = d; return true; }
+      if (d) { window.__PUBLIC_CARD__ = d; applyRemoteCard(d, false); return true; }
     } catch (e) {}
     return false;
   }
  async function verifyOwnerKey(key) {
     try {
       const d = await apiPost('ownerLogin', { key: key });
-      sessionStorage.setItem('athna-owner-token', d.token); window.__OWNER_CARD__ = d.card; return true;
+      sessionStorage.setItem('athna-owner-token', d.token); window.__OWNER_CARD__ = d.card; applyRemoteCard(d.card, true); return true;
     } catch (e) {}
     return false;
   }
@@ -11154,8 +11231,8 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
   window.openGate = showGate; /* para sa Sign Out later */
 
   /* boot: scanned QR / shared link → diretso sa public card. May owner session → full app. Wala → gate. */
-  if (idFromUrl()) setPublic(true);
-  else if (sessionStorage.getItem(SESSION)) setPublic(false);
+  if (idFromUrl()) { setPublic(true); syncCardOnBoot(false, idFromUrl()); }
+  else if (sessionStorage.getItem(SESSION)) { setPublic(false); syncCardOnBoot(true, ''); }
   else showGate();
 })();
 /* === END: CARD GATE === */
