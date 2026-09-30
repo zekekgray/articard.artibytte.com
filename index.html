@@ -876,9 +876,48 @@
   #identityScreen { z-index: 9750; }
   #licenseScreen  { z-index: 9750; }
   #tosScreen      { z-index: 9760; }
+  /* ── CARD GATE ── */
+  #screenGate{position:fixed;inset:0;z-index:10000;background:#ECE4D6;display:none;align-items:center;justify-content:center;padding:24px;}
+  #screenGate.show{display:flex;animation:screenFadeIn .45s cubic-bezier(.16,1,.3,1) forwards;}
+  #screenGate.leaving{animation:screenFadeOut .32s cubic-bezier(.4,0,.2,1) forwards;}
+  .gt-wrap{width:100%;max-width:340px;text-align:center;}
+  .gt-logo{font-family:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;font-size:34px;font-weight:700;letter-spacing:-.01em;color:#1c1c1e;margin:0 0 6px;}
+  .gt-tag{font:300 14px -apple-system,'SF Pro Text',sans-serif;letter-spacing:.04em;color:rgba(60,60,67,0.6);margin-bottom:38px;}
+  .gt-label{font:500 13px -apple-system,'SF Pro Text',sans-serif;color:rgba(60,60,67,0.55);text-align:left;padding:0 4px 7px;}
+  .gt-input{width:100%;background:rgba(255,255,255,0.72);border:1px solid rgba(0,0,0,0.08);border-radius:14px;padding:16px;font-family:'Space Mono',monospace;font-size:17px;letter-spacing:.06em;text-align:center;color:#1c1c1e;outline:none;}
+  .gt-input.err{border-color:#FF453A;background:rgba(255,69,58,0.05);}
+  .gt-err{min-height:18px;font:400 12px -apple-system,'SF Pro Text',sans-serif;color:#FF453A;margin:7px 0 4px;}
+  .gt-btn{width:100%;height:52px;padding:0 28px;border-radius:26px;background:#F3EDE4;border:.6px solid rgba(0,0,0,0.08);box-shadow:0 4px 12px rgba(0,0,0,0.10);color:#1c1c1e;font:700 12px -apple-system,'SF Pro Text','Helvetica Neue',sans-serif;letter-spacing:.22em;cursor:pointer;transition:transform .1s,opacity .15s;-webkit-tap-highlight-color:transparent;}
+  .gt-btn:active{transform:scale(.98);opacity:.85;}
+  .gt-btn:disabled{opacity:.4;cursor:not-allowed;}
+  .gt-link{margin-top:20px;background:none;border:none;font:600 13px -apple-system,'SF Pro Text',sans-serif;color:#1c1c1e;cursor:pointer;padding:6px;}
+  .gt-foot{margin-top:34px;padding-top:22px;border-top:1px solid rgba(0,0,0,0.08);}
+  .gt-foot-title{font:600 13px -apple-system,'SF Pro Text',sans-serif;color:#1c1c1e;margin-bottom:4px;}
+  .gt-foot-sub{font:400 12px/1.6 -apple-system,'SF Pro Text',sans-serif;color:rgba(60,60,67,0.55);}
+  .gt-foot-sub a{color:#1c1c1e;font-weight:600;text-decoration:underline;text-underline-offset:2px;}
+  /* public mode: owner-only affordances hidden */
+  body.public-mode .pill-avatar-plus, body.public-mode #pillVisToggleTrack{display:none !important;}
 </style>
 </head>
 <body>
+<!-- ══ CARD GATE ══ -->
+<div id="screenGate" role="dialog" aria-modal="true" aria-labelledby="gtLogo">
+  <div class="gt-wrap">
+    <div class="gt-logo" id="gtLogo">articardd.</div>
+    <div class="gt-tag">connect differently.</div>
+    <form id="gtForm" autocomplete="off" novalidate>
+      <div class="gt-label" id="gtLabel">Enter your Card ID</div>
+      <input id="gtInput" class="gt-input" type="text" placeholder="C-7F82KQ" autocapitalize="characters" autocorrect="off" spellcheck="false" aria-labelledby="gtLabel"/>
+      <div class="gt-err" id="gtErr" role="alert"></div>
+      <button type="submit" id="gtBtn" class="gt-btn">CONTINUE</button>
+    </form>
+    <button type="button" id="gtSwitch" class="gt-link">I'm the card owner →</button>
+    <div class="gt-foot">
+      <div class="gt-foot-title">Get your own ID</div>
+      <div class="gt-foot-sub">Want your own articardd. card? Email us at<br><a href="mailto:support@articardd.com?subject=Get%20my%20own%20articardd.%20ID">support@articardd.com</a></div>
+    </div>
+  </div>
+</div>
 <!-- ══ SCREEN 1: SETUP ══ -->
   <div class="screen active" id="screenSetup" style="justify-content:flex-start;padding-top:64px;min-height:100vh;">
   <div style="width:100%;max-width:390px;padding:0 20px 40px;">
@@ -3623,6 +3662,8 @@
 
   /* ── QR PROFILE LINK: articard.artibytte.com?id=<ATH ID> ── */
   function profileLink() {
+    const cid = currentEntry && currentEntry.cardId;
+    if (cid) return BASE_URL + '/c/' + encodeURIComponent(cid);
     const id = (currentEntry && currentEntry.athid) || '';
     return id ? BASE_URL + '/?id=' + encodeURIComponent(id) : BASE_URL;
   }
@@ -3685,7 +3726,315 @@
     showToast('.vcf downloaded. Open it to add to Contacts', 'neutral');
   }
 
+  /* === START: NATIVE ARTIMEET MODAL === */
+  const AMX_URL = API_URL;
+  const AMX_TYPES = ['Business / Partnership','Product Demo','Client Meeting','Technical Discussion','Career / Hiring','Sales Consultation','Project Kickoff','Project Status Update','Contract / Proposal Review','Investor Pitch','Vendor / Supplier Meeting','Onboarding Session','Training / Workshop','Strategy Planning','Budget / Finance Review','Marketing Consultation','Design Review','Legal Consultation','HR / Performance Review','Customer Support / Troubleshooting','Networking / Introduction','Mentorship / Coaching','Media / Press Interview','Speaking Engagement / Event','Real Estate Consultation','Financial Advisory','Medical / Health Consultation','Academic / Research Discussion','Volunteer / Community Meeting','Other'];
+  const AMX_LOCS = ['Videocall / Virtual Call','Phone Call','In Person'];
+  const AMX_ICONS = {
+    'Videocall / Virtual Call':'<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6.5" width="13" height="11" rx="2.5"/><path d="M15.5 10.5l6-3.5v10l-6-3.5z"/></svg>',
+    'Phone Call':'<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5c0-.6.4-1 1-1h3l2 5-2 1.3a11 11 0 0 0 5.2 5.2L14.5 13l5 2v3c0 .6-.4 1-1 1C10.5 19 4 12.5 4 4.5z"/></svg>',
+    'In Person':'<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>'
+  };
+  const AMX_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const AMX_TIMES = ['9:00 AM','10:00 AM','11:00 AM','1:00 PM','2:00 PM','3:00 PM','4:00 PM'];
+  const AMX_BACK = '<button type="button" class="amx-back" data-act="back" aria-label="Back"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>';
+  let amx = null;
+
+  function amxFresh() {
+    const n = new Date();
+    return { step:0, type:'', vy:n.getFullYear(), vm:n.getMonth(), day:null, date:null, timeBase:null, time:null, minute:'00',
+      duration:'30 min', recurrence:'One-time', location:'Videocall / Virtual Call', address:'',
+      name:'', org:'', email:'', phone:'', notes:'', busy:false, err:'', result:null, _shown:-1,
+      tz:(Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Manila') };
+  }
+
+   /* === START: CALL BACKEND (unified) === */
+  async function callBackend(action, payload) {
+    if (action === 'getAllMeetings' || action === 'updateMeetingStatus' || action === 'adminStats') {
+      let t = sessionStorage.getItem('am_admin');
+      if (!t) { t = prompt('Admin token'); if (!t) throw new Error('Admin token required'); sessionStorage.setItem('am_admin', t.trim()); }
+      payload = Object.assign({}, payload, { adminToken: t.trim() });
+    }
+    return apiPost(action, payload);
+  }
+  const amxCall = callBackend;   // ginagamit ng amxSubmit()
+  /* === END: CALL BACKEND (unified) === */
+
+  function amxFmtTz(tz) {
+    const city = (tz || '').split('/').pop().replace(/_/g, ' ');
+    let off = '';
+    try { off = (new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName:'shortOffset' }).formatToParts(new Date()).find(p => p.type === 'timeZoneName') || {}).value || ''; } catch (e) {}
+    return city + (off ? ' (' + off + ')' : '');
+  }
+  function amxEnd(time, dur) {
+    const [hm, ap] = time.split(' '); let [h, m] = hm.split(':').map(Number);
+    if (ap === 'PM' && h !== 12) h += 12; if (ap === 'AM' && h === 12) h = 0;
+    const d = new Date(2026, 0, 1, h, m + parseInt(dur, 10));
+    let hh = d.getHours(); const aa = hh >= 12 ? 'PM' : 'AM'; hh = hh % 12 || 12;
+    return hh + ':' + String(d.getMinutes()).padStart(2, '0') + ' ' + aa;
+  }
+  function amxGcal() {
+    const start = new Date(amx.date + ' ' + amx.time); if (isNaN(start.getTime())) return null;
+    const mins = parseInt(amx.duration, 10) || 30, end = new Date(start.getTime() + mins * 60000);
+    const f = d => d.getUTCFullYear() + pad2(d.getUTCMonth() + 1) + pad2(d.getUTCDate()) + 'T' + pad2(d.getUTCHours()) + pad2(d.getUTCMinutes()) + '00Z';
+    const p = new URLSearchParams({ action:'TEMPLATE', text:'Artimeet — ' + amx.type, dates:f(start) + '/' + f(end),
+      details:'Meeting ID ' + ((amx.result && amx.result.meetingId) || ''), location: amx.location + (amx.address ? ' — ' + amx.address : '') });
+    return 'https://calendar.google.com/calendar/render?' + p.toString();
+  }
+
+  function amxEnsureCss() {
+    if (document.getElementById('amxCss')) return;
+    const st = document.createElement('style'); st.id = 'amxCss';
+    st.textContent = `
+    #artimeetOverlay{position:fixed;inset:0;z-index:9950;background:#f2f2f7;overflow-y:auto;-webkit-overflow-scrolling:touch;color:#1c1c1e;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display',sans-serif;animation:screenFadeIn .35s cubic-bezier(.16,1,.3,1) forwards}
+    #artimeetOverlay.amx-out{animation:screenFadeOut .25s cubic-bezier(.4,0,.2,1) forwards}
+    .amx-app{max-width:600px;margin:0 auto;padding:max(14px,env(safe-area-inset-top)) 14px max(40px,env(safe-area-inset-bottom));min-height:100%;display:flex;flex-direction:column;justify-content:center}
+    .amx-panel{background:#fff;border:1px solid #e8e2d7;border-radius:25px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,.05)}
+    .amx-panel.amx-in{animation:amxIn .2s cubic-bezier(.4,0,.2,1)}
+    @keyframes amxIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+    .amx-head{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+    .amx-back{width:44px;height:44px;padding:0;border-radius:50%;border:1px solid rgba(0,0,0,.07);background:rgba(255,255,255,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 6px 16px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;color:#1c1c1e;flex:none;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
+    .amx-back:active{transform:scale(.94)}
+    .amx-h1{font-size:clamp(28px,4vw,40px);line-height:1.05;letter-spacing:-.04em;font-weight:800;margin:6px 0 10px}
+    .amx-h2{font-size:24px;letter-spacing:-.03em;font-weight:800;color:#000;margin:0}
+    .amx-sub{color:#8e8e93;line-height:1.6;font-size:14px}
+    .amx-label{display:block;font-size:11px;font-weight:600;margin:14px 0 7px}
+    .amx-bold{margin-top:20px;font-weight:750;font-size:15px}
+    .amx-in-field{width:100%;border:1px solid #e5e5ea;border-radius:12px;padding:13px 14px;background:#f2f2f7;outline:none;color:#1c1c1e;font:inherit;font-size:16px}
+    .amx-in-field:focus{border-color:#1c1c1e;box-shadow:0 0 0 3px rgba(28,28,30,.08)}
+    textarea.amx-in-field{min-height:90px;resize:vertical}
+    select.amx-in-field{-webkit-appearance:none;appearance:none;cursor:pointer;padding-right:38px;background-repeat:no-repeat;background-position:right 14px center;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='%238e8e93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")}
+    .amx-btn{border-radius:999px;padding:16px 22px;font-weight:750;font-size:14px;border:1px solid rgba(0,0,0,.07);background:rgba(255,255,255,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);color:#1c1c1e;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.11),inset 0 1px 0 rgba(255,255,255,.7);cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block;transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .1s linear}
+    .amx-btn:active{transform:scale(.985)}
+    .amx-btn:disabled{opacity:.45;cursor:default}
+    .amx-primary{background:rgba(255,255,255,.78);box-shadow:0 10px 24px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.85)}
+    .amx-ghost{background:transparent;border:none;box-shadow:none;color:#8e8e93}
+    .amx-full{width:100%;display:block;margin-top:18px}
+    .amx-btn.on{background:#1c1c1e;color:#fff;border-color:#1c1c1e}
+    .amx-dots{display:flex;gap:7px;margin-bottom:16px}.amx-dots i{height:3px;flex:1;border-radius:999px;background:#e5e5ea}.amx-dots i.on{background:#1c1c1e}
+    .amx-cal{border:1px solid #e8e2d7;border-radius:17px;padding:17px;background:#fff;margin-top:14px}
+    .amx-month{display:flex;justify-content:space-between;align-items:center;font-weight:750;margin-bottom:14px}
+    .amx-month button{border:0;background:transparent;color:#1c1c1e;padding:4px;cursor:pointer;display:flex}
+    .amx-month button:disabled{opacity:.25;cursor:default}
+    .amx-week,.amx-days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+    .amx-week span{font-size:11px;color:#999}
+    .amx-day{width:36px;height:36px;margin:0 auto;display:flex;align-items:center;justify-content:center;border:1px solid transparent;border-radius:10px;background:transparent;color:#1c1c1e;font-weight:700;cursor:pointer;font-family:inherit;font-size:14px}
+    .amx-day:disabled{color:#d1d1d6;font-weight:400;cursor:default}
+    .amx-day.on{background:#1c1c1e;color:#fff;border-radius:50%}
+    .amx-times{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:12px}
+    .amx-times .amx-btn{padding:12px 4px}
+    .amx-pills{display:flex;gap:6px;margin-top:13px}
+    .amx-pills .amx-btn{flex:1 1 0;min-width:0;padding:10px 2px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .amx-iconpills{display:flex;gap:12px;margin-top:8px}
+    .amx-iconpill{width:48px;height:48px;padding:0;border-radius:50%;border:1.5px solid #1c1c1e;background:#fff;color:#1c1c1e;display:flex;align-items:center;justify-content:center;cursor:pointer}
+    .amx-iconpill.on{background:#1c1c1e;color:#fff}
+    .amx-maps{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+    .amx-maps .amx-btn{flex:1;min-width:140px;background:#f2f2f7;box-shadow:none;border:none;font-size:13px;padding:12px 14px}
+    .amx-err{color:#c0392b;font-size:13px;margin-top:10px}
+    .amx-confirm{text-align:center}
+    .amx-check{width:72px;height:72px;background:#34c759;color:#fff;border-radius:50%;display:grid;place-items:center;margin:0 auto 18px}
+    .amx-summary{border:1px solid #e8e2d7;border-radius:16px;padding:0 18px;text-align:left;background:#fff;margin:22px 0}
+    .amx-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid #e5e5ea}
+    .amx-row:last-child{border-bottom:none}
+    .amx-row b{min-width:96px;font-size:13px;font-weight:600;color:#8e8e93}
+    .amx-row span{font-size:14px;font-weight:700;margin-left:auto;text-align:right}
+    .amx-pill{background:#fff1c9;color:#9a711e;font-weight:750;font-size:11px;padding:5px 9px;border-radius:999px}
+    @media(max-width:720px){.amx-times{grid-template-columns:repeat(2,1fr)}}`;
+    document.head.appendChild(st);
+  }
+
+  function amxStep0() {
+    return `<div class="amx-panel"><div class="amx-head">${AMX_BACK}</div>
+      <h1 class="amx-h1">Let's find a time.</h1>
+      <p class="amx-sub">Tell me what you'd like to discuss — we'll take it from there.</p>
+      <label class="amx-label" style="margin-top:20px" for="amxType">Meeting type</label>
+      <select class="amx-in-field" id="amxType"><option value="" ${!amx.type ? 'selected' : ''} disabled>Select a topic</option>${AMX_TYPES.map(t => `<option value="${auEsc(t)}" ${amx.type === t ? 'selected' : ''}>${auEsc(t)}</option>`).join('')}</select>
+      <button type="button" class="amx-btn amx-primary amx-full" data-act="next" ${!amx.type ? 'disabled' : ''}>Continue</button></div>`;
+  }
+
+  function amxStep1() {
+    const n = new Date(), t0 = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+    const first = (new Date(amx.vy, amx.vm, 1).getDay() + 6) % 7, total = new Date(amx.vy, amx.vm + 1, 0).getDate();
+    let cells = ''; for (let i = 0; i < first; i++) cells += '<span></span>';
+    for (let d = 1; d <= total; d++) cells += `<button type="button" class="amx-day${amx.day === d ? ' on' : ''}" data-day="${d}" ${new Date(amx.vy, amx.vm, d) < t0 ? 'disabled' : ''}>${d}</button>`;
+    const atMin = amx.vy === n.getFullYear() && amx.vm === n.getMonth();
+    const chev = p => `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${p}"/></svg>`;
+    const seg = (arr, attr, cur) => arr.map(v => `<button type="button" class="amx-btn${cur === v ? ' on' : ''}" data-${attr}="${auEsc(v)}">${auEsc(v)}</button>`).join('');
+    return `<div class="amx-panel">
+      <div class="amx-dots"><i class="on"></i><i class="on"></i><i></i><i></i></div>
+      <div class="amx-head">${AMX_BACK}<h2 class="amx-h2">When would you like to meet?</h2></div>
+      <div class="amx-sub">Propose a date and time — we'll confirm and get back to you.</div>
+      <div class="amx-cal">
+        <div class="amx-month"><button type="button" data-act="prevM" aria-label="Previous month" ${atMin ? 'disabled' : ''}>${chev('M15 6l-6 6 6 6')}</button><span>${AMX_MONTHS[amx.vm]} ${amx.vy}</span><button type="button" data-act="nextM" aria-label="Next month">${chev('M9 6l6 6-6 6')}</button></div>
+        <div class="amx-week">${['M','T','W','T','F','S','S'].map(x => `<span>${x}</span>`).join('')}</div>
+        <div class="amx-days">${cells}</div>
+      </div>
+      <div class="amx-bold">Preferred time</div>
+      ${!amx.day ? '<div class="amx-sub" style="margin-top:8px">Select an available date above.</div>'
+        : `<div class="amx-times">${AMX_TIMES.map(t => `<button type="button" class="amx-btn${amx.timeBase === t ? ' on' : ''}" data-time="${t}">${t}</button>`).join('')}</div>`}
+      ${amx.time ? `<div style="margin-top:10px;display:flex;align-items:center;gap:8px"><span class="amx-sub">at</span>
+        <select id="amxMinute" class="amx-in-field" style="width:auto;padding:8px 32px 8px 12px;font-size:13px">${['00','15','30','45'].map(m => `<option value="${m}" ${amx.minute === m ? 'selected' : ''}>:${m}</option>`).join('')}</select></div>` : ''}
+      <div class="amx-bold">Duration</div>
+      <div class="amx-pills">${seg(['30 min','45 min','60 min','Flexible'], 'duration', amx.duration)}</div>
+      ${amx.duration === 'Flexible' ? '<div class="amx-sub" style="margin-top:8px">We\'ll settle the exact duration with you once confirmed.</div>' : ''}
+      <div class="amx-bold">Repeats</div>
+      <div class="amx-pills">${seg(['One-time','Weekly','Monthly','Quarterly'], 'rec', amx.recurrence)}</div>
+      ${amx.recurrence !== 'One-time' ? `<div class="amx-sub" style="margin-top:8px">This repeats ${amx.recurrence.toLowerCase()} directly on the calendar event once confirmed.</div>` : ''}
+      <div class="amx-bold">Meeting location</div>
+      <div class="amx-iconpills">${AMX_LOCS.map(l => `<button type="button" class="amx-iconpill${amx.location === l ? ' on' : ''}" data-loc="${auEsc(l)}" aria-label="${auEsc(l)}">${AMX_ICONS[l]}</button>`).join('')}</div>
+      <div class="amx-sub" style="margin-top:8px">${auEsc(amx.location)}</div>
+      ${amx.location === 'In Person' ? `<div style="margin-top:12px"><label class="amx-label" style="margin-top:0" for="amxAddr">Where should we meet?</label>
+        <input class="amx-in-field" id="amxAddr" value="${auEsc(amx.address)}" placeholder="e.g. Greenbelt 3, Makati City">
+        <div class="amx-maps"><button type="button" class="amx-btn" data-act="gmaps">Google Maps</button><button type="button" class="amx-btn" data-act="waze">Waze</button></div></div>` : ''}
+      <div class="amx-sub" style="margin-top:12px">Times shown in your timezone: <b>${auEsc(amxFmtTz(amx.tz))}</b></div>
+      <button type="button" class="amx-btn amx-primary amx-full" data-act="next" ${(!amx.day || !amx.time) ? 'disabled' : ''}>Continue</button></div>`;
+  }
+
+  function amxStep2() {
+    return `<div class="amx-panel">
+      <div class="amx-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+      <div class="amx-head">${AMX_BACK}<h2 class="amx-h2">Almost there.</h2></div>
+      <div class="amx-sub">Just a few details so we can get back to you with a confirmation.</div>
+      <form id="amxForm" novalidate>
+        <label class="amx-label" for="amxName">Full name</label><input class="amx-in-field" id="amxName" required value="${auEsc(amx.name)}" placeholder="Juan Dela Cruz" autocomplete="name">
+        <label class="amx-label" for="amxOrg">Organization / company (optional)</label><input class="amx-in-field" id="amxOrg" value="${auEsc(amx.org)}" placeholder="ABC Company" autocomplete="organization">
+        <label class="amx-label" for="amxEmail">Email</label><input class="amx-in-field" id="amxEmail" type="email" required value="${auEsc(amx.email)}" placeholder="juan@email.com" autocomplete="email">
+        <label class="amx-label" for="amxPhone">Phone (optional)</label><input class="amx-in-field" id="amxPhone" type="tel" value="${auEsc(amx.phone)}" placeholder="+63 912 345 6789" autocomplete="tel">
+        <label class="amx-label" for="amxNotes">Notes (optional)</label><textarea class="amx-in-field" id="amxNotes" placeholder="Tell me anything I should know.">${auEsc(amx.notes)}</textarea>
+        ${amx.err ? `<div class="amx-err" role="alert">${auEsc(amx.err)}</div>` : ''}
+        <button type="submit" class="amx-btn amx-primary amx-full" ${amx.busy ? 'disabled' : ''}>${amx.busy ? 'Sending…' : 'Request Meeting'}</button>
+      </form></div>`;
+  }
+
+  function amxStep3() {
+    const r = amx.result || {};
+    const status = (r.requestStatus || 'Requested') === 'Requested' ? 'Pending Host Confirmation' : r.requestStatus;
+    const timeTxt = amx.time + (amx.duration === 'Flexible' ? ' · Duration TBD' : ' – ' + amxEnd(amx.time, amx.duration)) + ' (' + amxFmtTz(amx.tz) + ')';
+    return `<div class="amx-panel amx-confirm">
+      <div class="amx-head">${AMX_BACK}</div>
+      <div class="amx-check"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>
+      <h2 class="amx-h2">Meeting Requested</h2>
+      <p class="amx-sub" style="margin-top:8px">Reference <b>${auEsc(r.meetingId || '')}</b>. We'll email you once it's confirmed.</p>
+      <div class="amx-summary">
+        <div class="amx-row"><b>Date</b><span>${auEsc(amx.date)}</span></div>
+        <div class="amx-row"><b>Time</b><span>${auEsc(timeTxt)}</span></div>
+        <div class="amx-row"><b>Type</b><span>${auEsc(amx.type)}</span></div>
+        ${amx.recurrence !== 'One-time' ? `<div class="amx-row"><b>Repeats</b><span>${auEsc(amx.recurrence)}</span></div>` : ''}
+        <div class="amx-row"><b>Location</b><span>${auEsc(amx.location)}${amx.address ? '<br>' + auEsc(amx.address) : ''}</span></div>
+        <div class="amx-row"><b>Guest</b><span>${auEsc(amx.name)}${amx.org ? ' · ' + auEsc(amx.org) : ''}</span></div>
+        <div class="amx-row"><b>Status</b><span class="amx-pill">${auEsc(status)}</span></div>
+      </div>
+      ${amx.location === 'Videocall / Virtual Call' ? (r.meetingLink
+        ? `<a class="amx-btn amx-primary amx-full" href="${auEsc(r.meetingLink)}" target="_blank" rel="noopener">Join Google Meet</a>`
+        : '<div class="amx-sub" style="margin-bottom:10px">We\'ll send the video call link separately once confirmed.</div>') : ''}
+      <button type="button" class="amx-btn amx-primary amx-full" data-act="gcal">＋ Add to Google Calendar</button>
+      <button type="button" class="amx-btn amx-ghost amx-full" data-act="again" style="margin-top:14px">Book another meeting</button>
+      <button type="button" class="amx-btn amx-ghost amx-full" data-act="close" style="margin-top:0">Close</button></div>`;
+  }
+
+  function amxRender() {
+    const ov = document.getElementById('artimeetOverlay'); if (!ov || !amx) return;
+    const body = ov.querySelector('#amxBody'), keep = ov.scrollTop, changed = amx._shown !== amx.step;
+    body.innerHTML = [amxStep0, amxStep1, amxStep2, amxStep3][amx.step]();
+    const panel = body.firstElementChild;
+    if (panel && changed) panel.classList.add('amx-in');
+    ov.scrollTop = changed ? 0 : keep;
+    amx._shown = amx.step;
+  }
+
+  function amxReadForm() {
+    const v = id => (document.getElementById(id)?.value || '').trim();
+    amx.name = v('amxName'); amx.org = v('amxOrg'); amx.email = v('amxEmail'); amx.phone = v('amxPhone'); amx.notes = v('amxNotes');
+  }
+
+  async function amxSubmit() {
+    if (amx.busy) return;
+    amxReadForm();
+    if (!amx.name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(amx.email)) { amx.err = 'Enter your name and a valid email.'; haptic('error'); amxRender(); return; }
+    amx.busy = true; amx.err = ''; amxRender();
+    try {
+      amx.result = await amxCall('saveMeeting', {
+        hostHandle:'artibyte', cardId:(currentEntry && currentEntry.cardId) || '',
+        name:amx.name, email:amx.email, org:amx.org, phone:amx.phone, notes:amx.notes,
+        type:amx.type, date:amx.date, time:amx.time, duration:amx.duration,
+        location:amx.location, locationAddress:amx.address, recurrence:amx.recurrence, timezone:amx.tz
+      });
+      amx.step = 3; haptic('success');
+    } catch (e) {
+      amx.err = 'Could not send your request: ' + (e.message || 'Please try again.'); haptic('error');
+    }
+    amx.busy = false; amxRender();
+  }
+
+  function amxClick(e) {
+    const b = e.target.closest('[data-act],[data-day],[data-time],[data-duration],[data-rec],[data-loc]');
+    if (!b || b.disabled || !amx) return;
+    const d = b.dataset;
+    if (d.day) { haptic('light'); amx.day = +d.day; amx.date = AMX_MONTHS[amx.vm] + ' ' + amx.day + ', ' + amx.vy; amx.time = amx.timeBase = null; amx.minute = '00'; return amxRender(); }
+    if (d.time) { haptic('light'); amx.timeBase = amx.time = d.time; amx.minute = '00'; return amxRender(); }
+    if (d.duration) { haptic('light'); amx.duration = d.duration; return amxRender(); }
+    if (d.rec) { haptic('light'); amx.recurrence = d.rec; return amxRender(); }
+    if (d.loc) { haptic('light'); amx.location = d.loc; return amxRender(); }
+    switch (d.act) {
+      case 'back': haptic('light'); if (amx.step === 0) return closeArtimeet(); if (amx.step === 3) { amx = amxFresh(); } else amx.step--; return amxRender();
+      case 'next': haptic('medium'); amx.step++; return amxRender();
+      case 'prevM': case 'nextM': {
+        haptic('light'); const n = new Date();
+        amx.vm += d.act === 'nextM' ? 1 : -1;
+        if (amx.vm > 11) { amx.vm = 0; amx.vy++; } if (amx.vm < 0) { amx.vm = 11; amx.vy--; }
+        if (amx.vy < n.getFullYear() || (amx.vy === n.getFullYear() && amx.vm < n.getMonth())) { amx.vy = n.getFullYear(); amx.vm = n.getMonth(); }
+        amx.day = amx.date = amx.time = amx.timeBase = null; amx.minute = '00'; return amxRender();
+      }
+      case 'gmaps': case 'waze': {
+        const q = (document.getElementById('amxAddr')?.value || '').trim();
+        if (!q) { haptic('error'); showToast('Enter a place first', 'neutral'); return; }
+        haptic('light');
+        const P2 = 'https:' + String.fromCharCode(47, 47);
+        window.open(d.act === 'gmaps' ? P2 + 'www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q) : P2 + 'waze.com/ul?q=' + encodeURIComponent(q) + '&navigate=yes', '_blank');
+        return;
+      }
+      case 'gcal': { const u = amxGcal(); if (u) window.open(u, '_blank'); return; }
+      case 'again': haptic('light'); amx = amxFresh(); return amxRender();
+      case 'close': return closeArtimeet();
+    }
+  }
+
   function bookMeetingArtimeet() {
+    haptic('medium');
+    if (document.getElementById('artimeetOverlay')) return;
+    amxEnsureCss(); amx = amxFresh();
+    const ov = document.createElement('div');
+    ov.id = 'artimeetOverlay';
+    ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', 'Book a meeting');
+    ov.innerHTML = '<div class="amx-app"><div id="amxBody"></div></div>';
+    document.body.appendChild(ov);
+    const body = ov.querySelector('#amxBody');
+    body.addEventListener('click', amxClick);
+    body.addEventListener('change', e => {
+      if (e.target.id === 'amxType') { haptic('light'); amx.type = e.target.value; amxRender(); }
+      else if (e.target.id === 'amxMinute') {
+        haptic('light'); amx.minute = e.target.value;
+        const p = amx.timeBase.split(' '); amx.time = p[0].split(':')[0] + ':' + amx.minute + ' ' + p[1]; amxRender();
+      }
+    });
+    body.addEventListener('input', e => {
+      const m = { amxAddr:'address', amxName:'name', amxOrg:'org', amxEmail:'email', amxPhone:'phone', amxNotes:'notes' }[e.target.id];
+      if (m) amx[m] = e.target.value;
+    });
+    body.addEventListener('submit', e => { e.preventDefault(); amxSubmit(); });
+    amxRender();
+  }
+
+  function closeArtimeet() {
+    const ov = document.getElementById('artimeetOverlay');
+    if (!ov) return;
+    haptic('light');
+    ov.classList.add('amx-out');
+    setTimeout(() => { ov.remove(); amx = null; }, 250);
+  }
+  /* === END: NATIVE ARTIMEET MODAL === */
+
+  function bookMeetingArtimeetOld() {
     haptic('medium');
     window.open(artimeetLink(), '_blank');
   }
@@ -3813,7 +4162,29 @@
       timers.set(el, setTimeout(() => el.classList?.remove('scroll-active'), 1000));
     }, { capture: true, passive: true });
   })();
-  const SHEET_URL = "https://script.google.com/macros/s/AKfycbxb2G5G-XMGuCyxYq2Sw0cGRzxEgCre8xl4hvSZh7TXwZEiHvcXlIDtJb9DxD0C5QhspQ/exec";
+  /* === START: API CONNECTOR === */
+  const API_URL = 'https://script.google.com/macros/s/AKfycby5-iXl1Mlz02091BDWODpdAj5S7qu0lj96U6Ffw1qaGmWj6Ua8_t_i23qgV1-4khHL/exec';
+
+  async function apiPost(action, payload) {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action, payload: payload || {} })
+    });
+    const j = await res.json();
+    if (!j.success) throw new Error(j.error || 'Request failed');
+    return j.data;
+  }
+
+  async function apiGet(action, params) {
+    const qs = new URLSearchParams(Object.assign({ action }, params || {})).toString();
+    const res = await fetch(API_URL + '?' + qs);
+    const j = await res.json();
+    if (!j.success) throw new Error(j.error || 'Request failed');
+    return j.data;
+  }
+  /* === END: API CONNECTOR === */
+  const SHEET_URL = API_URL;
   let entries = [], currentEntry = null;
 
   function updatePreview() {} // stub — no preview box in current UI
@@ -4174,8 +4545,9 @@
     const minHold = new Promise(r => setTimeout(r, 700));
     const work = (async () => {
       try {
+        /* setup screen ay nakatago (#screenSetup display:none). Naka-off ang ALLOW_LEGACY_CARD_CREATE sa backend, kaya walang effect. */
         const p = new URLSearchParams({ name, position: pos, athid, no: padNo(no), qrLink });
-        await fetch(SHEET_URL + '?' + p.toString(), { method: 'GET', mode: 'no-cors' });
+        await fetch(API_URL + '?' + p.toString(), { method: 'GET' });
       } catch(e) {}
     })();
 
@@ -4800,8 +5172,7 @@
    let fbOk = false;
     try { fbOk = !!(await window.storage.set(kind + ':' + Date.now(), JSON.stringify(payload), false)); } catch(e) {}
     try {
-      const p = new URLSearchParams({ type: kind, athid: payload.athid, name: payload.name, remarks: text, ts: payload.ts });
-      await fetch(SHEET_URL + '?' + p.toString(), { method: 'GET', mode: 'no-cors' });
+      await apiPost('saveFeedback', { type: kind, athId: payload.athid, name: payload.name, remarks: text, clientTs: payload.ts });
       fbOk = true;
     } catch(e) {}
     if (!fbOk) { haptic('error'); showToast("Couldn't send. Try again", 'error'); return; }
@@ -5235,6 +5606,7 @@
   /* ── OS SHELL: enter/exit + tab switching ── */
   let currentOSPane = 'home';
   function enterOS(target) {
+    if (document.body.classList.contains('public-mode')) { haptic('error'); showToast('Owner access only', 'neutral'); return; }
     haptic('medium');
     const acctScreen0 = document.getElementById('screenAccount');
     if (acctScreen0) { acctScreen0.classList.remove('active','entering','leaving'); acctScreen0.style.display = ''; }
@@ -5408,6 +5780,7 @@
   }
 
   function triggerPhotoUpload() {
+    if (document.body.classList.contains('public-mode')) return;
     haptic('light');
     const inp = document.createElement('input');
     inp.type = 'file'; inp.accept = 'image/*';
@@ -5469,6 +5842,7 @@
 
   /* ── ATH•NA ACCOUNT PAGE ── */
   function openAccountPage() {
+    if (document.body.classList.contains('public-mode')) return;
     haptic('medium');
     const hasIdentity = !!(currentEntry?.name && currentEntry.name !== '—');
 
@@ -8888,9 +9262,8 @@ function toggleContactEdit() {
     let local = false, sent = false;
     try { local = !!(await window.storage.set('feedback:' + Date.now(), JSON.stringify(payload), false)); } catch (e) {}
     try {
-      const p = new URLSearchParams({ type:'feedback', context: payload.context, category: payload.category || '', athid:payload.athid, name:payload.name, stars:String(payload.stars), remarks:payload.remarks, ts:payload.ts });
-      await fetch(SHEET_URL + '?' + p.toString(), { method:'GET', mode:'no-cors' });
-      sent = true; // opaque response: dispatched, not confirmed
+      await apiPost('saveFeedback', { type:'feedback', context: payload.context, category: payload.category || '', athId:payload.athid, name:payload.name, stars:payload.stars, remarks:payload.remarks, clientTs:payload.ts });
+      sent = true;
     } catch (e) {}
     return local || sent;
   }
@@ -9551,6 +9924,7 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
     if (sendBtn) { delete sendBtn.dataset.busy; sendBtn.textContent = 'Send & Connect'; sendBtn.style.opacity = ''; }
     if (!saved) { haptic('error'); showToast("Couldn't save your info", 'error'); return; }
     haptic('success');
+    apiPost('saveLead', { cardId: (currentEntry && currentEntry.cardId) || '', name: cfVal('cfName'), title: cfVal('cfTitle'), email: cfVal('cfEmail'), mobile: cfVal('cfMobile') }).catch(function () {});
     document.getElementById('csName').textContent = cfVal('cfName');
     document.getElementById('csRole').textContent = cfVal('cfTitle');
     document.getElementById('csMobile').textContent = cfVal('cfMobile');
@@ -10301,7 +10675,7 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
 
   /* === START: ACCESSIBILITY LAYER === */
   (function a11yLayer() {
-    const DIALOG_SEL = '.share-overlay,.cf-overlay,.fb-overlay,.gs-overlay,#cardMenuOverlay,#cardFilterOverlay,#physOrderOverlay,#addContactScreen,#noteEditorScreen,#contactDetailScreen,#screenAccount,#personalInfoScreen,#identityScreen,#licenseScreen,#tosScreen,#screenOS';
+    const DIALOG_SEL = '.share-overlay,.cf-overlay,.fb-overlay,.gs-overlay,#cardMenuOverlay,#cardFilterOverlay,#physOrderOverlay,#addContactScreen,#noteEditorScreen,#contactDetailScreen,#screenAccount,#personalInfoScreen,#identityScreen,#licenseScreen,#tosScreen,#screenOS,#artimeetOverlay';
     const CLICKABLE = '[onclick]:not(button):not(input):not(select):not(textarea):not(a[href]),.ab-row,.ab-tag,.theme-dot-wrap,.au-nomatch-row,.id-checkbox';
     const ERR_SEL = '.ac-err,.cf-fe,.id-err-msg,.err-msg';
     /* === START: KEEP BANNER === */
@@ -10322,6 +10696,7 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
       physOrderOverlay:'Order physical NFC card', appStoreGateOverlay:'Rate on the App Store'
     };
     const CLOSERS = {
+      artimeetOverlay:'closeArtimeet',
       addContactScreen:'requestCloseAddContact', noteEditorScreen:'requestCloseNoteEditor', contactDetailScreen:'requestCloseContactDetail',
       confirmDialogOverlay:'cancelConfirmDialog',
       screenAccount:'closeAccountPage', personalInfoScreen:'closePersonalInfoScreen', identityScreen:'closeIdentityScreen',
@@ -10668,6 +11043,7 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
       pos: 'CEO',
       company: 'ArtiByte Apostrophe Inc.',
       athid: 'ARTICARD-000000',
+      cardId: 'C-7F82KQ', /* placeholder: palitan ng totoong Card ID */
       qrLink: BASE_URL + '/?id=ARTICARD-000000'
     };
     currentEntry = entry;
@@ -10676,7 +11052,114 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
     showCard(entry);
   });
 
-  /* === START: READY FLAG === */
+  /* === START: CARD GATE === */
+(function cardGate() {
+  const $ = id => document.getElementById(id);
+  const gate = $('screenGate'); if (!gate) return;
+  const SESSION = 'athna-owner-session';
+  const RE_CARD  = /^C-[A-Z0-9]{4,10}$/;
+  const RE_OWNER = /^AK-[A-Z0-9]{8,}$/;
+  let mode = 'card', busy = false;
+
+  /* TODO: palitan ng Apps Script lookup. Ngayon format check lang. */
+  async function resolveCardId(id) {
+    try {
+      const d = await apiGet('card', { id });
+      if (d) { window.__PUBLIC_CARD__ = d; return true; }
+    } catch (e) {}
+    return false;
+  }
+ async function verifyOwnerKey(key) {
+    try {
+      const d = await apiPost('ownerLogin', { key: key });
+      sessionStorage.setItem('athna-owner-token', d.token); window.__OWNER_CARD__ = d.card; return true;
+    } catch (e) {}
+    return false;
+  }
+
+  function idFromUrl() {
+    const p = new URLSearchParams(location.search);
+    const q = p.get('c') || p.get('id');
+    if (q) return q.trim().toUpperCase();
+    const m = location.pathname.match(/\/c\/([A-Za-z0-9-]+)/);
+    return m ? m[1].toUpperCase() : '';
+  }
+
+  function setPublic(on) {
+    document.body.classList.toggle('public-mode', on);
+    const gs = [...document.querySelectorAll('.face-front > svg > g')];
+    if (gs.length >= 2) gs[gs.length - 2].style.display = on ? 'none' : ''; /* pill 1: Account / Calendar / AI */
+  }
+
+  function showGate() {
+    gate.classList.remove('leaving');
+    gate.classList.add('show');
+    setMode('card');
+    setTimeout(() => $('gtInput').focus(), 300);
+  }
+  function closeGate() {
+    gate.classList.add('leaving');
+    setTimeout(() => { gate.classList.remove('show', 'leaving'); }, 320);
+  }
+
+  function setMode(m) {
+    mode = m;
+    const inp = $('gtInput');
+    inp.value = ''; inp.classList.remove('err'); $('gtErr').textContent = '';
+    if (m === 'card') {
+      $('gtLabel').textContent = 'Enter your Card ID';
+      inp.type = 'text'; inp.placeholder = 'C-7F82KQ';
+      $('gtSwitch').textContent = "I'm the card owner →";
+    } else {
+      $('gtLabel').textContent = 'Enter your Private Key';
+      inp.type = 'password'; inp.placeholder = 'AK-••••••••';
+      $('gtSwitch').textContent = '← Back to Card ID';
+    }
+    inp.focus();
+  }
+
+  function fail(msg) {
+    $('gtInput').classList.add('err'); $('gtErr').textContent = msg;
+    if (typeof haptic === 'function') haptic('error');
+  }
+
+  async function submit() {
+    if (busy) return;
+    let v = $('gtInput').value.trim().toUpperCase();
+    if (!v) { fail(mode === 'card' ? 'Enter your Card ID.' : 'Enter your Private Key.'); return; }
+    busy = true; $('gtBtn').disabled = true;
+    try {
+      if (mode === 'card') {
+        if (!v.startsWith('C-')) v = 'C-' + v;
+        if (!(await resolveCardId(v))) { fail('Card not found. Check the ID and try again.'); return; }
+        history.replaceState(null, '', '?c=' + encodeURIComponent(v));
+        setPublic(true);
+      } else {
+        if (!(await verifyOwnerKey(v))) { fail('That key is not valid.'); return; }
+        sessionStorage.setItem(SESSION, '1'); /* hindi ini-store ang mismong key */
+        setPublic(false);
+      }
+      if (typeof haptic === 'function') haptic('success');
+      closeGate();
+    } finally { busy = false; $('gtBtn').disabled = false; }
+  }
+
+  $('gtForm').addEventListener('submit', e => { e.preventDefault(); submit(); });
+  $('gtInput').addEventListener('input', e => {
+    e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '');
+    e.target.classList.remove('err'); $('gtErr').textContent = '';
+  });
+  $('gtSwitch').addEventListener('click', () => setMode(mode === 'card' ? 'owner' : 'card'));
+  window.openGate = showGate; /* para sa Sign Out later */
+
+  /* boot: scanned QR / shared link → diretso sa public card. May owner session → full app. Wala → gate. */
+  if (idFromUrl()) setPublic(true);
+  else if (sessionStorage.getItem(SESSION)) setPublic(false);
+  else showGate();
+})();
+/* === END: CARD GATE === */
+
+/* === START: READY FLAG === */
   window.__ATHNA_READY__ = true;
   /* === END: READY FLAG === */
 </script>
