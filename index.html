@@ -10132,7 +10132,8 @@ function closeRequestManager() {
 }
 /* === END: REQUEST MANAGER (OWNER) === */
 
-/* === START: REQUEST MANAGER (OWNER) === */
+/* === DUPLICATE DISABLED: START === */
+if (false) {
 const RM_PILL = {
   'Requested':['#fff1c9','#9a711e'], 'Reviewing':['#e3ecf9','#3a5f9e'], 'Confirmed':['#e3f5e5','#43854b'],
   'Reschedule Requested':['#f1e6fa','#7d4aa8'], 'Cancelled':['#eeeeee','#777777']
@@ -10270,7 +10271,8 @@ function closeRequestManager() {
   scr.style.animation = 'osShellOut .25s cubic-bezier(0.4,0,0.2,1) forwards';
   setTimeout(() => { scr.remove(); rmRefreshBadge(); }, 260);
 }
-/* === END: REQUEST MANAGER (OWNER) === */
+}
+/* === DUPLICATE DISABLED: END === */
 
 function licRow(label, val) {
     return `<div class="lic-info-row"><span class="lic-info-label">${label}</span><span class="lic-info-val">${val}</span></div>`;
