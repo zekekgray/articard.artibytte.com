@@ -2535,6 +2535,28 @@
       </div>
     </div>
 
+    <!-- === START: REQUEST MANAGER ROW === -->
+    <div class="acct-group">
+      <div class="os-row" onclick="openRequestManager()" style="cursor:pointer;">
+        <div class="os-row-icon" style="background:#4A9DE0;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/><path d="M9 15l2 2 4-4"/></svg></div>
+        <div class="os-row-text"><div class="os-row-title">Request Manager</div><div class="os-row-sub">Meeting requests from your card</div></div>
+        <span class="os-row-value" id="acctReqValue" style="color:#FF9F0A;font-weight:600;"></span>
+        <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+    <!-- === END: REQUEST MANAGER ROW === -->
+
+    <!-- === START: REQUEST MANAGER ROW === -->
+    <div class="acct-group">
+      <div class="os-row" onclick="openRequestManager()" style="cursor:pointer;">
+        <div class="os-row-icon" style="background:#4A9DE0;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/><path d="M9 15l2 2 4-4"/></svg></div>
+        <div class="os-row-text"><div class="os-row-title">Request Manager</div><div class="os-row-sub">Meeting requests from your card</div></div>
+        <span class="os-row-value" id="acctReqValue" style="color:#FF9F0A;font-weight:600;"></span>
+        <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+    <!-- === END: REQUEST MANAGER ROW === -->
+
     <!-- Notifications -->
     <div class="acct-group">
       <div class="os-row" onclick="haptic('light');showToast('Notification preferences — coming soon','neutral')" style="cursor:pointer;">
@@ -3631,7 +3653,18 @@
     window.visualViewport.addEventListener('scroll', onViewport);
   })();
 
-  const BASE_URL  = "https://articard.artibytte.com";
+  /* === START: CONNECT PREVIEW FILL === */
+function fillConnectPreview() {
+  const o = ownerInfo();
+  document.getElementById('cpName').textContent = currentEntry ? currentEntry.name : '—';
+  document.getElementById('cpRole').textContent = currentEntry ? currentEntry.pos : '—';
+  document.getElementById('cpMobile').textContent = o.phone || '—';
+  document.getElementById('cpEmail').textContent = o.email || '—';
+  const idRow = document.getElementById('cpLinkedin').closest('.cp-info-row');
+  if (idRow) idRow.style.display = 'none';   /* walang ATH ID sa modal */
+  renderConnectAvatarInto(document.getElementById('cpFolCircle'), 40);
+}
+/* === END: CONNECT PREVIEW FILL === */
   const ARTIMEET_URL = "https://artimeet.artibytte.com";
 
   /* ── QR PAYLOAD = vCard (compact, para scannable sa maliit na bilog) ── */
@@ -3664,7 +3697,7 @@
   /* ── QR PROFILE LINK: articard.artibytte.com?id=<ATH ID> ── */
   function profileLink() {
     const cid = currentEntry && currentEntry.cardId;
-    if (cid) return BASE_URL + '/c/' + encodeURIComponent(cid);
+    if (cid) return BASE_URL + '/?c=' + encodeURIComponent(cid);
     const id = (currentEntry && currentEntry.athid) || '';
     return id ? BASE_URL + '/?id=' + encodeURIComponent(id) : BASE_URL;
   }
@@ -5868,6 +5901,7 @@
     renderProfileCompletion(pct);
 
     const acctScreen = document.getElementById('screenAccount');
+    rmRefreshBadge(); /* REQUEST MANAGER BADGE */
     acctScreen.style.display = 'flex';
     acctScreen.classList.add('active', 'entering');
     setTimeout(() => acctScreen.classList.remove('entering'), 360);
@@ -9800,17 +9834,35 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
   }
 
   /* ── CONNECT / SHARE YOUR INFO ── */
-  function openConnectForm() {
+  /* === START: CONNECT PREVIEW FILL === */
+function fillConnectPreview() {
+  const o = ownerInfo();
+  document.getElementById('cpName').textContent = currentEntry ? currentEntry.name : '—';
+  document.getElementById('cpRole').textContent = currentEntry ? currentEntry.pos : '—';
+  document.getElementById('cpMobile').textContent = o.phone || '—';
+  document.getElementById('cpEmail').textContent = o.email || '—';
+  const idRow = document.getElementById('cpLinkedin').closest('.cp-info-row');
+  if (idRow) idRow.style.display = 'none';   /* walang ATH ID sa modal */
+  renderConnectAvatarInto(document.getElementById('cpFolCircle'), 40);
+}
+/* === END: CONNECT PREVIEW FILL === */
+
+/* === START: CONNECT PREVIEW FILL === */
+function fillConnectPreview() {
+  const o = ownerInfo();
+  document.getElementById('cpName').textContent = currentEntry ? currentEntry.name : '—';
+  document.getElementById('cpRole').textContent = currentEntry ? currentEntry.pos : '—';
+  document.getElementById('cpMobile').textContent = o.phone || '—';
+  document.getElementById('cpEmail').textContent = o.email || '—';
+  const idRow = document.getElementById('cpLinkedin').closest('.cp-info-row');
+  if (idRow) idRow.style.display = 'none';   /* walang ATH ID sa modal */
+  renderConnectAvatarInto(document.getElementById('cpFolCircle'), 40);
+}
+/* === END: CONNECT PREVIEW FILL === */
+
+function openConnectForm() {
     haptic('light');
-    const name = currentEntry ? currentEntry.name : '—';
-    const role = currentEntry ? currentEntry.pos : '—';
-    document.getElementById('cpName').textContent = name;
-    document.getElementById('cpRole').textContent = role;
-    const o = ownerInfo();
-    document.getElementById('cpMobile').textContent = o.phone || '—';
-    document.getElementById('cpEmail').textContent = o.email || '—';
-    document.getElementById('cpLinkedin').textContent = o.athid || '—';
-    renderConnectAvatarInto(document.getElementById('cpFolCircle'), 40);
+    fillConnectPreview(); /* CONNECT PREVIEW FILL */
 
     document.getElementById('connectStepPreview').style.display = 'block';
     document.getElementById('connectFormBody').style.display = 'none';
@@ -9938,7 +9990,287 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
   }
 
   /* ── LICENSE SCREEN ── */
-  function licRow(label, val) {
+  /* === START: REQUEST MANAGER (OWNER) === */
+const RM_PILL = {
+  'Requested':['#fff1c9','#9a711e'], 'Reviewing':['#e3ecf9','#3a5f9e'], 'Confirmed':['#e3f5e5','#43854b'],
+  'Reschedule Requested':['#f1e6fa','#7d4aa8'], 'Cancelled':['#eeeeee','#777777']
+};
+let _rmMeetings = [], _rmBusy = false;
+
+function wantsRM() { return new URLSearchParams(location.search).get('requests') === '1'; }
+function rmToken() { return sessionStorage.getItem('athna-owner-token') || ''; }
+function rmExpired() {
+  sessionStorage.removeItem('athna-owner-session'); sessionStorage.removeItem('athna-owner-token');
+  document.getElementById('requestMgrScreen')?.remove();
+  window.__OPEN_RM__ = true;                     /* pagka-login ulit, babalik dito */
+  if (window.openGate) window.openGate();
+}
+
+async function rmRefreshBadge() {
+  const el = document.getElementById('acctReqValue'), tok = rmToken();
+  if (!el || !tok) return;
+  try {
+    const list = await apiPost('ownerListMeetings', { token: tok });
+    const n = list.filter(m => m.requestStatus === 'Requested').length;
+    el.textContent = n ? n + ' new' : '';
+  } catch (e) {}
+}
+
+function rmCardHtml(m) {
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  const p = RM_PILL[m.requestStatus] || RM_PILL['Requested'];
+  const id = auEsc(m.meetingId);
+  const rep = (m.recurrence && m.recurrence !== 'One-time') ? ' · 🔁 ' + auEsc(m.recurrence) : '';
+  const join = /^https:\/\//.test(m.meetingLink || '')
+    ? `<a href="${auEsc(m.meetingLink)}" target="_blank" rel="noopener" style="padding:9px 13px;border-radius:12px;background:rgba(255,255,255,0.9);border:1px solid rgba(0,0,0,0.1);color:#1c1c1e;${F}font-size:12.5px;font-weight:600;text-decoration:none;">🎥 Join</a>` : '';
+  const btn = (st, label, kind) => {
+    const on = m.requestStatus === st;
+    const bg = kind === 'primary' ? '#1c1c1e' : 'rgba(255,255,255,0.9)';
+    const fg = kind === 'primary' ? '#ECE4D6' : kind === 'danger' ? '#FF453A' : '#1c1c1e';
+    return `<button ${on ? 'disabled' : ''} onclick="rmSetStatus('${id}','${st}')" style="padding:9px 13px;border-radius:12px;border:${kind === 'primary' ? 'none' : '1px solid rgba(0,0,0,0.1)'};background:${bg};color:${fg};${F}font-size:12.5px;font-weight:600;cursor:pointer;${on ? 'opacity:.4;cursor:default;' : ''}">${label}</button>`;
+  };
+  const when = auEsc(m.date) + ' · ' + auEsc(m.time) + (m.duration ? ' · ' + auEsc(m.duration) : '');
+  const who = auEsc(m.guestName || '—') + (m.guestOrg ? ' · ' + auEsc(m.guestOrg) : '');
+  const contact = [m.guestEmail ? `<a href="mailto:${auEsc(m.guestEmail)}" style="color:#1c1c1e;">${auEsc(m.guestEmail)}</a>` : '', m.guestPhone ? auEsc(m.guestPhone) : ''].filter(Boolean).join(' · ');
+  const notes = m.notes ? `<div style="${F}font-size:12.5px;color:rgba(60,60,67,0.7);margin-top:8px;white-space:pre-wrap;word-break:break-word;">${auEsc(m.notes)}</div>` : '';
+  return `<div style="background:rgba(255,255,255,0.72);border-radius:18px;padding:15px 16px;margin-bottom:10px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+      <div style="min-width:0;">
+        <div style="${F}font-size:14.5px;font-weight:700;color:#1c1c1e;">${id} · ${when}</div>
+        <div style="${F}font-size:12.5px;color:rgba(60,60,67,0.6);margin-top:3px;word-break:break-word;">${who} · ${auEsc(m.type)} · ${auEsc(m.location)}${rep}</div>
+        <div style="${F}font-size:12.5px;color:rgba(60,60,67,0.6);margin-top:3px;word-break:break-word;">${contact}</div>
+      </div>
+      <span style="flex-shrink:0;${F}font-size:11px;font-weight:700;padding:5px 9px;border-radius:999px;background:${p[0]};color:${p[1]};white-space:nowrap;">${auEsc(m.requestStatus)}</span>
+    </div>
+    ${notes}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+      ${join}${btn('Confirmed', 'Confirm', 'primary')}${btn('Reviewing', 'Reviewing')}${btn('Reschedule Requested', 'Reschedule')}${btn('Cancelled', 'Cancel', 'danger')}
+    </div>
+  </div>`;
+}
+
+function renderRequestManager() {
+  const list = document.getElementById('rmList'); if (!list) return;
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  list.innerHTML = _rmMeetings.length
+    ? _rmMeetings.map(rmCardHtml).join('')
+    : `<div style="${F}font-size:13.5px;color:rgba(60,60,67,0.4);text-align:center;padding:48px 12px;">No meeting requests yet.</div>`;
+}
+
+async function loadRequestManager() {
+  const list = document.getElementById('rmList'); if (!list) return;
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  list.innerHTML = `<div style="${F}font-size:13.5px;color:rgba(60,60,67,0.5);text-align:center;padding:48px 12px;">Loading requests…</div>`;
+  try {
+    _rmMeetings = await apiPost('ownerListMeetings', { token: rmToken() });
+    _rmMeetings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  } catch (e) {
+    if (/session|sign in/i.test(String(e && e.message))) { rmExpired(); return; }
+    list.innerHTML = `<div style="${F}font-size:13.5px;color:#FF453A;text-align:center;padding:48px 12px;">Could not load requests: ${auEsc(e && e.message || 'unknown error')}</div>`;
+    return;
+  }
+  renderRequestManager();
+}
+
+function rmSetStatus(id, status) {
+  if (_rmBusy) return;
+  if (status === 'Cancelled') {
+    confirmDialog({ title: 'Cancel this meeting?', message: 'The guest will be notified by email.', confirmLabel: 'Cancel Meeting', cancelLabel: 'Keep', danger: true, onConfirm: () => rmApplyStatus(id, status) });
+    return;
+  }
+  rmApplyStatus(id, status);
+}
+
+async function rmApplyStatus(id, status) {
+  if (_rmBusy) return;
+  _rmBusy = true;
+  haptic('light');
+  const list = document.getElementById('rmList');
+  if (list) { list.style.opacity = '.5'; list.style.pointerEvents = 'none'; }
+  try {
+    await apiPost('ownerUpdateMeetingStatus', { token: rmToken(), meetingId: id, status: status });
+    haptic(status === 'Cancelled' ? 'error' : 'success');
+    showToast(status === 'Confirmed' ? 'Meeting confirmed' : status === 'Cancelled' ? 'Meeting cancelled' : 'Status updated', 'success');
+    await loadRequestManager();
+  } catch (e) {
+    if (/session|sign in/i.test(String(e && e.message))) { _rmBusy = false; rmExpired(); return; }
+    haptic('error'); showToast(String((e && e.message) || 'Could not update'), 'error');
+  }
+  if (list) { list.style.opacity = ''; list.style.pointerEvents = ''; }
+  _rmBusy = false;
+}
+
+function openRequestManager() {
+  if (document.body.classList.contains('public-mode')) { haptic('error'); showToast('Owner access only', 'neutral'); return; }
+  if (!rmToken()) { rmExpired(); return; }
+  haptic('medium');
+  document.getElementById('requestMgrScreen')?.remove();
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  const pill = "display:flex;align-items:center;justify-content:center;width:54px;height:54px;padding:0;color:#1c1c1e;background:rgba(255,255,255,0.82);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:0.6px solid rgba(255,255,255,0.9);border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.10),inset 0 1px 0 rgba(255,255,255,0.7);cursor:pointer;-webkit-tap-highlight-color:transparent;position:absolute;top:max(14px,env(safe-area-inset-top));z-index:50;";
+  const scr = document.createElement('div');
+  scr.id = 'requestMgrScreen';
+  scr.setAttribute('aria-label', 'Meeting requests');
+  scr.style.cssText = 'position:fixed;inset:0;z-index:9650;background:#ECE4D6;display:flex;flex-direction:column;animation:screenFadeIn .3s cubic-bezier(0.16,1,0.3,1) forwards;';
+  scr.innerHTML = `
+    <button onclick="haptic('light');closeRequestManager()" aria-label="Back" style="${pill}left:14px;"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <button onclick="haptic('light');loadRequestManager()" aria-label="Refresh" style="${pill}right:14px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
+    <div style="position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:87px 16px max(40px,env(safe-area-inset-bottom));">
+      <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:30px;font-weight:700;color:#1c1c1e;letter-spacing:-.01em;">Meeting Requests</div>
+      <div style="${F}font-size:13px;color:rgba(60,60,67,0.55);margin:4px 0 18px;">Manage requests, confirmations and scheduling.</div>
+      <div id="rmList"></div>
+    </div>`;
+  document.body.appendChild(scr);
+  loadRequestManager();
+}
+
+function closeRequestManager() {
+  const scr = document.getElementById('requestMgrScreen'); if (!scr) return;
+  scr.style.animation = 'osShellOut .25s cubic-bezier(0.4,0,0.2,1) forwards';
+  setTimeout(() => { scr.remove(); rmRefreshBadge(); }, 260);
+}
+/* === END: REQUEST MANAGER (OWNER) === */
+
+/* === START: REQUEST MANAGER (OWNER) === */
+const RM_PILL = {
+  'Requested':['#fff1c9','#9a711e'], 'Reviewing':['#e3ecf9','#3a5f9e'], 'Confirmed':['#e3f5e5','#43854b'],
+  'Reschedule Requested':['#f1e6fa','#7d4aa8'], 'Cancelled':['#eeeeee','#777777']
+};
+let _rmMeetings = [], _rmBusy = false;
+
+function wantsRM() { return new URLSearchParams(location.search).get('requests') === '1'; }
+function rmToken() { return sessionStorage.getItem('athna-owner-token') || ''; }
+function rmExpired() {
+  sessionStorage.removeItem('athna-owner-session'); sessionStorage.removeItem('athna-owner-token');
+  document.getElementById('requestMgrScreen')?.remove();
+  window.__OPEN_RM__ = true;                     /* pagka-login ulit, babalik dito */
+  if (window.openGate) window.openGate();
+}
+
+async function rmRefreshBadge() {
+  const el = document.getElementById('acctReqValue'), tok = rmToken();
+  if (!el || !tok) return;
+  try {
+    const list = await apiPost('ownerListMeetings', { token: tok });
+    const n = list.filter(m => m.requestStatus === 'Requested').length;
+    el.textContent = n ? n + ' new' : '';
+  } catch (e) {}
+}
+
+function rmCardHtml(m) {
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  const p = RM_PILL[m.requestStatus] || RM_PILL['Requested'];
+  const id = auEsc(m.meetingId);
+  const rep = (m.recurrence && m.recurrence !== 'One-time') ? ' · 🔁 ' + auEsc(m.recurrence) : '';
+  const join = /^https:\/\//.test(m.meetingLink || '')
+    ? `<a href="${auEsc(m.meetingLink)}" target="_blank" rel="noopener" style="padding:9px 13px;border-radius:12px;background:rgba(255,255,255,0.9);border:1px solid rgba(0,0,0,0.1);color:#1c1c1e;${F}font-size:12.5px;font-weight:600;text-decoration:none;">🎥 Join</a>` : '';
+  const btn = (st, label, kind) => {
+    const on = m.requestStatus === st;
+    const bg = kind === 'primary' ? '#1c1c1e' : 'rgba(255,255,255,0.9)';
+    const fg = kind === 'primary' ? '#ECE4D6' : kind === 'danger' ? '#FF453A' : '#1c1c1e';
+    return `<button ${on ? 'disabled' : ''} onclick="rmSetStatus('${id}','${st}')" style="padding:9px 13px;border-radius:12px;border:${kind === 'primary' ? 'none' : '1px solid rgba(0,0,0,0.1)'};background:${bg};color:${fg};${F}font-size:12.5px;font-weight:600;cursor:pointer;${on ? 'opacity:.4;cursor:default;' : ''}">${label}</button>`;
+  };
+  const when = auEsc(m.date) + ' · ' + auEsc(m.time) + (m.duration ? ' · ' + auEsc(m.duration) : '');
+  const who = auEsc(m.guestName || '—') + (m.guestOrg ? ' · ' + auEsc(m.guestOrg) : '');
+  const contact = [m.guestEmail ? `<a href="mailto:${auEsc(m.guestEmail)}" style="color:#1c1c1e;">${auEsc(m.guestEmail)}</a>` : '', m.guestPhone ? auEsc(m.guestPhone) : ''].filter(Boolean).join(' · ');
+  const notes = m.notes ? `<div style="${F}font-size:12.5px;color:rgba(60,60,67,0.7);margin-top:8px;white-space:pre-wrap;word-break:break-word;">${auEsc(m.notes)}</div>` : '';
+  return `<div style="background:rgba(255,255,255,0.72);border-radius:18px;padding:15px 16px;margin-bottom:10px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+      <div style="min-width:0;">
+        <div style="${F}font-size:14.5px;font-weight:700;color:#1c1c1e;">${id} · ${when}</div>
+        <div style="${F}font-size:12.5px;color:rgba(60,60,67,0.6);margin-top:3px;word-break:break-word;">${who} · ${auEsc(m.type)} · ${auEsc(m.location)}${rep}</div>
+        <div style="${F}font-size:12.5px;color:rgba(60,60,67,0.6);margin-top:3px;word-break:break-word;">${contact}</div>
+      </div>
+      <span style="flex-shrink:0;${F}font-size:11px;font-weight:700;padding:5px 9px;border-radius:999px;background:${p[0]};color:${p[1]};white-space:nowrap;">${auEsc(m.requestStatus)}</span>
+    </div>
+    ${notes}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+      ${join}${btn('Confirmed', 'Confirm', 'primary')}${btn('Reviewing', 'Reviewing')}${btn('Reschedule Requested', 'Reschedule')}${btn('Cancelled', 'Cancel', 'danger')}
+    </div>
+  </div>`;
+}
+
+function renderRequestManager() {
+  const list = document.getElementById('rmList'); if (!list) return;
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  list.innerHTML = _rmMeetings.length
+    ? _rmMeetings.map(rmCardHtml).join('')
+    : `<div style="${F}font-size:13.5px;color:rgba(60,60,67,0.4);text-align:center;padding:48px 12px;">No meeting requests yet.</div>`;
+}
+
+async function loadRequestManager() {
+  const list = document.getElementById('rmList'); if (!list) return;
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  list.innerHTML = `<div style="${F}font-size:13.5px;color:rgba(60,60,67,0.5);text-align:center;padding:48px 12px;">Loading requests…</div>`;
+  try {
+    _rmMeetings = await apiPost('ownerListMeetings', { token: rmToken() });
+    _rmMeetings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  } catch (e) {
+    if (/session|sign in/i.test(String(e && e.message))) { rmExpired(); return; }
+    list.innerHTML = `<div style="${F}font-size:13.5px;color:#FF453A;text-align:center;padding:48px 12px;">Could not load requests: ${auEsc(e && e.message || 'unknown error')}</div>`;
+    return;
+  }
+  renderRequestManager();
+}
+
+function rmSetStatus(id, status) {
+  if (_rmBusy) return;
+  if (status === 'Cancelled') {
+    confirmDialog({ title: 'Cancel this meeting?', message: 'The guest will be notified by email.', confirmLabel: 'Cancel Meeting', cancelLabel: 'Keep', danger: true, onConfirm: () => rmApplyStatus(id, status) });
+    return;
+  }
+  rmApplyStatus(id, status);
+}
+
+async function rmApplyStatus(id, status) {
+  if (_rmBusy) return;
+  _rmBusy = true;
+  haptic('light');
+  const list = document.getElementById('rmList');
+  if (list) { list.style.opacity = '.5'; list.style.pointerEvents = 'none'; }
+  try {
+    await apiPost('ownerUpdateMeetingStatus', { token: rmToken(), meetingId: id, status: status });
+    haptic(status === 'Cancelled' ? 'error' : 'success');
+    showToast(status === 'Confirmed' ? 'Meeting confirmed' : status === 'Cancelled' ? 'Meeting cancelled' : 'Status updated', 'success');
+    await loadRequestManager();
+  } catch (e) {
+    if (/session|sign in/i.test(String(e && e.message))) { _rmBusy = false; rmExpired(); return; }
+    haptic('error'); showToast(String((e && e.message) || 'Could not update'), 'error');
+  }
+  if (list) { list.style.opacity = ''; list.style.pointerEvents = ''; }
+  _rmBusy = false;
+}
+
+function openRequestManager() {
+  if (document.body.classList.contains('public-mode')) { haptic('error'); showToast('Owner access only', 'neutral'); return; }
+  if (!rmToken()) { rmExpired(); return; }
+  haptic('medium');
+  document.getElementById('requestMgrScreen')?.remove();
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  const pill = "display:flex;align-items:center;justify-content:center;width:54px;height:54px;padding:0;color:#1c1c1e;background:rgba(255,255,255,0.82);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:0.6px solid rgba(255,255,255,0.9);border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.10),inset 0 1px 0 rgba(255,255,255,0.7);cursor:pointer;-webkit-tap-highlight-color:transparent;position:absolute;top:max(14px,env(safe-area-inset-top));z-index:50;";
+  const scr = document.createElement('div');
+  scr.id = 'requestMgrScreen';
+  scr.setAttribute('aria-label', 'Meeting requests');
+  scr.style.cssText = 'position:fixed;inset:0;z-index:9650;background:#ECE4D6;display:flex;flex-direction:column;animation:screenFadeIn .3s cubic-bezier(0.16,1,0.3,1) forwards;';
+  scr.innerHTML = `
+    <button onclick="haptic('light');closeRequestManager()" aria-label="Back" style="${pill}left:14px;"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <button onclick="haptic('light');loadRequestManager()" aria-label="Refresh" style="${pill}right:14px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
+    <div style="position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:87px 16px max(40px,env(safe-area-inset-bottom));">
+      <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:30px;font-weight:700;color:#1c1c1e;letter-spacing:-.01em;">Meeting Requests</div>
+      <div style="${F}font-size:13px;color:rgba(60,60,67,0.55);margin:4px 0 18px;">Manage requests, confirmations and scheduling.</div>
+      <div id="rmList"></div>
+    </div>`;
+  document.body.appendChild(scr);
+  loadRequestManager();
+}
+
+function closeRequestManager() {
+  const scr = document.getElementById('requestMgrScreen'); if (!scr) return;
+  scr.style.animation = 'osShellOut .25s cubic-bezier(0.4,0,0.2,1) forwards';
+  setTimeout(() => { scr.remove(); rmRefreshBadge(); }, 260);
+}
+/* === END: REQUEST MANAGER (OWNER) === */
+
+function licRow(label, val) {
     return `<div class="lic-info-row"><span class="lic-info-label">${label}</span><span class="lic-info-val">${val}</span></div>`;
   }
 
@@ -10676,7 +11008,7 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
 
   /* === START: ACCESSIBILITY LAYER === */
   (function a11yLayer() {
-    const DIALOG_SEL = '.share-overlay,.cf-overlay,.fb-overlay,.gs-overlay,#cardMenuOverlay,#cardFilterOverlay,#physOrderOverlay,#addContactScreen,#noteEditorScreen,#contactDetailScreen,#screenAccount,#personalInfoScreen,#identityScreen,#licenseScreen,#tosScreen,#screenOS,#artimeetOverlay';
+    const DIALOG_SEL = '.share-overlay,.cf-overlay,.fb-overlay,.gs-overlay,#cardMenuOverlay,#cardFilterOverlay,#physOrderOverlay,#addContactScreen,#noteEditorScreen,#contactDetailScreen,#screenAccount,#personalInfoScreen,#identityScreen,#licenseScreen,#tosScreen,#screenOS,#artimeetOverlay,#requestMgrScreen';
     const CLICKABLE = '[onclick]:not(button):not(input):not(select):not(textarea):not(a[href]),.ab-row,.ab-tag,.theme-dot-wrap,.au-nomatch-row,.id-checkbox';
     const ERR_SEL = '.ac-err,.cf-fe,.id-err-msg,.err-msg';
     /* === START: KEEP BANNER === */
@@ -10697,7 +11029,7 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
       physOrderOverlay:'Order physical NFC card', appStoreGateOverlay:'Rate on the App Store'
     };
     const CLOSERS = {
-      artimeetOverlay:'closeArtimeet',
+      artimeetOverlay:'closeArtimeet', requestMgrScreen:'closeRequestManager',
       addContactScreen:'requestCloseAddContact', noteEditorScreen:'requestCloseNoteEditor', contactDetailScreen:'requestCloseContactDetail',
       confirmDialogOverlay:'cancelConfirmDialog',
       screenAccount:'closeAccountPage', personalInfoScreen:'closePersonalInfoScreen', identityScreen:'closeIdentityScreen',
@@ -11037,14 +11369,16 @@ Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange 
   /* ── CARD BOOT: run only after the complete app script is initialized ── */
   document.addEventListener('DOMContentLoaded', function bootCard() {
     const screenCard = document.getElementById('screenCard');
-    if (!screenCard || currentEntry) return;
+    /* === START: SKIP DEMO CARD ON PUBLIC LINK === */
+    if (!screenCard || currentEntry || /\/c\/[A-Za-z0-9-]+/.test(location.pathname) || /[?&](c|id)=/.test(location.search)) return;
+    /* === END: SKIP DEMO CARD ON PUBLIC LINK === */
     const entry = {
       no: 1,
       name: 'Ephraim Nasser E. Tambiga',
       pos: 'CEO',
       company: 'ArtiByte Apostrophe Inc.',
       athid: 'ARTICARD-000000',
-      cardId: 'C-7F82KQ', /* placeholder: palitan ng totoong Card ID */
+      cardId: 'C-BY5FK3',
       qrLink: BASE_URL + '/?id=ARTICARD-000000'
     };
     currentEntry = entry;
@@ -11063,6 +11397,14 @@ function cardCacheWrite(d, owner) {
   try { localStorage.setItem(CARD_CACHE_PREFIX + kind, rec); } catch (e) {}
   try { Promise.resolve(window.storage.set('card-cache-' + kind, rec, false)).catch(function () {}); } catch (e) {}
 }
+
+/* === START: PUBLIC AUTO-OPEN === */
+function publicConnectSync() {
+  const ov = document.getElementById('connectFormOverlay');
+  if (ov && ov.classList.contains('show')) { fillConnectPreview(); return; }  /* na-update ng sheet habang bukas */
+  if (window.__AUTO_CONNECT__) { window.__AUTO_CONNECT__ = false; setTimeout(openConnectForm, 400); }
+}
+/* === END: PUBLIC AUTO-OPEN === */
 
 function applyRemoteCard(d, owner, fromCache) {
   try {
@@ -11095,6 +11437,7 @@ function applyRemoteCard(d, owner, fromCache) {
     showCard(currentEntry);
     applyAvatarEverywhere();
     if (owner) { savePI(); try { window.storage.set(EP_STORE_KEY, JSON.stringify(X), false); } catch (e) {} }
+    if (!owner) publicConnectSync(); /* PUBLIC AUTO-OPEN */
     if (!fromCache) cardCacheWrite(d, owner);
     return true;
   } catch (e) { console.error('applyRemoteCard failed', e); return false; }
@@ -11114,6 +11457,13 @@ async function refreshRemoteCard(owner, id) {
     if (prev && JSON.stringify(prev.d) === JSON.stringify(d) && currentEntry && currentEntry.cardId === d.cardId) return; // walang binago, huwag i-re-render
     applyRemoteCard(d, owner, false);
   } catch (e) {
+    /* === START: PUBLIC CARD NOT FOUND === */
+    if (!owner && window.__AUTO_CONNECT__) {
+      window.__AUTO_CONNECT__ = false;
+      history.replaceState(null, '', '/');
+      if (window.openGate) { window.openGate(); setTimeout(function () { const g = document.getElementById('gtErr'); if (g) g.textContent = 'Card not found.'; }, 50); }
+    }
+    /* === END: PUBLIC CARD NOT FOUND === */
     if (owner && /session|sign in/i.test(String(e && e.message))) {
       sessionStorage.removeItem('athna-owner-session'); sessionStorage.removeItem('athna-owner-token');
       if (window.openGate) window.openGate();
@@ -11173,7 +11523,7 @@ function syncCardOnBoot(owner, id) {
   function showGate() {
     gate.classList.remove('leaving');
     gate.classList.add('show');
-    setMode('card');
+    setMode('owner'); /* OWNER-KEY-ONLY GATE */
     setTimeout(() => $('gtInput').focus(), 300);
   }
   function closeGate() {
@@ -11216,6 +11566,12 @@ function syncCardOnBoot(owner, id) {
       } else {
         if (!(await verifyOwnerKey(v))) { fail('That key is not valid.'); return; }
         sessionStorage.setItem(SESSION, '1'); /* hindi ini-store ang mismong key */
+        /* === START: RM OPEN AFTER LOGIN === */
+        if (window.__OPEN_RM__) { window.__OPEN_RM__ = false; setTimeout(openRequestManager, 700); }
+        /* === END: RM OPEN AFTER LOGIN === */
+        /* === START: RM OPEN AFTER LOGIN === */
+        if (window.__OPEN_RM__) { window.__OPEN_RM__ = false; setTimeout(openRequestManager, 700); }
+        /* === END: RM OPEN AFTER LOGIN === */
         setPublic(false);
       }
       if (typeof haptic === 'function') haptic('success');
@@ -11228,13 +11584,21 @@ function syncCardOnBoot(owner, id) {
     e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '');
     e.target.classList.remove('err'); $('gtErr').textContent = '';
   });
-  $('gtSwitch').addEventListener('click', () => setMode(mode === 'card' ? 'owner' : 'card'));
+  /* === START: OWNER-KEY-ONLY GATE === */
+$('gtSwitch').style.display = 'none';
+/* === END: OWNER-KEY-ONLY GATE === */
   window.openGate = showGate; /* para sa Sign Out later */
 
   /* boot: scanned QR / shared link → diretso sa public card. May owner session → full app. Wala → gate. */
-  if (idFromUrl()) { setPublic(true); syncCardOnBoot(false, idFromUrl()); }
-  else if (sessionStorage.getItem(SESSION)) { setPublic(false); syncCardOnBoot(true, ''); }
-  else showGate();
+  /* === START: PUBLIC LINK AUTO-OPEN === */
+if (idFromUrl()) { setPublic(true); window.__AUTO_CONNECT__ = true; syncCardOnBoot(false, idFromUrl()); }
+/* === END: PUBLIC LINK AUTO-OPEN === */
+  /* === START: RM DEEP LINK (WITH SESSION) === */
+else if (sessionStorage.getItem(SESSION)) { setPublic(false); syncCardOnBoot(true, ''); if (wantsRM()) setTimeout(openRequestManager, 600); }
+/* === END: RM DEEP LINK (WITH SESSION) === */
+  /* === START: RM DEEP LINK (NO SESSION) === */
+else { if (wantsRM()) window.__OPEN_RM__ = true; showGate(); }
+/* === END: RM DEEP LINK (NO SESSION) === */
 })();
 /* === END: CARD GATE === */
 
