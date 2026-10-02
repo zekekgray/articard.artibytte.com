@@ -3186,8 +3186,12 @@ body.public-mode .back-mascot-btn{display:none !important;}
 })();
 </script>
 <!-- === END: RESCUE + DIAGNOSTIC SCRIPT === -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/articard-supabase.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/articard-supabase.js"></script>
 <script>
   /* ── STORAGE SHIM (localStorage → memory fallback) ── */
   (function () {
@@ -4223,6 +4227,7 @@ function fillConnectPreview() {
   /* === END: API URL (new deployment) === */
 
   async function apiPost(action, payload) {
+    if (window.AC) return AC.compat.post(action, payload);
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -4234,6 +4239,7 @@ function fillConnectPreview() {
   }
 
   async function apiGet(action, params) {
+    if (window.AC) return AC.compat.get(action, params);
     const qs = new URLSearchParams(Object.assign({ action }, params || {})).toString();
     const res = await fetch(API_URL + '?' + qs);
     const j = await res.json();
