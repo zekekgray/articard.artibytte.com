@@ -2546,17 +2546,6 @@
     </div>
     <!-- === END: REQUEST MANAGER ROW === -->
 
-    <!-- === START: REQUEST MANAGER ROW === -->
-    <div class="acct-group">
-      <div class="os-row" onclick="openRequestManager()" style="cursor:pointer;">
-        <div class="os-row-icon" style="background:#4A9DE0;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/><path d="M9 15l2 2 4-4"/></svg></div>
-        <div class="os-row-text"><div class="os-row-title">Request Manager</div><div class="os-row-sub">Meeting requests from your card</div></div>
-        <span class="os-row-value" id="acctReqValue" style="color:#FF9F0A;font-weight:600;"></span>
-        <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
-    </div>
-    <!-- === END: REQUEST MANAGER ROW === -->
-
     <!-- Notifications -->
     <div class="acct-group">
       <div class="os-row" onclick="haptic('light');showToast('Notification preferences — coming soon','neutral')" style="cursor:pointer;">
@@ -3750,15 +3739,27 @@ function fillConnectPreview() {
       'END:VCARD'
     ].filter(Boolean).join('\r\n');
     const blob = new Blob([vcf], { type: 'text/vcard;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${nice.replace(/\s+/g, '-')}.vcf`;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
-    haptic('success');
-    showToast('.vcf downloaded. Open it to add to Contacts', 'neutral');
+    /* === START: OWN CARD SAVE (share sheet, fallback download) === */
+    const fname = `${nice.replace(/\s+/g, '-')}.vcf`;
+    const file = new File([blob], fname, { type: 'text/vcard' });
+    const dl = () => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = fname;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+      haptic('success');
+      showToast('.vcf downloaded. Open it to add to Contacts', 'neutral');
+    };
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], title: nice })
+        .then(() => haptic('success'))
+        .catch(e => { if (e && e.name !== 'AbortError') dl(); });
+      return;
+    }
+    dl();
+    /* === END: OWN CARD SAVE (share sheet, fallback download) === */
   }
 
   /* === START: NATIVE ARTIMEET MODAL === */
@@ -3887,6 +3888,30 @@ function fillConnectPreview() {
       <button type="button" class="amx-btn amx-primary amx-full" data-act="next" ${!amx.type ? 'disabled' : ''}>Continue</button></div>`;
   }
 
+  /* === START: AVAILABILITY (public modal) === */
+  async function amxLoadAvail() {
+    if (!amx || !amx.date) return;
+    const key = amx.date + '|' + amx.duration + '|' + amx.tz;
+    if (amx.avail && amx.avail.key === key) return;
+    amx.avail = { key: key, loading: true, times: null };
+    amxRender();
+    try {
+      const d = await apiGet('availability', { date: amx.date, duration: amx.duration, timezone: amx.tz, hostHandle: 'artibyte', cardId: (currentEntry && currentEntry.cardId) || '' });
+      if (!amx || !amx.avail || amx.avail.key !== key) return;
+      amx.avail = { key: key, loading: false, times: d.times || [] };
+    } catch (e) {
+      if (!amx || !amx.avail || amx.avail.key !== key) return;
+      amx.avail = { key: key, loading: false, times: null, err: true };   /* fallback: AMX_TIMES, backend pa rin ang final na hukom */
+    }
+    if (amx.timeBase && amx.avail.times && amx.avail.times.indexOf(amx.timeBase) < 0) { amx.time = amx.timeBase = null; amx.minute = '00'; }
+    amxRender();
+  }
+  function amxTimeList() {
+    const a = amx && amx.avail;
+    return (a && !a.loading && a.times) ? a.times : AMX_TIMES;
+  }
+  /* === END: AVAILABILITY (public modal) === */
+
   function amxStep1() {
     const n = new Date(), t0 = new Date(n.getFullYear(), n.getMonth(), n.getDate());
     const first = (new Date(amx.vy, amx.vm, 1).getDay() + 6) % 7, total = new Date(amx.vy, amx.vm + 1, 0).getDate();
@@ -3905,8 +3930,12 @@ function fillConnectPreview() {
         <div class="amx-days">${cells}</div>
       </div>
       <div class="amx-bold">Preferred time</div>
+      /* === START: AVAILABILITY TIME GRID === */
       ${!amx.day ? '<div class="amx-sub" style="margin-top:8px">Select an available date above.</div>'
-        : `<div class="amx-times">${AMX_TIMES.map(t => `<button type="button" class="amx-btn${amx.timeBase === t ? ' on' : ''}" data-time="${t}">${t}</button>`).join('')}</div>`}
+        : (amx.avail && amx.avail.loading) ? '<div class="amx-sub" style="margin-top:8px">Checking availability…</div>'
+        : !amxTimeList().length ? '<div class="amx-sub" style="margin-top:8px">No times available on this date. Please try another day.</div>'
+        : `<div class="amx-times">${amxTimeList().map(t => `<button type="button" class="amx-btn${amx.timeBase === t ? ' on' : ''}" data-time="${t}">${t}</button>`).join('')}</div>`}
+      /* === END: AVAILABILITY TIME GRID === */
       ${amx.time ? `<div style="margin-top:10px;display:flex;align-items:center;gap:8px"><span class="amx-sub">at</span>
         <select id="amxMinute" class="amx-in-field" style="width:auto;padding:8px 32px 8px 12px;font-size:13px">${['00','15','30','45'].map(m => `<option value="${m}" ${amx.minute === m ? 'selected' : ''}>:${m}</option>`).join('')}</select></div>` : ''}
       <div class="amx-bold">Duration</div>
@@ -4005,9 +4034,13 @@ function fillConnectPreview() {
     const b = e.target.closest('[data-act],[data-day],[data-time],[data-duration],[data-rec],[data-loc]');
     if (!b || b.disabled || !amx) return;
     const d = b.dataset;
-    if (d.day) { haptic('light'); amx.day = +d.day; amx.date = AMX_MONTHS[amx.vm] + ' ' + amx.day + ', ' + amx.vy; amx.time = amx.timeBase = null; amx.minute = '00'; return amxRender(); }
+    /* === START: LOAD AVAIL ON DATE PICK === */
+    if (d.day) { haptic('light'); amx.day = +d.day; amx.date = AMX_MONTHS[amx.vm] + ' ' + amx.day + ', ' + amx.vy; amx.time = amx.timeBase = null; amx.minute = '00'; amxRender(); return amxLoadAvail(); }
+    /* === END: LOAD AVAIL ON DATE PICK === */
     if (d.time) { haptic('light'); amx.timeBase = amx.time = d.time; amx.minute = '00'; return amxRender(); }
-    if (d.duration) { haptic('light'); amx.duration = d.duration; return amxRender(); }
+    /* === START: RELOAD AVAIL ON DURATION === */
+    if (d.duration) { haptic('light'); amx.duration = d.duration; amxRender(); return amx.day ? amxLoadAvail() : undefined; }
+    /* === END: RELOAD AVAIL ON DURATION === */
     if (d.rec) { haptic('light'); amx.recurrence = d.rec; return amxRender(); }
     if (d.loc) { haptic('light'); amx.location = d.loc; return amxRender(); }
     switch (d.act) {
@@ -4068,11 +4101,6 @@ function fillConnectPreview() {
     setTimeout(() => { ov.remove(); amx = null; }, 250);
   }
   /* === END: NATIVE ARTIMEET MODAL === */
-
-  function bookMeetingArtimeetOld() {
-    haptic('medium');
-    window.open(artimeetLink(), '_blank');
-  }
 
   /* ── Apple-like seamless sheet dismiss: haptic + slide-down + delayed unmount ── */
   function dismissSheet(overlayId, sheetSelector, after) {
@@ -4198,7 +4226,9 @@ function fillConnectPreview() {
     }, { capture: true, passive: true });
   })();
   /* === START: API CONNECTOR === */
-  const API_URL = 'https://script.google.com/macros/s/AKfycbzmfClSHCFgGFBEmw1tEWmKkCrNCFdwO1Y1JUxoz7qIio1jZMK1jVg6i6SCP6QTbsiU/exec';
+  /* === START: API URL (new deployment) === */
+  const API_URL = 'https://script.google.com/macros/s/AKfycbwgHwN4jQJeHqpVWVguZg7oFCcwmSX6rECEZlmAP9dPQ-uRiy0W7owrIXfZWH4fbI8P/exec';
+  /* === END: API URL (new deployment) === */
 
   async function apiPost(action, payload) {
     const res = await fetch(API_URL, {
@@ -4838,7 +4868,7 @@ function fillConnectPreview() {
       html += `<div class="gs-section-label">Calendar</div><div class="gs-group">`;
       html += meetingHits.map(m => gsRow(
         `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>`,
-        '#FF9F0A', m.name, `${m.type} · ${new Date(m.date+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${formatTime12(m.time)}`,
+        '#FF9F0A', auEsc(m.name), `${auEsc(m.type)} · ${new Date(m.date+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${formatTime12(m.time)}`,
         `closeGlobalSearch();enterOS();setTimeout(()=>{switchOSTab('upcoming');switchUpcomingView('calendar');calSelectedDate='${m.date}';renderCalendar();},280);`
       )).join('');
       html += `</div>`;
@@ -5653,6 +5683,7 @@ function fillConnectPreview() {
     const scrubber = document.getElementById('abScrubber');
     if (scrubber) scrubber.style.display = pane === 'address' ? 'flex' : 'none';
     if (pane === 'address') filterAddressBook(document.getElementById('abSearchInput')?.value || '');
+    if (pane === 'upcoming') loadMeetings();
     if (currentEntry) {
       document.getElementById('osProfileName').textContent = currentEntry.name;
       document.getElementById('osProfileSub').textContent = currentEntry.pos + ' · ' + currentEntry.athid;
@@ -5682,6 +5713,7 @@ function fillConnectPreview() {
     if (scrubber) scrubber.style.display = tabId === 'address' ? 'flex' : 'none';
     if (tabId === 'address') filterAddressBook(document.getElementById('abSearchInput')?.value || '');
     if (tabId === 'tag') renderNotes();
+    if (tabId === 'upcoming') loadMeetings();
     currentOSPane = tabId;
     document.getElementById('osBackBtn')?.classList.toggle('os-back-home', tabId === 'home');
     if (tabId === 'home') requestAnimationFrame(handleOsBodyScroll);
@@ -6248,9 +6280,6 @@ function fillConnectPreview() {
         setTimeout(() => openImportPreview(list), 280);
         return;
       } catch (e) { showContactsFallback('denied'); return; }
-      document.getElementById('syncStepInitial').style.display = 'none';
-      document.getElementById('syncStepPermission').style.display = 'block';
-      return;
     }
     haptic('error');
     showContactsFallback('unsupported');
@@ -7485,18 +7514,26 @@ function toggleContactEdit() {
       'END:VCARD'
     ].filter(Boolean).join('\r\n');
 
-    // try native contacts API first (iOS Safari 17+)
-    if ('contacts' in navigator && 'ContactsManager' in window) {
+    /* === START: SAVE TO CONTACTS (share sheet, fallback download) === */
+    const fname = `${c.name.replace(/\s+/g,'-')}.vcf`;
+    const blob  = new Blob([vcf], { type: 'text/vcard;charset=utf-8' });
+    const file  = new File([blob], fname, { type: 'text/vcard' });
+    const downloadVcf = () => {
+      const url = URL.createObjectURL(blob);
+      const a   = document.createElement('a');
+      a.href = url; a.download = fname;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+      showToast('.vcf downloaded. Open it to add to Contacts', 'neutral');
+    };
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], title: c.name })
+        .catch(e => { if (e && e.name !== 'AbortError') downloadVcf(); });   /* AbortError = nag-cancel ang user */
+      return;
     }
-    const blob = new Blob([vcf], { type: 'text/vcard;charset=utf-8' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = `${c.name.replace(/\s+/g,'-')}.vcf`;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
-    showToast('.vcf downloaded. Open it to add to Contacts', 'neutral');
+    downloadVcf();
+    /* === END: SAVE TO CONTACTS (share sheet, fallback download) === */
   }
 
   /* === START: LEGACY CONTACT DETAIL JS (DELETE) === */
@@ -7511,7 +7548,7 @@ function toggleContactEdit() {
     if (type === 'call') window.open(`tel:${c.mobile.replace(/\s/g,'')}`, '_self');
     else if (type === 'message') window.open(`sms:${c.mobile.replace(/\s/g,'')}`, '_self');
     else if (type === 'email') window.open(`mailto:${c.email}`, '_self');
-    else if (type === 'book') showToast('BOOKING — COMING SOON', 'success');
+    else if (type === 'book') cdfsAction('book');
   }
 
   function copyContactField(field) {
@@ -8298,7 +8335,7 @@ function toggleContactEdit() {
   }
 
   /* ── UPCOMING / MEETINGS ── */
-  const MEETINGS_KEY = 'upcoming-meetings';
+  /* MEETINGS_KEY removed: Meetings sheet na ang source of truth */
   let MEETINGS = [];
   let upcomingView = 'list';
   let calCursor = new Date();
@@ -8318,24 +8355,7 @@ function toggleContactEdit() {
     return `${h12}:${pad2(m)} ${period}`;
   }
 
-  async function loadMeetings() {
-    try {
-      const res = await window.storage.get(MEETINGS_KEY, false);
-      if (res && res.value) MEETINGS = JSON.parse(res.value);
-    } catch (e) {
-      // seed with sample meetings on first load
-      const today = new Date();
-      const d2 = new Date(today); d2.setDate(d2.getDate() + 2);
-      const d5 = new Date(today); d5.setDate(d5.getDate() + 5);
-      MEETINGS = [
-        { id:'m1', name:'Juan dela Cruz', date:dateKey(today), time:'14:30', type:'Discovery Call' },
-        { id:'m2', name:'Carlo Reyes',    date:dateKey(d2),   time:'10:00', type:'In-Person Meeting' },
-        { id:'m3', name:'Pio Reyes',      date:dateKey(d5),   time:'16:00', type:'Contract Signing' },
-      ];
-      await saveMeetings();
-    }
-    renderUpcoming();
-  }
+  /* loadMeetings: nasa UNIFIED MEETINGS block na */
 
    async function saveMeetings() {
     try { return !!(await window.storage.set(MEETINGS_KEY, JSON.stringify(MEETINGS), false)); }
@@ -8357,8 +8377,10 @@ function toggleContactEdit() {
       <div class="up-row" id="mrow-${m.id}" style="cursor:pointer;" onclick="if(!event.target.closest('.up-row-del'))openMeetingDetail('${m.id}')">
         <div class="up-row-time">${formatTime12(m.time)}</div>
         <div class="up-row-text">
-          <div class="up-row-name">${m.name}</div>
-          <div class="up-row-type">${m.type}</div>
+          /* === START: ESCAPE GUEST DATA (today row) === */
+          <div class="up-row-name">${auEsc(m.name)}</div>
+          <div class="up-row-type">${auEsc(m.type)}${m.status === 'Requested'
+          /* === END: ESCAPE GUEST DATA (today row) === */ ? ' · <span style="color:#FF9F0A;font-weight:700;">Pending</span>' : ''}</div>
         </div>
         <button class="up-row-del"
           data-del="${m.id}"
@@ -8390,8 +8412,8 @@ function toggleContactEdit() {
           <div class="up-row" style="cursor:pointer;" onclick="if(!event.target.closest('.up-row-del'))openMeetingDetail('${m.id}')">
             <div class="up-row-time">${new Date(m.date+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>
             <div class="up-row-text">
-              <div class="up-row-name">${m.name}</div>
-              <div class="up-row-type">${m.type} · ${formatTime12(m.time)}</div>
+              <div class="up-row-name">${auEsc(m.name)}</div>
+              <div class="up-row-type">${auEsc(m.type)} · ${formatTime12(m.time)}${m.status === 'Requested' ? ' · <span style="color:#FF9F0A;font-weight:700;">Pending</span>' : ''}</div>
             </div>
             <button class="up-row-del" onclick="deleteMeeting('${m.id}')">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg>
@@ -8475,7 +8497,9 @@ function toggleContactEdit() {
   function deleteMeeting(id) {
     const m = MEETINGS.find(x => x.id === id); if (!m) return;
     haptic('medium');
-    confirmDialog({ title: 'Delete meeting with ' + m.name + '?', message: 'This meeting will be removed from your calendar.', confirmLabel: 'Delete', danger: true, onConfirm: () => deleteMeetingNow(id) });
+    /* === START: CANCEL WORDING === */
+confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meeting will be marked Cancelled. If the guest has an email, they will be notified.', confirmLabel: 'Cancel Meeting', cancelLabel: 'Keep', danger: true, onConfirm: () => deleteMeetingNow(id) });
+/* === END: CANCEL WORDING === */
   }
   async function deleteMeetingNow(id) {
     haptic('medium');
@@ -8513,6 +8537,7 @@ function toggleContactEdit() {
   }
 
   function closeAddMeeting() {
+    _rebookCtx = null;
     dismissSheet('addMeetingOverlay', '.share-sheet');
   }
 
@@ -8565,7 +8590,7 @@ function toggleContactEdit() {
       </div>
       ${c ? `<button onclick="meetingViewContact('${m.id}',${c.id})" style="${bs}background:#1c1c1e;color:#ECE4D6;">View Contact</button>` : ''}
       <button onclick="meetingEdit('${m.id}')" style="${bs}background:rgba(255,255,255,0.72);color:#1c1c1e;border:1px solid rgba(0,0,0,0.1);">Edit Meeting</button>
-      <button onclick="meetingRebook()" style="${bs}background:rgba(255,255,255,0.72);color:#1c1c1e;border:1px solid rgba(0,0,0,0.1);">Book Again · Artimeet</button>
+      <button onclick="meetingRebook('${m.id}')" style="${bs}background:rgba(255,255,255,0.72);color:#1c1c1e;border:1px solid rgba(0,0,0,0.1);">Book Again</button>
       <button onclick="meetingDelete('${m.id}')" style="${bs}background:rgba(255,69,58,0.08);color:#FF453A;border:1px solid rgba(255,69,58,0.22);margin-bottom:0;">Delete Meeting</button>
     `);
   }
@@ -8611,8 +8636,6 @@ function toggleContactEdit() {
     closeAuGenericModal('meetingDetailOverlay');
     setTimeout(() => deleteMeeting(id), 260);
   }
-
-  loadMeetings();
 
   /* ── NOTE OS ── */
   const NOTES_KEY = 'notes-data';
@@ -10132,148 +10155,6 @@ function closeRequestManager() {
 }
 /* === END: REQUEST MANAGER (OWNER) === */
 
-/* === DUPLICATE DISABLED: START === */
-if (false) {
-const RM_PILL = {
-  'Requested':['#fff1c9','#9a711e'], 'Reviewing':['#e3ecf9','#3a5f9e'], 'Confirmed':['#e3f5e5','#43854b'],
-  'Reschedule Requested':['#f1e6fa','#7d4aa8'], 'Cancelled':['#eeeeee','#777777']
-};
-let _rmMeetings = [], _rmBusy = false;
-
-function wantsRM() { return new URLSearchParams(location.search).get('requests') === '1'; }
-function rmToken() { return sessionStorage.getItem('athna-owner-token') || ''; }
-function rmExpired() {
-  sessionStorage.removeItem('athna-owner-session'); sessionStorage.removeItem('athna-owner-token');
-  document.getElementById('requestMgrScreen')?.remove();
-  window.__OPEN_RM__ = true;                     /* pagka-login ulit, babalik dito */
-  if (window.openGate) window.openGate();
-}
-
-async function rmRefreshBadge() {
-  const el = document.getElementById('acctReqValue'), tok = rmToken();
-  if (!el || !tok) return;
-  try {
-    const list = await apiPost('ownerListMeetings', { token: tok });
-    const n = list.filter(m => m.requestStatus === 'Requested').length;
-    el.textContent = n ? n + ' new' : '';
-  } catch (e) {}
-}
-
-function rmCardHtml(m) {
-  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
-  const p = RM_PILL[m.requestStatus] || RM_PILL['Requested'];
-  const id = auEsc(m.meetingId);
-  const rep = (m.recurrence && m.recurrence !== 'One-time') ? ' · 🔁 ' + auEsc(m.recurrence) : '';
-  const join = /^https:\/\//.test(m.meetingLink || '')
-    ? `<a href="${auEsc(m.meetingLink)}" target="_blank" rel="noopener" style="padding:9px 13px;border-radius:12px;background:rgba(255,255,255,0.9);border:1px solid rgba(0,0,0,0.1);color:#1c1c1e;${F}font-size:12.5px;font-weight:600;text-decoration:none;">🎥 Join</a>` : '';
-  const btn = (st, label, kind) => {
-    const on = m.requestStatus === st;
-    const bg = kind === 'primary' ? '#1c1c1e' : 'rgba(255,255,255,0.9)';
-    const fg = kind === 'primary' ? '#ECE4D6' : kind === 'danger' ? '#FF453A' : '#1c1c1e';
-    return `<button ${on ? 'disabled' : ''} onclick="rmSetStatus('${id}','${st}')" style="padding:9px 13px;border-radius:12px;border:${kind === 'primary' ? 'none' : '1px solid rgba(0,0,0,0.1)'};background:${bg};color:${fg};${F}font-size:12.5px;font-weight:600;cursor:pointer;${on ? 'opacity:.4;cursor:default;' : ''}">${label}</button>`;
-  };
-  const when = auEsc(m.date) + ' · ' + auEsc(m.time) + (m.duration ? ' · ' + auEsc(m.duration) : '');
-  const who = auEsc(m.guestName || '—') + (m.guestOrg ? ' · ' + auEsc(m.guestOrg) : '');
-  const contact = [m.guestEmail ? `<a href="mailto:${auEsc(m.guestEmail)}" style="color:#1c1c1e;">${auEsc(m.guestEmail)}</a>` : '', m.guestPhone ? auEsc(m.guestPhone) : ''].filter(Boolean).join(' · ');
-  const notes = m.notes ? `<div style="${F}font-size:12.5px;color:rgba(60,60,67,0.7);margin-top:8px;white-space:pre-wrap;word-break:break-word;">${auEsc(m.notes)}</div>` : '';
-  return `<div style="background:rgba(255,255,255,0.72);border-radius:18px;padding:15px 16px;margin-bottom:10px;">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
-      <div style="min-width:0;">
-        <div style="${F}font-size:14.5px;font-weight:700;color:#1c1c1e;">${id} · ${when}</div>
-        <div style="${F}font-size:12.5px;color:rgba(60,60,67,0.6);margin-top:3px;word-break:break-word;">${who} · ${auEsc(m.type)} · ${auEsc(m.location)}${rep}</div>
-        <div style="${F}font-size:12.5px;color:rgba(60,60,67,0.6);margin-top:3px;word-break:break-word;">${contact}</div>
-      </div>
-      <span style="flex-shrink:0;${F}font-size:11px;font-weight:700;padding:5px 9px;border-radius:999px;background:${p[0]};color:${p[1]};white-space:nowrap;">${auEsc(m.requestStatus)}</span>
-    </div>
-    ${notes}
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
-      ${join}${btn('Confirmed', 'Confirm', 'primary')}${btn('Reviewing', 'Reviewing')}${btn('Reschedule Requested', 'Reschedule')}${btn('Cancelled', 'Cancel', 'danger')}
-    </div>
-  </div>`;
-}
-
-function renderRequestManager() {
-  const list = document.getElementById('rmList'); if (!list) return;
-  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
-  list.innerHTML = _rmMeetings.length
-    ? _rmMeetings.map(rmCardHtml).join('')
-    : `<div style="${F}font-size:13.5px;color:rgba(60,60,67,0.4);text-align:center;padding:48px 12px;">No meeting requests yet.</div>`;
-}
-
-async function loadRequestManager() {
-  const list = document.getElementById('rmList'); if (!list) return;
-  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
-  list.innerHTML = `<div style="${F}font-size:13.5px;color:rgba(60,60,67,0.5);text-align:center;padding:48px 12px;">Loading requests…</div>`;
-  try {
-    _rmMeetings = await apiPost('ownerListMeetings', { token: rmToken() });
-    _rmMeetings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  } catch (e) {
-    if (/session|sign in/i.test(String(e && e.message))) { rmExpired(); return; }
-    list.innerHTML = `<div style="${F}font-size:13.5px;color:#FF453A;text-align:center;padding:48px 12px;">Could not load requests: ${auEsc(e && e.message || 'unknown error')}</div>`;
-    return;
-  }
-  renderRequestManager();
-}
-
-function rmSetStatus(id, status) {
-  if (_rmBusy) return;
-  if (status === 'Cancelled') {
-    confirmDialog({ title: 'Cancel this meeting?', message: 'The guest will be notified by email.', confirmLabel: 'Cancel Meeting', cancelLabel: 'Keep', danger: true, onConfirm: () => rmApplyStatus(id, status) });
-    return;
-  }
-  rmApplyStatus(id, status);
-}
-
-async function rmApplyStatus(id, status) {
-  if (_rmBusy) return;
-  _rmBusy = true;
-  haptic('light');
-  const list = document.getElementById('rmList');
-  if (list) { list.style.opacity = '.5'; list.style.pointerEvents = 'none'; }
-  try {
-    await apiPost('ownerUpdateMeetingStatus', { token: rmToken(), meetingId: id, status: status });
-    haptic(status === 'Cancelled' ? 'error' : 'success');
-    showToast(status === 'Confirmed' ? 'Meeting confirmed' : status === 'Cancelled' ? 'Meeting cancelled' : 'Status updated', 'success');
-    await loadRequestManager();
-  } catch (e) {
-    if (/session|sign in/i.test(String(e && e.message))) { _rmBusy = false; rmExpired(); return; }
-    haptic('error'); showToast(String((e && e.message) || 'Could not update'), 'error');
-  }
-  if (list) { list.style.opacity = ''; list.style.pointerEvents = ''; }
-  _rmBusy = false;
-}
-
-function openRequestManager() {
-  if (document.body.classList.contains('public-mode')) { haptic('error'); showToast('Owner access only', 'neutral'); return; }
-  if (!rmToken()) { rmExpired(); return; }
-  haptic('medium');
-  document.getElementById('requestMgrScreen')?.remove();
-  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
-  const pill = "display:flex;align-items:center;justify-content:center;width:54px;height:54px;padding:0;color:#1c1c1e;background:rgba(255,255,255,0.82);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:0.6px solid rgba(255,255,255,0.9);border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.10),inset 0 1px 0 rgba(255,255,255,0.7);cursor:pointer;-webkit-tap-highlight-color:transparent;position:absolute;top:max(14px,env(safe-area-inset-top));z-index:50;";
-  const scr = document.createElement('div');
-  scr.id = 'requestMgrScreen';
-  scr.setAttribute('aria-label', 'Meeting requests');
-  scr.style.cssText = 'position:fixed;inset:0;z-index:9650;background:#ECE4D6;display:flex;flex-direction:column;animation:screenFadeIn .3s cubic-bezier(0.16,1,0.3,1) forwards;';
-  scr.innerHTML = `
-    <button onclick="haptic('light');closeRequestManager()" aria-label="Back" style="${pill}left:14px;"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-    <button onclick="haptic('light');loadRequestManager()" aria-label="Refresh" style="${pill}right:14px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
-    <div style="position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:87px 16px max(40px,env(safe-area-inset-bottom));">
-      <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:30px;font-weight:700;color:#1c1c1e;letter-spacing:-.01em;">Meeting Requests</div>
-      <div style="${F}font-size:13px;color:rgba(60,60,67,0.55);margin:4px 0 18px;">Manage requests, confirmations and scheduling.</div>
-      <div id="rmList"></div>
-    </div>`;
-  document.body.appendChild(scr);
-  loadRequestManager();
-}
-
-function closeRequestManager() {
-  const scr = document.getElementById('requestMgrScreen'); if (!scr) return;
-  scr.style.animation = 'osShellOut .25s cubic-bezier(0.4,0,0.2,1) forwards';
-  setTimeout(() => { scr.remove(); rmRefreshBadge(); }, 260);
-}
-}
-/* === DUPLICATE DISABLED: END === */
-
 function licRow(label, val) {
     return `<div class="lic-info-row"><span class="lic-info-label">${label}</span><span class="lic-info-val">${val}</span></div>`;
   }
@@ -11450,6 +11331,7 @@ function applyRemoteCard(d, owner, fromCache) {
     applyAvatarEverywhere();
     if (owner) { savePI(); try { window.storage.set(EP_STORE_KEY, JSON.stringify(X), false); } catch (e) {} }
     if (!owner) publicConnectSync(); /* PUBLIC AUTO-OPEN */
+    if (owner) loadMeetings(); /* UNIFIED MEETINGS: kunin sa Meetings sheet pagka-login/boot */
     if (!fromCache) cardCacheWrite(d, owner);
     return true;
   } catch (e) { console.error('applyRemoteCard failed', e); return false; }
@@ -11596,9 +11478,6 @@ window.forgetDevice = function () { try { localStorage.removeItem('athna-owner-r
         /* === START: RM OPEN AFTER LOGIN === */
         if (window.__OPEN_RM__) { window.__OPEN_RM__ = false; setTimeout(openRequestManager, 700); }
         /* === END: RM OPEN AFTER LOGIN === */
-        /* === START: RM OPEN AFTER LOGIN === */
-        if (window.__OPEN_RM__) { window.__OPEN_RM__ = false; setTimeout(openRequestManager, 700); }
-        /* === END: RM OPEN AFTER LOGIN === */
         setPublic(false);
       }
       if (typeof haptic === 'function') haptic('success');
@@ -11629,6 +11508,251 @@ else { if (wantsRM()) window.__OPEN_RM__ = true; showGate(); }
 })();
 /* === END: CARD GATE === */
 
+/* === START: UNIFIED MEETINGS (ATH•NA Calendar → Meetings sheet) === */
+/* Ang mga function na ito ay nag-o-override sa lumang local (window.storage) na version sa itaas. */
+function mtgDateToKey(s) {
+  const m = /^([A-Za-z]+) (\d{1,2}), (\d{4})$/.exec(String(s || '').trim());
+  if (!m) return '';
+  const mi = AMX_MONTHS.findIndex(x => x.toLowerCase() === m[1].toLowerCase());
+  return mi < 0 ? '' : m[3] + '-' + pad2(mi + 1) + '-' + pad2(+m[2]);
+}
+function mtgTimeTo24(s) {
+  const m = /^(\d{1,2}):(\d{2}) (AM|PM)$/.exec(String(s || '').trim());
+  if (!m) return '00:00';
+  let h = (+m[1]) % 12; if (m[3] === 'PM') h += 12;
+  return pad2(h) + ':' + m[2];
+}
+function mtgKeyToDate(k) { const a = String(k).split('-').map(Number); return AMX_MONTHS[a[1] - 1] + ' ' + a[2] + ', ' + a[0]; }
+function mtgTo12(t) { const a = String(t).split(':').map(Number); return ((a[0] % 12) || 12) + ':' + pad2(a[1]) + ' ' + (a[0] >= 12 ? 'PM' : 'AM'); }
+function mtgFromApi(r) {
+  return { id: r.meetingId, name: r.guestName || 'Meeting', date: mtgDateToKey(r.date), time: mtgTimeTo24(r.time),
+           type: r.type, status: r.requestStatus, duration: r.duration, location: r.location, meetingLink: r.meetingLink || '' };
+}
+
+async function loadMeetings() {
+  if (!rmToken()) { renderUpcoming(); return; }
+  try {
+    const list = await apiPost('ownerListMeetings', { token: rmToken() });
+    MEETINGS = list.filter(r => r.requestStatus !== 'Cancelled').map(mtgFromApi).filter(m => m.date);
+  } catch (e) {
+    if (/session|sign in/i.test(String(e && e.message))) { rmExpired(); return; }
+    showToast("Couldn't load meetings", 'error');
+  }
+  renderUpcoming();
+}
+
+/* wala nang local persistence; ang Meetings sheet na ang source of truth */
+async function saveMeetings() { return true; }
+
+function openAddMeeting() {
+  haptic('light');
+  const todayStr = todayKey(), maxStr = dateKey(CAL_MAX_DATE());
+  const dateInp = document.getElementById('amDate');
+  dateInp.value = calSelectedDate && calSelectedDate >= todayStr ? calSelectedDate : todayStr;
+  dateInp.min = todayStr; dateInp.max = maxStr;
+  document.getElementById('amName').value = '';
+  document.getElementById('amTime').value = '';
+  const sel = document.getElementById('amType');
+  sel.innerHTML = AMX_TYPES.map(t => '<option>' + auEsc(t) + '</option>').join('');
+  sel.value = 'Business / Partnership';
+  editingMeetingId = null;
+  document.getElementById('amTitle').textContent = 'Add Meeting';
+  document.getElementById('amSubmitBtn').textContent = '+ Add Meeting';
+  document.getElementById('addMeetingOverlay').classList.add('show');
+}
+
+let _mtgBusy = false;
+async function submitAddMeeting() {
+  if (_mtgBusy) return;
+  const name = document.getElementById('amName').value.trim();
+  const date = document.getElementById('amDate').value;
+  const time = document.getElementById('amTime').value;
+  const type = document.getElementById('amType').value;
+  if (!name || !date || !time) { haptic('error'); showToast('Fill in all required fields', 'error'); return; }
+  if (!rmToken()) { rmExpired(); return; }
+  const editing = editingMeetingId;
+  const payload = { token: rmToken(), name: name, type: type, date: mtgKeyToDate(date), time: mtgTo12(time) };
+  const btn = document.getElementById('amSubmitBtn');
+  _mtgBusy = true; btn.style.pointerEvents = 'none'; btn.style.opacity = '.6';
+  try {
+    if (editing) await apiPost('ownerEditMeeting', Object.assign({ meetingId: editing }, payload));
+    else await apiPost('ownerCreateMeeting', payload);
+  } catch (e) {
+    _mtgBusy = false; btn.style.pointerEvents = ''; btn.style.opacity = '';
+    if (/session|sign in/i.test(String(e && e.message))) { rmExpired(); return; }
+    haptic('error'); showToast(String((e && e.message) || "Couldn't save meeting"), 'error'); return;
+  }
+  _mtgBusy = false; btn.style.pointerEvents = ''; btn.style.opacity = '';
+  editingMeetingId = null;
+  closeAddMeeting();
+  await loadMeetings();
+  haptic('success');
+  showToast(editing ? 'Meeting updated' : 'Meeting added', 'success');
+}
+
+async function deleteMeetingNow(id) {
+  haptic('medium');
+  try {
+    await apiPost('ownerUpdateMeetingStatus', { token: rmToken(), meetingId: id, status: 'Cancelled' });
+  } catch (e) {
+    if (/session|sign in/i.test(String(e && e.message))) { rmExpired(); return; }
+    haptic('error'); showToast("Couldn't cancel meeting", 'error'); return;
+  }
+  MEETINGS = MEETINGS.filter(m => m.id !== id);
+  renderUpcoming();
+  showToast('Meeting cancelled', 'neutral');
+}
+
+function meetingRebook(id) {
+  const m = MEETINGS.find(x => x.id === id);
+  closeAuGenericModal('meetingDetailOverlay');
+  haptic('medium');
+  setTimeout(() => {
+    openAddMeeting();
+    if (m) { document.getElementById('amName').value = m.name; document.getElementById('amType').value = m.type; }
+  }, 260);
+}
+/* alisin ang lumang local dataset (kasama ang sample na Juan/Carlo/Pio) */
+try { window.storage.delete('upcoming-meetings', false); } catch (e) {}
+document.addEventListener('visibilitychange', () => { if (!document.hidden && rmToken()) loadMeetings(); });
+setInterval(() => { if (!document.hidden && rmToken()) loadMeetings(); }, 60000);
+/* === END: UNIFIED MEETINGS === */
+/* === START: TRUE REBOOK === */
+let _rebookCtx = null;
+
+function mtgFromApi(r) {
+  return { id: r.meetingId, name: r.guestName || 'Meeting', date: mtgDateToKey(r.date), time: mtgTimeTo24(r.time),
+           type: r.type, status: r.requestStatus, duration: r.duration, location: r.location, meetingLink: r.meetingLink || '',
+           recurrence: r.recurrence || 'One-time', address: r.locationAddress || '',
+           email: r.guestEmail || '', org: r.guestOrg || '', phone: r.guestPhone || '', notes: r.notes || '' };
+}
+
+function mtgEnsureExtras() {
+  let box = document.getElementById('amExtras');
+  if (box) return box;
+  const actions = document.querySelector('#addMeetingOverlay .am-actions');
+  box = document.createElement('div');
+  box.id = 'amExtras';
+  const opts = a => a.map(x => '<option>' + auEsc(x) + '</option>').join('');
+  box.innerHTML =
+    '<div class="am-field-label">Duration</div><select class="am-input" id="amDuration">' + opts(['30 min','45 min','60 min','Flexible']) + '</select>' +
+    '<div class="am-field-label">Location</div><select class="am-input" id="amLocation">' + opts(AMX_LOCS) + '</select>' +
+    '<div id="amAddrWrap" style="display:none;"><div class="am-field-label">Address</div><input class="am-input" id="amAddress" placeholder="e.g. Greenbelt 3, Makati City"/></div>' +
+    '<div class="am-field-label">Repeats</div><select class="am-input" id="amRecurrence">' + opts(['One-time','Weekly','Monthly','Quarterly']) + '</select>' +
+    '<div id="amRebookNote" style="display:none;margin-top:12px;font-family:-apple-system,\'SF Pro Text\',sans-serif;font-size:12px;color:rgba(60,60,67,0.6);line-height:1.5;"></div>';
+  actions.parentNode.insertBefore(box, actions);
+  document.getElementById('amLocation').addEventListener('change', e => {
+    document.getElementById('amAddrWrap').style.display = e.target.value === 'In Person' ? 'block' : 'none';
+  });
+  return box;
+}
+
+function openAddMeeting(ctx) {
+  haptic('light');
+  _rebookCtx = ctx && ctx.id ? ctx : null;
+  const box = mtgEnsureExtras();
+  box.style.display = 'block';
+  const todayStr = todayKey();
+  const dateInp = document.getElementById('amDate');
+  dateInp.value = calSelectedDate && calSelectedDate >= todayStr ? calSelectedDate : todayStr;
+  dateInp.min = todayStr; dateInp.max = dateKey(CAL_MAX_DATE());
+  document.getElementById('amName').value = '';
+  document.getElementById('amTime').value = '';
+  const sel = document.getElementById('amType');
+  sel.innerHTML = AMX_TYPES.map(t => '<option>' + auEsc(t) + '</option>').join('');
+  sel.value = 'Business / Partnership';
+  document.getElementById('amDuration').value = '30 min';
+  document.getElementById('amLocation').value = 'Videocall / Virtual Call';
+  document.getElementById('amRecurrence').value = 'One-time';
+  document.getElementById('amAddress').value = '';
+  document.getElementById('amAddrWrap').style.display = 'none';
+  const note = document.getElementById('amRebookNote');
+  note.style.display = 'none';
+  editingMeetingId = null;
+  document.getElementById('amTitle').textContent = 'Add Meeting';
+  document.getElementById('amSubmitBtn').textContent = '+ Add Meeting';
+
+  if (_rebookCtx) {                       // prefill mula sa lumang meeting
+    const m = _rebookCtx;
+    document.getElementById('amTitle').textContent = 'Book Again';
+    document.getElementById('amSubmitBtn').textContent = 'Book Again';
+    document.getElementById('amName').value = m.name;
+    if (![...sel.options].some(o => o.value === m.type)) sel.appendChild(new Option(m.type));
+    sel.value = m.type;
+    document.getElementById('amDuration').value = m.duration || '30 min';
+    document.getElementById('amLocation').value = m.location || 'Videocall / Virtual Call';
+    document.getElementById('amRecurrence').value = m.recurrence || 'One-time';
+    if (m.location === 'In Person') { document.getElementById('amAddrWrap').style.display = 'block'; document.getElementById('amAddress').value = m.address || ''; }
+    const who = [m.email, m.org].filter(Boolean).join(' · ');
+    note.textContent = 'Same details as ' + m.id + (who ? ' (' + who + ')' : '') + '. Pick a new date and time.' + (m.email ? ' The guest will be emailed.' : '');
+    note.style.display = 'block';
+  }
+  document.getElementById('addMeetingOverlay').classList.add('show');
+}
+
+function openEditMeeting(id) {
+  const m = MEETINGS.find(x => x.id === id);
+  if (!m) return;
+  openAddMeeting();
+  document.getElementById('amExtras').style.display = 'none';   // edit = name/type/date/time lang
+  editingMeetingId = id;
+  document.getElementById('amTitle').textContent = 'Edit Meeting';
+  document.getElementById('amSubmitBtn').textContent = 'Save Changes';
+  document.getElementById('amName').value = m.name;
+  const dateInp = document.getElementById('amDate');
+  dateInp.removeAttribute('min'); dateInp.value = m.date;
+  document.getElementById('amTime').value = m.time;
+  const sel = document.getElementById('amType');
+  if (![...sel.options].some(o => o.value === m.type)) sel.appendChild(new Option(m.type));
+  sel.value = m.type;
+}
+
+async function submitAddMeeting() {
+  if (_mtgBusy) return;
+  const name = document.getElementById('amName').value.trim();
+  const date = document.getElementById('amDate').value;
+  const time = document.getElementById('amTime').value;
+  const type = document.getElementById('amType').value;
+  if (!name || !date || !time) { haptic('error'); showToast('Fill in all required fields', 'error'); return; }
+  if (!rmToken()) { rmExpired(); return; }
+  const editing = editingMeetingId;
+  const payload = { token: rmToken(), name: name, type: type, date: mtgKeyToDate(date), time: mtgTo12(time) };
+  if (!editing) {
+    payload.duration = document.getElementById('amDuration').value;
+    payload.location = document.getElementById('amLocation').value;
+    payload.recurrence = document.getElementById('amRecurrence').value;
+    if (payload.location === 'In Person') payload.locationAddress = document.getElementById('amAddress').value.trim();
+    const c = _rebookCtx;
+    if (c && c.name.trim().toLowerCase() === name.toLowerCase()) {   // same guest lang ang dala ang contact details
+      payload.guestEmail = c.email; payload.guestOrg = c.org; payload.guestPhone = c.phone; payload.notes = c.notes; payload.rebookOf = c.id;
+    }
+  }
+  const btn = document.getElementById('amSubmitBtn');
+  _mtgBusy = true; btn.style.pointerEvents = 'none'; btn.style.opacity = '.6';
+  try {
+    if (editing) await apiPost('ownerEditMeeting', Object.assign({ meetingId: editing }, payload));
+    else await apiPost('ownerCreateMeeting', payload);
+  } catch (e) {
+    _mtgBusy = false; btn.style.pointerEvents = ''; btn.style.opacity = '';
+    if (/session|sign in/i.test(String(e && e.message))) { rmExpired(); return; }
+    haptic('error'); showToast(String((e && e.message) || "Couldn't save meeting"), 'error'); return;
+  }
+  _mtgBusy = false; btn.style.pointerEvents = ''; btn.style.opacity = '';
+  editingMeetingId = null; _rebookCtx = null;
+  closeAddMeeting();
+  await loadMeetings();
+  haptic('success');
+  showToast(editing ? 'Meeting updated' : 'Meeting booked', 'success');
+}
+
+function meetingRebook(id) {
+  const m = MEETINGS.find(x => x.id === id);
+  closeAuGenericModal('meetingDetailOverlay');
+  if (!m) return;
+  haptic('medium');
+  setTimeout(() => openAddMeeting(m), 260);
+}
+/* === END: TRUE REBOOK === */
 /* === START: READY FLAG === */
   window.__ATHNA_READY__ = true;
   /* === END: READY FLAG === */
