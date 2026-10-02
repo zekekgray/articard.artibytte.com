@@ -601,7 +601,7 @@
   .card-top-line,.card-bottom-line{position:absolute;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,#ffffff 30%,#ffffff 70%,transparent);z-index:10;}
   .card-top-line{top:0;opacity:.6;}.card-bottom-line{bottom:0;opacity:.3;}
   .back-inner{position:relative;z-index:5;height:100%;display:flex;flex-direction:column;}
-.back-mascot{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:68%;max-height:88%;object-fit:contain;z-index:3;pointer-events:none;filter:drop-shadow(0 14px 26px rgba(0,0,0,.45));}
+.back-mascot{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:73%;max-height:92%;object-fit:contain;z-index:3;pointer-events:none;filter:drop-shadow(0 14px 26px rgba(0,0,0,.45));}
 .back-mascot-btn{position:absolute;top:14px;right:14px;z-index:6;width:36px;height:36px;border-radius:50%;border:.6px solid rgba(255,255,255,.18);background:rgba(255,255,255,.10);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent;}
 body.public-mode .back-mascot-btn{display:none !important;}
   .back-fol-wrap{flex:1;position:relative;overflow:hidden;}
@@ -1512,19 +1512,6 @@ body.public-mode .back-mascot-btn{display:none !important;}
           <div class="back-fol-wrap">
               <img id="backMascot" class="back-mascot" alt="" decoding="async"/>
               <button type="button" class="back-mascot-btn" aria-label="Choose mascot" onclick="event.stopPropagation();haptic('light');openMascotPicker();"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#d0d0d0" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="#d0d0d0"/><circle cx="15" cy="10" r="1" fill="#d0d0d0"/><path d="M8.5 15c1 1.2 2.2 1.8 3.5 1.8s2.5-.6 3.5-1.8"/></svg></button>
-              <svg width="100%" height="100%" viewBox="0 0 340 340" preserveAspectRatio="xMidYMid slice" fill="none" style="position:absolute;inset:0;">
-                <defs>
-                  <radialGradient id="bFade" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="white" stop-opacity="1"/><stop offset="55%" stop-color="white" stop-opacity=".8"/><stop offset="80%" stop-color="white" stop-opacity=".15"/><stop offset="100%" stop-color="white" stop-opacity="0"/></radialGradient>
-                  <mask id="bMask"><rect width="340" height="340" fill="url(#bFade)"/></mask>
-                </defs>
-                <g mask="url(#bMask)" stroke="#d0d0d0" stroke-width=".8" fill="none" transform="translate(170,170) scale(0.80) translate(-170,-170)">
-                  <circle cx="170" cy="170" r="32"/><circle cx="170" cy="138" r="32"/><circle cx="197.7" cy="154" r="32"/><circle cx="197.7" cy="186" r="32"/><circle cx="170" cy="202" r="32"/><circle cx="142.3" cy="186" r="32"/><circle cx="142.3" cy="154" r="32"/>
-                  <circle cx="170" cy="106" r="32"/><circle cx="197.7" cy="122" r="32"/><circle cx="225.4" cy="138" r="32"/><circle cx="225.4" cy="170" r="32"/><circle cx="225.4" cy="202" r="32"/><circle cx="197.7" cy="218" r="32"/><circle cx="170" cy="234" r="32"/><circle cx="142.3" cy="218" r="32"/><circle cx="114.6" cy="202" r="32"/><circle cx="114.6" cy="170" r="32"/><circle cx="114.6" cy="138" r="32"/><circle cx="142.3" cy="122" r="32"/>
-                  <circle cx="170" cy="74" r="32"/><circle cx="197.7" cy="90" r="32"/><circle cx="225.4" cy="106" r="32"/><circle cx="253.1" cy="122" r="32"/><circle cx="253.1" cy="154" r="32"/><circle cx="253.1" cy="186" r="32"/><circle cx="253.1" cy="218" r="32"/><circle cx="225.4" cy="234" r="32"/><circle cx="197.7" cy="250" r="32"/><circle cx="170" cy="266" r="32"/><circle cx="142.3" cy="250" r="32"/><circle cx="114.6" cy="234" r="32"/><circle cx="86.9" cy="218" r="32"/><circle cx="86.9" cy="186" r="32"/><circle cx="86.9" cy="154" r="32"/><circle cx="86.9" cy="122" r="32"/><circle cx="114.6" cy="106" r="32"/><circle cx="142.3" cy="90" r="32"/>
-                  <circle cx="170" cy="42" r="32"/><circle cx="197.7" cy="58" r="32"/><circle cx="225.4" cy="74" r="32"/><circle cx="253.1" cy="90" r="32"/><circle cx="280.8" cy="106" r="32"/><circle cx="280.8" cy="138" r="32"/><circle cx="280.8" cy="170" r="32"/><circle cx="280.8" cy="202" r="32"/><circle cx="280.8" cy="234" r="32"/><circle cx="253.1" cy="250" r="32"/><circle cx="225.4" cy="266" r="32"/><circle cx="197.7" cy="282" r="32"/><circle cx="170" cy="298" r="32"/><circle cx="142.3" cy="282" r="32"/><circle cx="114.6" cy="266" r="32"/><circle cx="86.9" cy="250" r="32"/><circle cx="59.2" cy="234" r="32"/><circle cx="59.2" cy="202" r="32"/><circle cx="59.2" cy="170" r="32"/><circle cx="59.2" cy="138" r="32"/><circle cx="59.2" cy="106" r="32"/><circle cx="86.9" cy="90" r="32"/><circle cx="114.6" cy="74" r="32"/><circle cx="142.3" cy="58" r="32"/>
-                </g>
-                <circle cx="170" cy="170" r="3" fill="#d0d0d0"/>
-              </svg>
             </div>
             <div class="back-bottom">
               <div class="back-divider"></div>
