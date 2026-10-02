@@ -11330,9 +11330,11 @@ function applyRemoteCard(d, owner, fromCache) {
     X.company = d.company || ''; X.mobile = d.phone || ''; X.email = d.email || ''; X.linkedin = d.linkedin || d.website || '';
 
     const t = THEMES.find(function (x) { return x.id === d.theme; }); if (t) activeTheme = t;
-    if (d.colorway && BUILDING_COLORWAYS[d.colorway]) activeCW = d.colorway;
+   if (d.colorway && BUILDING_COLORWAYS[d.colorway]) activeCW = d.colorway;
+   if (d.mascotId && MASCOTS.some(function (m) { return m.id === d.mascotId; })) { activeMascot = d.mascotId; window.__MASCOT_REMOTE__ = true; }
 
     showCard(currentEntry);
+    applyMascot();
     applyAvatarEverywhere();
     if (owner) { savePI(); try { window.storage.set(EP_STORE_KEY, JSON.stringify(X), false); } catch (e) {} }
     if (!owner) publicConnectSync(); /* PUBLIC AUTO-OPEN */
@@ -11773,6 +11775,7 @@ function applyMascot() {
   if (im && m) { im.src = m.src; im.alt = m.name; }
 }
 async function loadMascot() {
+  if (document.body.classList.contains('public-mode') || window.__MASCOT_REMOTE__) { applyMascot(); return; }
   try { const r = await window.storage.get(MASCOT_KEY, false); if (r && r.value && MASCOTS.some(x => x.id === r.value)) activeMascot = r.value; } catch (e) {}
   applyMascot();
 }
@@ -11782,6 +11785,7 @@ async function pickMascot(id) {
   try { ok = !!(await window.storage.set(MASCOT_KEY, id, false)); } catch (e) {}
   if (!ok) { activeMascot = prev; haptic('error'); showToast("Couldn't save mascot", 'error'); return; }
   applyMascot(); haptic('success');
+  if (rmToken()) apiPost('ownerUpdateCard', { token: rmToken(), fields: { mascotId: id } }).catch(function () {});
   closeAuGenericModal('mascotOverlay');
 }
 function openMascotPicker() {
