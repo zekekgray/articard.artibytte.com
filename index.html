@@ -601,6 +601,9 @@
   .card-top-line,.card-bottom-line{position:absolute;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,#ffffff 30%,#ffffff 70%,transparent);z-index:10;}
   .card-top-line{top:0;opacity:.6;}.card-bottom-line{bottom:0;opacity:.3;}
   .back-inner{position:relative;z-index:5;height:100%;display:flex;flex-direction:column;}
+.back-mascot{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:68%;max-height:88%;object-fit:contain;z-index:3;pointer-events:none;filter:drop-shadow(0 14px 26px rgba(0,0,0,.45));}
+.back-mascot-btn{position:absolute;top:14px;right:14px;z-index:6;width:36px;height:36px;border-radius:50%;border:.6px solid rgba(255,255,255,.18);background:rgba(255,255,255,.10);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent;}
+body.public-mode .back-mascot-btn{display:none !important;}
   .back-fol-wrap{flex:1;position:relative;overflow:hidden;}
   .back-bottom{padding:0 26px 22px;position:relative;z-index:5;}
   .back-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(208,208,208,0.4),transparent);margin-bottom:14px;}
@@ -1507,6 +1510,8 @@
           <div class="card-bottom-line"></div>
           <div class="back-inner">
           <div class="back-fol-wrap">
+              <img id="backMascot" class="back-mascot" alt="" decoding="async"/>
+              <button type="button" class="back-mascot-btn" aria-label="Choose mascot" onclick="event.stopPropagation();haptic('light');openMascotPicker();"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#d0d0d0" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="#d0d0d0"/><circle cx="15" cy="10" r="1" fill="#d0d0d0"/><path d="M8.5 15c1 1.2 2.2 1.8 3.5 1.8s2.5-.6 3.5-1.8"/></svg></button>
               <svg width="100%" height="100%" viewBox="0 0 340 340" preserveAspectRatio="xMidYMid slice" fill="none" style="position:absolute;inset:0;">
                 <defs>
                   <radialGradient id="bFade" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="white" stop-opacity="1"/><stop offset="55%" stop-color="white" stop-opacity=".8"/><stop offset="80%" stop-color="white" stop-opacity=".15"/><stop offset="100%" stop-color="white" stop-opacity="0"/></radialGradient>
@@ -11753,6 +11758,42 @@ function meetingRebook(id) {
   setTimeout(() => openAddMeeting(m), 260);
 }
 /* === END: TRUE REBOOK === */
+/* === START: MASCOTS === */
+const MASCOTS = [
+  { id:'m01', name:'Mascot 1', src:'/assets/mascots/mascot-01.webp' },
+  { id:'m02', name:'Mascot 2', src:'/assets/mascots/mascot-02.webp' }
+  /* idagdag ang m03–m07 dito */
+];
+const MASCOT_KEY = 'mascot-id';
+let activeMascot = MASCOTS[0].id;
+
+function applyMascot() {
+  const m = MASCOTS.find(x => x.id === activeMascot) || MASCOTS[0];
+  const im = document.getElementById('backMascot');
+  if (im && m) { im.src = m.src; im.alt = m.name; }
+}
+async function loadMascot() {
+  try { const r = await window.storage.get(MASCOT_KEY, false); if (r && r.value && MASCOTS.some(x => x.id === r.value)) activeMascot = r.value; } catch (e) {}
+  applyMascot();
+}
+async function pickMascot(id) {
+  const prev = activeMascot; activeMascot = id;
+  let ok = false;
+  try { ok = !!(await window.storage.set(MASCOT_KEY, id, false)); } catch (e) {}
+  if (!ok) { activeMascot = prev; haptic('error'); showToast("Couldn't save mascot", 'error'); return; }
+  applyMascot(); haptic('success');
+  closeAuGenericModal('mascotOverlay');
+}
+function openMascotPicker() {
+  if (document.body.classList.contains('public-mode')) return;
+  const cells = MASCOTS.map(m => {
+    const on = m.id === activeMascot;
+    return `<button type="button" onclick="pickMascot('${m.id}')" aria-label="${auEsc(m.name)}" style="border-radius:16px;padding:10px;cursor:pointer;background:#2F343A;border:${on ? '2.5px solid #1c1c1e' : '1px solid rgba(0,0,0,0.1)'};box-shadow:${on ? '0 0 0 2px #E8CC7A' : 'none'};-webkit-tap-highlight-color:transparent;"><img src="${m.src}" alt="" style="width:100%;aspect-ratio:1;object-fit:contain;display:block;"/></button>`;
+  }).join('');
+  auMakeSheet('mascotOverlay', 'Choose Mascot', `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">${cells}</div>`);
+}
+loadMascot();
+/* === END: MASCOTS === */
 /* === START: READY FLAG === */
   window.__ATHNA_READY__ = true;
   /* === END: READY FLAG === */
