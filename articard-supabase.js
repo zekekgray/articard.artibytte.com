@@ -18,9 +18,8 @@
   /* ── CONFIG: Supabase Dashboard → Project Settings → API ───────────
      Only the anon (public) key goes here. NEVER put service_role in
      the frontend. */
-  const SUPABASE_URL = 'https://YOUR-PROJECT-REF.supabase.co';
-  const SUPABASE_ANON_KEY = 'YOUR-ANON-PUBLIC-KEY';
-
+const SUPABASE_URL = 'https://sxvsurhtnfbrsyqadyyy.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_JJ2noP-kKRH0xprsO5-Y7w_e4W7rAfn';
   if (!window.supabase || !window.supabase.createClient) {
     console.error('Supabase SDK not loaded — AC disabled, legacy API stays active.');
     return;
