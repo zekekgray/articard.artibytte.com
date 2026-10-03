@@ -898,6 +898,14 @@ body.public-mode .back-mascot-btn{display:none !important;}
   .gt-hint{margin-top:22px;font:400 12px -apple-system,'SF Pro Text',sans-serif;color:rgba(60,60,67,0.55);}
   .gt-preview{display:block;margin:12px auto 0;width:112px;height:191px;filter:drop-shadow(0 10px 22px rgba(0,0,0,.28));}
   @media (max-height:720px){ .gt-hint,.gt-preview{display:none;} }
+  .gt-preview{cursor:pointer;}
+  .gt-sample{display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:11px 20px;border-radius:22px;background:#1c1c1e;color:#ECE4D6;border:none;font:600 13px -apple-system,'SF Pro Text',sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+  .gt-sample:active{transform:scale(.97);opacity:.85;}
+  .sc-scene{perspective:1200px;}
+  .sc-card{position:relative;width:340px;height:580px;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .9s cubic-bezier(.23,1,.32,1);cursor:pointer;}
+  .sc-card.flipped{transform:rotateY(180deg);}
+  .sc-face{position:absolute;inset:0;border-radius:24px;overflow:hidden;background:#2F343A;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 40px 80px rgba(0,0,0,.45),0 8px 24px rgba(0,0,0,.35);}
+  .sc-back{transform:rotateY(180deg);}
   .gt-foot{margin-top:28px;padding-top:22px;border-top:1px solid rgba(0,0,0,0.08);}
   .gt-foot-title{font:600 13px -apple-system,'SF Pro Text',sans-serif;color:#1c1c1e;margin-bottom:4px;}
   .gt-foot-sub{font:400 12px/1.6 -apple-system,'SF Pro Text',sans-serif;color:rgba(60,60,67,0.55);}
@@ -932,6 +940,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <rect x="27.52" y="502.64" width="144.9" height="53.13" rx="26.57" fill="#F3EDE4"/>
       <rect x="235.21" y="502.64" width="77.28" height="53.13" rx="26.57" fill="#F3EDE4"/>
     </svg>
+    <button type="button" id="gtSample" class="gt-sample" onclick="openSampleCard()">View sample card</button>
     <button type="button" id="gtSwitch" class="gt-link">I'm the card owner →</button>
     <div class="gt-foot">
       <div class="gt-foot-title">Get your own ID</div>
@@ -11773,8 +11782,9 @@ const MASCOTS = [
   { id:'m01', name:'Mascot 1', src:'/assets/mascots/mascot-01.webp' },
  { id:'m02', name:'Mascot 2', src:'/assets/mascots/mascot-02.webp' },
  { id:'m03', name:'Mascot 3', src:'/assets/mascots/mascot-03.webp' },
-  { id:'m04', name:'Mascot 4', src:'/assets/mascots/mascot-04.webp' }
-  /* idagdag ang m03–m07 dito */
+  { id:'m04', name:'Mascot 4', src:'/assets/mascots/mascot-04.webp' },
+  { id:'m05', name:'Mascot 5', src:'/assets/mascots/mascot-05.webp' }
+  /* idagdag ang m06–m07 dito */
 ];
 const MASCOT_KEY = 'mascot-id';
 let activeMascot = MASCOTS[0].id;
@@ -11808,6 +11818,61 @@ function openMascotPicker() {
 }
 loadMascot();
 /* === END: MASCOTS === */
+/* === START: SAMPLE CARD VIEWER (public, dummy data only) === */
+function openSampleCard() {
+  if (document.getElementById('sampleCardOverlay')) return;
+  haptic('light');
+  const s = Math.min(1, (innerHeight - 230) / 580, (innerWidth - 48) / 340);
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  const front = `<svg viewBox="0 0 340 580" width="340" height="580" style="display:block">
+    <rect x="4.35" y="3.44" width="332" height="71.3" rx="24" fill="#F3EDE4"/>
+    <circle cx="40" cy="39" r="28" fill="#8E8E93"/>
+    <text x="84" y="35" font-family="-apple-system,'SF Pro Text',sans-serif" font-size="13" font-weight="600" letter-spacing="3" fill="#1c1c1e">J. DELA CRUZ</text>
+    <text x="84" y="53" font-family="-apple-system,'SF Pro Text',sans-serif" font-size="8.98" font-weight="700" letter-spacing="1.3" fill="#1c1c1e" opacity=".7">FOUNDER | SAMPLE CO.</text>
+    <circle cx="170" cy="170" r="80" fill="none" stroke="#d9d7d2" stroke-width="15" opacity=".85"/>
+    <rect x="162" y="250" width="16" height="130" rx="4" fill="#cac7c0" opacity=".85"/>
+    <rect x="178" y="320" width="32" height="12" rx="3" fill="#cac7c0" opacity=".85"/>
+    <rect x="178" y="348" width="22" height="12" rx="3" fill="#cac7c0" opacity=".85"/>
+    <circle cx="170" cy="428" r="34" fill="#F3EDE4"/>
+    <rect x="152" y="410" width="36" height="36" rx="4" fill="#fff"/>
+    <g fill="#1c1c1e"><rect x="156" y="414" width="9" height="9"/><rect x="175" y="414" width="9" height="9"/><rect x="156" y="433" width="9" height="9"/><rect x="168" y="424" width="6" height="6"/><rect x="177" y="433" width="7" height="7"/></g>
+    <rect x="27.52" y="502.64" width="144.9" height="53.13" rx="26.57" fill="#F3EDE4"/>
+    <rect x="235.21" y="502.64" width="77.28" height="53.13" rx="26.57" fill="#F3EDE4"/>
+    <text x="170" y="572" text-anchor="middle" font-family="-apple-system,'SF Pro Text',sans-serif" font-size="8.5" letter-spacing="1.1" fill="#d0d0d0"><tspan font-weight="700" fill="#fff">articardd.</tspan><tspan dx="4" font-weight="300" opacity=".75">connect differently.</tspan></text>
+  </svg>`;
+  const ov = document.createElement('div');
+  ov.id = 'sampleCardOverlay';
+  ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', 'Sample card');
+  ov.style.cssText = 'position:fixed;inset:0;z-index:10050;background:#ECE4D6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;animation:screenFadeIn .35s cubic-bezier(.16,1,.3,1) forwards;';
+  ov.innerHTML = `
+    <button type="button" onclick="closeSampleCard()" aria-label="Close" style="position:absolute;top:max(14px,env(safe-area-inset-top));left:14px;display:flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;border:0.6px solid rgba(255,255,255,0.9);background:rgba(255,255,255,0.82);box-shadow:0 2px 8px rgba(0,0,0,0.10);color:#1c1c1e;cursor:pointer;padding:0;"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <div style="${F}font-size:11px;font-weight:700;letter-spacing:.14em;color:rgba(60,60,67,0.5);">SAMPLE CARD</div>
+    <div style="width:${340 * s}px;height:${580 * s}px;">
+      <div class="sc-scene" style="width:340px;height:580px;transform:scale(${s});transform-origin:top left;">
+        <div class="sc-card" id="scCard" onclick="this.classList.toggle('flipped');haptic('light');">
+          <div class="sc-face">${front}</div>
+          <div class="sc-face sc-back">
+            <img src="/assets/mascots/mascot-01.webp" alt="" style="position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:73%;max-height:80%;object-fit:contain;" onerror="this.style.display='none'"/>
+            <div style="position:absolute;left:26px;right:26px;bottom:22px;border-top:1px solid rgba(208,208,208,0.3);padding-top:14px;${F}font-size:11px;font-weight:500;letter-spacing:.08em;color:#d0d0d0;">ARTICARD-SAMPLE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="${F}font-size:12.5px;color:rgba(60,60,67,0.55);">Tap the card to flip</div>
+    <a href="mailto:support@articardd.com?subject=Get%20my%20own%20articardd.%20ID" style="${F}font-size:13.5px;font-weight:700;color:#ECE4D6;background:#1c1c1e;padding:13px 24px;border-radius:24px;text-decoration:none;">Get your own card</a>`;
+  document.body.appendChild(ov);
+  document.addEventListener('keydown', sampleEsc);
+}
+function sampleEsc(e) { if (e.key === 'Escape') closeSampleCard(); }
+function closeSampleCard() {
+  const ov = document.getElementById('sampleCardOverlay'); if (!ov) return;
+  haptic('light');
+  document.removeEventListener('keydown', sampleEsc);
+  ov.style.animation = 'screenFadeOut .25s cubic-bezier(.4,0,.2,1) forwards';
+  setTimeout(() => ov.remove(), 250);
+}
+(function () { const p = document.querySelector('.gt-preview'); if (p) p.addEventListener('click', openSampleCard); })();
+/* === END: SAMPLE CARD VIEWER === */
 /* === START: READY FLAG === */
   window.__ATHNA_READY__ = true;
   /* === END: READY FLAG === */
