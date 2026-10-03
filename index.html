@@ -604,6 +604,10 @@
 .back-mascot{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:73%;max-height:92%;object-fit:contain;z-index:3;pointer-events:none;filter:drop-shadow(0 14px 26px rgba(0,0,0,.45));}
 .back-mascot-btn{position:absolute;top:14px;right:14px;z-index:6;width:36px;height:36px;border-radius:50%;border:.6px solid rgba(255,255,255,.18);background:rgba(255,255,255,.10);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent;}
 body.public-mode .back-mascot-btn{display:none !important;}
+.mascot-limited{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:6;display:none;align-items:center;gap:8px;padding:7px 8px 7px 14px;border-radius:20px;border:.6px solid rgba(232,204,122,.45);background:rgba(20,22,26,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#E8CC7A;font:700 9.5px -apple-system,'SF Pro Text',sans-serif;letter-spacing:.14em;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
+.mascot-limited.show{display:flex;}
+.mascot-limited:active{transform:translateX(-50%) scale(.96);opacity:.85;}
+.mascot-limited i{font-style:normal;font-weight:600;letter-spacing:.04em;background:rgba(232,204,122,.18);padding:3px 9px;border-radius:12px;}
   .back-fol-wrap{flex:1;position:relative;overflow:hidden;}
   .back-bottom{padding:0 26px 22px;position:relative;z-index:5;}
   .back-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(208,208,208,0.4),transparent);margin-bottom:14px;}
@@ -902,6 +906,85 @@ body.public-mode .back-mascot-btn{display:none !important;}
   .gt-sample{display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:11px 20px;border-radius:22px;background:#1c1c1e;color:#ECE4D6;border:none;font:600 13px -apple-system,'SF Pro Text',sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent;}
   .gt-sample:active{transform:scale(.97);opacity:.85;}
   .sc-scene{perspective:1200px;}
+  .gt-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
+  .gt-actions .gt-sample{margin-top:0;}
+  .gt-story{background:rgba(255,255,255,.72);color:#1c1c1e;border:1px solid rgba(0,0,0,.1);}
+  /* STORY */
+  #storyOverlay{position:fixed;inset:0;z-index:10050;background:#ECE4D6;overflow:hidden;font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;color:#1c1c1e;animation:screenFadeIn .35s cubic-bezier(.16,1,.3,1) forwards;}
+  #storyOverlay.out{animation:screenFadeOut .25s cubic-bezier(.4,0,.2,1) forwards;}
+  .st-track{display:flex;height:100%;transition:transform .5s cubic-bezier(.77,0,.175,1);will-change:transform;}
+  .st-page{flex:0 0 100%;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
+  .st-page.d{background:#2F343A;color:#F3EDE4;}
+  .st-in{max-width:560px;margin:0 auto;min-height:100%;padding:87px 24px 130px;}
+  .st-page.d .st-in{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+  .st-close{position:absolute;top:max(14px,env(safe-area-inset-top));left:14px;z-index:60;display:flex;align-items:center;justify-content:center;width:54px;height:54px;padding:0;border-radius:50%;border:.6px solid rgba(255,255,255,.9);background:rgba(255,255,255,.82);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);box-shadow:0 2px 8px rgba(0,0,0,.1),inset 0 1px 0 rgba(255,255,255,.7);color:#1c1c1e;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+  .st-close:active{transform:scale(.9);opacity:.75;}
+  .st-bar{position:absolute;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:6px;padding:6px;border-radius:30px;border:.6px solid rgba(255,255,255,.9);background:rgba(255,255,255,.82);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);box-shadow:0 4px 14px rgba(0,0,0,.14);}
+  .st-nav{width:44px;height:44px;border-radius:50%;border:none;background:rgba(0,0,0,.05);color:#1c1c1e;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent;}
+  .st-nav:active{transform:scale(.9);}
+  .st-nav:disabled{opacity:.25;cursor:default;}
+  .st-count{min-width:62px;text-align:center;font:600 12px -apple-system,'SF Pro Text',sans-serif;letter-spacing:.06em;color:rgba(60,60,67,.7);}
+  .st-rh{display:flex;justify-content:space-between;gap:10px;margin-bottom:26px;padding-bottom:10px;border-bottom:1px solid rgba(0,0,0,.1);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(60,60,67,.5);}
+  .st-lab{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(60,60,67,.55);margin-bottom:8px;}
+  .st-h{font:700 28px/1.25 -apple-system,'SF Pro Display',sans-serif;letter-spacing:-.01em;margin:0 0 8px;}
+  .st-i{font-style:italic;font-size:15.5px;line-height:1.6;color:rgba(60,60,67,.65);margin:0 0 20px;}
+  .st-p{font-size:15.5px;line-height:1.85;color:rgba(28,28,30,.82);margin:0 0 16px;}
+  .st-p strong{color:#1c1c1e;font-weight:700;}
+  .st-p.dc::first-letter{font:700 3.5em/.8 -apple-system,'SF Pro Display',sans-serif;float:left;margin:6px 8px 0 0;color:#1c1c1e;}
+  .st-p.it{font-style:italic;font-size:17px;color:#1c1c1e;}
+  .st-p.mu{font-style:italic;color:rgba(60,60,67,.65);}
+  .st-rule{display:flex;align-items:center;gap:12px;margin:24px 0;}
+  .st-rule i{flex:1;height:1px;background:rgba(0,0,0,.12);}
+  .st-rule b{font-weight:400;font-size:16px;color:#C9A227;}
+  .st-pq{border-left:3px solid #1c1c1e;padding:12px 0 12px 18px;margin:22px 0;}
+  .st-pq p{margin:0;font-style:italic;font-size:18px;line-height:1.65;}
+  .st-pq strong{font-style:normal;font-weight:700;}
+  .st-sig{font-size:14px;font-weight:700;color:rgba(60,60,67,.7);}
+  .st-sub{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(60,60,67,.45);margin-top:5px;}
+  .st-eyebrow{font-size:10px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:rgba(232,204,122,.65);margin-bottom:16px;position:relative;z-index:1;}
+  .st-otitle{font:700 clamp(26px,7vw,38px)/1.25 -apple-system,'SF Pro Display',sans-serif;color:#E8CC7A;margin:0;position:relative;z-index:1;}
+  .st-bgnum{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font:700 min(45vw,220px)/1 -apple-system,'SF Pro Display',sans-serif;color:rgba(232,204,122,.07);pointer-events:none;white-space:nowrap;}
+  .st-brand{font:700 clamp(46px,13vw,68px)/1 -apple-system,'SF Pro Display',sans-serif;letter-spacing:-.02em;color:#fff;margin:0 0 6px;}
+  .st-tag{font:300 15px -apple-system,'SF Pro Text',sans-serif;letter-spacing:.06em;color:rgba(243,237,228,.65);margin:0 0 22px;}
+  .st-dq{font-style:italic;font-size:clamp(19px,5vw,24px);line-height:1.7;color:rgba(243,237,228,.7);margin:0;}
+  .st-dq strong{font-style:normal;color:#E8CC7A;}
+  .st-pre{font-style:italic;font-size:15px;line-height:1.9;color:rgba(232,204,122,.55);margin:0 0 10px;position:relative;z-index:1;}
+  .st-big{font:700 clamp(22px,6vw,36px)/1.2 -apple-system,'SF Pro Display',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#E8CC7A;margin:0 0 6px;}
+  .st-bigsub{font-style:italic;font-size:clamp(19px,5vw,28px);color:#C9A227;margin:0;}
+  .st-drule{width:70px;height:1px;background:linear-gradient(90deg,transparent,rgba(232,204,122,.5),transparent);margin:20px auto;}
+  .st-meta{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;line-height:2.4;color:rgba(232,204,122,.55);margin:0;}
+  .st-hint{margin-top:26px;font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:rgba(232,204,122,.7);animation:hintPulse 2.8s ease-in-out infinite;}
+  @keyframes hintPulse{0%,100%{opacity:.45}50%{opacity:1}}
+  .st-card{background:rgba(255,255,255,.72);border-radius:18px;padding:16px;margin-bottom:12px;}
+  .st-tag2{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(60,60,67,.5);margin-bottom:6px;}
+  .st-ct{font-size:15.5px;font-weight:700;margin-bottom:6px;}
+  .st-cb{font-size:13.5px;line-height:1.75;color:rgba(60,60,67,.75);margin:0;}
+  .st-tl{display:grid;grid-template-columns:64px 1fr;gap:0 16px;padding:14px 0;border-bottom:1px solid rgba(0,0,0,.08);}
+  .st-tl:last-child{border-bottom:none;}
+  .st-yr{font-size:11px;font-weight:700;letter-spacing:.06em;color:#9B7A3E;text-align:right;padding-top:2px;}
+  .st-tl.cur .st-yr,.st-tl.cur .st-ct{color:#1c1c1e;}
+  .st-li{display:grid;grid-template-columns:30px 1fr;gap:12px;padding:16px 0;border-bottom:1px solid rgba(0,0,0,.1);}
+  .st-n{font:700 20px/1 -apple-system,'SF Pro Display',sans-serif;color:rgba(28,28,30,.2);}
+  .st-price{background:rgba(255,255,255,.72);border-radius:18px;overflow:hidden;margin:18px 0;}
+  .st-pgrid{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid rgba(0,0,0,.08);}
+  .st-pc{padding:18px 16px;}
+  .st-pc+.st-pc{border-left:1px solid rgba(0,0,0,.08);}
+  .st-amt{font:700 28px/1 -apple-system,'SF Pro Display',sans-serif;margin:6px 0 4px;}
+  .st-cad{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(60,60,67,.45);margin-bottom:10px;}
+  .st-note{font-size:12px;line-height:1.75;color:rgba(60,60,67,.7);margin:0;}
+  .st-eb{background:#2F343A;color:#F3EDE4;padding:20px 16px;}
+  .st-eb .st-amt{color:#E8CC7A;font-size:24px;}
+  .st-eb .st-note{color:rgba(232,204,122,.6);}
+  .st-orig{font-size:11px;color:rgba(232,204,122,.4);text-decoration:line-through;margin-bottom:6px;}
+  .st-ebf{margin-top:14px;padding-top:12px;border-top:1px solid rgba(232,204,122,.18);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;text-align:center;color:rgba(232,204,122,.55);}
+  .st-scar{display:flex;gap:16px;align-items:center;padding:16px;}
+  .st-scar b{font:700 30px/1 -apple-system,'SF Pro Display',sans-serif;}
+  .st-cta{display:block;width:100%;box-sizing:border-box;text-align:center;text-decoration:none;padding:15px;border-radius:14px;border:none;background:#1c1c1e;color:#ECE4D6;font:700 14.5px -apple-system,'SF Pro Text',sans-serif;cursor:pointer;margin-top:18px;}
+  .st-dk{background:#2F343A;border-radius:18px;padding:18px;margin:18px 0;}
+  .st-dk p{margin:0 0 8px;font-size:13px;line-height:1.75;color:rgba(232,204,122,.65);}
+  .st-dk p:last-child{margin:0;}
+  .st-dk .st-lab{color:rgba(232,204,122,.5);}
+  @media(max-width:420px){.st-pgrid{grid-template-columns:1fr;}.st-pc+.st-pc{border-left:none;border-top:1px solid rgba(0,0,0,.08);}}
   .sc-card{position:relative;width:340px;height:580px;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .9s cubic-bezier(.23,1,.32,1);cursor:pointer;}
   .sc-card.flipped{transform:rotateY(180deg);}
   .sc-face{position:absolute;inset:0;border-radius:24px;overflow:hidden;background:#2F343A;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 40px 80px rgba(0,0,0,.45),0 8px 24px rgba(0,0,0,.35);}
@@ -940,7 +1023,10 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <rect x="27.52" y="502.64" width="144.9" height="53.13" rx="26.57" fill="#F3EDE4"/>
       <rect x="235.21" y="502.64" width="77.28" height="53.13" rx="26.57" fill="#F3EDE4"/>
     </svg>
-    <button type="button" id="gtSample" class="gt-sample" onclick="openSampleCard()">View sample card</button>
+    <div class="gt-actions">
+      <button type="button" id="gtSample" class="gt-sample" onclick="openSampleCard()">View sample card</button>
+      <button type="button" id="gtStory" class="gt-sample gt-story" onclick="openStory()">Read our story</button>
+    </div>
     <button type="button" id="gtSwitch" class="gt-link">I'm the card owner →</button>
     <div class="gt-foot">
       <div class="gt-foot-title">Get your own ID</div>
@@ -1537,6 +1623,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
           <div class="back-inner">
           <div class="back-fol-wrap">
               <img id="backMascot" class="back-mascot" alt="" decoding="async"/>
+              <button type="button" id="mascotLimitedBtn" class="mascot-limited" onclick="event.stopPropagation();haptic('light');openMascotLore();">LIMITED EDITION <i>Details ›</i></button>
               <button type="button" class="back-mascot-btn" aria-label="Choose mascot" onclick="event.stopPropagation();haptic('light');openMascotPicker();"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#d0d0d0" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="#d0d0d0"/><circle cx="15" cy="10" r="1" fill="#d0d0d0"/><path d="M8.5 15c1 1.2 2.2 1.8 3.5 1.8s2.5-.6 3.5-1.8"/></svg></button>
             </div>
             <div class="back-bottom">
@@ -11793,6 +11880,8 @@ function applyMascot() {
   const m = MASCOTS.find(x => x.id === activeMascot) || MASCOTS[0];
   const im = document.getElementById('backMascot');
   if (im && m) { im.src = m.src; im.alt = m.name; }
+  const lb = document.getElementById('mascotLimitedBtn');
+  if (lb) lb.classList.toggle('show', !!(m && window.MASCOT_LORE && window.MASCOT_LORE[m.id]));
 }
 async function loadMascot() {
   if (document.body.classList.contains('public-mode') || window.__MASCOT_REMOTE__) { applyMascot(); return; }
@@ -11815,6 +11904,24 @@ function openMascotPicker() {
     return `<button type="button" onclick="pickMascot('${m.id}')" aria-label="${auEsc(m.name)}" style="border-radius:16px;padding:10px;cursor:pointer;background:#2F343A;border:${on ? '2.5px solid #1c1c1e' : '1px solid rgba(0,0,0,0.1)'};box-shadow:${on ? '0 0 0 2px #E8CC7A' : 'none'};-webkit-tap-highlight-color:transparent;"><img src="${m.src}" alt="" style="width:100%;aspect-ratio:1;object-fit:contain;display:block;"/></button>`;
   }).join('');
   auMakeSheet('mascotOverlay', 'Choose Mascot', `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">${cells}</div>`);
+}
+var MASCOT_LORE = {
+  m05: {
+    name: 'E80 OMEGA Æ-1X DELTA-8 INFINITY INVICTUS',
+    origin: 'From the year 12,847 CE',
+    text: 'A sentient being from the year 12,847 CE, created after humanity transcended biological limitations. He is not merely an artificial intelligence—he possesses independent consciousness, perception, emotion, and the ability to create realities of his own.'
+  }
+};
+function openMascotLore() {
+  const L = (window.MASCOT_LORE || {})[activeMascot]; if (!L) return;
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  auMakeSheet('mascotLoreOverlay', 'Limited Edition', `
+    <div style="background:#2F343A;border-radius:18px;padding:18px 16px;margin-bottom:12px;text-align:center;">
+      <img src="${auEsc((MASCOTS.find(x => x.id === activeMascot) || {}).src || '')}" alt="" style="height:150px;object-fit:contain;display:block;margin:0 auto 12px;"/>
+      <div style="${F}font-size:10px;font-weight:700;letter-spacing:.16em;color:#E8CC7A;margin-bottom:8px;">${auEsc(L.origin)}</div>
+      <div style="${F}font-size:15px;font-weight:700;letter-spacing:.04em;color:#fff;line-height:1.4;word-break:break-word;">${auEsc(L.name)}</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.72);border-radius:16px;padding:15px 16px;${F}font-size:14px;line-height:1.65;color:#1c1c1e;">${auEsc(L.text)}</div>`);
 }
 loadMascot();
 /* === END: MASCOTS === */
@@ -11873,6 +11980,203 @@ function closeSampleCard() {
 }
 (function () { const p = document.querySelector('.gt-preview'); if (p) p.addEventListener('click', openSampleCard); })();
 /* === END: SAMPLE CARD VIEWER === */
+/* === START: STORY VIEWER (public, articardd origin document) === */
+var STORY = null, stCur = 0, stX = 0, stY = 0;
+function stBuild() {
+  const D = h => ({ d: 1, h: h });
+  const L = (r, h) => ({ d: 0, h: `${stHead(r)}${h}` });
+  function stHead(r) { return `<div class="st-rh"><span>articardd.</span><span>${r}</span></div>`; }
+  const rule = o => `<div class="st-rule"><i></i><b>${o || '❧'}</b><i></i></div>`;
+  const p = (t, c) => `<p class="st-p${c ? ' ' + c : ''}">${t}</p>`;
+  const q = t => `<div class="st-pq"><p>${t}</p></div>`;
+  const open = (n, l, t) => D(`<div class="st-bgnum">${n}</div><div class="st-eyebrow">${l}</div><h2 class="st-otitle">${t}</h2>`);
+  const sigil = s => `<svg width="${s}" height="${s}" viewBox="-24 -24 48 48" fill="none" style="margin-bottom:18px;opacity:.9"><circle r="22" stroke="#E8CC7A" stroke-width=".6" opacity=".4"/><g stroke="#E8CC7A" stroke-width="1" fill="none"><circle r="8.5"/><circle cy="-8.5" r="8.5"/><circle cx="7.36" cy="-4.25" r="8.5"/><circle cx="7.36" cy="4.25" r="8.5"/><circle cy="8.5" r="8.5"/><circle cx="-7.36" cy="4.25" r="8.5"/><circle cx="-7.36" cy="-4.25" r="8.5"/></g><circle r="1.5" fill="#E8CC7A"/></svg>`;
+  const need = (t, ti, b) => `<div class="st-card"><div class="st-tag2">${t}</div><div class="st-ct">${ti}</div><p class="st-cb">${b}</p></div>`;
+  const tl = (y, n, d, c) => `<div class="st-tl${c ? ' cur' : ''}"><div class="st-yr">${y}</div><div><div class="st-ct">${n}</div><p class="st-cb">${d}</p></div></div>`;
+  const li = (n, t, b) => `<div class="st-li"><div class="st-n">${n}</div><div><div class="st-ct">${t}</div><p class="st-cb">${b}</p></div></div>`;
+  const feat = (n, t, b) => `<div class="st-li"><div class="st-n">${n}</div><div><div class="st-ct">${t}</div><p class="st-cb">${b}</p></div></div>`;
+  const founder = 'Ephraim Nasser E. Tambiga';
+
+  return [
+    /* 0 COVER */
+    D(`<div class="st-eyebrow" style="position:absolute;top:max(30px,env(safe-area-inset-top));left:0;right:0;text-align:center;opacity:.6">Origin Document · First Edition · 2026</div>
+       ${sigil(60)}<h1 class="st-brand">articardd.</h1><p class="st-tag">connect differently.</p><div class="st-drule"></div>
+       <p class="st-dq">Before there was a card,<br>there was a question.</p>
+       <div class="st-hint">Swipe to open ›</div>
+       <p class="st-meta" style="margin-top:34px;font-size:9px;opacity:.7">Philippines · 2026<br>7,000 articardd Digital Cards</p>`),
+    /* 1 FOUNDER */
+    L("Founder's Note", `<div class="st-lab">Founder's Note</div><h2 class="st-h" style="margin-bottom:18px">${founder}</h2>${rule()}
+      ${p('A life truly lived is not one sheltered within the gentle illusions of safety, nor confined to the predictable rhythms of comfort and certainty. It does not unfold in the quiet corners of convenience. Rather, it reveals itself in the untamed vastness beyond the familiar—in the wilderness of uncertainty where courage is demanded, not suggested.', 'dc')}
+      ${p('It is there, in the unseen terrains of challenge, where we are summoned to confront not the world alone, but the hidden fractures within ourselves. In those silent battles—fought not with others, but within—we are stripped of pretense and forced into honesty. We stumble, we falter, we are brought to our knees… yet it is precisely in those moments that we discover the raw architecture of our strength.')}
+      ${p('To live deeply is to endure the tempests—those long, relentless crossings where doubt whispers louder than hope, and fear attempts to anchor us in place. And still, we move. Not because the path is clear, but because something within us refuses to surrender. Each step forward becomes an act of defiance against limitation.')}
+      ${p('And when, at last, we reach our summits—earned through persistence, sacrifice, and unyielding will—we realize that the ascent was never merely about the destination. It was about the becoming. The forging of character. The awakening of a self we had not yet met.')}
+      ${q('Life, in its richest form, exists beyond the architecture of routine. It thrives where uncertainty breathes, where risk sharpens awareness, and where <strong>the soul is stretched beyond its former boundaries.</strong>')}
+      ${p('It is in choosing the difficult path—the one unmarked, overgrown, and solitary—that we encounter possibility in its purest form.')}
+      ${p('There comes a moment when we must stand unguarded before the world—unmasked, unapologetic, and entirely ourselves. It is in that vulnerability that we begin to see others more clearly, not as strangers, but as reflections of courage, struggle, and shared humanity. And from that recognition, we learn to love—fully, fiercely, without condition or limit.')}
+      ${p('Beyond comfort, beyond accumulation, beyond the quiet seduction of routine—there lies a realm where we transcend our own constraints. Where we rise above doubt, dismantle our limiting beliefs, and step into the fullest expression of who we are meant to be.')}
+      ${p('This world—rich with uncertainty, challenge, fear, and freedom—holds within it your greatest calling. Your untapped gifts. Your undiscovered victories.')}
+      ${p('Listen closely.', 'it')}${p('Something within you is calling.', 'it')}${p('And now is not the time to hesitate.', 'it')}
+      ${rule('✦')}
+      ${p('Yet, if you are honest with yourself, you may feel a quiet dissonance within. A knowing that, despite your potential, you have not fully honored the promises you once made to yourself.')}
+      ${p('You begin each cycle of time with fire in your chest—ambition alive, vision clear—yet somewhere along the way, that fire dims. The pace slows. The intention dissolves into routine. Your days are filled, your schedule overflowing, yet something essential feels absent. The work that occupies you does not always reflect the work that defines you.')}
+      ${p('You give effort, intellect, even passion—but still find yourself caught in cycles of hesitation, distraction, and delay. You are connected to the world in ways never before possible, yet feel an undeniable distance—from others, and perhaps even from yourself.')}
+      ${p('You wait—for the right moment, the right signal, the right permission to begin living fully.')}
+      ${q('But that moment does not arrive.<br><br>Because <strong>it was never meant to.</strong>')}
+      ${p('The truth is this: you are meant for more. But more will never come to you by chance—it must be demanded from within.')}
+      ${p('And yes, that truth carries weight. Because you are already striving. Already navigating pressures, expectations, fatigue. The last thing you may want to hear is that more is required of you.')}
+      ${p('And yet—it is. Not as punishment, but as invitation. An invitation to rise beyond mediocrity. To reclaim authorship over your life. To align your actions with the deeper calling you already sense within yourself.')}
+      ${p('You have felt it before—that rare, electric state where you felt alive, fearless, fully engaged. Moments where clarity replaced doubt, where energy replaced hesitation, where you moved with purpose and certainty.')}
+      ${p('That state was not accidental. It was a glimpse of what is possible.', 'mu')}
+      ${p('And understand this clearly: the dissatisfaction, the restlessness, the quiet anxiety you may feel—these are not born from circumstance, nor from fate, nor from the world around you. They are not the product of your past, nor of misfortune.')}
+      ${p('They are, instead, the result of <strong>misalignment.</strong> A failure—not of ability—but of strategy. A failure to consciously direct your focus, your thoughts, your inner world.')}
+      ${p('For it is not the external that governs the depth of your life—but the <strong>disciplined mastery of your internal state.</strong>')}
+      ${p('And here lies the power: When you take control of your awareness—when you become intentional about what you think, what you focus on, what you allow to shape your perception—you unlock a sustained sense of aliveness. A state of clarity, connection, and fulfillment that is not fleeting, but cultivated.')}
+      ${p('I do not offer you fleeting motivation, nor temporary emotional highs.')}
+      ${q('What stands before you is something far greater—<br>an entirely <strong>elevated plane of existence.</strong><br><br>A life more vivid. More dynamic. More expansive.<br>More alive than you have ever imagined.')}
+      ${p('And it is not reserved for the few.')}${p('It is available to you.')}
+      ${p('If you are willing… to rise and claim it.', 'it')}
+      ${rule()}<div class="st-sig">${founder}</div><div class="st-sub">Founder · articardd · Philippines, 2026</div>`),
+    /* 2-3 CH I */
+    open('I', 'Chapter the First', 'The Ancient Question'),
+    L('Chapter I · The Ancient Question', `<h2 class="st-h">Before the Card,<br>There Was the Mark</h2>
+      <p class="st-i">Every civilization asked the same question.<br>The question was never about paper. It was about trust.</p>${rule()}
+      ${p('Imagine a merchant in ancient Mesopotamia — 3,000 years before the first telephone. He walks into a foreign city. He knows no one. He needs to be <strong>remembered.</strong>', 'dc')}
+      ${p('So he carries a clay cylinder seal — a small carved stone that when rolled across wet clay leaves his unique mark. His name. His title. His proof.')}
+      ${q("One press. Complete identity transfer.<br>The world's first portable credential.<br>Not a card. Not an app. <strong>A mark.</strong>")}
+      ${p('This was not primitive technology. This was <strong>architecture</strong> — a system designed to make one person unforgettable in a world of strangers.')}`),
+    /* 4-5 CH II */
+    open('II', 'Chapter the Second', 'Five Thousand Years<br>of the Same Gesture'),
+    L('Chapter II · The Long Evolution', `<p class="st-i" style="margin-bottom:12px">The tools changed every era. The act — <em>never did.</em></p>
+      ${tl('3000 BC', 'Clay Cylinder Seal — Mesopotamia', "One press. Complete identity transfer. The world's first portable credential.")}
+      ${tl('500 BC', 'Jade Chops & Signet Rings — China & Rome', 'Authority made wearable. Identity fused with material value for the first time.')}
+      ${tl('1700s', 'The Visiting Card — European Aristocracy', 'Status communicated through paper quality, typography, and restraint.')}
+      ${tl('1800s', 'The Business Card — Industrial Commerce', 'Universal — but passive. It could not follow up. It only hoped to be kept.')}
+      ${tl('2000s', 'NFC Tap-to-Save — The First Living Card', "One tap. Instant transfer. But it still couldn't think. It could not persist.")}
+      ${tl('2026', 'articardd — Philippines', 'The last identity system a professional will ever need.', 1)}`),
+    /* 6 GAP */
+    D(`<p class="st-pre">The gap that articardd was built to close —</p>
+       <p class="st-dq">"Every generation solved the problem of <em>transfer.</em><br><br>None of them solved the problem of <strong>what happens next."</strong></p>`),
+    /* 7-8 CH III */
+    open('III', 'Chapter the Third', 'The Broken Promise'),
+    L('Chapter III · The Broken Promise', `<h2 class="st-h">The Card Was Never the Problem.<br>The After Was.</h2>
+      ${p('In 5,000 years of identity technology, we never solved the one thing that actually generates business: <strong>what happens after the exchange.</strong>')}
+      <div style="border-top:1px solid rgba(0,0,0,.1);margin-top:14px">
+      ${li('I', 'Passive Identity', 'Every card waited for a human to act. It had no agency. It could not reach out. It could not remind. It sat in a drawer and hoped.')}
+      ${li('II', 'One-Way Transfer', 'You gave your card. They received it. You received nothing. They remained a stranger in your world forever.')}
+      ${li('III', 'No Memory', 'Every exchange vanished into the void. No data. No intelligence. Just hope — the most expensive strategy in the history of commerce.')}</div>`),
+    /* 9-10 CH IV */
+    open('IV', 'Chapter the Fourth', 'The Answer'),
+    L('Chapter IV · The Answer', `<h2 class="st-h">The Card That Works</h2>
+      <p class="st-i">Not an upgrade. The replacement of everything that came before it.</p>
+      ${p('For the first time in 5,000 years — all three ancient needs answered by a single system.')}
+      ${need('Need 01 · Carry', 'A Numbered Physical Collectible', 'A premium, serialized card. Engraved with your number. Unique in the world. Every edition — Obsidian, Sapphire, Ruby — is a statement before a word is spoken.')}
+      ${need('Need 02 · Transfer', 'The Unlock — A Mutual Exchange', 'When someone taps your articardd card, they exchange their contact to unlock yours. One tap. Two identities transferred. The system acts — automatically, immediately.')}
+      ${need('Need 03 · Persist', 'The Card — Intelligence That Never Sleeps', 'Thank-you emails fire automatically. Follow-ups at 24 hours. Leads scored and ranked. Weekly report every Monday. Your CRM builds itself. You show up to close.')}`),
+    /* 11 FOUNDING LINE */
+    D(`<p class="st-pre">The ancient merchant pressed his seal and hoped to be remembered.<br>The 20th-century professional printed ten thousand cards and prayed one would stick.</p>
+       <div class="st-drule"></div><p class="st-big">You Tap Once.</p><p class="st-bigsub">articardd Remembers Everything.</p>`),
+    /* 12 PRICING */
+    L('Claim Your Number', `<h2 class="st-h" style="margin-bottom:5px">Claim Your Number</h2><p class="st-i">7,000 cards. Seven editions. No reprints.</p>
+      <div class="st-price">
+        <div class="st-pgrid">
+          <div class="st-pc"><div class="st-tag2">✦ Hero Offer</div><div class="st-ct">Annual Plan</div><div class="st-amt">₱9,980</div><div class="st-cad">Per Year</div><p class="st-note">≈ ₱832/month effective rate.<br>Best value for the active professional.</p></div>
+          <div class="st-pc"><div class="st-tag2">&nbsp;</div><div class="st-ct">Lifetime Plan</div><div class="st-amt">₱55,000</div><div class="st-cad">One-Time · Forever</div><p class="st-note">Pay once. Own it permanently.<br>Not for everyone — that's the point.</p></div>
+        </div>
+        <div class="st-eb">
+          <div class="st-ct" style="color:#E8CC7A">Early Bird — First 100 Only</div>
+          <p class="st-note" style="margin-bottom:14px">70% off, first year. Controlled. Premium. Protected.</p>
+          <div class="st-pgrid" style="border:none">
+            <div class="st-pc" style="padding:0 12px 0 0"><div class="st-tag2" style="color:rgba(232,204,122,.5)">Early Bird Annual</div><div class="st-amt">₱2,980</div><div class="st-orig">Regular: ₱9,980/yr</div><p class="st-note">Renews at ₱9,980.</p></div>
+            <div class="st-pc" style="padding:0 0 0 12px;border-color:rgba(232,204,122,.18)"><div class="st-tag2" style="color:rgba(232,204,122,.5)">Early Bird Lifetime</div><div class="st-amt">₱16,500</div><div class="st-orig">Regular: ₱55,000</div><p class="st-note">Limited slots. Forever.</p></div>
+          </div>
+          <div class="st-ebf">First 100 Founding Users only · Non-transferable</div>
+        </div>
+        <div class="st-scar"><b>7,000</b><div><div class="st-tag2" style="margin-bottom:4px">Total Cap · Forever</div><p class="st-note">7,000 articardd digital cards.<br>New colorways every quarter for active license holders.</p></div></div>
+      </div>
+      <a class="st-cta" href="mailto:support@articardd.com?subject=Secure%20my%20articardd.%20number">Secure Your Number</a>`),
+    /* 13 WHAT YOU RECEIVE */
+    L('What You Receive', `<div class="st-lab">What You Receive</div><h2 class="st-h">articardd.</h2><p class="st-i">Your number. Your data. Your system.</p>
+      <div class="st-lab" style="margin-top:6px">Core System</div><div style="border-top:1px solid rgba(0,0,0,.1)">
+      ${feat('01', 'The articardd Digital Card', 'A premium numbered digital card. One tap — your full identity transfers instantly. Their contact lands in your system automatically. No manual entry. Ever.')}
+      ${feat('02', 'Auto Email Exchange System', 'Every tap triggers an automatic thank-you. Follow-ups fire at 24 hours. Your Gmail does the work. You show up to close.')}
+      ${feat('03', 'Meeting Booking — Direct to Your Calendar', 'Anyone who taps your card can book a meeting directly into your Google Calendar. No back-and-forth. No scheduling apps. One tap, one booking.')}
+      ${feat('04', 'Note OS — 25-Category Executive Vault', 'Your intelligence, organized. Deadlines, schedules, and priorities tracked categorically — with automated alerts before anything approaches. No app does this the way we do.')}
+      ${feat('05', 'Google Calendar & Gmail Integration', "Everything runs inside Google's ecosystem — 99.9% uptime, no exotic databases, no third-party risk. Your data stays in infrastructure you already own.")}
+      ${feat('06', 'Contact Storage — Auto to GSheet', 'Every contact who taps your card lands directly in your Google Sheet. Auto-configured when they change their number, position, or info. Your network updates itself.')}
+      ${feat('07', 'iPhone Shortcut & Siri Setup — Free', 'We configure your iPhone so one press launches your card. Siri-enabled. No fumbling. Your card is always one gesture away.')}</div>
+      <div class="st-lab" style="margin-top:22px">Launching Soon</div>
+      ${need('Coming', 'Agentic Chief of Staff AI', "An AI that doesn't just chat — it acts. Emails on your behalf, manages automations, operates as your executive proxy. 5 years ahead of the market. Available now via prompt injection through Grok while the full command center is completed.")}
+      ${need('Coming', 'The Collection — Quarterly Colorways', 'Every quarter, active license holders receive an exclusive new colorway of their card — free. Obsidian. Sapphire. Ruby. Platinum. Yours to collect, yours to keep.')}
+      <div class="st-dk"><div class="st-lab">Also Included</div>
+        <p>• Free 10-minute setup + 1-hour onboarding training</p><p>• 24/7 maintenance, support & help desk</p>
+        <p>• Your own AI support — active now, while the full console is built</p><p>• Your data is yours — entirely. We store nothing on our servers.</p></div>
+      <a class="st-cta" style="margin-top:0" href="mailto:support@articardd.com?subject=Claim%20my%20articardd.%20number">Claim My Number</a>
+      <div class="st-sub" style="text-align:center;margin-top:12px">Early Bird · First 100 Only · Non-transferable</div>`),
+    /* 14 CLOSING */
+    L('A Closing Word', `<div class="st-lab">A Closing Word</div><h2 class="st-h" style="margin-bottom:18px">You Have Earned This.</h2>${rule()}
+      ${p('Yes — it costs more than you expected. We will not apologize for that. But we will ask you to weigh it honestly against what you have already lost: the client who never followed up, the contact buried in a drawer, the conversation that simply… disappeared. That cost was silent. This one is not.', 'dc')}
+      ${p('And here is what most platforms will never tell you — <strong>your data is yours. Entirely.</strong> We do not hold it. We do not sell it. We do not benefit from it. Ninety-nine percent of the tools you use today store your most valuable professional relationships on servers you will never see, controlled by people you will never meet — to be leveraged in ways you will never know.')}
+      ${p('articardd is built on Google\'s ecosystem — not because it is fashionable, but because it is the one infrastructure that already lives in your hands. 99.9% uptime. No exotic databases. No over-engineered architecture that collapses the moment a developer moves on. Just a system that works, quietly and completely, every single day.')}
+      ${q('While others sell features — while startups chase the AI gold rush and wrap APIs in promises — <strong>we sell results.</strong> We cut everything that does not serve you. That simplicity cost us more to build than complexity ever would have.')}
+      ${p('We are not in the business of selling technology. We are in the business of returning to you what was always yours: your time, your relationships, your reputation — running on a system that works as hard as you do.')}
+      ${p('You have spent years building something worth being remembered for. You have shown up, sacrificed, navigated the uncertainty, and earned your seat at every table you now occupy.')}
+      ${p('You deserve something that fits that story perfectly. Not a template. Not a subscription to a dashboard you will forget to check. Something that carries your name with the same weight you have worked to give it.')}
+      ${q('This card will never forget.<br>It remembers — so you can be fully present.')}
+      ${p('Every person who taps your card enters a system that honours the exchange. Every contact is held. Every follow-up is made. Every introduction you gave becomes a relationship your card tends to — long after the conversation ends.')}
+      ${p('That is not technology.', 'it')}${p('That is what you were always worth.', 'it')}
+      ${rule('✦')}<div style="font:700 22px -apple-system,'SF Pro Display',sans-serif;margin-bottom:4px">Congratulations.</div>
+      <p class="st-i" style="margin-bottom:20px">Welcome to articardd.<br>Your number is waiting.</p>
+      <div class="st-sig">${founder}</div><div class="st-sub">Founder · articardd · Philippines, 2026</div>`),
+    /* 15 COLOPHON */
+    D(`${sigil(52)}<div class="st-brand" style="font-size:36px">articardd.</div><div class="st-drule"></div>
+       <p class="st-meta">Philippines · 2026 · 7,000 articardd Digital Cards<br>New colorways every quarter · Active licenses only<br><br>You tap once.<br>articardd remembers everything.</p>
+       <a href="mailto:support@articardd.com?subject=Get%20my%20own%20articardd.%20ID" style="margin-top:22px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#E8CC7A;text-decoration:none;border-bottom:1px solid rgba(232,204,122,.35);padding-bottom:3px">Get your own card ↗</a>`)
+  ];
+}
+function openStory() {
+  if (document.getElementById('storyOverlay')) return;
+  haptic('light');
+  STORY = stBuild(); stCur = 0;
+  const chev = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">';
+  const ov = document.createElement('div');
+  ov.id = 'storyOverlay';
+  ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', 'articardd story');
+  ov.innerHTML = `<button type="button" class="st-close" aria-label="Close story" onclick="closeStory()"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <div class="st-track" id="stTrack">${STORY.map(s => `<section class="st-page${s.d ? ' d' : ''}"><div class="st-in">${s.h}</div></section>`).join('')}</div>
+    <div class="st-bar"><button type="button" class="st-nav" id="stPrev" aria-label="Previous page" onclick="stGo(stCur-1)">${chev}<polyline points="15 18 9 12 15 6"/></svg></button><div class="st-count" id="stCount"></div><button type="button" class="st-nav" id="stNext" aria-label="Next page" onclick="stGo(stCur+1)">${chev}<polyline points="9 18 15 12 9 6"/></svg></button></div>`;
+  ov.addEventListener('touchstart', e => { stX = e.touches[0].clientX; stY = e.touches[0].clientY; }, { passive: true });
+  ov.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - stX, dy = e.changedTouches[0].clientY - stY;
+    if (Math.abs(dx) > Math.abs(dy) * 1.4 && Math.abs(dx) > 50) stGo(stCur + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+  document.body.appendChild(ov);
+  document.addEventListener('keydown', stKey);
+  stGo(0);
+}
+function stGo(n) {
+  const t = document.getElementById('stTrack'); if (!t) return;
+  n = Math.max(0, Math.min(STORY.length - 1, n));
+  if (n !== stCur) haptic('light');
+  stCur = n;
+  t.style.transform = 'translateX(-' + (n * 100) + '%)';
+  [...t.children].forEach((pg, i) => { pg.inert = i !== n; if (i === n) pg.scrollTop = 0; });
+  document.getElementById('stCount').textContent = (n + 1) + ' / ' + STORY.length;
+  document.getElementById('stPrev').disabled = n === 0;
+  document.getElementById('stNext').disabled = n === STORY.length - 1;
+}
+function stKey(e) {
+  if (e.key === 'Escape') closeStory();
+  else if (e.key === 'ArrowRight') stGo(stCur + 1);
+  else if (e.key === 'ArrowLeft') stGo(stCur - 1);
+}
+function closeStory() {
+  const ov = document.getElementById('storyOverlay'); if (!ov) return;
+  haptic('light');
+  document.removeEventListener('keydown', stKey);
+  ov.classList.add('out');
+  setTimeout(() => ov.remove(), 250);
+}
+/* === END: STORY VIEWER === */
 /* === START: READY FLAG === */
   window.__ATHNA_READY__ = true;
   /* === END: READY FLAG === */
