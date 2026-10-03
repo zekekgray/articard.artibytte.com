@@ -895,7 +895,10 @@ body.public-mode .back-mascot-btn{display:none !important;}
   .gt-btn:active{transform:scale(.98);opacity:.85;}
   .gt-btn:disabled{opacity:.4;cursor:not-allowed;}
   .gt-link{margin-top:20px;background:none;border:none;font:600 13px -apple-system,'SF Pro Text',sans-serif;color:#1c1c1e;cursor:pointer;padding:6px;}
-  .gt-foot{margin-top:34px;padding-top:22px;border-top:1px solid rgba(0,0,0,0.08);}
+  .gt-hint{margin-top:22px;font:400 12px -apple-system,'SF Pro Text',sans-serif;color:rgba(60,60,67,0.55);}
+  .gt-preview{display:block;margin:12px auto 0;width:112px;height:191px;filter:drop-shadow(0 10px 22px rgba(0,0,0,.28));}
+  @media (max-height:720px){ .gt-hint,.gt-preview{display:none;} }
+  .gt-foot{margin-top:28px;padding-top:22px;border-top:1px solid rgba(0,0,0,0.08);}
   .gt-foot-title{font:600 13px -apple-system,'SF Pro Text',sans-serif;color:#1c1c1e;margin-bottom:4px;}
   .gt-foot-sub{font:400 12px/1.6 -apple-system,'SF Pro Text',sans-serif;color:rgba(60,60,67,0.55);}
   .gt-foot-sub a{color:#1c1c1e;font-weight:600;text-decoration:underline;text-underline-offset:2px;}
@@ -915,6 +918,20 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <div class="gt-err" id="gtErr" role="alert"></div>
       <button type="submit" id="gtBtn" class="gt-btn">CONTINUE</button>
     </form>
+    <div class="gt-hint">Your key unlocks your card</div>
+    <svg class="gt-preview" viewBox="0 0 340 580" aria-hidden="true">
+      <rect width="340" height="580" rx="24" fill="#2F343A"/>
+      <rect x="4.35" y="3.44" width="332" height="71.3" rx="24" fill="#F3EDE4"/>
+      <circle cx="40" cy="39" r="28" fill="#8E8E93"/>
+      <rect x="84" y="28" width="130" height="9" rx="4.5" fill="#1c1c1e" opacity=".7"/>
+      <rect x="84" y="46" width="90" height="6" rx="3" fill="#1c1c1e" opacity=".3"/>
+      <circle cx="170" cy="190" r="86" fill="none" stroke="#d9d7d2" stroke-width="16" opacity=".85"/>
+      <rect x="162" y="276" width="16" height="140" rx="4" fill="#cac7c0" opacity=".85"/>
+      <rect x="178" y="350" width="34" height="12" rx="3" fill="#cac7c0" opacity=".85"/>
+      <rect x="178" y="380" width="24" height="12" rx="3" fill="#cac7c0" opacity=".85"/>
+      <rect x="27.52" y="502.64" width="144.9" height="53.13" rx="26.57" fill="#F3EDE4"/>
+      <rect x="235.21" y="502.64" width="77.28" height="53.13" rx="26.57" fill="#F3EDE4"/>
+    </svg>
     <button type="button" id="gtSwitch" class="gt-link">I'm the card owner →</button>
     <div class="gt-foot">
       <div class="gt-foot-title">Get your own ID</div>
