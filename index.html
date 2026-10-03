@@ -3,7 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ATH•NA — Card Setup</title>
+<title>articardd. Setup</title>
+<!-- === START: FAVICON === -->
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<!-- === END: FAVICON === -->
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root { --gold: #E8CC7A; --bg: #1a1a1a; --surface: #111; --border: rgba(232,204,122,0.18); }
@@ -1068,7 +1074,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
     <button type="button" id="gtSwitch" class="gt-link">I'm the card owner →</button>
     <div class="gt-foot">
       <div class="gt-foot-title">Get your own ID</div>
-      <div class="gt-foot-sub">Want your own articardd. card? Email us at<br><a href="mailto:support@articardd.com?subject=Get%20my%20own%20articardd.%20ID">support@articardd.com</a></div>
+      <div class="gt-foot-sub">Want your own articardd. card? Email us at<br><a href="mailto:support@artibytte.com" onclick="this.href=supportMail('id')">support@artibytte.com</a></div>
     </div>
   </div>
 </div>
@@ -11963,6 +11969,46 @@ function openMascotLore() {
 }
 loadMascot();
 /* === END: MASCOTS === */
+/* === START: SUPPORT MAIL TEMPLATES === */
+function supportMail(kind) {
+  const T = {
+    id: {
+      s: 'Get my own articardd. ID',
+      b: [
+        'Hello articardd. team,',
+        '',
+        'I would like to get my own articardd. card and ID.',
+        '',
+        'Full name: ',
+        'Position / Title: ',
+        'Company: ',
+        'Mobile: ',
+        'Email: ',
+        '',
+        'Please let me know the next steps. Thank you!'
+      ]
+    },
+    card: {
+      s: 'Get my articardd. card (Annual License)',
+      b: [
+        'Hello articardd. team,',
+        '',
+        'I would like to get my articardd. card with the Annual License (\u20B14,990 per year).',
+        '',
+        'Full name: ',
+        'Position / Title: ',
+        'Company: ',
+        'Mobile: ',
+        'Email: ',
+        '',
+        'Please send me the payment details and setup steps. Thank you!'
+      ]
+    }
+  };
+  const t = T[kind] || T.id;
+  return 'mailto:support@artibytte.com?subject=' + encodeURIComponent(t.s) + '&body=' + encodeURIComponent(t.b.join('\n'));
+}
+/* === END: SUPPORT MAIL TEMPLATES === */
 /* === START: SAMPLE CARD VIEWER (public, dummy data only) === */
 function openSampleCard() {
   if (document.getElementById('sampleCardOverlay')) return;
@@ -12004,7 +12050,7 @@ function openSampleCard() {
       </div>
     </div>
     <div style="${F}font-size:12.5px;color:rgba(60,60,67,0.55);">Tap the card to flip</div>
-    <a href="mailto:support@articardd.com?subject=Get%20my%20own%20articardd.%20ID" style="${F}font-size:13.5px;font-weight:700;color:#ECE4D6;background:#1c1c1e;padding:13px 24px;border-radius:24px;text-decoration:none;">Get your own card</a>`;
+    <a href="mailto:support@artibytte.com" onclick="this.href=supportMail('id')" style="${F}font-size:13.5px;font-weight:700;color:#ECE4D6;background:#1c1c1e;padding:13px 24px;border-radius:24px;text-decoration:none;">Get your own card</a>`;
   document.body.appendChild(ov);
   document.addEventListener('keydown', sampleEsc);
 }
@@ -12328,7 +12374,7 @@ function stBuild() {
         </div>
         <div class="st-scar"><div><div class="st-tag2" style="margin-bottom:4px">Included</div><p class="st-note">A premium articardd digital card.<br>New colorways every quarter for active license holders.</p></div></div>
       </div>
-      <a class="st-cta" href="mailto:support@articardd.com?subject=Get%20my%20articardd.%20card">Get Your Card</a>`),
+      <a class="st-cta" href="mailto:support@artibytte.com" onclick="this.href=supportMail('card')">Get Your Card</a>`),
     /* 13 WHAT YOU RECEIVE */
     L('What You Receive', `<div class="st-lab">What You Receive</div><h2 class="st-h">articardd.</h2><p class="st-i">Your card. Your data. Your system.</p>${stVisHub()}
       <div class="st-lab" style="margin-top:6px">Core System</div><div style="border-top:1px solid rgba(0,0,0,.1)">
@@ -12345,7 +12391,7 @@ function stBuild() {
       <div class="st-dk"><div class="st-lab">Also Included</div>
         <p>• Free 10-minute setup + 1-hour onboarding training</p><p>• 24/7 maintenance, support & help desk</p>
         <p>• Your own AI support — active now, while the full console is built</p><p>• Your data is yours — entirely. We store nothing on our servers.</p></div>
-      <a class="st-cta" style="margin-top:0" href="mailto:support@articardd.com?subject=Get%20my%20articardd.%20card">Get My Card</a>
+      <a class="st-cta" style="margin-top:0" href="mailto:support@artibytte.com" onclick="this.href=supportMail('card')">Get My Card</a>
       <div class="st-sub" style="text-align:center;margin-top:12px">₱4,990 per year · Non-negotiable</div>`),
     /* 14 CLOSING */
     L('A Closing Word', `<div class="st-lab">A Closing Word</div><h2 class="st-h" style="margin-bottom:18px">You Have Earned This.</h2>${rule()}
@@ -12365,7 +12411,7 @@ function stBuild() {
     /* 15 COLOPHON */
     D(`<div class="st-brand" style="font-size:36px">articardd.</div><div class="st-drule"></div>
        <p class="st-meta">Philippines · 2026<br>New colorways every quarter · Active licenses only<br><br>You tap once.<br>articardd remembers everything.</p>
-       <a href="mailto:support@articardd.com?subject=Get%20my%20own%20articardd.%20ID" style="margin-top:22px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#E8CC7A;text-decoration:none;border-bottom:1px solid rgba(232,204,122,.35);padding-bottom:3px">Get your own card ↗</a>`)
+       <a href="mailto:support@artibytte.com" onclick="this.href=supportMail('id')" style="margin-top:22px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#E8CC7A;text-decoration:none;border-bottom:1px solid rgba(232,204,122,.35);padding-bottom:3px">Get your own card ↗</a>`)
   ];
 }
 function openStory() {
