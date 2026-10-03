@@ -11389,7 +11389,7 @@ window.forgetDevice = function () { try { localStorage.removeItem('athna-owner-r
   const SESSION = 'athna-owner-session';
   const RE_CARD  = /^C-[A-Z0-9]{4,10}$/;
   const RE_OWNER = /^AK-[A-Z0-9]{8,}$/;
-  let mode = 'card', busy = false, otpEmail = null;
+  let mode = 'card', busy = false;
 
   /* TODO: palitan ng Apps Script lookup. Ngayon format check lang. */
   async function resolveCardId(id) {
@@ -11443,13 +11443,11 @@ window.forgetDevice = function () { try { localStorage.removeItem('athna-owner-r
       inp.type = 'text'; inp.placeholder = 'C-7F82KQ';
       $('gtSwitch').textContent = "I'm the card owner →";
     } else {
-      $('gtLabel').textContent = otpEmail ? 'Enter the 6-digit code' : 'Enter your owner email';
-      inp.type = otpEmail ? 'text' : 'email';
-      inp.placeholder = otpEmail ? '123456' : 'you@email.com';
-      inp.setAttribute('inputmode', otpEmail ? 'numeric' : 'email');
-      inp.setAttribute('autocapitalize', 'none');
-      $('gtBtn').textContent = otpEmail ? 'VERIFY' : 'SEND CODE';
-      $('gtSwitch').textContent = '';
+      $('gtLabel').textContent = 'Enter your Private Key';
+      inp.type = 'password'; inp.placeholder = 'AK-••••••••';
+      inp.setAttribute('inputmode', 'text');
+      $('gtBtn').textContent = 'CONTINUE';
+      $('gtSwitch').textContent = '← Back to Card ID';
     }
     inp.focus();
   }
@@ -11461,9 +11459,8 @@ window.forgetDevice = function () { try { localStorage.removeItem('athna-owner-r
 
   async function submit() {
     if (busy) return;
-    const raw = $('gtInput').value.trim();
-    let v = raw.toUpperCase();
-    if (!raw) { fail(mode === 'card' ? 'Enter your Card ID.' : (otpEmail ? 'Enter the code.' : 'Enter your email.')); return; }
+    let v = $('gtInput').value.trim().toUpperCase();
+    if (!v) { fail(mode === 'card' ? 'Enter your Card ID.' : 'Enter your Private Key.'); return; }
     busy = true; $('gtBtn').disabled = true;
     try {
       if (mode === 'card') {
@@ -11471,18 +11468,8 @@ window.forgetDevice = function () { try { localStorage.removeItem('athna-owner-r
         if (!(await resolveCardId(v))) { fail('Card not found. Check the ID and try again.'); return; }
         history.replaceState(null, '', '?c=' + encodeURIComponent(v));
         setPublic(true);
-      } else if (!otpEmail) {
-        await AC.auth.sendOtp(raw);
-        otpEmail = raw.toLowerCase();
-        setMode('owner');
-        $('gtErr').textContent = 'Code sent. Check your email.';
-        return;
       } else {
-        await AC.auth.verifyOtp(otpEmail, raw);
-        const oc = await apiPost('ownerGetCard', {});
-        window.__OWNER_CARD__ = oc;
-        applyRemoteCard(oc, true);
-        otpEmail = null;
+        if (!(await verifyOwnerKey(v))) { fail('That key is not valid.'); return; }
         sessionStorage.setItem(SESSION, '1');
         /* === START: RM OPEN AFTER LOGIN === */
         if (window.__OPEN_RM__) { window.__OPEN_RM__ = false; setTimeout(openRequestManager, 700); }
@@ -11498,8 +11485,7 @@ window.forgetDevice = function () { try { localStorage.removeItem('athna-owner-r
 
   $('gtForm').addEventListener('submit', e => { e.preventDefault(); submit(); });
   $('gtInput').addEventListener('input', e => {
-    if (mode === 'card') e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '');
-    else if (otpEmail) e.target.value = e.target.value.replace(/\D/g, '').slice(0, 8);
+    e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '');
     e.target.classList.remove('err'); $('gtErr').textContent = '';
   });
   /* === START: OWNER-KEY-ONLY GATE === */
