@@ -984,6 +984,44 @@ body.public-mode .back-mascot-btn{display:none !important;}
   .st-dk p{margin:0 0 8px;font-size:13px;line-height:1.75;color:rgba(232,204,122,.65);}
   .st-dk p:last-child{margin:0;}
   .st-dk .st-lab{color:rgba(232,204,122,.5);}
+/* === START: STORY VISUALS CSS === */
+.st-vis{margin:22px 0;opacity:0;transform:translateY(14px);}
+.st-page.d .st-vis{width:100%;max-width:340px;margin-left:auto;margin-right:auto;}
+.st-page.on .st-vis{animation:stVisIn .9s cubic-bezier(.16,1,.3,1) .1s forwards;}
+@keyframes stVisIn{to{opacity:1;transform:none;}}
+.st-fig{background:rgba(255,255,255,.72);border-radius:22px;padding:20px 16px 14px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 12px 32px rgba(0,0,0,.05);}
+.st-fig.dk{background:#2F343A;box-shadow:0 14px 36px rgba(0,0,0,.22);}
+.st-fig svg{display:block;width:100%;height:auto;overflow:visible;}
+.st-cap{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(60,60,67,.5);text-align:center;margin-top:14px;}
+.st-fig.dk .st-cap{color:rgba(232,204,122,.6);}
+.st-trio{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.st-tile{background:rgba(255,255,255,.72);border-radius:18px;padding:16px 8px 14px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.04);}
+.st-tile svg{width:36px;height:36px;margin-bottom:8px;}
+.st-tile b{display:block;font-size:12.5px;color:#1c1c1e;}
+.st-tile span{display:block;font-size:10.5px;line-height:1.4;color:rgba(60,60,67,.6);margin-top:3px;}
+.st-sw{display:flex;justify-content:center;gap:16px;margin-top:18px;}
+.st-sw i{display:block;width:22px;height:22px;border-radius:50%;margin:0 auto 6px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35),0 3px 8px rgba(0,0,0,.18);}
+.st-sw span{display:block;text-align:center;font-size:9.5px;font-weight:600;letter-spacing:.04em;color:rgba(60,60,67,.6);}
+.st-ring{transform-box:fill-box;transform-origin:center;opacity:0;}
+.st-page.on .st-ring{animation:stRing 3.2s ease-out infinite;}
+@keyframes stRing{0%{transform:scale(.5);opacity:.75;}100%{transform:scale(1.7);opacity:0;}}
+.st-draw{stroke-dasharray:var(--l,300);stroke-dashoffset:var(--l,300);}
+.st-page.on .st-draw{animation:stDraw 1.5s .35s ease forwards;}
+@keyframes stDraw{to{stroke-dashoffset:0;}}
+.st-grow{transform-box:fill-box;transform-origin:left center;transform:scaleX(0);}
+.st-page.on .st-grow{animation:stGrow 1.4s .5s cubic-bezier(.4,0,.2,1) forwards;}
+@keyframes stGrow{to{transform:scaleX(1);}}
+.st-flow{stroke-dasharray:3 5;}
+.st-page.on .st-flow{animation:stFlow 1.4s linear infinite;}
+@keyframes stFlow{to{stroke-dashoffset:-16;}}
+@media (prefers-reduced-motion:reduce){
+  .st-vis{opacity:1!important;transform:none!important;animation:none!important;}
+  .st-draw{stroke-dashoffset:0!important;animation:none!important;}
+  .st-grow{transform:none!important;animation:none!important;}
+  .st-ring,.st-flow{animation:none!important;}
+  .st-ring{opacity:.25;}
+}
+/* === END: STORY VISUALS CSS === */
   @media(max-width:420px){.st-pgrid{grid-template-columns:1fr;}.st-pc+.st-pc{border-left:none;border-top:1px solid rgba(0,0,0,.08);}}
   .sc-card{position:relative;width:340px;height:580px;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .9s cubic-bezier(.23,1,.32,1);cursor:pointer;}
   .sc-card.flipped{transform:rotateY(180deg);}
@@ -11982,6 +12020,210 @@ function closeSampleCard() {
 /* === END: SAMPLE CARD VIEWER === */
 /* === START: STORY VIEWER (public, articardd origin document) === */
 var STORY = null, stCur = 0, stX = 0, stY = 0;
+/* === START: STORY VISUAL HELPERS === */
+const ST_FONT = "-apple-system,'SF Pro Text','Helvetica Neue',sans-serif";
+
+/* Ch I — cylinder seal rolling across clay */
+function stVisSeal() {
+  return `<div class="st-vis"><div class="st-fig">
+  <svg viewBox="0 0 320 170" role="img" aria-label="A cylinder seal rolling across wet clay and leaving its impression">
+    <defs>
+      <pattern id="stSealPat" width="26" height="40" patternUnits="userSpaceOnUse">
+        <path d="M13 6 L20 14 L13 22 L6 14 Z" fill="none" stroke="#1c1c1e" stroke-width="1.2" opacity=".55"/>
+        <circle cx="13" cy="14" r="1.6" fill="#1c1c1e" opacity=".55"/>
+        <path d="M4 32 H22" stroke="#1c1c1e" stroke-width="1.2" opacity=".4" stroke-linecap="round"/>
+      </pattern>
+      <linearGradient id="stClay" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E0D5BF"/><stop offset="1" stop-color="#CBBFA6"/></linearGradient>
+      <linearGradient id="stCyl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1c1c1e"/><stop offset=".45" stop-color="#4b4b50"/><stop offset="1" stop-color="#1c1c1e"/></linearGradient>
+    </defs>
+    <rect x="14" y="98" width="292" height="58" rx="12" fill="url(#stClay)"/>
+    <rect class="st-grow" x="118" y="106" width="172" height="40" rx="6" fill="url(#stSealPat)"/>
+    <path d="M70 26 Q130 -2 196 22" fill="none" stroke="#C9A227" stroke-width="1.4" stroke-dasharray="3 5" stroke-linecap="round"/>
+    <path d="M190 15 L197 22 L188 26" fill="none" stroke="#C9A227" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="78" y="30" width="12" height="14" rx="3" fill="#1c1c1e"/>
+    <rect x="62" y="42" width="44" height="66" rx="11" fill="url(#stCyl)"/>
+    <rect x="62" y="54" width="44" height="3" fill="#E8CC7A" opacity=".85"/>
+    <rect x="62" y="92" width="44" height="3" fill="#E8CC7A" opacity=".85"/>
+    <path d="M70 66 L84 76 L98 66 M70 80 L84 90 L98 80" fill="none" stroke="#E8CC7A" stroke-width="1" opacity=".5"/>
+  </svg>
+  <div class="st-cap">3000 BC · One press. One identity.</div></div></div>`;
+}
+
+/* Ch II — five-thousand-year ribbon */
+function stVisEvolve() {
+  const P = [['Seal','3000 BC'],['Chop','500 BC'],['Visiting','1700s'],['Business','1800s'],['NFC','2000s'],['articardd','2026']];
+  const x = i => 28 + i * 52.8;
+  const nodes = P.map((p, i) => {
+    const last = i === P.length - 1;
+    return `${last ? `<circle class="st-ring" cx="${x(i)}" cy="44" r="8" fill="none" stroke="#C9A227" stroke-width="1.2"/>` : ''}
+    <circle cx="${x(i)}" cy="44" r="${last ? 8 : 5}" fill="${last ? '#E8CC7A' : '#ECE4D6'}" stroke="${last ? '#C9A227' : 'rgba(28,28,30,.4)'}" stroke-width="1.4"/>
+    <text x="${x(i)}" y="24" text-anchor="middle" font-family="${ST_FONT}" font-size="8.5" font-weight="${last ? 800 : 600}" fill="#1c1c1e" opacity="${last ? 1 : .7}">${p[0]}</text>
+    <text x="${x(i)}" y="72" text-anchor="middle" font-family="${ST_FONT}" font-size="8" font-weight="600" letter-spacing=".5" fill="#1c1c1e" opacity=".45">${p[1]}</text>`;
+  }).join('');
+  return `<div class="st-vis"><div class="st-fig">
+  <svg viewBox="0 0 320 86" role="img" aria-label="Timeline from the cylinder seal to articardd">
+    <line x1="28" y1="44" x2="292" y2="44" stroke="#1c1c1e" stroke-opacity=".14" stroke-width="2" stroke-linecap="round"/>
+    <line class="st-draw" style="--l:264" x1="28" y1="44" x2="292" y2="44" stroke="#C9A227" stroke-width="2" stroke-linecap="round"/>
+    ${nodes}
+  </svg>
+  <div class="st-cap">Five thousand years · One gesture</div></div></div>`;
+}
+
+/* Gap page (dark) — transfer solved, the after unsolved */
+function stVisGap() {
+  return `<div class="st-vis"><div class="st-fig dk">
+  <svg viewBox="0 0 320 130" role="img" aria-label="Transfer was solved. What happens after was never solved.">
+    <circle cx="64" cy="54" r="30" fill="#E8CC7A"/>
+    <path d="M50 54 L60 64 L79 44" fill="none" stroke="#1c1c1e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <line class="st-flow" x1="102" y1="54" x2="216" y2="54" stroke="#E8CC7A" stroke-width="1.4" stroke-opacity=".7"/>
+    <circle class="st-ring" cx="256" cy="54" r="30" fill="none" stroke="#E8CC7A" stroke-width="1"/>
+    <circle cx="256" cy="54" r="30" fill="none" stroke="#E8CC7A" stroke-width="1.4" stroke-dasharray="4 5" opacity=".75"/>
+    <text x="256" y="65" text-anchor="middle" font-family="${ST_FONT}" font-size="30" font-weight="300" fill="#E8CC7A">?</text>
+    <text x="64" y="108" text-anchor="middle" font-family="${ST_FONT}" font-size="8.5" font-weight="700" letter-spacing="2" fill="#F3EDE4">TRANSFER</text>
+    <text x="64" y="122" text-anchor="middle" font-family="${ST_FONT}" font-size="9" font-style="italic" fill="#E8CC7A" opacity=".7">Solved</text>
+    <text x="256" y="108" text-anchor="middle" font-family="${ST_FONT}" font-size="8.5" font-weight="700" letter-spacing="2" fill="#F3EDE4">THE AFTER</text>
+    <text x="256" y="122" text-anchor="middle" font-family="${ST_FONT}" font-size="9" font-style="italic" fill="#E8CC7A" opacity=".7">Unsolved</text>
+  </svg></div></div>`;
+}
+
+/* Ch III — three failures of every card before */
+function stVisBroken() {
+  const S = 'fill="none" stroke="#1c1c1e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"';
+  const tile = (icon, t, s) => `<div class="st-tile"><svg viewBox="0 0 36 36" aria-hidden="true">${icon}</svg><b>${t}</b><span>${s}</span></div>`;
+  return `<div class="st-vis"><div class="st-trio">
+  ${tile(`<rect x="11" y="5" width="14" height="11" rx="2" ${S} opacity=".45"/><rect x="5" y="15" width="26" height="15" rx="3" ${S}/><path d="M14 23 H22" ${S}/>`, 'Passive', 'Waits in a drawer')}
+  ${tile(`<path d="M5 13 H28 M23 8 L28 13 L23 18" ${S}/><path d="M31 25 H11 M16 20 L11 25 L16 30" ${S} stroke-dasharray="2 3" opacity=".35"/>`, 'One-way', 'Gives, gets nothing')}
+  ${tile(`<circle cx="18" cy="18" r="12" ${S} stroke-dasharray="3 4" opacity=".5"/><path d="M18 6 A12 12 0 0 1 30 18" ${S}/><circle cx="18" cy="18" r="2" fill="#1c1c1e" opacity=".3"/>`, 'No memory', 'Vanishes into the void')}
+  </div></div>`;
+}
+
+/* Ch IV — Carry → Transfer → Persist */
+function stVisTrio() {
+  const S = 'fill="none" stroke="#1c1c1e" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"';
+  const node = (cx, no, ttl, sub, icon) => `
+    <circle cx="${cx}" cy="50" r="28" fill="#fff" stroke="rgba(0,0,0,.1)"/>
+    <g transform="translate(${cx} 50)">${icon}</g>
+    <text x="${cx}" y="12" text-anchor="middle" font-family="${ST_FONT}" font-size="8.5" font-weight="700" letter-spacing="2" fill="#9B7A3E">${no}</text>
+    <text x="${cx}" y="98" text-anchor="middle" font-family="${ST_FONT}" font-size="12.5" font-weight="700" fill="#1c1c1e">${ttl}</text>
+    <text x="${cx}" y="112" text-anchor="middle" font-family="${ST_FONT}" font-size="9" fill="rgba(60,60,67,.6)">${sub}</text>`;
+  return `<div class="st-vis"><div class="st-fig">
+  <svg viewBox="0 0 320 122" role="img" aria-label="Carry, transfer, persist: three needs answered by one system">
+    <line x1="84" y1="50" x2="236" y2="50" stroke="#1c1c1e" stroke-opacity=".12" stroke-width="2"/>
+    <line class="st-draw" style="--l:152" x1="84" y1="50" x2="236" y2="50" stroke="#C9A227" stroke-width="2" stroke-linecap="round"/>
+    ${node(56, '01', 'Carry', 'A physical card', `<rect x="-11" y="-8" width="22" height="16" rx="3" ${S}/><path d="M-6 0 H4" ${S}/>`)}
+    ${node(160, '02', 'Transfer', 'A mutual exchange', `<path d="M-10 -4 H8 M4 -8 L8 -4 L4 0 M10 5 H-8 M-4 1 L-8 5 L-4 9" ${S}/>`)}
+    ${node(264, '03', 'Persist', 'Intelligence that stays', `<path d="M8 -4 A9 9 0 1 0 8 4" ${S}/><path d="M11 -9 L8 -3 L2 -5" ${S}/>`)}
+  </svg>
+  <div class="st-cap">One system</div></div></div>`;
+}
+
+/* Ch IV — the mutual exchange */
+function stVisExchange() {
+  const card = x => `<g transform="translate(${x} 0)">
+    <rect x="22" y="14" width="82" height="124" rx="13" fill="#3a4047" stroke="#E8CC7A" stroke-opacity=".3"/>
+    <rect x="28" y="20" width="70" height="18" rx="9" fill="#F3EDE4"/>
+    <circle cx="40" cy="29" r="6" fill="#8E8E93"/>
+    <rect x="50" y="26" width="40" height="3" rx="1.5" fill="#1c1c1e" opacity=".55"/>
+    <rect x="50" y="31.5" width="26" height="2.5" rx="1.2" fill="#1c1c1e" opacity=".3"/>
+    <circle cx="63" cy="78" r="15" fill="none" stroke="#cac7c0" stroke-width="5"/>
+    <rect x="60.5" y="93" width="5" height="26" rx="2" fill="#cac7c0"/>
+  </g>`;
+  return `<div class="st-vis v2"><div class="st-fig dk">
+  <svg viewBox="0 0 320 152" role="img" aria-label="Two cards exchanging identities with one tap">
+    ${card(0)}${card(194)}
+    <line class="st-flow" x1="114" y1="66" x2="204" y2="66" stroke="#E8CC7A" stroke-width="1.6"/>
+    <path d="M198 60 L206 66 L198 72" fill="none" stroke="#E8CC7A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <line class="st-flow" x1="206" y1="90" x2="116" y2="90" stroke="#E8CC7A" stroke-width="1.6"/>
+    <path d="M122 84 L114 90 L122 96" fill="none" stroke="#E8CC7A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle class="st-ring" cx="160" cy="78" r="9" fill="none" stroke="#E8CC7A" stroke-width="1.2"/>
+    <circle cx="160" cy="78" r="3.5" fill="#E8CC7A"/>
+  </svg>
+  <div class="st-cap">One tap · Two identities</div></div></div>`;
+}
+
+/* Founding line (dark) — the single tap */
+function stVisTap() {
+  const ring = d => `<circle class="st-ring" style="animation-delay:${d}s" cx="80" cy="80" r="34" fill="none" stroke="#E8CC7A" stroke-width="1"/>`;
+  return `<div class="st-vis" style="width:150px;margin:0 auto 22px;">
+  <svg viewBox="0 0 160 160" style="display:block;width:100%;overflow:visible" role="img" aria-label="A single tap radiating outward">
+    ${ring(0)}${ring(1.06)}${ring(2.12)}
+    <rect x="62" y="52" width="36" height="56" rx="7" fill="#2F343A" stroke="#E8CC7A" stroke-width="1.4"/>
+    <rect x="66" y="56" width="28" height="8" rx="4" fill="#F3EDE4"/>
+    <circle cx="80" cy="84" r="8" fill="none" stroke="#E8CC7A" stroke-width="2.2"/>
+    <rect x="78.5" y="92" width="3" height="10" rx="1.2" fill="#E8CC7A"/>
+  </svg></div>`;
+}
+
+/* Pricing — card render + colorways */
+function stVisCardMock() {
+  const sw = [['Obsidian','#2F343A'],['Sapphire','#1F3A6E'],['Ruby','#7A1F2E'],['Platinum','#B8B6B0']];
+  return `<div class="st-vis"><div style="display:flex;flex-direction:column;align-items:center;">
+  <div style="width:150px;filter:drop-shadow(0 18px 28px rgba(0,0,0,.28));">
+    <svg viewBox="0 0 340 580" style="display:block;width:100%;height:auto" role="img" aria-label="articardd premium digital card">
+      <rect width="340" height="580" rx="24" fill="#2F343A"/>
+      <rect x="40" y="0.5" width="260" height="1" fill="#fff" opacity=".5"/>
+      <rect x="4.35" y="3.44" width="332" height="71.3" rx="24" fill="#F3EDE4"/>
+      <circle cx="40" cy="39" r="28" fill="#8E8E93"/>
+      <rect x="84" y="28" width="130" height="9" rx="4.5" fill="#1c1c1e" opacity=".7"/>
+      <rect x="84" y="46" width="90" height="6" rx="3" fill="#1c1c1e" opacity=".3"/>
+      <circle cx="170" cy="190" r="86" fill="none" stroke="#d9d7d2" stroke-width="16" opacity=".9"/>
+      <rect x="162" y="276" width="16" height="140" rx="4" fill="#cac7c0" opacity=".9"/>
+      <rect x="178" y="350" width="34" height="12" rx="3" fill="#cac7c0" opacity=".9"/>
+      <rect x="178" y="380" width="24" height="12" rx="3" fill="#cac7c0" opacity=".9"/>
+      <rect x="27.5" y="502.6" width="144.9" height="53.1" rx="26.5" fill="#F3EDE4"/>
+      <rect x="235.2" y="502.6" width="77.3" height="53.1" rx="26.5" fill="#F3EDE4"/>
+      <text x="170" y="572" text-anchor="middle" font-family="${ST_FONT}" font-size="8.5" letter-spacing="1.1" fill="#d0d0d0"><tspan font-weight="700" fill="#fff">articardd.</tspan><tspan dx="4" font-weight="300" opacity=".75">connect differently.</tspan></text>
+    </svg>
+  </div>
+  <div class="st-sw">${sw.map(s => `<div><i style="background:${s[1]}"></i><span>${s[0]}</span></div>`).join('')}</div>
+  </div></div>`;
+}
+
+/* What You Receive — hub and spokes */
+function stVisHub() {
+  const N = [['Gmail',160,37],['Calendar',254,81],['Sheets',254,169],['Siri',160,213],['Booking',66,169],['Note OS',66,81]];
+  const lines = N.map(n => `<line class="st-flow" x1="160" y1="125" x2="${n[1]}" y2="${n[2]}" stroke="#C9A227" stroke-width="1.2"/>`).join('');
+  const pills = N.map(n => `<rect x="${n[1] - 32}" y="${n[2] - 13}" width="64" height="26" rx="13" fill="#fff" stroke="rgba(0,0,0,.1)"/>
+    <text x="${n[1]}" y="${n[2] + 3.5}" text-anchor="middle" font-family="${ST_FONT}" font-size="9.5" font-weight="600" fill="#1c1c1e">${n[0]}</text>`).join('');
+  return `<div class="st-vis"><div class="st-fig">
+  <svg viewBox="0 0 320 250" role="img" aria-label="articardd connected to Gmail, Calendar, Sheets, Siri, Booking and Note OS">
+    ${lines}
+    <circle class="st-ring" cx="160" cy="125" r="30" fill="none" stroke="#C9A227" stroke-width="1.2"/>
+    <circle cx="160" cy="125" r="30" fill="#ECE4D6"/>
+    ${pills}
+    <rect x="142" y="97" width="36" height="56" rx="7" fill="#2F343A" stroke="#E8CC7A" stroke-width="1.2"/>
+    <rect x="146" y="101" width="28" height="8" rx="4" fill="#F3EDE4"/>
+    <circle cx="160" cy="128" r="8" fill="none" stroke="#E8CC7A" stroke-width="2.2"/>
+    <rect x="158.5" y="136" width="3" height="10" rx="1.2" fill="#E8CC7A"/>
+  </svg>
+  <div class="st-cap">Runs inside the Google ecosystem you already own</div></div></div>`;
+}
+
+/* Closing — whose servers hold your data */
+function stVisOwnership() {
+  const T = (x, y, s, w, f, o, extra) => `<text x="${x}" y="${y}" font-family="${ST_FONT}" font-size="${s}" font-weight="${w}" fill="${f}" opacity="${o}" ${extra || ''}>`;
+  return `<div class="st-vis"><div class="st-fig">
+  <svg viewBox="0 0 320 196" role="img" aria-label="Typical platforms keep your data on their servers. articardd keeps it in your own Google account.">
+    ${T(16, 18, 8.5, 700, '#1c1c1e', .5, 'letter-spacing="2"')}TYPICAL PLATFORMS</text>
+    <circle cx="40" cy="54" r="14" fill="#8E8E93"/>
+    <line x1="60" y1="54" x2="196" y2="54" stroke="#1c1c1e" stroke-opacity=".35" stroke-width="1.4" stroke-dasharray="2 5" stroke-linecap="round"/>
+    <rect x="204" y="36" width="68" height="10" rx="3" fill="#8E8E93" opacity=".6"/>
+    <rect x="204" y="50" width="68" height="10" rx="3" fill="#8E8E93" opacity=".6"/>
+    <rect x="204" y="64" width="68" height="10" rx="3" fill="#8E8E93" opacity=".6"/>
+    ${T(238, 90, 9, 600, '#1c1c1e', .5, 'text-anchor="middle"')}Their servers</text>
+    <line x1="16" y1="104" x2="304" y2="104" stroke="#1c1c1e" stroke-opacity=".08"/>
+    ${T(16, 124, 8.5, 700, '#9B7A3E', 1, 'letter-spacing="2"')}ARTICARDD.</text>
+    <circle cx="40" cy="154" r="14" fill="#1c1c1e"/>
+    <line class="st-draw" style="--l:136" x1="60" y1="154" x2="196" y2="154" stroke="#C9A227" stroke-width="2" stroke-linecap="round"/>
+    <rect x="200" y="140" width="76" height="28" rx="14" fill="#E8CC7A"/>
+    ${T(238, 158, 9.5, 800, '#1c1c1e', 1, 'text-anchor="middle"')}Your Google</text>
+    <path d="M238 172 Q238 186 150 186 Q40 186 40 172" fill="none" stroke="#C9A227" stroke-width="1.3" stroke-linecap="round" opacity=".7"/>
+    <path d="M36 178 L40 171 L45 177" fill="none" stroke="#C9A227" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>
+  </svg>
+  <div class="st-cap">Your data is yours. Entirely.</div></div></div>`;
+}
+/* === END: STORY VISUAL HELPERS === */
+
 function stBuild() {
   const D = h => ({ d: 1, h: h });
   const L = (r, h) => ({ d: 0, h: `${stHead(r)}${h}` });
@@ -12000,10 +12242,10 @@ function stBuild() {
   return [
     /* 0 COVER */
     D(`<div class="st-eyebrow" style="position:absolute;top:max(30px,env(safe-area-inset-top));left:0;right:0;text-align:center;opacity:.6">Origin Document · First Edition · 2026</div>
-       ${sigil(60)}<h1 class="st-brand">articardd.</h1><p class="st-tag">connect differently.</p><div class="st-drule"></div>
+       <h1 class="st-brand">articardd.</h1><p class="st-tag">connect differently.</p><div class="st-drule"></div>
        <p class="st-dq">Before there was a card,<br>there was a question.</p>
        <div class="st-hint">Swipe to open ›</div>
-       <p class="st-meta" style="margin-top:34px;font-size:9px;opacity:.7">Philippines · 2026<br>7,000 articardd Digital Cards</p>`),
+       <p class="st-meta" style="margin-top:34px;font-size:9px;opacity:.7">Philippines · 2026</p>`),
     /* 1 FOUNDER */
     L("Founder's Note", `<div class="st-lab">Founder's Note</div><h2 class="st-h" style="margin-bottom:18px">${founder}</h2>${rule()}
       ${p('A life truly lived is not one sheltered within the gentle illusions of safety, nor confined to the predictable rhythms of comfort and certainty. It does not unfold in the quiet corners of convenience. Rather, it reveals itself in the untamed vastness beyond the familiar—in the wilderness of uncertainty where courage is demanded, not suggested.', 'dc')}
@@ -12043,10 +12285,10 @@ function stBuild() {
       ${p('Imagine a merchant in ancient Mesopotamia — 3,000 years before the first telephone. He walks into a foreign city. He knows no one. He needs to be <strong>remembered.</strong>', 'dc')}
       ${p('So he carries a clay cylinder seal — a small carved stone that when rolled across wet clay leaves his unique mark. His name. His title. His proof.')}
       ${q("One press. Complete identity transfer.<br>The world's first portable credential.<br>Not a card. Not an app. <strong>A mark.</strong>")}
-      ${p('This was not primitive technology. This was <strong>architecture</strong> — a system designed to make one person unforgettable in a world of strangers.')}`),
+      ${stVisSeal()}${p('This was not primitive technology. This was <strong>architecture</strong> — a system designed to make one person unforgettable in a world of strangers.')}`),
     /* 4-5 CH II */
     open('II', 'Chapter the Second', 'Five Thousand Years<br>of the Same Gesture'),
-    L('Chapter II · The Long Evolution', `<p class="st-i" style="margin-bottom:12px">The tools changed every era. The act — <em>never did.</em></p>
+    L('Chapter II · The Long Evolution', `<p class="st-i" style="margin-bottom:12px">The tools changed every era. The act — <em>never did.</em></p>${stVisEvolve()}
       ${tl('3000 BC', 'Clay Cylinder Seal — Mesopotamia', "One press. Complete identity transfer. The world's first portable credential.")}
       ${tl('500 BC', 'Jade Chops & Signet Rings — China & Rome', 'Authority made wearable. Identity fused with material value for the first time.')}
       ${tl('1700s', 'The Visiting Card — European Aristocracy', 'Status communicated through paper quality, typography, and restraint.')}
@@ -12054,12 +12296,12 @@ function stBuild() {
       ${tl('2000s', 'NFC Tap-to-Save — The First Living Card', "One tap. Instant transfer. But it still couldn't think. It could not persist.")}
       ${tl('2026', 'articardd — Philippines', 'The last identity system a professional will ever need.', 1)}`),
     /* 6 GAP */
-    D(`<p class="st-pre">The gap that articardd was built to close —</p>
+    D(`<p class="st-pre">The gap that articardd was built to close —</p>${stVisGap()}
        <p class="st-dq">"Every generation solved the problem of <em>transfer.</em><br><br>None of them solved the problem of <strong>what happens next."</strong></p>`),
     /* 7-8 CH III */
     open('III', 'Chapter the Third', 'The Broken Promise'),
     L('Chapter III · The Broken Promise', `<h2 class="st-h">The Card Was Never the Problem.<br>The After Was.</h2>
-      ${p('In 5,000 years of identity technology, we never solved the one thing that actually generates business: <strong>what happens after the exchange.</strong>')}
+      ${p('In 5,000 years of identity technology, we never solved the one thing that actually generates business: <strong>what happens after the exchange.</strong>')}${stVisBroken()}
       <div style="border-top:1px solid rgba(0,0,0,.1);margin-top:14px">
       ${li('I', 'Passive Identity', 'Every card waited for a human to act. It had no agency. It could not reach out. It could not remind. It sat in a drawer and hoped.')}
       ${li('II', 'One-Way Transfer', 'You gave your card. They received it. You received nothing. They remained a stranger in your world forever.')}
@@ -12068,36 +12310,29 @@ function stBuild() {
     open('IV', 'Chapter the Fourth', 'The Answer'),
     L('Chapter IV · The Answer', `<h2 class="st-h">The Card That Works</h2>
       <p class="st-i">Not an upgrade. The replacement of everything that came before it.</p>
-      ${p('For the first time in 5,000 years — all three ancient needs answered by a single system.')}
-      ${need('Need 01 · Carry', 'A Numbered Physical Collectible', 'A premium, serialized card. Engraved with your number. Unique in the world. Every edition — Obsidian, Sapphire, Ruby — is a statement before a word is spoken.')}
+      ${p('For the first time in 5,000 years — all three ancient needs answered by a single system.')}${stVisTrio()}
+      ${need('Need 01 · Carry', 'A Premium Physical Card', 'A premium card, made to be carried. Every colorway — Obsidian, Sapphire, Ruby — is a statement before a word is spoken.')}
       ${need('Need 02 · Transfer', 'The Unlock — A Mutual Exchange', 'When someone taps your articardd card, they exchange their contact to unlock yours. One tap. Two identities transferred. The system acts — automatically, immediately.')}
-      ${need('Need 03 · Persist', 'The Card — Intelligence That Never Sleeps', 'Thank-you emails fire automatically. Follow-ups at 24 hours. Leads scored and ranked. Weekly report every Monday. Your CRM builds itself. You show up to close.')}`),
+      ${stVisExchange()}${need('Need 03 · Persist', 'The Card — Intelligence That Never Sleeps', 'Thank-you emails fire automatically. Follow-ups at 24 hours. Leads scored and ranked. Weekly report every Monday. Your CRM builds itself. You show up to close.')}`),
     /* 11 FOUNDING LINE */
-    D(`<p class="st-pre">The ancient merchant pressed his seal and hoped to be remembered.<br>The 20th-century professional printed ten thousand cards and prayed one would stick.</p>
+    D(`${stVisTap()}<p class="st-pre">The ancient merchant pressed his seal and hoped to be remembered.<br>The 20th-century professional printed ten thousand cards and prayed one would stick.</p>
        <div class="st-drule"></div><p class="st-big">You Tap Once.</p><p class="st-bigsub">articardd Remembers Everything.</p>`),
-    /* 12 PRICING */
-    L('Claim Your Number', `<h2 class="st-h" style="margin-bottom:5px">Claim Your Number</h2><p class="st-i">7,000 cards. Seven editions. No reprints.</p>
+       /* 12 PRICING */
+    L('Your License', `<h2 class="st-h" style="margin-bottom:5px">Your Annual License</h2><p class="st-i">One plan. One price. No tiers.</p>${stVisCardMock()}
       <div class="st-price">
-        <div class="st-pgrid">
-          <div class="st-pc"><div class="st-tag2">✦ Hero Offer</div><div class="st-ct">Annual Plan</div><div class="st-amt">₱9,980</div><div class="st-cad">Per Year</div><p class="st-note">≈ ₱832/month effective rate.<br>Best value for the active professional.</p></div>
-          <div class="st-pc"><div class="st-tag2">&nbsp;</div><div class="st-ct">Lifetime Plan</div><div class="st-amt">₱55,000</div><div class="st-cad">One-Time · Forever</div><p class="st-note">Pay once. Own it permanently.<br>Not for everyone — that's the point.</p></div>
-        </div>
         <div class="st-eb">
-          <div class="st-ct" style="color:#E8CC7A">Early Bird — First 100 Only</div>
-          <p class="st-note" style="margin-bottom:14px">70% off, first year. Controlled. Premium. Protected.</p>
-          <div class="st-pgrid" style="border:none">
-            <div class="st-pc" style="padding:0 12px 0 0"><div class="st-tag2" style="color:rgba(232,204,122,.5)">Early Bird Annual</div><div class="st-amt">₱2,980</div><div class="st-orig">Regular: ₱9,980/yr</div><p class="st-note">Renews at ₱9,980.</p></div>
-            <div class="st-pc" style="padding:0 0 0 12px;border-color:rgba(232,204,122,.18)"><div class="st-tag2" style="color:rgba(232,204,122,.5)">Early Bird Lifetime</div><div class="st-amt">₱16,500</div><div class="st-orig">Regular: ₱55,000</div><p class="st-note">Limited slots. Forever.</p></div>
-          </div>
-          <div class="st-ebf">First 100 Founding Users only · Non-transferable</div>
+          <div class="st-tag2" style="color:rgba(232,204,122,.5)">Annual License</div>
+          <div class="st-amt">₱4,990</div>
+          <div class="st-cad" style="color:rgba(232,204,122,.5)">Per Year</div>
+          <p class="st-note">≈ ₱416/month effective rate.<br>Fixed price. Non-negotiable.</p>
         </div>
-        <div class="st-scar"><b>7,000</b><div><div class="st-tag2" style="margin-bottom:4px">Total Cap · Forever</div><p class="st-note">7,000 articardd digital cards.<br>New colorways every quarter for active license holders.</p></div></div>
+        <div class="st-scar"><div><div class="st-tag2" style="margin-bottom:4px">Included</div><p class="st-note">A premium articardd digital card.<br>New colorways every quarter for active license holders.</p></div></div>
       </div>
-      <a class="st-cta" href="mailto:support@articardd.com?subject=Secure%20my%20articardd.%20number">Secure Your Number</a>`),
+      <a class="st-cta" href="mailto:support@articardd.com?subject=Get%20my%20articardd.%20card">Get Your Card</a>`),
     /* 13 WHAT YOU RECEIVE */
-    L('What You Receive', `<div class="st-lab">What You Receive</div><h2 class="st-h">articardd.</h2><p class="st-i">Your number. Your data. Your system.</p>
+    L('What You Receive', `<div class="st-lab">What You Receive</div><h2 class="st-h">articardd.</h2><p class="st-i">Your card. Your data. Your system.</p>${stVisHub()}
       <div class="st-lab" style="margin-top:6px">Core System</div><div style="border-top:1px solid rgba(0,0,0,.1)">
-      ${feat('01', 'The articardd Digital Card', 'A premium numbered digital card. One tap — your full identity transfers instantly. Their contact lands in your system automatically. No manual entry. Ever.')}
+      ${feat('01', 'The articardd Digital Card', 'A premium digital card. One tap — your full identity transfers instantly. Their contact lands in your system automatically. No manual entry. Ever.')}
       ${feat('02', 'Auto Email Exchange System', 'Every tap triggers an automatic thank-you. Follow-ups fire at 24 hours. Your Gmail does the work. You show up to close.')}
       ${feat('03', 'Meeting Booking — Direct to Your Calendar', 'Anyone who taps your card can book a meeting directly into your Google Calendar. No back-and-forth. No scheduling apps. One tap, one booking.')}
       ${feat('04', 'Note OS — 25-Category Executive Vault', 'Your intelligence, organized. Deadlines, schedules, and priorities tracked categorically — with automated alerts before anything approaches. No app does this the way we do.')}
@@ -12110,14 +12345,14 @@ function stBuild() {
       <div class="st-dk"><div class="st-lab">Also Included</div>
         <p>• Free 10-minute setup + 1-hour onboarding training</p><p>• 24/7 maintenance, support & help desk</p>
         <p>• Your own AI support — active now, while the full console is built</p><p>• Your data is yours — entirely. We store nothing on our servers.</p></div>
-      <a class="st-cta" style="margin-top:0" href="mailto:support@articardd.com?subject=Claim%20my%20articardd.%20number">Claim My Number</a>
-      <div class="st-sub" style="text-align:center;margin-top:12px">Early Bird · First 100 Only · Non-transferable</div>`),
+      <a class="st-cta" style="margin-top:0" href="mailto:support@articardd.com?subject=Get%20my%20articardd.%20card">Get My Card</a>
+      <div class="st-sub" style="text-align:center;margin-top:12px">₱4,990 per year · Non-negotiable</div>`),
     /* 14 CLOSING */
     L('A Closing Word', `<div class="st-lab">A Closing Word</div><h2 class="st-h" style="margin-bottom:18px">You Have Earned This.</h2>${rule()}
       ${p('Yes — it costs more than you expected. We will not apologize for that. But we will ask you to weigh it honestly against what you have already lost: the client who never followed up, the contact buried in a drawer, the conversation that simply… disappeared. That cost was silent. This one is not.', 'dc')}
       ${p('And here is what most platforms will never tell you — <strong>your data is yours. Entirely.</strong> We do not hold it. We do not sell it. We do not benefit from it. Ninety-nine percent of the tools you use today store your most valuable professional relationships on servers you will never see, controlled by people you will never meet — to be leveraged in ways you will never know.')}
       ${p('articardd is built on Google\'s ecosystem — not because it is fashionable, but because it is the one infrastructure that already lives in your hands. 99.9% uptime. No exotic databases. No over-engineered architecture that collapses the moment a developer moves on. Just a system that works, quietly and completely, every single day.')}
-      ${q('While others sell features — while startups chase the AI gold rush and wrap APIs in promises — <strong>we sell results.</strong> We cut everything that does not serve you. That simplicity cost us more to build than complexity ever would have.')}
+      ${stVisOwnership()}${q('While others sell features — while startups chase the AI gold rush and wrap APIs in promises — <strong>we sell results.</strong> We cut everything that does not serve you. That simplicity cost us more to build than complexity ever would have.')}
       ${p('We are not in the business of selling technology. We are in the business of returning to you what was always yours: your time, your relationships, your reputation — running on a system that works as hard as you do.')}
       ${p('You have spent years building something worth being remembered for. You have shown up, sacrificed, navigated the uncertainty, and earned your seat at every table you now occupy.')}
       ${p('You deserve something that fits that story perfectly. Not a template. Not a subscription to a dashboard you will forget to check. Something that carries your name with the same weight you have worked to give it.')}
@@ -12125,11 +12360,11 @@ function stBuild() {
       ${p('Every person who taps your card enters a system that honours the exchange. Every contact is held. Every follow-up is made. Every introduction you gave becomes a relationship your card tends to — long after the conversation ends.')}
       ${p('That is not technology.', 'it')}${p('That is what you were always worth.', 'it')}
       ${rule('✦')}<div style="font:700 22px -apple-system,'SF Pro Display',sans-serif;margin-bottom:4px">Congratulations.</div>
-      <p class="st-i" style="margin-bottom:20px">Welcome to articardd.<br>Your number is waiting.</p>
+      <p class="st-i" style="margin-bottom:20px">Welcome to articardd.<br>Your card is waiting.</p>
       <div class="st-sig">${founder}</div><div class="st-sub">Founder · articardd · Philippines, 2026</div>`),
     /* 15 COLOPHON */
-    D(`${sigil(52)}<div class="st-brand" style="font-size:36px">articardd.</div><div class="st-drule"></div>
-       <p class="st-meta">Philippines · 2026 · 7,000 articardd Digital Cards<br>New colorways every quarter · Active licenses only<br><br>You tap once.<br>articardd remembers everything.</p>
+    D(`<div class="st-brand" style="font-size:36px">articardd.</div><div class="st-drule"></div>
+       <p class="st-meta">Philippines · 2026<br>New colorways every quarter · Active licenses only<br><br>You tap once.<br>articardd remembers everything.</p>
        <a href="mailto:support@articardd.com?subject=Get%20my%20own%20articardd.%20ID" style="margin-top:22px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#E8CC7A;text-decoration:none;border-bottom:1px solid rgba(232,204,122,.35);padding-bottom:3px">Get your own card ↗</a>`)
   ];
 }
@@ -12159,7 +12394,7 @@ function stGo(n) {
   if (n !== stCur) haptic('light');
   stCur = n;
   t.style.transform = 'translateX(-' + (n * 100) + '%)';
-  [...t.children].forEach((pg, i) => { pg.inert = i !== n; if (i === n) pg.scrollTop = 0; });
+  [...t.children].forEach((pg, i) => { pg.inert = i !== n; pg.classList.toggle('on', i === n); if (i === n) pg.scrollTop = 0; });
   document.getElementById('stCount').textContent = (n + 1) + ' / ' + STORY.length;
   document.getElementById('stPrev').disabled = n === 0;
   document.getElementById('stNext').disabled = n === STORY.length - 1;
