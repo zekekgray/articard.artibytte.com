@@ -2718,6 +2718,18 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <div class="tos-section-body"><b>Amendments</b> — Material changes require 30 days' notice via email. Continued use after the effective date constitutes acceptance.<br><br><b>Governing Law</b> — This Agreement is governed by the laws of the Republic of the Philippines; proper venue is the courts of Pasig City, Metro Manila.<br><br><b>Dispute Resolution</b> — Direct negotiation (15 days) → formal written demand (15 days) → mediation (30 days) → litigation in Pasig City courts.<br><br>This Agreement is the entire understanding between the parties. If any provision is invalid, the rest remains in effect (Severability).</div>
     </div>
 
+    <div class="tos-section">
+      <div class="tos-section-num">19</div>
+      <div class="tos-section-title">ArtiStar Rewards (Referral Program)</div>
+      <div class="tos-section-body"><b>19.1 Reward</b> — A Qualified Referral earns the referrer one (1) ₱1,000 Starbucks e-Gift Card. If that card is unavailable, ATH•NA may substitute a gift card or equivalent of the same value. The reward has no cash value and is not transferable.<br><br>
+      <b>19.2 Qualified Referral</b> — The buyer must be a new customer who has never held an articardd license, must buy the Annual License at the regular price, and must state the referrer's code or use the referrer's link <b>before paying</b>. Payment must be verified and the license activated by ATH•NA.<br><br>
+      <b>19.3 One-time</b> — One reward per buyer. Renewals do not qualify.<br><br>
+      <b>19.4 Hold period</b> — The reward is released 14 days after the buyer's license is activated. If the purchase is refunded, cancelled, or reversed within that period, the referral is void and no reward is due.<br><br>
+      <b>19.5 Not allowed</b> — Self-referrals (including the same person, email, mobile number, or business), duplicate or repeated referrals of the same buyer, fake or paid-for accounts, and unsolicited bulk messaging or misleading claims. ATH•NA may void any referral it reasonably believes breaks these rules.<br><br>
+      <b>19.6 Eligibility and delivery</b> — The referrer must hold an active license when the reward is released. The e-Gift Card is sent to the email or mobile number on the referrer's card. Rewards may be subject to applicable taxes.<br><br>
+      <b>19.7 Changes</b> — ATH•NA may change or end this program at any time. Qualified Referrals already verified before a change will still be honored. ATH•NA's decision on whether a referral qualifies is final.</div>
+    </div>
+
     <div class="tos-footer">
       By tapping I Agree, you confirm you are at least 18 years of age, have fully read and understood this Agreement, and unconditionally agree to be bound by all its terms.<br><br>
       ATH•NA Executive vCard OS · Version 3.0 · Effective May 11, 2026<br>
@@ -4495,7 +4507,7 @@ function fillConnectPreview() {
   })();
   /* === START: API CONNECTOR === */
   /* === START: API URL (new deployment) === */
-  const API_URL = 'https://script.google.com/macros/s/AKfycbxTXi6H5Sd3zwY4Yok6D2WDin5hHV6rKlkjLxZQtJh_of5plTJLZ5O3MbpBgN38dpnn/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbz98wRgx-16CeYaC0jl0N78EmFo_7ZMrBmnXwlgGBQzkq0m5LJgKWhgHX1ek77BMsvK/exec';
   /* === END: API URL (new deployment) === */
 
   async function apiPost(action, payload) {
@@ -5392,7 +5404,7 @@ function fillConnectPreview() {
   }
 
   function auInviteCode() {
-    const id = (currentEntry?.athid || '').replace(/[^A-Z0-9]/gi,'').slice(-6).toUpperCase();
+    const id = (currentEntry && currentEntry.cardId) || '';
     return id || 'OPENKEY';
   }
   function auInviteLink() {
@@ -5427,9 +5439,9 @@ function fillConnectPreview() {
         <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.45);">No friends invited yet</div>
       </div>
 
-      <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(60,60,67,0.4);margin:0 2px 8px;">Referral Rewards <span style="font-weight:400;text-transform:none;letter-spacing:0;opacity:.6;">(optional)</span></div>
+      <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(60,60,67,0.4);margin:0 2px 8px;">ArtiStar Rewards</div>
       <div style="background:rgba(181,88,58,0.07);border:1px solid rgba(181,88,58,0.16);border-radius:14px;padding:14px;">
-        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12.5px;color:#8a4a2f;line-height:1.55;">🎁 Invite 3 friends to unlock a bonus AU search boost — rewards activate automatically once they join.</div>
+        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12.5px;color:#8a4a2f;line-height:1.55;">🎁 <b>₱1,000 Starbucks e-Gift Card</b> per qualified referral. Your code: <b>${auInviteCode()}</b>. Kapag may bumili ng Annual License gamit ang link o code mo at na-verify ang payment, sa iyo ang e-Gift Card. <a onclick="openRewardTerms()" style="font-weight:700;text-decoration:underline;cursor:pointer;">See terms</a></div>
       </div>
     `);
   }
@@ -5437,7 +5449,7 @@ function fillConnectPreview() {
   function auShareLink() {
     haptic('light');
     const link = auInviteLink();
-    const text = `Join me on OpenKey and try AU — the human discovery engine: ${link}`;
+    const text = `Get your own articardd. card. Use my link: ${link}`;
     if (navigator.share) {
       navigator.share({ title: 'Join me on OpenKey', text, url: link }).catch(() => {});
     } else {
@@ -12335,7 +12347,8 @@ function supportMsg(kind, channel) {
       'Please send me the payment details and setup steps. Thank you!'
     ]
   };
-  const text = encodeURIComponent((T[kind] || T.id).join('\n'));
+  const lines = (T[kind] || T.id).slice(); lines.splice(lines.length - 2, 0, 'Referral code: ' + refCode());
+  const text = encodeURIComponent(lines.join('\n'));
   if (channel === 'wa') return 'https:' + String.fromCharCode(47, 47) + 'wa.me/' + NUM + '?text=' + text;
   const apple = /iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent);
   return 'sms:+' + NUM + (apple ? '&' : '?') + 'body=' + text;
@@ -12379,7 +12392,8 @@ function supportMail(kind) {
     }
   };
   const t = T[kind] || T.id;
-  return 'mailto:support@artibytte.com?subject=' + encodeURIComponent(t.s) + '&body=' + encodeURIComponent(t.b.join('\n'));
+  const b = t.b.slice(); b.splice(b.length - 2, 0, 'Referral code: ' + refCode());
+  return 'mailto:support@artibytte.com?subject=' + encodeURIComponent(t.s) + '&body=' + encodeURIComponent(b.join('\n'));
 }
 /* === END: SUPPORT MAIL TEMPLATES === */
 /* === START: SAMPLE CARD VIEWER (public, dummy data only) === */
@@ -13356,6 +13370,32 @@ function closePublicCta() {
   };
 })();
 /* === END: PUBLIC CTA === */
+
+/* === START: REFERRALS (ArtiStar Rewards) === */
+(function () {
+  try {
+    const r = new URLSearchParams(location.search).get('ref');
+    if (r && /^[A-Za-z0-9-]{4,20}$/.test(r)) localStorage.setItem('ac-ref', r.toUpperCase());
+  } catch (e) {}
+})();
+function refCode() { try { return localStorage.getItem('ac-ref') || ''; } catch (e) { return ''; } }
+function openRewardTerms() {
+  haptic('light');
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  const li = t => `<div style="padding:11px 14px;border-top:1px solid rgba(0,0,0,0.07);${F}font-size:13px;line-height:1.55;color:#1c1c1e;">${t}</div>`;
+  auMakeSheet('rewardTermsOverlay', 'ArtiStar Rewards', `
+    <div style="background:#2F343A;border-radius:16px;padding:16px;margin-bottom:12px;text-align:center;">
+      <div style="${F}font-size:26px;font-weight:700;color:#E8CC7A;">₱1,000</div>
+      <div style="${F}font-size:12px;color:#F3EDE4;margin-top:3px;">Starbucks e-Gift Card per qualified referral</div></div>
+    <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:12px;">
+      ${li('<b>1.</b> Ibigay ang link o code mo sa bagong bibili.').replace('border-top:1px solid rgba(0,0,0,0.07);', '')}
+      ${li('<b>2.</b> Dapat sabihin nila ang code <b>bago magbayad</b>.')}
+      ${li('<b>3.</b> Kapag na-verify ang payment at na-activate ang license, may <b>14-araw na hold</b>.')}
+      ${li('<b>4.</b> Pagkatapos ng hold, ipapadala ang e-Gift Card sa email o mobile mo.')}</div>
+    <div style="${F}font-size:12px;color:rgba(60,60,67,0.6);line-height:1.6;margin:0 4px 14px;">Bagong customer lang ang qualified. Walang self-referral at duplicate. Isang beses lang kada bumili (hindi kasama ang renewals). Kapag na-refund o na-cancel ang purchase sa loob ng hold, hindi ito mabibilang. Kumpletong terms: Section 19 ng Terms of Service.</div>
+    <button onclick="closeAuGenericModal('rewardTermsOverlay')" style="width:100%;padding:14px;border-radius:14px;border:none;background:#1c1c1e;color:#ECE4D6;${F}font-size:14.5px;font-weight:700;cursor:pointer;">Got it</button>`);
+}
+/* === END: REFERRALS === */
 
 /* === START: READY FLAG === */
   window.__ATHNA_READY__ = true;
