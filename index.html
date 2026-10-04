@@ -1094,6 +1094,10 @@ body.public-mode .back-mascot-btn{display:none !important;}
 .st-calc .o span{display:block;margin-top:3px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(243,237,228,.6);}
 .st-calc .fine{font-size:10.5px;line-height:1.6;color:rgba(60,60,67,.55);margin-top:12px;}
 /* === END: STORY v3 CSS === */
+.st-founder{display:flex;align-items:center;gap:14px;margin:0 0 18px;}
+.st-founder img{width:76px;height:76px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid #E8CC7A;box-shadow:0 0 0 3px rgba(232,204,122,.22),0 6px 16px rgba(0,0,0,.14);background:#ECE4D6;}
+.st-founder .st-h{margin:0;}
+.st-founder .st-sub{margin-top:3px;}
 /* === END: STORY VISUALS CSS === */
   @media(max-width:420px){.st-pgrid{grid-template-columns:1fr;}.st-pc+.st-pc{border-left:none;border-top:1px solid rgba(0,0,0,.08);}}
   .sc-card{position:relative;width:340px;height:580px;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .9s cubic-bezier(.23,1,.32,1);cursor:pointer;}
@@ -12957,7 +12961,7 @@ function stBuild() {
        <div class="st-hint">Swipe to open ›</div>
        <p class="st-meta" style="margin-top:34px;font-size:9px;opacity:.7">Philippines · 2026</p>`),
     /* 1 FOUNDER */
-    L("Founder's Note", `<div class="st-lab">Founder's Note</div><h2 class="st-h" style="margin-bottom:18px">${founder}</h2>${rule()}
+    L("Founder's Note", `<div class="st-lab">Founder's Note</div><div class="st-founder"><img src="/assets/founder.webp" alt="${founder}" width="76" height="76" loading="lazy" decoding="async" onerror="this.style.display='none'"><div><h2 class="st-h" style="font-size:20px">${founder}</h2><div class="st-sub">Founder · articardd</div></div></div>${rule()}
       ${p('A life truly lived is not one sheltered within the gentle illusions of safety, nor confined to the predictable rhythms of comfort and certainty. It does not unfold in the quiet corners of convenience. Rather, it reveals itself in the untamed vastness beyond the familiar—in the wilderness of uncertainty where courage is demanded, not suggested.', 'dc')}
       ${p('It is there, in the unseen terrains of challenge, where we are summoned to confront not the world alone, but the hidden fractures within ourselves. In those silent battles—fought not with others, but within—we are stripped of pretense and forced into honesty. We stumble, we falter, we are brought to our knees… yet it is precisely in those moments that we discover the raw architecture of our strength.')}
       ${p('To live deeply is to endure the tempests—those long, relentless crossings where doubt whispers louder than hope, and fear attempts to anchor us in place. And still, we move. Not because the path is clear, but because something within us refuses to surrender. Each step forward becomes an act of defiance against limitation.')}
