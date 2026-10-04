@@ -887,6 +887,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
   }
   /* ── Z-INDEX FIX: sheets/modals opened from Account (9600) & Personal Info (9700) must sit above them ── */
   .share-overlay, .cf-overlay, .fb-overlay { z-index: 9800; }
+  #cardFilterOverlay, #physOrderOverlay { z-index: 9800 !important; }
   #identityScreen { z-index: 9750; }
   #licenseScreen  { z-index: 9750; }
   #tosScreen      { z-index: 9760; }
@@ -1027,6 +1028,30 @@ body.public-mode .back-mascot-btn{display:none !important;}
   .st-ring,.st-flow{animation:none!important;}
   .st-ring{opacity:.25;}
 }
+/* === START: STORY v3 CSS (compare, break-even, calculator) === */
+.st-cmp{background:rgba(255,255,255,.72);border-radius:18px;overflow:hidden;margin:14px 0;}
+.st-cmp .r{display:grid;grid-template-columns:1.6fr repeat(4,1fr);align-items:center;gap:4px;padding:10px 10px;border-bottom:1px solid rgba(0,0,0,.07);font-size:11px;}
+.st-cmp .r:last-child{border-bottom:none;}
+.st-cmp.two .r{grid-template-columns:1fr 1fr;font-size:13px;}
+.st-cmp .r>span{text-align:center;}
+.st-cmp .r>span:first-child{text-align:left;color:#1c1c1e;font-weight:600;}
+.st-cmp .h{font-size:8.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(60,60,67,.55);background:rgba(0,0,0,.03);}
+.st-cmp .h>span:first-child{font-weight:700;color:rgba(60,60,67,.55);}
+.st-cmp .a{background:rgba(232,204,122,.2);border-radius:8px;padding:4px 0;}
+.st-cmp .y{color:#1c8a3e;font-weight:800;}
+.st-cmp .n{color:#FF453A;font-weight:800;}
+.st-cmp .m{color:#B36B00;font-weight:800;}
+.st-calc{background:rgba(255,255,255,.72);border-radius:18px;padding:16px;margin:16px 0;}
+.st-calc label{display:block;font-size:11px;font-weight:700;color:rgba(60,60,67,.6);margin:10px 0 6px;}
+.st-calc label:first-child{margin-top:0;}
+.st-calc input{width:100%;box-sizing:border-box;border:1px solid rgba(0,0,0,.1);border-radius:12px;padding:12px;font-size:16px;background:#fff;color:#1c1c1e;font-family:inherit;outline:none;}
+.st-calc input:focus{border-color:#1c1c1e;}
+.st-calc .o{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;}
+.st-calc .o div{background:#2F343A;border-radius:14px;padding:12px 8px;text-align:center;}
+.st-calc .o b{display:block;font-size:17px;color:#E8CC7A;word-break:break-word;}
+.st-calc .o span{display:block;margin-top:3px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(243,237,228,.6);}
+.st-calc .fine{font-size:10.5px;line-height:1.6;color:rgba(60,60,67,.55);margin-top:12px;}
+/* === END: STORY v3 CSS === */
 /* === END: STORY VISUALS CSS === */
   @media(max-width:420px){.st-pgrid{grid-template-columns:1fr;}.st-pc+.st-pc{border-left:none;border-top:1px solid rgba(0,0,0,.08);}}
   .sc-card{position:relative;width:340px;height:580px;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .9s cubic-bezier(.23,1,.32,1);cursor:pointer;}
@@ -1037,6 +1062,12 @@ body.public-mode .back-mascot-btn{display:none !important;}
   .gt-foot-title{font:600 13px -apple-system,'SF Pro Text',sans-serif;color:#1c1c1e;margin-bottom:4px;}
   .gt-foot-sub{font:400 12px/1.6 -apple-system,'SF Pro Text',sans-serif;color:rgba(60,60,67,0.55);}
   .gt-foot-sub a{color:#1c1c1e;font-weight:600;text-decoration:underline;text-underline-offset:2px;}
+  /* === START: GATE REACH BUTTONS === */
+  .gt-reach{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
+  .gt-reach-btn{display:inline-flex;align-items:center;gap:7px;padding:10px 16px;border-radius:22px;background:rgba(255,255,255,.72);border:1px solid rgba(0,0,0,.1);color:#1c1c1e;font:600 13px -apple-system,'SF Pro Text',sans-serif;text-decoration:none;-webkit-tap-highlight-color:transparent;transition:transform .12s,opacity .12s;}
+  .gt-reach-btn:active{transform:scale(.96);opacity:.8;}
+  .gt-reach-btn svg{flex-shrink:0;}
+  /* === END: GATE REACH BUTTONS === */
   /* public mode: owner-only affordances hidden */
   body.public-mode .pill-avatar-plus, body.public-mode #pillVisToggleTrack{display:none !important;}
 </style>
@@ -1075,6 +1106,20 @@ body.public-mode .back-mascot-btn{display:none !important;}
     <div class="gt-foot">
       <div class="gt-foot-title">Get your own ID</div>
       <div class="gt-foot-sub">Want your own articardd. card? Email us at<br><a href="mailto:support@artibytte.com" onclick="this.href=supportMail('id')">support@artibytte.com</a></div>
+      <!-- === START: GATE REACH (iMessage / WhatsApp) === -->
+      <div class="gt-foot-sub" style="margin-top:12px;">or message us directly</div>
+      <div class="gt-reach">
+        <a class="gt-reach-btn" href="sms:+639757764187" onclick="this.href=supportMsg('id','sms')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#34c759"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          iMessage
+        </a>
+        <a class="gt-reach-btn" href="https://wa.me/639757764187" target="_blank" rel="noopener" onclick="this.href=supportMsg('id','wa')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </a>
+      </div>
+      <div class="gt-foot-sub" style="margin-top:8px;">0975 776 4187</div>
+      <!-- === END: GATE REACH (iMessage / WhatsApp) === -->
     </div>
   </div>
 </div>
@@ -2716,10 +2761,10 @@ body.public-mode .back-mascot-btn{display:none !important;}
 
     <!-- Order NFC Card -->
     <div class="acct-group">
-      <div class="os-row" onclick="haptic('light');showToast('CardKit — under maintenance','neutral');" style="cursor:default;opacity:.45;">
+      <div class="os-row" onclick="haptic('light');orderPhysicalCard()" style="cursor:pointer;">
         <div class="os-row-icon" style="background:#1c1c1e;"><svg width="19" height="19" viewBox="0 4 24 16" fill="none" stroke="#E8CC7A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M6 9.82a6 6 0 0 1 0 4.36"/><path d="M9.2 8a9 9 0 0 1 0 8"/><path d="M12.4 6.2a12 12 0 0 1 0 11.6"/></svg></div>
-        <div class="os-row-text"><div class="os-row-title">CardKit</div><div class="os-row-sub">Get your physical tap-to-share card</div></div>
-        <span style="font-size:10px;font-weight:700;letter-spacing:.03em;color:#FF9F0A;margin-right:4px;">SOON</span>
+        <div class="os-row-text"><div class="os-row-title">CardKit</div><div class="os-row-sub">Order your physical NFC card: ring, QR &amp; your mascot</div></div>
+        <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </div>
 
@@ -9501,7 +9546,59 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     showCardFilterModal();
   }
 
+  /* === START: CARDKIT STEP 1 v2 (theme + mascot) === */
+  function cfmMascotBtns() {
+    return MASCOTS.map(m => {
+      const on = m.id === activeMascot;
+      return `<button type="button" onclick="cfmSelectMascot('${m.id}')" aria-label="${auEsc(m.name)}" style="flex-shrink:0;width:54px;height:54px;border-radius:14px;padding:6px;background:#2F343A;cursor:pointer;-webkit-tap-highlight-color:transparent;border:${on ? '2.5px solid #1c1c1e' : '1px solid rgba(0,0,0,0.1)'};box-shadow:${on ? '0 0 0 2px #E8CC7A' : 'none'};"><img src="${auEsc(m.src)}" alt="" style="width:100%;height:100%;object-fit:contain;display:block;"/></button>`;
+    }).join('');
+  }
+  async function cfmSelectMascot(id) {
+    await pickMascot(id);
+    const row = document.getElementById('cfm-mascots');
+    if (row) row.innerHTML = cfmMascotBtns();
+  }
+
   function showCardFilterModal() {
+    document.getElementById('cardFilterOverlay')?.remove();
+    const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+    const lbl = "font-size:11px;font-weight:700;letter-spacing:.08em;color:rgba(60,60,67,0.45);text-transform:uppercase;padding:0 20px;margin-bottom:8px;";
+    const overlay = document.createElement('div');
+    overlay.id = 'cardFilterOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;align-items:flex-end;justify-content:center;z-index:9800;';
+    overlay.onclick = e => { if (e.target === overlay) closeCardFilterModal(); };
+    overlay.innerHTML = `
+      <div id="cfm-sheet" style="background:#ECE4D6;border-radius:22px 22px 0 0;width:100%;max-width:480px;max-height:92vh;display:flex;flex-direction:column;animation:sheetUp .3s cubic-bezier(0.23,1,0.32,1);position:relative;overflow:hidden;">
+        <div id="cfm-handle" style="flex-shrink:0;padding:14px 0;cursor:grab;touch-action:none;display:flex;justify-content:center;background:#ECE4D6;"><div style="width:36px;height:4px;background:rgba(0,0,0,0.15);border-radius:2px;"></div></div>
+        <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 0 32px;">
+          <div style="padding:0 20px 12px;">
+            <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:21px;font-weight:700;color:#1c1c1e;letter-spacing:-.01em;">Design Your Card</div>
+            <div style="${F}font-size:13px;color:rgba(60,60,67,0.5);margin-top:3px;">Step 1 of 2 · This is how your NFC card will look</div>
+          </div>
+          <div style="display:flex;justify-content:center;margin-bottom:14px;padding:0 20px;">
+            <div style="width:160px;height:272px;border-radius:14px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,0.35);flex-shrink:0;position:relative;">
+              <div id="cfm-clone-wrap" style="position:absolute;top:0;left:0;width:340px;height:580px;transform:scale(0.4706);transform-origin:top left;pointer-events:none;"></div>
+            </div>
+          </div>
+          <div style="${F}${lbl}">Card Theme</div>
+          <div style="display:flex;gap:10px;overflow-x:auto;padding:0 20px 14px;scrollbar-width:none;-webkit-overflow-scrolling:touch;align-items:center;">
+            ${THEMES.map(t => `<div onclick="cfmSelectTheme('${t.id}')" data-cfm-theme="${t.id}" role="button" aria-label="${auEsc(THEME_LABELS[t.id] || t.id)} theme" style="flex-shrink:0;width:26px;height:26px;border-radius:50%;background:${t.aurora ? 'linear-gradient(135deg,#00CED1,#FF2D9B)' : t.dot};border:2.5px solid ${t.id === activeTheme.id ? '#1c1c1e' : 'transparent'};cursor:pointer;box-shadow:${t.id === activeTheme.id ? '0 0 0 1px #1c1c1e' : 'none'};transition:all .15s;"></div>`).join('')}
+          </div>
+          <div style="${F}${lbl}">Mascot (back of card)</div>
+          <div id="cfm-mascots" style="display:flex;gap:10px;overflow-x:auto;padding:0 20px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">${cfmMascotBtns()}</div>
+          <div style="display:flex;gap:10px;padding:18px 20px 0;">
+            <button onclick="closeCardFilterModal()" style="flex:1;padding:14px;border-radius:13px;border:none;background:rgba(0,0,0,0.06);color:#1c1c1e;${F}font-size:14px;font-weight:600;cursor:pointer;">Cancel</button>
+            <button onclick="saveAppearanceDefault();cfmProceedToOrder()" style="flex:2;padding:14px;border-radius:13px;border:none;background:#1c1c1e;color:#ECE4D6;${F}font-size:14px;font-weight:700;cursor:pointer;">Continue to Order →</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    initSheetDragHandle('cfm-handle', 'cfm-sheet', 'cardFilterOverlay', () => overlay.remove());
+    requestAnimationFrame(() => cfmRenderPreview());
+  }
+  /* === END: CARDKIT STEP 1 v2 === */
+
+  function showCardFilterModalLegacy() {
     const existing = document.getElementById('cardFilterOverlay');
     if (existing) existing.remove();
 
@@ -9750,7 +9847,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
         <div id="phys-scroll-body" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 20px 36px;">
         <div style="margin-bottom:20px;">
           <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:21px;font-weight:700;color:#1c1c1e;letter-spacing:-.01em;">Order Physical NFC Card</div>
-          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.5);margin-top:3px;">Tap-to-share · Engraved · Delivered to you</div>
+          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.5);margin-top:3px;">Ring + QR design · NFC tap-to-share · Delivered to you</div>
         </div>
         <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(60,60,67,0.45);margin-bottom:8px;">Card Type</div>
         <div id="phys-type-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;"></div>
@@ -9829,7 +9926,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
         ${disc?`<div style="display:flex;justify-content:space-between;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;color:#34C759;margin-bottom:7px;">
           <span>Bulk discount (–${disc}%)</span><span>–${fmt(base-discounted)}</span></div>`:''}
         <div style="display:flex;justify-content:space-between;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;color:rgba(60,60,67,0.65);margin-bottom:7px;">
-          <span>Engraving / print</span><span style="color:#34C759;font-weight:600;">Included ✓</span>
+          <span>Custom design (theme + mascot)</span><span style="color:#34C759;font-weight:600;">Included ✓</span>
         </div>
         <div style="display:flex;justify-content:space-between;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;color:rgba(60,60,67,0.65);margin-bottom:12px;">
           <span>Shipping (Lalamove / J&T)</span><span>₱100 – ₱250</span>
@@ -9980,6 +10077,8 @@ I would like to order a Physical NFC Card for my ATH•NA OS membership.
   Mobile       : ${mobile}
 
   Card Type    : ${cardType}
+  Card Theme   : ${(activeTheme && THEME_LABELS[activeTheme.id]) || '—'}
+  Mascot       : ${((MASCOTS.find(m => m.id === activeMascot)) || {}).name || '—'}
   Quantity     : ${qty} pc${qty > 1 ? 's' : ''}
   Unit Price   : ₱${price.toLocaleString('en-PH')}
   Subtotal     : ₱${total.toLocaleString('en-PH')}
@@ -11969,6 +12068,44 @@ function openMascotLore() {
 }
 loadMascot();
 /* === END: MASCOTS === */
+/* === START: SUPPORT MESSAGE (iMessage / WhatsApp) === */
+function supportMsg(kind, channel) {
+  const NUM = '639757764187';   /* 0975 776 4187 */
+  const T = {
+    id: [
+      'Hello articardd. team,',
+      '',
+      'I would like to get my own articardd. card and ID.',
+      '',
+      'Full name: ',
+      'Position / Title: ',
+      'Company: ',
+      'Mobile: ',
+      'Email: ',
+      '',
+      'Please let me know the next steps. Thank you!'
+    ],
+    card: [
+      'Hello articardd. team,',
+      '',
+      'I would like to get my articardd. card with the Annual License (\u20B14,990 per year).',
+      '',
+      'Full name: ',
+      'Position / Title: ',
+      'Company: ',
+      'Mobile: ',
+      'Email: ',
+      '',
+      'Please send me the payment details and setup steps. Thank you!'
+    ]
+  };
+  const text = encodeURIComponent((T[kind] || T.id).join('\n'));
+  if (channel === 'wa') return 'https:' + String.fromCharCode(47, 47) + 'wa.me/' + NUM + '?text=' + text;
+  const apple = /iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent);
+  return 'sms:+' + NUM + (apple ? '&' : '?') + 'body=' + text;
+}
+/* === END: SUPPORT MESSAGE === */
+
 /* === START: SUPPORT MAIL TEMPLATES === */
 function supportMail(kind) {
   const T = {
@@ -12010,7 +12147,112 @@ function supportMail(kind) {
 }
 /* === END: SUPPORT MAIL TEMPLATES === */
 /* === START: SAMPLE CARD VIEWER (public, dummy data only) === */
+/* === START: SAMPLE CARD v2 (ring + QR, mascot choices) === */
+let sampleMascot = 'm01';
+
+function sampleFrontSvg() {
+  const ico = 'stroke="#1c1c1e" stroke-width="2.17" fill="none" stroke-linecap="round" stroke-linejoin="round"';
+  return `<svg viewBox="0 0 340 580" width="340" height="580" style="position:absolute;inset:0;display:block">
+    <defs>
+      <linearGradient id="scGold" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#d9d7d2"/><stop offset="12%" stop-color="#eae8e3"/><stop offset="28%" stop-color="#b7b4ad"/>
+        <stop offset="45%" stop-color="#e2dfd9"/><stop offset="62%" stop-color="#a19e97"/><stop offset="78%" stop-color="#cac7c0"/><stop offset="100%" stop-color="#b0ada6"/>
+      </linearGradient>
+      <linearGradient id="scGoldH" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#b3b0a9"/><stop offset="35%" stop-color="#cac7c0"/><stop offset="50%" stop-color="#e2dfd9"/><stop offset="82%" stop-color="#d6d3cc"/><stop offset="100%" stop-color="#a19e97"/>
+      </linearGradient>
+    </defs>
+    <rect x="40" y="0" width="260" height="1" fill="#fff" opacity=".5"/>
+    <g fill="#E8CC7A"><circle cx="28" cy="100" r=".7" opacity=".5"/><circle cx="60" cy="140" r=".6" opacity=".4"/><circle cx="300" cy="120" r=".7" opacity=".45"/><circle cx="318" cy="200" r=".6" opacity=".4"/><circle cx="20" cy="230" r=".8" opacity=".4"/><circle cx="322" cy="330" r=".6" opacity=".35"/><circle cx="40" cy="440" r=".6" opacity=".35"/><circle cx="296" cy="460" r=".7" opacity=".4"/></g>
+    <rect x="4.35" y="3.44" width="332" height="71.3" rx="24" fill="#F3EDE4"/>
+    <circle cx="40" cy="39" r="28" fill="#8E8E93"/>
+    <svg x="22" y="21" width="36" height="36" viewBox="0 0 24 24" fill="#ECE4D6"><circle cx="12" cy="8.5" r="4"/><path d="M4 21c0-4.2 3.6-7.5 8-7.5s8 3.3 8 7.5"/></svg>
+    <text x="84" y="35" font-family="-apple-system,'SF Pro Text',sans-serif" font-size="13" font-weight="600" letter-spacing="3" fill="#1c1c1e">J. DELA CRUZ</text>
+    <text x="84" y="53" font-family="-apple-system,'SF Pro Text',sans-serif" font-size="8.98" font-weight="700" letter-spacing="1.3" fill="#1c1c1e" opacity=".7">FOUNDER | SAMPLE CO.</text>
+    <circle cx="170" cy="290" r="124.5" fill="none" stroke="url(#scGold)" stroke-width="25"/>
+    <circle cx="170" cy="290" r="137" fill="none" stroke="url(#scGoldH)" stroke-width="2"/>
+    <circle cx="170" cy="290" r="112" fill="none" stroke="rgba(180,180,180,0.15)" stroke-width="1"/>
+    <line x1="32" y1="569" x2="84" y2="569" stroke="#fff" stroke-width=".6" opacity=".22" stroke-linecap="round"/>
+    <line x1="256" y1="569" x2="308" y2="569" stroke="#fff" stroke-width=".6" opacity=".22" stroke-linecap="round"/>
+    <text x="170" y="572" text-anchor="middle" font-family="-apple-system,'SF Pro Text',sans-serif" font-size="8.5" letter-spacing="1.1" fill="#d0d0d0"><tspan font-weight="700" fill="#fff">articardd.</tspan><tspan dx="4" font-weight="300" opacity=".75">connect differently.</tspan></text>
+    <rect x="27.52" y="502.64" width="144.9" height="53.13" rx="26.57" fill="#F3EDE4"/>
+    <g transform="translate(41.53,519.06) scale(0.845)" ${ico}><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="10" r="2.5"/><path d="M8 17c.6-2 2-3 4-3s3.4 1 4 3"/></g>
+    <g transform="translate(89.83,519.06) scale(0.845)" ${ico}><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></g>
+    <g transform="translate(138.13,519.06) scale(0.845)"><circle cx="12" cy="12" r="9" fill="none" stroke="#1c1c1e" stroke-width="2.3"/></g>
+    <rect x="235.21" y="502.64" width="77.28" height="53.13" rx="26.57" fill="#F3EDE4"/>
+    <g transform="translate(244.39,519.06) scale(0.845)" ${ico}><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/></g>
+    <g transform="translate(283.03,519.06) scale(0.845)" ${ico}><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></g>
+  </svg>
+  <div style="position:absolute;left:136px;top:256px;width:68px;height:68px;border-radius:50%;background:#F3EDE4;border:.6px solid rgba(0,0,0,0.08);box-sizing:border-box;">
+    <div id="scQr" style="position:absolute;left:11.4px;top:11.4px;width:44px;height:44px;background:#fff;padding:3px;box-sizing:border-box;border-radius:4px;"></div>
+  </div>`;
+}
+
+function sampleBackHtml() {
+  const m = MASCOTS.find(x => x.id === sampleMascot) || MASCOTS[0];
+  return `<div style="position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,#fff 30%,#fff 70%,transparent);opacity:.6;"></div>
+    <img id="scMascot" src="${auEsc(m.src)}" alt="" style="position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:73%;max-height:80%;object-fit:contain;filter:drop-shadow(0 14px 26px rgba(0,0,0,.45));" onerror="this.style.display='none'"/>
+    <div style="position:absolute;left:26px;right:26px;bottom:22px;border-top:1px solid rgba(208,208,208,0.3);padding-top:14px;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:500;letter-spacing:.08em;color:#d0d0d0;">ARTICARD-SAMPLE</span>
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#d0d0d0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity=".85"><circle cx="6" cy="12" r="1.4" fill="#d0d0d0" stroke="none"/><path d="M10 8a5.7 5.7 0 0 1 0 8"/><path d="M13.2 5a9.6 9.6 0 0 1 0 14"/><path d="M16.4 2a13.5 13.5 0 0 1 0 20"/></svg>
+    </div>`;
+}
+
+function sampleMascotBtns() {
+  return MASCOTS.map(m => {
+    const on = m.id === sampleMascot;
+    return `<button type="button" data-scm="${m.id}" onclick="sampleSetMascot('${m.id}')" aria-label="${auEsc(m.name)}" style="flex-shrink:0;width:54px;height:54px;border-radius:14px;padding:6px;background:#2F343A;cursor:pointer;-webkit-tap-highlight-color:transparent;border:${on ? '2.5px solid #1c1c1e' : '1px solid rgba(0,0,0,0.1)'};box-shadow:${on ? '0 0 0 2px #E8CC7A' : 'none'};"><img src="${auEsc(m.src)}" alt="" style="width:100%;height:100%;object-fit:contain;display:block;"/></button>`;
+  }).join('');
+}
+
+function sampleSetMascot(id) {
+  const m = MASCOTS.find(x => x.id === id); if (!m) return;
+  haptic('light');
+  sampleMascot = id;
+  const im = document.getElementById('scMascot');
+  if (im) { im.style.display = ''; im.src = m.src; }
+  const row = document.getElementById('scMascots');
+  if (row) row.innerHTML = sampleMascotBtns();
+  const card = document.getElementById('scCard');
+  if (card) card.classList.add('flipped');   /* ipakita agad ang napili sa likod */
+}
+
 function openSampleCard() {
+  if (document.getElementById('sampleCardOverlay')) return;
+  haptic('light');
+  const s = Math.min(1, (innerHeight - 320) / 580, (innerWidth - 48) / 340);
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  const ov = document.createElement('div');
+  ov.id = 'sampleCardOverlay';
+  ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', 'Sample card');
+  ov.style.cssText = 'position:fixed;inset:0;z-index:10050;background:#ECE4D6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;animation:screenFadeIn .35s cubic-bezier(.16,1,.3,1) forwards;overflow-y:auto;';
+  ov.innerHTML = `
+    <button type="button" onclick="closeSampleCard()" aria-label="Close" style="position:absolute;top:max(14px,env(safe-area-inset-top));left:14px;display:flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;border:0.6px solid rgba(255,255,255,0.9);background:rgba(255,255,255,0.82);box-shadow:0 2px 8px rgba(0,0,0,0.10);color:#1c1c1e;cursor:pointer;padding:0;z-index:5;"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <div style="${F}font-size:11px;font-weight:700;letter-spacing:.14em;color:rgba(60,60,67,0.5);">SAMPLE CARD</div>
+    <div style="width:${340 * s}px;height:${580 * s}px;flex-shrink:0;">
+      <div class="sc-scene" style="width:340px;height:580px;transform:scale(${s});transform-origin:top left;">
+        <div class="sc-card" id="scCard" onclick="this.classList.toggle('flipped');haptic('light');">
+          <div class="sc-face">${sampleFrontSvg()}</div>
+          <div class="sc-face sc-back">${sampleBackHtml()}</div>
+        </div>
+      </div>
+    </div>
+    <div style="${F}font-size:12.5px;color:rgba(60,60,67,0.55);">Tap the card to flip</div>
+    <div style="${F}font-size:10.5px;font-weight:700;letter-spacing:.14em;color:rgba(60,60,67,0.5);margin-top:2px;">CHOOSE YOUR MASCOT</div>
+    <div id="scMascots" style="display:flex;gap:10px;overflow-x:auto;max-width:100%;padding:4px 6px 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">${sampleMascotBtns()}</div>
+    <a href="mailto:support@artibytte.com" onclick="this.href=supportMail('id')" style="${F}font-size:13.5px;font-weight:700;color:#ECE4D6;background:#1c1c1e;padding:13px 24px;border-radius:24px;text-decoration:none;flex-shrink:0;">Get your own card</a>`;
+  document.body.appendChild(ov);
+  document.addEventListener('keydown', sampleEsc);
+  /* generic QR (walang personal na data): bubukas lang sa articardd.com */
+  const qb = document.getElementById('scQr');
+  if (qb && window.QRCode) {
+    new QRCode(qb, { text: BASE_URL, width: 152, height: 152, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.L });
+    qb.querySelectorAll('canvas,img').forEach(el => { el.style.width = '100%'; el.style.height = '100%'; });
+  }
+}
+/* === END: SAMPLE CARD v2 === */
+
+function openSampleCardLegacy() {
   if (document.getElementById('sampleCardOverlay')) return;
   haptic('light');
   const s = Math.min(1, (innerHeight - 230) / 580, (innerWidth - 48) / 340);
@@ -12164,7 +12406,32 @@ function stVisTrio() {
 }
 
 /* Ch IV — the mutual exchange */
+/* === START: STORY v2 EXCHANGE === */
 function stVisExchange() {
+  const card = x => `<g transform="translate(${x} 0)">
+    <rect x="22" y="14" width="82" height="124" rx="13" fill="#3a4047" stroke="#E8CC7A" stroke-opacity=".3"/>
+    <rect x="28" y="20" width="70" height="18" rx="9" fill="#F3EDE4"/>
+    <circle cx="40" cy="29" r="6" fill="#8E8E93"/>
+    <rect x="50" y="26" width="40" height="3" rx="1.5" fill="#1c1c1e" opacity=".55"/>
+    <rect x="50" y="31.5" width="26" height="2.5" rx="1.2" fill="#1c1c1e" opacity=".3"/>
+    <circle cx="63" cy="84" r="30" fill="none" stroke="#cac7c0" stroke-width="7"/>
+    ${stQrGlyph(63, 84, .5)}
+  </g>`;
+  return `<div class="st-vis v2"><div class="st-fig dk">
+  <svg viewBox="0 0 320 152" role="img" aria-label="Two cards exchanging identities with one tap">
+    ${card(0)}${card(194)}
+    <line class="st-flow" x1="114" y1="66" x2="204" y2="66" stroke="#E8CC7A" stroke-width="1.6"/>
+    <path d="M198 60 L206 66 L198 72" fill="none" stroke="#E8CC7A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <line class="st-flow" x1="206" y1="90" x2="116" y2="90" stroke="#E8CC7A" stroke-width="1.6"/>
+    <path d="M122 84 L114 90 L122 96" fill="none" stroke="#E8CC7A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle class="st-ring" cx="160" cy="78" r="9" fill="none" stroke="#E8CC7A" stroke-width="1.2"/>
+    <circle cx="160" cy="78" r="3.5" fill="#E8CC7A"/>
+  </svg>
+  <div class="st-cap">One tap · Two identities</div></div></div>`;
+}
+/* === END: STORY v2 EXCHANGE === */
+
+function stVisExchangeLegacy() {
   const card = x => `<g transform="translate(${x} 0)">
     <rect x="22" y="14" width="82" height="124" rx="13" fill="#3a4047" stroke="#E8CC7A" stroke-opacity=".3"/>
     <rect x="28" y="20" width="70" height="18" rx="9" fill="#F3EDE4"/>
@@ -12188,7 +12455,40 @@ function stVisExchange() {
 }
 
 /* Founding line (dark) — the single tap */
+/* === START: STORY v2 SHARED HELPERS + COVER MARK + TAP === */
+function stQrGlyph(cx, cy, k) {
+  return `<g transform="translate(${cx} ${cy}) scale(${k})">
+    <circle r="34" fill="#F3EDE4" stroke="rgba(0,0,0,.08)" stroke-width=".6"/>
+    <rect x="-22" y="-22" width="44" height="44" rx="4" fill="#fff"/>
+    <g fill="#1c1c1e"><rect x="-17" y="-17" width="12" height="12"/><rect x="5" y="-17" width="12" height="12"/><rect x="-17" y="5" width="12" height="12"/><rect x="-2" y="-3" width="6" height="6"/><rect x="7" y="7" width="10" height="10"/></g>
+    <g fill="#fff"><rect x="-14" y="-14" width="6" height="6"/><rect x="8" y="-14" width="6" height="6"/><rect x="-14" y="8" width="6" height="6"/></g>
+  </g>`;
+}
+function stRingDefs(id) {
+  return `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9d7d2"/><stop offset=".28" stop-color="#b7b4ad"/><stop offset=".45" stop-color="#e2dfd9"/><stop offset=".62" stop-color="#a19e97"/><stop offset="1" stop-color="#b0ada6"/></linearGradient>`;
+}
+function stVisMark() {
+  return `<div class="st-vis" style="width:120px;margin:0 auto 18px;">
+  <svg viewBox="0 0 120 120" style="display:block;width:100%;overflow:visible" role="img" aria-label="The articardd mark: a ring with a QR at its center">
+    <defs>${stRingDefs('stMkG')}</defs>
+    <circle class="st-ring" cx="60" cy="60" r="50" fill="none" stroke="#E8CC7A" stroke-width="1"/>
+    <circle cx="60" cy="60" r="46" fill="none" stroke="url(#stMkG)" stroke-width="9"/>
+    ${stQrGlyph(60, 60, .62)}
+  </svg></div>`;
+}
 function stVisTap() {
+  const ring = d => `<circle class="st-ring" style="animation-delay:${d}s" cx="80" cy="80" r="34" fill="none" stroke="#E8CC7A" stroke-width="1"/>`;
+  return `<div class="st-vis" style="width:150px;margin:0 auto 22px;">
+  <svg viewBox="0 0 160 160" style="display:block;width:100%;overflow:visible" role="img" aria-label="Holding the QR at the center of the card opens the connection">
+    ${ring(0)}${ring(1.06)}${ring(2.12)}
+    <circle cx="80" cy="80" r="42" fill="none" stroke="#E8CC7A" stroke-opacity=".18" stroke-width="2.5"/>
+    <circle class="st-draw" style="--l:264" cx="80" cy="80" r="42" fill="none" stroke="#E8CC7A" stroke-width="2.5" stroke-linecap="round" transform="rotate(-90 80 80)"/>
+    ${stQrGlyph(80, 80, .95)}
+  </svg></div>`;
+}
+/* === END: STORY v2 SHARED HELPERS + COVER MARK + TAP === */
+
+function stVisTapLegacy() {
   const ring = d => `<circle class="st-ring" style="animation-delay:${d}s" cx="80" cy="80" r="34" fill="none" stroke="#E8CC7A" stroke-width="1"/>`;
   return `<div class="st-vis" style="width:150px;margin:0 auto 22px;">
   <svg viewBox="0 0 160 160" style="display:block;width:100%;overflow:visible" role="img" aria-label="A single tap radiating outward">
@@ -12201,7 +12501,46 @@ function stVisTap() {
 }
 
 /* Pricing — card render + colorways */
+/* === START: STORY v2 CARD MOCK (front + back, real themes + mascots) === */
 function stVisCardMock() {
+  const pick = ['obsidian','arctic','crimson','jade','aurora'].map(id => THEMES.find(t => t.id === id)).filter(Boolean);
+  const sw = pick.map(t => `<div><i style="background:${t.aurora ? 'linear-gradient(135deg,#00CED1,#FF2D9B)' : t.dot}"></i><span>${auEsc(THEME_LABELS[t.id] || t.id)}</span></div>`).join('');
+  const thumbs = MASCOTS.map(x => `<div style="width:40px;height:40px;border-radius:12px;background:#2F343A;padding:5px;box-sizing:border-box;flex-shrink:0;"><img src="${auEsc(x.src)}" alt="" style="width:100%;height:100%;object-fit:contain;display:block;" onerror="this.style.visibility='hidden'"/></div>`).join('');
+  const m0 = (MASCOTS[0] || {}).src || '';
+  const front = `<svg x="18" y="6" width="130" height="222" viewBox="0 0 340 580">
+    <defs>${stRingDefs('stCmG')}</defs>
+    <rect width="340" height="580" rx="24" fill="#2F343A"/>
+    <rect x="40" y="0.5" width="260" height="1" fill="#fff" opacity=".5"/>
+    <rect x="4.35" y="3.44" width="332" height="71.3" rx="24" fill="#F3EDE4"/>
+    <circle cx="40" cy="39" r="28" fill="#8E8E93"/>
+    <rect x="84" y="28" width="130" height="9" rx="4.5" fill="#1c1c1e" opacity=".7"/>
+    <rect x="84" y="46" width="90" height="6" rx="3" fill="#1c1c1e" opacity=".3"/>
+    <circle cx="170" cy="290" r="124.5" fill="none" stroke="url(#stCmG)" stroke-width="25"/>
+    ${stQrGlyph(170, 290, 1)}
+    <rect x="27.5" y="502.6" width="144.9" height="53.1" rx="26.5" fill="#F3EDE4"/>
+    <rect x="235.2" y="502.6" width="77.3" height="53.1" rx="26.5" fill="#F3EDE4"/>
+    <text x="170" y="572" text-anchor="middle" font-family="${ST_FONT}" font-size="8.5" letter-spacing="1.1" fill="#d0d0d0"><tspan font-weight="700" fill="#fff">articardd.</tspan><tspan dx="4" font-weight="300" opacity=".75">connect differently.</tspan></text>
+  </svg>`;
+  const back = `<svg x="172" y="6" width="130" height="222" viewBox="0 0 340 580">
+    <rect width="340" height="580" rx="24" fill="#2F343A"/>
+    <rect x="34" y="0.5" width="272" height="1" fill="#fff" opacity=".5"/>
+    <image href="${auEsc(m0)}" x="46" y="120" width="248" height="300" preserveAspectRatio="xMidYMid meet"/>
+    <line x1="26" y1="520" x2="314" y2="520" stroke="#d0d0d0" stroke-opacity=".3"/>
+    <text x="26" y="552" font-family="${ST_FONT}" font-size="12" letter-spacing="1" fill="#d0d0d0">ARTICARD-000000</text>
+  </svg>`;
+  return `<div class="st-vis"><div class="st-fig">
+  <svg viewBox="0 0 320 250" style="filter:drop-shadow(0 12px 18px rgba(0,0,0,.22))" role="img" aria-label="The articardd card, front and back">
+    ${front}${back}
+    <text x="83" y="246" text-anchor="middle" font-family="${ST_FONT}" font-size="8" font-weight="700" letter-spacing="2" fill="#1c1c1e" opacity=".4">FRONT</text>
+    <text x="237" y="246" text-anchor="middle" font-family="${ST_FONT}" font-size="8" font-weight="700" letter-spacing="2" fill="#1c1c1e" opacity=".4">BACK</text>
+  </svg>
+  <div class="st-sw">${sw}</div>
+  <div style="display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap;">${thumbs}</div>
+  <div class="st-cap">${THEMES.length} card themes · ${MASCOTS.length} mascots</div></div></div>`;
+}
+/* === END: STORY v2 CARD MOCK === */
+
+function stVisCardMockLegacy() {
   const sw = [['Obsidian','#2F343A'],['Sapphire','#1F3A6E'],['Ruby','#7A1F2E'],['Platinum','#B8B6B0']];
   return `<div class="st-vis"><div style="display:flex;flex-direction:column;align-items:center;">
   <div style="width:150px;filter:drop-shadow(0 18px 28px rgba(0,0,0,.28));">
@@ -12226,7 +12565,25 @@ function stVisCardMock() {
 }
 
 /* What You Receive — hub and spokes */
+/* === START: STORY v2 HUB === */
 function stVisHub() {
+  const N = [['Gmail',160,37],['Calendar',254,81],['Sheets',254,169],['Meet',160,213],['Contacts',66,169],['Captures',66,81]];
+  const lines = N.map(n => `<line class="st-flow" x1="160" y1="125" x2="${n[1]}" y2="${n[2]}" stroke="#C9A227" stroke-width="1.2"/>`).join('');
+  const pills = N.map(n => `<rect x="${n[1] - 32}" y="${n[2] - 13}" width="64" height="26" rx="13" fill="#fff" stroke="rgba(0,0,0,.1)"/>
+    <text x="${n[1]}" y="${n[2] + 3.5}" text-anchor="middle" font-family="${ST_FONT}" font-size="9.5" font-weight="600" fill="#1c1c1e">${n[0]}</text>`).join('');
+  return `<div class="st-vis"><div class="st-fig">
+  <svg viewBox="0 0 320 250" role="img" aria-label="articardd connected to Gmail, Calendar, Sheets, Meet, Contacts and Captures">
+    ${lines}
+    <circle class="st-ring" cx="160" cy="125" r="30" fill="none" stroke="#C9A227" stroke-width="1.2"/>
+    <circle cx="160" cy="125" r="30" fill="#ECE4D6"/>
+    ${pills}
+    ${stQrGlyph(160, 125, .8)}
+  </svg>
+  <div class="st-cap">Runs inside the Google ecosystem you already own</div></div></div>`;
+}
+/* === END: STORY v2 HUB === */
+
+function stVisHubLegacy() {
   const N = [['Gmail',160,37],['Calendar',254,81],['Sheets',254,169],['Siri',160,213],['Booking',66,169],['Note OS',66,81]];
   const lines = N.map(n => `<line class="st-flow" x1="160" y1="125" x2="${n[1]}" y2="${n[2]}" stroke="#C9A227" stroke-width="1.2"/>`).join('');
   const pills = N.map(n => `<rect x="${n[1] - 32}" y="${n[2] - 13}" width="64" height="26" rx="13" fill="#fff" stroke="rgba(0,0,0,.1)"/>
@@ -12270,6 +12627,87 @@ function stVisOwnership() {
 }
 /* === END: STORY VISUAL HELPERS === */
 
+/* === START: STORY v3 HELPERS (SIM lifecycle + ROI) === */
+const ST_FEE = 4990;
+
+/* SIM lifecycle: contacts rise, then vanish */
+function stVisSimLife() {
+  const X = [36, 98, 160, 222, 284];
+  const L = [['Register','new SIM'],['Save','to the SIM'],['Upgrade','new phone'],['Lost / expired','or damaged'],['Gone','start at zero']];
+  const nodes = X.map((x, i) => {
+    const last = i === 4, warn = i >= 3;
+    const c = last ? '#FF453A' : warn ? '#FF9F0A' : '#1c1c1e';
+    return `<circle cx="${x}" cy="34" r="${last ? 9 : 6}" fill="${last ? '#FF453A' : '#ECE4D6'}" stroke="${c}" stroke-width="1.6"/>
+    <text x="${x}" y="62" text-anchor="middle" font-family="${ST_FONT}" font-size="8.5" font-weight="700" fill="${c}">${L[i][0]}</text>
+    <text x="${x}" y="74" text-anchor="middle" font-family="${ST_FONT}" font-size="7.5" fill="#1c1c1e" opacity=".45">${L[i][1]}</text>`;
+  }).join('');
+  const area = 'M36 172 L98 110 L160 108 L222 132 L284 172';
+  return `<div class="st-vis"><div class="st-fig">
+  <svg viewBox="0 0 320 196" role="img" aria-label="Lifecycle of a contact saved on a SIM: saved, partly lost on a new phone, then gone when the SIM is lost, damaged or expires">
+    <line x1="36" y1="34" x2="284" y2="34" stroke="#1c1c1e" stroke-opacity=".12" stroke-width="2"/>
+    ${nodes}
+    <line x1="24" y1="172" x2="296" y2="172" stroke="#1c1c1e" stroke-opacity=".15"/>
+    <path d="${area} Z" fill="#E8CC7A" opacity=".28"/>
+    <path class="st-draw" style="--l:300" d="${area}" fill="none" stroke="#C9A227" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="104" y="102" font-family="${ST_FONT}" font-size="8" font-weight="700" letter-spacing="1.5" fill="#9B7A3E">YOUR CONTACTS</text>
+    <text x="284" y="188" text-anchor="middle" font-family="${ST_FONT}" font-size="8" font-weight="700" letter-spacing="1.5" fill="#FF453A">0</text>
+  </svg>
+  <div class="st-cap">A SIM identifies a line. It does not keep a network.</div></div></div>`;
+}
+
+/* comparison: where do your contacts live? */
+function stVisCompare() {
+  const rows = [
+    ['Email, company &amp; notes',       'n','m','m','y'],
+    ['Survives a new phone or SIM',      'n','m','m','y'],
+    ['Searchable, duplicates merged',    'n','n','n','y'],
+    ['Takes meeting requests',           'n','n','n','y'],
+    ['Backed up in your own Google',     'n','n','m','y'],
+    ['Room for a whole network',         'n','n','y','y']
+  ];
+  const sym = { y:'✓', n:'✕', m:'~' };
+  const body = rows.map(r => `<div class="r"><span>${r[0]}</span>${r.slice(1).map((v, i) => `<span class="${v}${i === 3 ? ' a' : ''}">${sym[v]}</span>`).join('')}</div>`).join('');
+  return `<div class="st-vis"><div class="st-cmp">
+    <div class="r h"><span></span><span>SIM</span><span>Paper</span><span>Notes</span><span>articardd</span></div>${body}</div>
+    <div class="st-cap" style="margin-top:10px">✓ yes · ~ partly · ✕ no</div></div>`;
+}
+
+/* break-even table: how many clients cover the license */
+function stVisBreakeven() {
+  const rows = [10000, 5000, 2500, 1000, 500].map(v =>
+    `<div class="r"><span>₱${v.toLocaleString('en-PH')} profit per client</span><span><b>${Math.ceil(ST_FEE / v)}</b> client${Math.ceil(ST_FEE / v) > 1 ? 's' : ''} a year</span></div>`).join('');
+  return `<div class="st-vis"><div class="st-cmp two">
+    <div class="r h"><span>If one client is worth</span><span>You break even at</span></div>${rows}</div>
+    <div class="st-cap" style="margin-top:10px">₱4,990 ÷ profit per client</div></div>`;
+}
+
+/* live calculator */
+function stCalcHtml(v, n) {
+  const gain = v * n, net = gain - ST_FEE, roi = Math.round(net / ST_FEE * 100);
+  const be = v > 0 ? Math.ceil(ST_FEE / v) : '—';
+  const f = x => (x < 0 ? '−' : '') + '₱' + Math.abs(Math.round(x)).toLocaleString('en-PH');
+  return `<div class="o">
+    <div><b>${be}</b><span>Clients to break even</span></div>
+    <div><b>${f(gain)}</b><span>Return from your card</span></div>
+    <div><b>${f(net)}</b><span>Net after license</span></div>
+    <div><b>${roi > 0 ? '+' : roi < 0 ? '−' : ''}${Math.abs(roi).toLocaleString('en-PH')}%</b><span>Return on license</span></div></div>`;
+}
+function stCalc() {
+  const v = Math.max(0, +document.getElementById('stcV').value || 0);
+  const n = Math.max(0, +document.getElementById('stcN').value || 0);
+  const o = document.getElementById('stcOut'); if (o) o.innerHTML = stCalcHtml(v, n);
+}
+function stCalcBlock() {
+  return `<div class="st-calc">
+    <label for="stcV">Profit from one client or deal (₱)</label>
+    <input id="stcV" type="number" inputmode="numeric" min="0" value="5000" oninput="stCalc()">
+    <label for="stcN">Clients you keep or win through your card, per year</label>
+    <input id="stcN" type="number" inputmode="numeric" min="0" value="3" oninput="stCalc()">
+    <div id="stcOut">${stCalcHtml(5000, 3)}</div>
+    <div class="fine">Illustrative only. Put in your own numbers. This is simple arithmetic, not a promise of results.</div></div>`;
+}
+/* === END: STORY v3 HELPERS === */
+
 function stBuild() {
   const D = h => ({ d: 1, h: h });
   const L = (r, h) => ({ d: 0, h: `${stHead(r)}${h}` });
@@ -12288,7 +12726,7 @@ function stBuild() {
   return [
     /* 0 COVER */
     D(`<div class="st-eyebrow" style="position:absolute;top:max(30px,env(safe-area-inset-top));left:0;right:0;text-align:center;opacity:.6">Origin Document · First Edition · 2026</div>
-       <h1 class="st-brand">articardd.</h1><p class="st-tag">connect differently.</p><div class="st-drule"></div>
+       ${stVisMark()}<h1 class="st-brand">articardd.</h1><p class="st-tag">connect differently.</p><div class="st-drule"></div>
        <p class="st-dq">Before there was a card,<br>there was a question.</p>
        <div class="st-hint">Swipe to open ›</div>
        <p class="st-meta" style="margin-top:34px;font-size:9px;opacity:.7">Philippines · 2026</p>`),
@@ -12352,18 +12790,63 @@ function stBuild() {
       ${li('I', 'Passive Identity', 'Every card waited for a human to act. It had no agency. It could not reach out. It could not remind. It sat in a drawer and hoped.')}
       ${li('II', 'One-Way Transfer', 'You gave your card. They received it. You received nothing. They remained a stranger in your world forever.')}
       ${li('III', 'No Memory', 'Every exchange vanished into the void. No data. No intelligence. Just hope — the most expensive strategy in the history of commerce.')}</div>`),
+    /* === START: SIM INTERLUDE === */
+    open('SIM', 'Interlude', 'The SIM Card<br>Problem'),
+    L('Interlude · The SIM Lifecycle', `<h2 class="st-h">Your Contacts Are Living<br>on Borrowed Time</h2>
+      <p class="st-i">A SIM was built to identify a phone line. Not to remember your network.</p>${rule()}
+      ${p(`Most of us have done it: new phone, tap “save to SIM,” move on. It feels safe. It isn't. Here is the whole life of a contact stored on a SIM, and where it ends.`, 'dc')}
+      ${stVisSimLife()}
+      <div style="border-top:1px solid rgba(0,0,0,.1);margin-top:14px">
+      ${li('I', 'Tiny, capped storage', 'SIM storage is counted in hundreds of entries at best, and it varies by card and phone. A busy professional outgrows it fast, and the overflow quietly lands somewhere else, or nowhere.')}
+      ${li('II', 'Names cut, details dropped', 'Names are often truncated, and each entry holds little more than a name and a number. No email. No company. No title. No note about where you met or what you promised.')}
+      ${li('III', 'Tied to the line, not to you', "The contacts belong to that physical card. Change phones, move to eSIM or dual-SIM, and they don't follow reliably.")}
+      ${li('IV', 'Lost, damaged, deactivated', 'SIMs get lost, cracked, locked or swapped. A prepaid number that lapses can be deactivated, and numbers can be recycled. The contacts leave with it.')}
+      ${li('V', 'No backup, no search, no merge', "No duplicate detection. No export you control. No history. When it's gone, it's gone.")}</div>
+      ${q(`A SIM can tell the network <strong>who you are.</strong><br>It was never meant to remember <strong>who you know.</strong>`)}
+      ${p(`articardd keeps every connection in your own Contacts and Google Sheet, with email, company and notes, independent of any phone, SIM or number. Change all three tomorrow. <strong>Your network stays.</strong>`)}
+      <p class="st-note" style="margin-top:14px">Storage limits and carrier policies vary by SIM, phone and provider.</p>`),
+    /* === END: SIM INTERLUDE === */
     /* 9-10 CH IV */
     open('IV', 'Chapter the Fourth', 'The Answer'),
     L('Chapter IV · The Answer', `<h2 class="st-h">The Card That Works</h2>
       <p class="st-i">Not an upgrade. The replacement of everything that came before it.</p>
       ${p('For the first time in 5,000 years — all three ancient needs answered by a single system.')}${stVisTrio()}
-      ${need('Need 01 · Carry', 'A Premium Physical Card', 'A premium card, made to be carried. Every colorway — Obsidian, Sapphire, Ruby — is a statement before a word is spoken.')}
-      ${need('Need 02 · Transfer', 'The Unlock — A Mutual Exchange', 'When someone taps your articardd card, they exchange their contact to unlock yours. One tap. Two identities transferred. The system acts — automatically, immediately.')}
-      ${stVisExchange()}${need('Need 03 · Persist', 'The Card — Intelligence That Never Sleeps', 'Thank-you emails fire automatically. Follow-ups at 24 hours. Leads scored and ranked. Weekly report every Monday. Your CRM builds itself. You show up to close.')}`),
+      ${need('Need 01 · Carry', 'A Card That Lives on Your Phone', 'A ring, your name above it, and a QR at its center — in your pocket, one tap from anyone. Choose from ' + THEMES.length + ' card themes and a mascot for the back. Want it in your hand too? Order a physical NFC card (CardKit) right from your account.')}
+      ${need('Need 02 · Transfer', 'The Unlock — A Mutual Exchange', 'When someone taps your card or scans the QR at its center, they land on your public card — save your contact, book a meeting, and share their details back. One tap. Two identities transferred. The system acts — automatically, immediately.')}
+      ${stVisExchange()}${need('Need 03 · Persist', 'A Memory That Never Sleeps', 'Every contact lands in your Contacts — duplicates caught and merged, with undo. Every meeting request waits in your Request Manager until you confirm, reschedule or cancel. Your Calendar, your notes and your network stay in one place. You show up to close.')}`),
     /* 11 FOUNDING LINE */
     D(`${stVisTap()}<p class="st-pre">The ancient merchant pressed his seal and hoped to be remembered.<br>The 20th-century professional printed ten thousand cards and prayed one would stick.</p>
        <div class="st-drule"></div><p class="st-big">You Tap Once.</p><p class="st-bigsub">articardd Remembers Everything.</p>`),
-       /* 12 PRICING */
+       /* === START: ROI CHAPTERS === */
+    open('V', 'Chapter the Fifth', 'The Math Behind<br>₱4,990'),
+    L('Chapter V · The Math', `<h2 class="st-h">₱14 a Day.<br>Or One Good Client.</h2>
+      <p class="st-i">Not a cost to justify. A break-even to beat.</p>${rule()}
+      ${p(`₱4,990 a year is about <strong>₱416 a month</strong>, roughly <strong>₱14 a day.</strong> The real question is not whether that is a lot. It is how many connections it takes to cover it.`, 'dc')}
+      ${stVisBreakeven()}
+      ${p(`Those are examples. Replace them with your own: the profit from one client, one booking, one contract.`)}
+      ${stCalcBlock()}`),
+    L('Who It Is For', `<div class="st-lab">Who It Is For</div><h2 class="st-h">Built for People<br>Whose Name Is Their Business</h2>${rule()}
+      ${need('Business Owners', 'Every Supplier, Buyer and Partner, Kept', `Everyone you meet becomes a saved contact, with a booking link that works while you are in your next meeting. One recovered deal can pay for the year.`)}
+      ${need('Professionals', 'Easy to Reach. Easy to Book. Easy to Remember.', 'Consultants, agents, advisors and specialists: clients request a time, you confirm from one inbox, and your title and company sit on every tap.')}
+      ${need('Everyone Else', 'Freelancers, Job Seekers, Organizers', 'A ring, your name and a QR: a first impression that says you take your work seriously, and a contact list that survives every new phone.')}`),
+    L('The Advantage', `<h2 class="st-h">Where Do Your<br>Contacts Live?</h2><p class="st-i">Be honest about where your network is stored today.</p>${stVisCompare()}
+      <div style="border-top:1px solid rgba(0,0,0,.1);margin-top:6px">
+      ${li('01', 'Time back', 'No manual typing of every new contact. They land in your Contacts, and duplicates are caught and merged, with undo.')}
+      ${li('02', 'Fewer missed leads', 'Meeting requests wait in your Request Manager and Calendar until you confirm, reschedule or cancel. Nothing slips because you were busy.')}
+      ${li('03', 'A sharper first impression', 'A premium ring-and-QR card with your theme and mascot, instead of a stack of paper that ends up in a drawer.')}
+      ${li('04', 'Always current', 'Update your details once. Every scan opens the latest version of your card.')}
+      ${li('05', 'A network that cannot vanish', 'Not on a SIM, not on one phone, not on someone else’s servers. In your own Google account.')}
+      ${li('06', 'One price', '₱4,990 a year, fixed. No tiers, no per-contact fees, no surprise upgrades.')}</div>`),
+    L('Your Scorecard', `<div class="st-lab">Your Scorecard</div><h2 class="st-h">Measure It.<br>Don’t Take Our Word.</h2>${rule()}
+      ${p(`Four numbers tell you whether your card has paid for itself. All four are already inside the app.`, 'dc')}
+      ${need('Count 01', 'Connections Made', 'People added to your Contacts through your card this month.')}
+      ${need('Count 02', 'Meeting Requests Received', 'Requests waiting in your Request Manager.')}
+      ${need('Count 03', 'Meetings Confirmed', 'The ones that reached your Calendar.')}
+      ${need('Count 04', 'Clients Won', 'Yours to log. Multiply by your profit per client.')}
+      ${q(`If confirmed clients × profit per client beats <strong>₱416 a month,</strong> the card has already paid for itself.`)}
+      <a class="st-cta" href="mailto:support@artibytte.com" onclick="this.href=supportMail('card')">Get Your Card</a>`),
+    /* === END: ROI CHAPTERS === */
+    /* 12 PRICING */
     L('Your License', `<h2 class="st-h" style="margin-bottom:5px">Your Annual License</h2><p class="st-i">One plan. One price. No tiers.</p>${stVisCardMock()}
       <div class="st-price">
         <div class="st-eb">
@@ -12372,22 +12855,24 @@ function stBuild() {
           <div class="st-cad" style="color:rgba(232,204,122,.5)">Per Year</div>
           <p class="st-note">≈ ₱416/month effective rate.<br>Fixed price. Non-negotiable.</p>
         </div>
-        <div class="st-scar"><div><div class="st-tag2" style="margin-bottom:4px">Included</div><p class="st-note">A premium articardd digital card.<br>New colorways every quarter for active license holders.</p></div></div>
+        <div class="st-scar"><div><div class="st-tag2" style="margin-bottom:4px">Included</div><p class="st-note">A premium articardd digital card — ring, QR, and your choice of theme and mascot.<br>New themes and limited-edition mascots every quarter for active license holders.</p></div></div>
       </div>
       <a class="st-cta" href="mailto:support@artibytte.com" onclick="this.href=supportMail('card')">Get Your Card</a>`),
     /* 13 WHAT YOU RECEIVE */
     L('What You Receive', `<div class="st-lab">What You Receive</div><h2 class="st-h">articardd.</h2><p class="st-i">Your card. Your data. Your system.</p>${stVisHub()}
-      <div class="st-lab" style="margin-top:6px">Core System</div><div style="border-top:1px solid rgba(0,0,0,.1)">
-      ${feat('01', 'The articardd Digital Card', 'A premium digital card. One tap — your full identity transfers instantly. Their contact lands in your system automatically. No manual entry. Ever.')}
-      ${feat('02', 'Auto Email Exchange System', 'Every tap triggers an automatic thank-you. Follow-ups fire at 24 hours. Your Gmail does the work. You show up to close.')}
-      ${feat('03', 'Meeting Booking — Direct to Your Calendar', 'Anyone who taps your card can book a meeting directly into your Google Calendar. No back-and-forth. No scheduling apps. One tap, one booking.')}
-      ${feat('04', 'Note OS — 25-Category Executive Vault', 'Your intelligence, organized. Deadlines, schedules, and priorities tracked categorically — with automated alerts before anything approaches. No app does this the way we do.')}
+      <a class="st-cta" style="margin:0 0 18px" href="#" onclick="event.preventDefault();stOpenSample()">See a live sample card →</a><div class="st-lab" style="margin-top:6px">Core System</div><div style="border-top:1px solid rgba(0,0,0,.1)">
+      ${feat('01', 'The articardd Digital Card', 'A premium digital card — a ring with your QR at its center, your name and title above it. Tap it, scan it, or share the link: your full identity transfers instantly and their contact lands in your system. No manual entry. Ever.')}
+      ${feat('02', 'Choose Your Look — Themes & Mascots', 'Pick from ' + THEMES.length + ' card themes and a mascot for the back of your card — including limited editions. New drops every quarter for active license holders.')}
+      ${feat('03', 'Meeting Booking — Direct to Your Calendar', 'Anyone who opens your card can request a meeting — pick a date and time, by video call, phone or in person. It lands in your Request Manager and your Calendar; you confirm, reschedule or cancel. No back-and-forth. No scheduling apps.')}
+      ${feat('04', 'Captures — Your Notes, Always Close', 'Pin what matters, keep the rest within reach. Ideas, follow-ups and deadlines live in one quiet place inside your card.')}
       ${feat('05', 'Google Calendar & Gmail Integration', "Everything runs inside Google's ecosystem — 99.9% uptime, no exotic databases, no third-party risk. Your data stays in infrastructure you already own.")}
-      ${feat('06', 'Contact Storage — Auto to GSheet', 'Every contact who taps your card lands directly in your Google Sheet. Auto-configured when they change their number, position, or info. Your network updates itself.')}
+      ${feat('06', 'Contacts — Import, Merge, Export', 'Everyone who connects with you lands in your Contacts and your Google Sheet. Import from your phone or a .vcf / .csv file, catch duplicates and merge them with undo, export to CSV any time.')}
       ${feat('07', 'iPhone Shortcut & Siri Setup — Free', 'We configure your iPhone so one press launches your card. Siri-enabled. No fumbling. Your card is always one gesture away.')}</div>
       <div class="st-lab" style="margin-top:22px">Launching Soon</div>
+      ${need('Coming', 'Automation Suite', 'Automatic thank-you emails after every tap, follow-ups at 24 hours, lead scoring and a weekly report every Monday. Your Gmail does the work. You show up to close.')}
+      ${need('Coming', 'AU — Human Discovery Engine', 'Tell AU what you need — a designer, an investor, a supplier — and it finds the right people near you, ranked by match. In development.')}
       ${need('Coming', 'Agentic Chief of Staff AI', "An AI that doesn't just chat — it acts. Emails on your behalf, manages automations, operates as your executive proxy. 5 years ahead of the market. Available now via prompt injection through Grok while the full command center is completed.")}
-      ${need('Coming', 'The Collection — Quarterly Colorways', 'Every quarter, active license holders receive an exclusive new colorway of their card — free. Obsidian. Sapphire. Ruby. Platinum. Yours to collect, yours to keep.')}
+      ${need('Coming', 'The Collection — Themes & Mascots', 'Every quarter, active license holders receive new card themes and limited-edition mascots — free. Yours to collect, yours to keep.')}
       <div class="st-dk"><div class="st-lab">Also Included</div>
         <p>• Free 10-minute setup + 1-hour onboarding training</p><p>• 24/7 maintenance, support & help desk</p>
         <p>• Your own AI support — active now, while the full console is built</p><p>• Your data is yours — entirely. We store nothing on our servers.</p></div>
@@ -12410,10 +12895,17 @@ function stBuild() {
       <div class="st-sig">${founder}</div><div class="st-sub">Founder · articardd · Philippines, 2026</div>`),
     /* 15 COLOPHON */
     D(`<div class="st-brand" style="font-size:36px">articardd.</div><div class="st-drule"></div>
-       <p class="st-meta">Philippines · 2026<br>New colorways every quarter · Active licenses only<br><br>You tap once.<br>articardd remembers everything.</p>
+       <p class="st-meta">Philippines · 2026<br>New themes &amp; mascots every quarter · Active licenses only<br><br>You tap once.<br>articardd remembers everything.</p>
        <a href="mailto:support@artibytte.com" onclick="this.href=supportMail('id')" style="margin-top:22px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#E8CC7A;text-decoration:none;border-bottom:1px solid rgba(232,204,122,.35);padding-bottom:3px">Get your own card ↗</a>`)
   ];
 }
+/* === START: STORY → SAMPLE CARD === */
+function stOpenSample() {
+  closeStory();
+  setTimeout(openSampleCard, 300);
+}
+/* === END: STORY → SAMPLE CARD === */
+
 function openStory() {
   if (document.getElementById('storyOverlay')) return;
   haptic('light');
