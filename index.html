@@ -4983,7 +4983,7 @@ function fillConnectPreview() {
   let coachSeen = false;
   function syncCoachPill() {
     const p = document.getElementById('coachPill');
-    if (p) p.classList.toggle('hide', coachSeen);
+    if (p) p.classList.remove('hide');
   }
   async function markCoachSeen() {
     if (coachSeen) return;
