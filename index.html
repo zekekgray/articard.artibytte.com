@@ -608,7 +608,7 @@
   .card-top-line{top:0;opacity:.6;}.card-bottom-line{bottom:0;opacity:.3;}
   .back-inner{position:relative;z-index:5;height:100%;display:flex;flex-direction:column;}
 .back-mascot{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:73%;max-height:92%;object-fit:contain;z-index:3;pointer-events:none;filter:drop-shadow(0 14px 26px rgba(0,0,0,.45));}
-.back-mascot-btn{position:absolute;top:14px;right:14px;z-index:6;width:36px;height:36px;border-radius:50%;border:.6px solid rgba(255,255,255,.18);background:rgba(255,255,255,.10);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent;}
+.back-mascot-btn{position:absolute;top:16px;right:16px;z-index:6;width:48px;height:48px;border-radius:50%;border:.6px solid rgba(255,255,255,.18);background:rgba(255,255,255,.10);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent;}
 body.public-mode .back-mascot-btn{display:none !important;}
 .mascot-limited{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:6;display:none;align-items:center;gap:8px;padding:7px 8px 7px 14px;border-radius:20px;border:.6px solid rgba(232,204,122,.45);background:rgba(20,22,26,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#E8CC7A;font:700 9.5px -apple-system,'SF Pro Text',sans-serif;letter-spacing:.14em;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
 .mascot-limited.show{display:flex;}
@@ -721,7 +721,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
 .gd-card{background:rgba(255,255,255,.72);border-radius:16px;overflow:hidden;margin-bottom:12px;}
 .gd-row{display:flex;gap:13px;align-items:flex-start;padding:13px 15px;border-top:1px solid rgba(0,0,0,.07);}
 .gd-row:first-child{border-top:none;}
-.gd-n{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:#1c1c1e;color:#ECE4D6;display:flex;align-items:center;justify-content:center;font:700 13px -apple-system,'SF Pro Text',sans-serif;}
+.gd-n{flex-shrink:0;width:34px;height:34px;border-radius:9px;background:#1c1c1e;color:#ECE4D6;display:flex;align-items:center;justify-content:center;font:700 13px -apple-system,'SF Pro Text',sans-serif;}
 .gd-n.em{background:rgba(232,204,122,.25);font-size:15px;}
 .gd-t b{display:block;font:600 14.5px -apple-system,'SF Pro Text',sans-serif;color:#1c1c1e;margin-bottom:2px;}
 .gd-t span{display:block;font:400 12.5px/1.5 -apple-system,'SF Pro Text',sans-serif;color:rgba(60,60,67,.62);}
@@ -749,6 +749,13 @@ body.public-mode .back-mascot-btn{display:none !important;}
   .hold-open.holding{opacity:.7;}
 }
 /* === END: HOLD TO OPEN === */
+/* === START: COACH PILL (static, opacity-only) === */
+.coach-pill{position:absolute;left:50%;top:342px;transform:translateX(-50%);z-index:7;display:flex;align-items:center;gap:7px;height:34px;padding:0 14px 0 11px;border-radius:17px;background:#F3EDE4;border:.6px solid rgba(0,0,0,0.08);box-shadow:0 4px 12px rgba(0,0,0,0.10);color:#1c1c1e;font:700 10px -apple-system,'SF Pro Text','Helvetica Neue',sans-serif;letter-spacing:.16em;white-space:nowrap;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity .25s ease;}
+.coach-pill:active{opacity:.7;}
+.coach-pill.hide{opacity:0;pointer-events:none;}
+.coach-pill svg{flex-shrink:0;}
+#cfm-clone-wrap .coach-pill,.share-blur-clone .coach-pill{display:none !important;}
+/* === END: COACH PILL === */
 
 /* ── TOAST ── */
   .nfc-icon-wrap:hover .nfc-tooltip{opacity:1;transform:translateY(0);}
@@ -1288,7 +1295,13 @@ body.public-mode .back-mascot-btn{display:none !important;}
   TAP &amp; HOLD
 </div>
 <!-- === END: HOLD HINT === -->
-<div class="glass-pill" id="glassPill">
+          <!-- === START: COACH PILL === -->
+          <button type="button" id="coachPill" class="coach-pill hide" onclick="event.stopPropagation();openCoach()" aria-label="How to use your card">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg>
+            TAP &amp; HOLD
+          </button>
+          <!-- === END: COACH PILL === -->
+          <div class="glass-pill" id="glassPill">
             <div class="pill-avatar" id="pillAvatar" onclick="event.stopPropagation();haptic('light');triggerPhotoUpload();"></div>
             <div class="pill-name" id="pillName">E. N. TAMBIGA</div>
             <div class="pill-pos" id="pillPos">CEO | ARTIBYTE APOSTROPHE INC.</div>
@@ -1755,7 +1768,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
           <div class="back-fol-wrap">
               <img id="backMascot" class="back-mascot" alt="" decoding="async"/>
               <button type="button" id="mascotLimitedBtn" class="mascot-limited" onclick="event.stopPropagation();haptic('light');openMascotLore();">LIMITED EDITION <i>Details ›</i></button>
-              <button type="button" class="back-mascot-btn" aria-label="Choose mascot" onclick="event.stopPropagation();haptic('light');openMascotPicker();"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#d0d0d0" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="#d0d0d0"/><circle cx="15" cy="10" r="1" fill="#d0d0d0"/><path d="M8.5 15c1 1.2 2.2 1.8 3.5 1.8s2.5-.6 3.5-1.8"/></svg></button>
+              <button type="button" class="back-mascot-btn" aria-label="Choose mascot" onclick="event.stopPropagation();haptic('light');openMascotPicker();"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#d0d0d0" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="#d0d0d0"/><circle cx="15" cy="10" r="1" fill="#d0d0d0"/><path d="M8.5 15c1 1.2 2.2 1.8 3.5 1.8s2.5-.6 3.5-1.8"/></svg></button>
             </div>
             <div class="back-bottom">
               <div class="back-divider"></div>
@@ -2791,7 +2804,16 @@ body.public-mode .back-mascot-btn{display:none !important;}
   </div>
 </div>
 <!-- === END: GUIDE ROW === -->
-<!-- Notifications -->
+    <!-- How to use -->
+    <div class="acct-group">
+      <div class="os-row" onclick="openCoach()" style="cursor:pointer;">
+        <div class="os-row-icon" style="background:#1c1c1e;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#E8CC7A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg></div>
+        <div class="os-row-text"><div class="os-row-title">How to Use Your Card</div><div class="os-row-sub">Tap &amp; hold, flip, mascots, share</div></div>
+        <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <!-- Notifications -->
     <div class="acct-group">
       <div class="os-row" onclick="haptic('light');showToast('Notification preferences — coming soon','neutral')" style="cursor:pointer;">
         <div class="os-row-icon" style="background:#FF453A;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
@@ -4947,6 +4969,52 @@ function fillConnectPreview() {
     });
     return (initials.join(' ') + ' ' + lastFormatted).toUpperCase();
   }
+
+  /* === START: CARD COACH (tap & hold hint + how-to sheet) === */
+  const COACH_KEY = 'coach-seen-v1';
+  let coachSeen = false;
+  function syncCoachPill() {
+    const p = document.getElementById('coachPill');
+    if (p) p.classList.toggle('hide', coachSeen);
+  }
+  async function markCoachSeen() {
+    if (coachSeen) return;
+    coachSeen = true; syncCoachPill();
+    try { await window.storage.set(COACH_KEY, '1', false); } catch (e) {}
+  }
+  (async () => {
+    try { const r = await window.storage.get(COACH_KEY, false); if (r && r.value) coachSeen = true; } catch (e) {}
+    syncCoachPill();
+  })();
+  /* matagumpay na hold = alam na ng user, kaya itago ang pill */
+  (function bindCoachHold() {
+    const b = document.getElementById('holdOpenBtn'); if (!b) return;
+    let t = null;
+    b.addEventListener('pointerdown', () => { t = setTimeout(markCoachSeen, 800); });
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => b.addEventListener(ev, () => clearTimeout(t)));
+  })();
+
+  function coachRow(bg, icon, title, sub) {
+    return `<div class="os-row"><div class="os-row-icon" style="background:${bg};">${icon}</div><div class="os-row-text"><div class="os-row-title">${title}</div><div class="os-row-sub">${sub}</div></div></div>`;
+  }
+  function openCoach() {
+    haptic('light');
+    markCoachSeen();
+    const pub = document.body.classList.contains('public-mode');
+    const S = 'width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"';
+    const icHold  = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E8CC7A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg>`;
+    const icFlip  = `<svg ${S}><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>`;
+    const icMasc  = `<svg ${S}><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="#fff"/><circle cx="15" cy="10" r="1" fill="#fff"/><path d="M8.5 15c1 1.2 2.2 1.8 3.5 1.8s2.5-.6 3.5-1.8"/></svg>`;
+    const icShare = `<svg ${S}><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>`;
+    let rows = coachRow('#1c1c1e', icHold, 'Tap &amp; hold', pub ? 'Hold the QR at the center of the card to connect.' : 'Hold the QR at the center of the card to open your public card.')
+             + coachRow('#4A9DE0', icFlip, 'Tap to flip', 'Tap anywhere on the card to see the back.');
+    if (!pub) rows += coachRow('#9B59B6', icMasc, 'Choose your mascot', 'On the back, tap the face icon at the top right.');
+    rows += coachRow('#34C759', icShare, 'Share', 'Use the share button in the bottom right pill.');
+    auMakeSheet('coachOverlay', 'How It Works', `
+      <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:14px;">${rows}</div>
+      <button onclick="closeAuGenericModal('coachOverlay')" style="width:100%;padding:14px;border-radius:14px;border:none;background:#1c1c1e;color:#ECE4D6;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14.5px;font-weight:700;cursor:pointer;">Got it</button>`);
+  }
+  /* === END: CARD COACH === */
 
   function initHoldToOpen() {
     const btn  = document.getElementById('holdOpenBtn');
@@ -9124,7 +9192,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     // remove the scene's ambient ::before glow context — it's decorative only
     // and can otherwise expand the measured bounding box during capture
     const styleOverride = document.createElement('style');
-    styleOverride.textContent = '.scene::before { display: none !important; } .hold-hint, .hold-pulse { display: none !important; }';
+        styleOverride.textContent = '.scene::before { display: none !important; } .coach-pill { display: none !important; } .hold-pulse { display: none !important; } .hold-hint { animation: none !important; transform: translateX(-50%) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: rgba(20,22,26,.85) !important; opacity: 1 !important; }';
     sceneClone.appendChild(styleOverride);
 
     // Host: same size as .scene, off-screen, transparent — the clone keeps
@@ -12518,14 +12586,12 @@ function stQrGlyph(cx, cy, k) {
 function stRingDefs(id) {
   return `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9d7d2"/><stop offset=".28" stop-color="#b7b4ad"/><stop offset=".45" stop-color="#e2dfd9"/><stop offset=".62" stop-color="#a19e97"/><stop offset="1" stop-color="#b0ada6"/></linearGradient>`;
 }
+/* official articardd logo (same as favicon): isang source para sa buong app */
+function acLogo(px, r) {
+  return `<img src="/assets/favicon-192.png" alt="articardd" width="${px}" height="${px}" style="display:block;width:${px}px;height:${px}px;border-radius:${r || Math.round(px * .22)}px;object-fit:cover;" onerror="this.style.display='none'"/>`;
+}
 function stVisMark() {
-  return `<div class="st-vis" style="width:120px;margin:0 auto 18px;">
-  <svg viewBox="0 0 120 120" style="display:block;width:100%;overflow:visible" role="img" aria-label="The articardd mark: a ring with a QR at its center">
-    <defs>${stRingDefs('stMkG')}</defs>
-    <circle class="st-ring" cx="60" cy="60" r="50" fill="none" stroke="#E8CC7A" stroke-width="1"/>
-    <circle cx="60" cy="60" r="46" fill="none" stroke="url(#stMkG)" stroke-width="9"/>
-    ${stQrGlyph(60, 60, .62)}
-  </svg></div>`;
+  return `<div class="st-vis" style="width:96px;margin:0 auto 18px;filter:drop-shadow(0 10px 22px rgba(0,0,0,.35));">${acLogo(96)}</div>`;
 }
 function stVisTap() {
   const ring = d => `<circle class="st-ring" style="animation-delay:${d}s" cx="80" cy="80" r="34" fill="none" stroke="#E8CC7A" stroke-width="1"/>`;
@@ -13014,12 +13080,7 @@ function guideRow(n, title, body, em) {
 
 function guidePages() {
   const hero = `<div class="gd-hero">
-    <svg viewBox="0 0 120 120" width="104" height="104" style="overflow:visible" aria-hidden="true">
-      <defs>${stRingDefs('gdG')}</defs>
-      <circle class="gd-ring" cx="60" cy="60" r="50" fill="none" stroke="#E8CC7A" stroke-width="1"/>
-      <circle cx="60" cy="60" r="46" fill="none" stroke="url(#gdG)" stroke-width="9"/>
-      ${stQrGlyph(60, 60, .62)}
-    </svg>
+    <div style="filter:drop-shadow(0 6px 16px rgba(0,0,0,.18));">${acLogo(84)}</div>
     <div class="gd-h">Your card, one gesture away</div>
     <div class="gd-sub">A quick tour so you get the most out of your articard.</div></div>`;
 
@@ -13032,10 +13093,10 @@ function guidePages() {
 
   return [
     { html: hero + `<div class="gd-card">
-      ${guideRow('👆', 'Tap &amp; hold the QR', 'Press and hold the QR inside the ring for a moment. Your connect sheet opens: save contact, book a meeting.', 1)}
-      ${guideRow('🔄', 'Tap the card to flip', 'See your mascot and ID on the back.', 1)}
-      ${guideRow('📤', 'Share anywhere', 'Use the share icon at the lower right: AirDrop, WhatsApp, link, or image.', 1)}
-      ${guideRow('📇', 'Contacts &amp; Calendar', 'Lower left: your contacts, meetings and requests.', 1)}</div>` },
+      ${coachRow('#1c1c1e', '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E8CC7A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg>', 'Tap &amp; hold the QR', 'Hold the QR inside the ring. Your connect sheet opens: save contact, book a meeting.')}
+      ${coachRow('#4A9DE0', '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>', 'Tap to flip', 'See your mascot and ID on the back.')}
+      ${coachRow('#34C759', '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>', 'Share anywhere', 'Share icon at the lower right: AirDrop, WhatsApp, link, or image.')}
+      ${coachRow('#FF9F0A', '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>', 'Contacts &amp; Calendar', 'Lower left: your contacts, meetings and requests.')}</div>` },
 
     { html: `<div class="gd-hero"><div class="gd-h">Put it on your Home Screen</div><div class="gd-sub">Open your articard in one tap, every time. No typing the link.</div></div>
       <div class="gd-seg"><button class="${guideDev === 'iphone' ? 'on' : ''}" onclick="guideSetDev('iphone')">iPhone / iPad</button><button class="${guideDev === 'android' ? 'on' : ''}" onclick="guideSetDev('android')">Android</button></div>
