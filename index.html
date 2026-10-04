@@ -704,7 +704,42 @@ body.public-mode .back-mascot-btn{display:none !important;}
   .btn-action:active .icon-pill{transform:scale(0.90);opacity:.82;}
   .btn-tooltip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%) translateY(0);background:rgba(30,30,30,0.95);color:#fff;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:10px;font-weight:500;white-space:nowrap;padding:4px 8px;border-radius:6px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;letter-spacing:.02em;border:1px solid rgba(255,255,255,0.1);}
 
-  /* === START: HOLD TO OPEN === */
+  /* === START: HOLD HINT + GUIDE CSS === */
+.hold-pulse{position:absolute;left:170px;top:290px;width:68px;height:68px;margin:-34px 0 0 -34px;border-radius:50%;border:1.5px solid rgba(232,204,122,.75);z-index:5;pointer-events:none;animation:holdPulse 2.4s ease-out infinite;}
+@keyframes holdPulse{0%{transform:scale(1);opacity:.75;}100%{transform:scale(1.75);opacity:0;}}
+.hold-hint{position:absolute;left:170px;top:338px;z-index:6;display:flex;align-items:center;gap:6px;padding:6px 12px 6px 9px;border-radius:16px;background:rgba(20,22,26,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:.6px solid rgba(232,204,122,.4);color:#E8CC7A;font:700 8.5px -apple-system,'SF Pro Text',sans-serif;letter-spacing:.16em;white-space:nowrap;pointer-events:none;transition:opacity .2s;animation:holdHintFloat 2.6s ease-in-out infinite;}
+@keyframes holdHintFloat{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-3px);}}
+#holdOpenBtn.holding ~ .hold-hint{opacity:0;}
+#holdOpenBtn.holding ~ .hold-pulse{display:none;}
+
+.gd-dots{display:flex;gap:6px;justify-content:center;margin:-4px 0 16px;}
+.gd-dots i{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.15);transition:all .25s;}
+.gd-dots i.on{width:20px;border-radius:3px;background:#1c1c1e;}
+.gd-hero{display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:16px;}
+.gd-h{font:700 21px -apple-system,'SF Pro Display',sans-serif;color:#1c1c1e;letter-spacing:-.01em;margin:10px 0 4px;}
+.gd-sub{font:400 13px/1.55 -apple-system,'SF Pro Text',sans-serif;color:rgba(60,60,67,.6);max-width:290px;}
+.gd-card{background:rgba(255,255,255,.72);border-radius:16px;overflow:hidden;margin-bottom:12px;}
+.gd-row{display:flex;gap:13px;align-items:flex-start;padding:13px 15px;border-top:1px solid rgba(0,0,0,.07);}
+.gd-row:first-child{border-top:none;}
+.gd-n{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:#1c1c1e;color:#ECE4D6;display:flex;align-items:center;justify-content:center;font:700 13px -apple-system,'SF Pro Text',sans-serif;}
+.gd-n.em{background:rgba(232,204,122,.25);font-size:15px;}
+.gd-t b{display:block;font:600 14.5px -apple-system,'SF Pro Text',sans-serif;color:#1c1c1e;margin-bottom:2px;}
+.gd-t span{display:block;font:400 12.5px/1.5 -apple-system,'SF Pro Text',sans-serif;color:rgba(60,60,67,.62);}
+.gd-t em{font-style:normal;font-weight:700;color:#1c1c1e;}
+.gd-seg{display:flex;background:rgba(118,118,128,.14);border-radius:11px;padding:3px;margin:0 0 14px;}
+.gd-seg button{flex:1;padding:8px;border:none;border-radius:9px;background:none;font:600 13px -apple-system,'SF Pro Text',sans-serif;color:rgba(60,60,67,.6);cursor:pointer;transition:all .2s;}
+.gd-seg button.on{background:#fff;color:#1c1c1e;box-shadow:0 1px 4px rgba(0,0,0,.12);}
+.gd-say{background:#2F343A;color:#E8CC7A;border-radius:14px;padding:14px;text-align:center;font:600 15px -apple-system,'SF Pro Text',sans-serif;letter-spacing:.01em;margin-bottom:12px;}
+.gd-tip{background:rgba(232,204,122,.2);border:1px solid rgba(201,162,39,.3);border-radius:14px;padding:12px 14px;font:400 12.5px/1.55 -apple-system,'SF Pro Text',sans-serif;color:#6b5514;margin-bottom:12px;}
+.gd-links{display:flex;gap:8px;margin-bottom:12px;}
+.gd-link{flex:1;text-align:center;padding:11px 8px;border-radius:12px;background:rgba(255,255,255,.9);border:1px solid rgba(0,0,0,.1);color:#1c1c1e;font:600 12.5px -apple-system,'SF Pro Text',sans-serif;text-decoration:none;cursor:pointer;}
+.gd-actions{display:flex;gap:10px;margin-top:6px;}
+.gd-btn{flex:1;padding:14px;border-radius:14px;border:none;background:#1c1c1e;color:#ECE4D6;font:700 14.5px -apple-system,'SF Pro Text',sans-serif;cursor:pointer;}
+.gd-btn.ghost{background:rgba(0,0,0,.06);color:#1c1c1e;font-weight:600;flex:0 0 36%;}
+.gd-ring{transform-box:fill-box;transform-origin:center;animation:holdPulse 2.6s ease-out infinite;}
+/* === END: HOLD HINT + GUIDE CSS === */
+
+/* === START: HOLD TO OPEN === */
 .hold-open{position:relative;overflow:hidden;min-width:200px;height:48px;padding:0 28px;border-radius:24px;background:#F3EDE4;border:.6px solid rgba(0,0,0,0.08);box-shadow:0 4px 12px rgba(0,0,0,0.10);color:#1c1c1e;font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;font-size:12px;font-weight:700;letter-spacing:.22em;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
 .hold-open-fill{position:absolute;inset:0;background:rgba(28,28,30,0.10);transform:scaleX(0);transform-origin:left center;transition:transform .2s ease-out;pointer-events:none;}
 .hold-open.holding .hold-open-fill{transform:scaleX(1);transition:transform var(--hold-ms,800ms) linear;}
@@ -1246,7 +1281,14 @@ body.public-mode .back-mascot-btn{display:none !important;}
               </svg>
             </span>
           </button>
-          <div class="glass-pill" id="glassPill">
+          <!-- === START: HOLD HINT === -->
+<span class="hold-pulse" aria-hidden="true"></span>
+<div class="hold-hint" aria-hidden="true">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E8CC7A" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3" fill="#E8CC7A" stroke="none"/><circle cx="12" cy="12" r="8"/></svg>
+  TAP &amp; HOLD
+</div>
+<!-- === END: HOLD HINT === -->
+<div class="glass-pill" id="glassPill">
             <div class="pill-avatar" id="pillAvatar" onclick="event.stopPropagation();haptic('light');triggerPhotoUpload();"></div>
             <div class="pill-name" id="pillName">E. N. TAMBIGA</div>
             <div class="pill-pos" id="pillPos">CEO | ARTIBYTE APOSTROPHE INC.</div>
@@ -2740,7 +2782,16 @@ body.public-mode .back-mascot-btn{display:none !important;}
     </div>
     <!-- === END: REQUEST MANAGER ROW === -->
 
-    <!-- Notifications -->
+    <!-- === START: GUIDE ROW === -->
+<div class="acct-group">
+  <div class="os-row" onclick="haptic('light');guideOpen()" style="cursor:pointer;">
+    <div class="os-row-icon" style="background:#E8CC7A;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+    <div class="os-row-text"><div class="os-row-title">How to Use articard</div><div class="os-row-sub">Home Screen &amp; Siri setup</div></div>
+    <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+  </div>
+</div>
+<!-- === END: GUIDE ROW === -->
+<!-- Notifications -->
     <div class="acct-group">
       <div class="os-row" onclick="haptic('light');showToast('Notification preferences — coming soon','neutral')" style="cursor:pointer;">
         <div class="os-row-icon" style="background:#FF453A;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
@@ -9073,7 +9124,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     // remove the scene's ambient ::before glow context — it's decorative only
     // and can otherwise expand the measured bounding box during capture
     const styleOverride = document.createElement('style');
-    styleOverride.textContent = '.scene::before { display: none !important; }';
+    styleOverride.textContent = '.scene::before { display: none !important; } .hold-hint, .hold-pulse { display: none !important; }';
     sceneClone.appendChild(styleOverride);
 
     // Host: same size as .scene, off-screen, transparent — the clone keeps
@@ -12950,6 +13001,124 @@ function closeStory() {
   setTimeout(() => ov.remove(), 250);
 }
 /* === END: STORY VIEWER === */
+/* === START: FIRST-TIME GUIDE === */
+const GUIDE_KEY = 'athna-guide-seen-v1';
+let guideStep = 0, guideDev = 'iphone';
+
+function guideSeen() { try { return !!localStorage.getItem(GUIDE_KEY); } catch (e) { return false; } }
+function guideMarkSeen() { try { localStorage.setItem(GUIDE_KEY, '1'); } catch (e) {} }
+
+function guideRow(n, title, body, em) {
+  return `<div class="gd-row"><div class="gd-n${em ? ' em' : ''}">${n}</div><div class="gd-t"><b>${title}</b><span>${body}</span></div></div>`;
+}
+
+function guidePages() {
+  const hero = `<div class="gd-hero">
+    <svg viewBox="0 0 120 120" width="104" height="104" style="overflow:visible" aria-hidden="true">
+      <defs>${stRingDefs('gdG')}</defs>
+      <circle class="gd-ring" cx="60" cy="60" r="50" fill="none" stroke="#E8CC7A" stroke-width="1"/>
+      <circle cx="60" cy="60" r="46" fill="none" stroke="url(#gdG)" stroke-width="9"/>
+      ${stQrGlyph(60, 60, .62)}
+    </svg>
+    <div class="gd-h">Your card, one gesture away</div>
+    <div class="gd-sub">A quick tour so you get the most out of your articard.</div></div>`;
+
+  const iphone = guideRow(1, 'Tap the Share button', 'The square with an arrow <em>↑</em> in Safari. If you don\'t see it, tap the <em>•••</em> (More) icon first, then <em>Share</em>.')
+    + guideRow(2, 'Scroll and tap "Add to Home Screen"', 'It\'s in the list of actions. Swipe up if you can\'t see it.')
+    + guideRow(3, 'Tap "Add"', 'Top-right corner. That\'s it! articard is now on your Home Screen.');
+  const android = guideRow(1, 'Open the browser menu', 'Tap the <em>⋮</em> three dots in Chrome.')
+    + guideRow(2, 'Tap "Add to Home screen"', 'Or "Install app" if you see it.')
+    + guideRow(3, 'Confirm "Add"', 'articard now opens like a real app.');
+
+  return [
+    { html: hero + `<div class="gd-card">
+      ${guideRow('👆', 'Tap &amp; hold the QR', 'Press and hold the QR inside the ring for a moment. Your connect sheet opens: save contact, book a meeting.', 1)}
+      ${guideRow('🔄', 'Tap the card to flip', 'See your mascot and ID on the back.', 1)}
+      ${guideRow('📤', 'Share anywhere', 'Use the share icon at the lower right: AirDrop, WhatsApp, link, or image.', 1)}
+      ${guideRow('📇', 'Contacts &amp; Calendar', 'Lower left: your contacts, meetings and requests.', 1)}</div>` },
+
+    { html: `<div class="gd-hero"><div class="gd-h">Put it on your Home Screen</div><div class="gd-sub">Open your articard in one tap, every time. No typing the link.</div></div>
+      <div class="gd-seg"><button class="${guideDev === 'iphone' ? 'on' : ''}" onclick="guideSetDev('iphone')">iPhone / iPad</button><button class="${guideDev === 'android' ? 'on' : ''}" onclick="guideSetDev('android')">Android</button></div>
+      <div class="gd-card">${guideDev === 'iphone' ? iphone : android}</div>` },
+
+    { html: guideDev === 'android' ? guideAndroidVoice() : `<div class="gd-hero"><div class="gd-h">Call it with Siri</div><div class="gd-sub">One-time setup, then just say the magic words.</div></div>
+      ${guideSeg()}
+      <div class="gd-say">“Hey Siri, show articard”</div>
+      <div class="gd-card">
+        ${guideRow(1, 'Create an album named "articard"', 'Open <em>Photos</em> → Albums → <em>+</em> → New Album → name it <em>articard</em>.')}
+        ${guideRow(2, 'Save your card image to it', 'On your card tap <em>Share → Save to Photos</em>, then add that image to the articard album.')}
+        ${guideRow(3, 'Create the shortcut', 'Open <em>Shortcuts</em> → <em>+</em>. Tap the name at the top and rename it <em>Show articard</em>. The name is what Siri listens for.')}
+        ${guideRow(4, 'Add action: Speak', 'Search <em>Speak Text</em> and type your greeting, for example <em>"Of course! Here\'s your articard."</em> Make it yours.')}
+        ${guideRow(5, 'Add action: Find Photos', 'Filter: <em>Album</em> is <em>articard</em>. Sort by <em>Date Taken</em>, <em>Latest First</em>. Turn on <em>Limit</em> and set it to <em>1</em>.')}
+        ${guideRow(6, 'Add action: Quick Look', 'Search <em>Quick Look</em> and make sure it shows the <em>Photos</em> from the step above. Tap Done.')}
+      </div>
+      <div class="gd-links"><a class="gd-link" href="photos-redirect://">Open Photos</a><a class="gd-link" href="shortcuts://">Open Shortcuts</a></div>
+      <div class="gd-tip"><b>Tip:</b> Anytime you change your card theme or mascot, save the new image to the articard album. "Latest first, limit 1" always shows your newest card.</div>
+      <button class="gd-btn ghost" style="width:100%;margin-bottom:12px;" onclick="guideSaveCardImage()">Save my card image to Photos</button>` }
+  ];
+}
+
+/* === START: GUIDE ANDROID VOICE === */
+function guideSeg() {
+  return `<div class="gd-seg"><button class="${guideDev === 'iphone' ? 'on' : ''}" onclick="guideSetDev('iphone')">iPhone / iPad</button><button class="${guideDev === 'android' ? 'on' : ''}" onclick="guideSetDev('android')">Android</button></div>`;
+}
+
+function guideAndroidVoice() {
+  return `<div class="gd-hero"><div class="gd-h">Call it with your voice</div><div class="gd-sub">Android. One-time setup, then just say the magic words.</div></div>
+    ${guideSeg()}
+    <div class="gd-say">“Hey Google, open articard”</div>
+    <div class="gd-card">
+      ${guideRow(1, 'Install it as an app', 'In Chrome tap <em>⋮</em> → <em>Install app</em> (or <em>Add to Home screen</em>). When it asks for a name, type <em>articard</em>. The name is what you will say.')}
+      ${guideRow(2, 'Open it once from your Home screen', 'This lets your phone register it as an app.')}
+      ${guideRow(3, 'Say it', 'Say <em>"Hey Google, open articard"</em>. Works with Google Assistant or Gemini, depending on your phone.')}
+    </div>
+    <div class="gd-card">
+      ${guideRow('A', 'Voice opened a search instead?', 'Open the <em>Google Home</em> app → <em>Automations</em> → <em>+</em> → starter: <em>When I say…</em> → type <em>show articard</em> → action: <em>Open app</em> → <em>articard</em>. Menus differ by phone and Android version.', 1)}
+      ${guideRow('B', 'Prefer photo style?', 'Save your card image to a <em>Google Photos</em> album named <em>articard</em> and pin it to your Home screen for a one-tap view.', 1)}
+    </div>
+    <div class="gd-tip"><b>Tip:</b> Keep the Home screen icon named exactly <em>articard</em>. If voice mishears it, rename the icon: long-press it → <em>Edit</em> or <em>Rename</em>.</div>
+    <button class="gd-btn ghost" style="width:100%;margin-bottom:12px;" onclick="guideSaveCardImage()">Save my card image</button>`;
+}
+/* === END: GUIDE ANDROID VOICE === */
+
+function guideRender(keepScroll) {
+  const body = document.getElementById('guideBody'); if (!body) return;
+  const sh = document.getElementById('guideOverlay-sheet');
+  const keep = sh ? sh.scrollTop : 0;
+  const P = guidePages(), last = guideStep === P.length - 1;
+  body.innerHTML = `<div class="gd-dots">${P.map((_, i) => `<i class="${i === guideStep ? 'on' : ''}"></i>`).join('')}</div>
+    <div>${P[guideStep].html}</div>
+    <div class="gd-actions">${guideStep > 0 ? '<button class="gd-btn ghost" onclick="guideGo(-1)">Back</button>' : ''}<button class="gd-btn" onclick="${last ? 'guideFinish()' : 'guideGo(1)'}">${last ? 'Got it' : 'Next'}</button></div>`;
+  if (sh) sh.scrollTop = keepScroll ? keep : 0;
+}
+function guideGo(d) { haptic('light'); guideStep = Math.max(0, Math.min(guidePages().length - 1, guideStep + d)); guideRender(); }
+function guideSetDev(d) { haptic('light'); guideDev = d; guideRender(true); }
+function guideFinish() { guideMarkSeen(); haptic('success'); closeAuGenericModal('guideOverlay'); }
+function guideSaveCardImage() { closeAuGenericModal('guideOverlay'); setTimeout(shareCard, 300); }
+
+function guideOpen(auto) {
+  if (document.getElementById('guideOverlay')) return;
+  if (auto) guideMarkSeen();          /* lalabas lang nang kusa nang isang beses */
+  guideStep = 0;
+  guideDev = /Android/i.test(navigator.userAgent) ? 'android' : 'iphone';
+  auMakeSheet('guideOverlay', 'Welcome to articard', '<div id="guideBody"></div>');
+  guideRender();
+}
+
+/* auto-open: owner lang, pagkatapos ng gate, first time lang */
+function guideAutoWatch() {
+  let tries = 0;
+  const t = setInterval(() => {
+    if (++tries > 120) { clearInterval(t); return; }
+    const gate = document.getElementById('screenGate');
+    if ((gate && gate.classList.contains('show')) || !currentEntry || document.body.classList.contains('public-mode')) return;
+    clearInterval(t);
+    if (!guideSeen()) setTimeout(() => guideOpen(true), 900);
+  }, 500);
+}
+guideAutoWatch();
+/* === END: FIRST-TIME GUIDE === */
+
 /* === START: READY FLAG === */
   window.__ATHNA_READY__ = true;
   /* === END: READY FLAG === */
