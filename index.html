@@ -4192,12 +4192,10 @@ function fillConnectPreview() {
         <div class="amx-days">${cells}</div>
       </div>
       <div class="amx-bold">Preferred time</div>
-      /* === START: AVAILABILITY TIME GRID === */
       ${!amx.day ? '<div class="amx-sub" style="margin-top:8px">Select an available date above.</div>'
         : (amx.avail && amx.avail.loading) ? '<div class="amx-sub" style="margin-top:8px">Checking availability…</div>'
         : !amxTimeList().length ? '<div class="amx-sub" style="margin-top:8px">No times available on this date. Please try another day.</div>'
         : `<div class="amx-times">${amxTimeList().map(t => `<button type="button" class="amx-btn${amx.timeBase === t ? ' on' : ''}" data-time="${t}">${t}</button>`).join('')}</div>`}
-      /* === END: AVAILABILITY TIME GRID === */
       ${amx.time ? `<div style="margin-top:10px;display:flex;align-items:center;gap:8px"><span class="amx-sub">at</span>
         <select id="amxMinute" class="amx-in-field" style="width:auto;padding:8px 32px 8px 12px;font-size:13px">${['00','15','30','45'].map(m => `<option value="${m}" ${amx.minute === m ? 'selected' : ''}>:${m}</option>`).join('')}</select></div>` : ''}
       <div class="amx-bold">Duration</div>
@@ -4360,7 +4358,7 @@ function fillConnectPreview() {
     if (!ov) return;
     haptic('light');
     ov.classList.add('amx-out');
-    setTimeout(() => { ov.remove(); amx = null; }, 250);
+    setTimeout(() => { ov.remove(); amx = null; if (typeof rmToken === 'function' && rmToken()) loadMeetings(); }, 250);
   }
   /* === END: NATIVE ARTIMEET MODAL === */
 
@@ -7777,7 +7775,7 @@ function toggleContactEdit() {
     else if (type === 'book') {
       closeContactDetailScreen();
       const who = c.name; /* prefill ang pangalan ng contact sa meeting */
-      setTimeout(() => { switchOSTab('upcoming'); openAddMeeting(); document.getElementById('amName').value = who; }, 300);
+      setTimeout(() => openAddMeeting({ name: who, email: c.email, org: c.company, phone: c.mobile }), 300);
     }
   }
 
@@ -8685,10 +8683,8 @@ function toggleContactEdit() {
       <div class="up-row" id="mrow-${m.id}" style="cursor:pointer;" onclick="if(!event.target.closest('.up-row-del'))openMeetingDetail('${m.id}')">
         <div class="up-row-time">${formatTime12(m.time)}</div>
         <div class="up-row-text">
-          /* === START: ESCAPE GUEST DATA (today row) === */
           <div class="up-row-name">${auEsc(m.name)}</div>
-          <div class="up-row-type">${auEsc(m.type)}${m.status === 'Requested'
-          /* === END: ESCAPE GUEST DATA (today row) === */ ? ' · <span style="color:#FF9F0A;font-weight:700;">Pending</span>' : ''}</div>
+          <div class="up-row-type">${auEsc(m.type)}${m.status === 'Requested' ? ' · <span style="color:#FF9F0A;font-weight:700;">Pending</span>' : ''}</div>
         </div>
         <button class="up-row-del"
           data-del="${m.id}"
@@ -12111,7 +12107,7 @@ function mtgEnsureExtras() {
   return box;
 }
 
-function openAddMeeting(ctx) {
+function openMeetingSheet(ctx) {
   haptic('light');
   _rebookCtx = ctx && ctx.id ? ctx : null;
   const box = mtgEnsureExtras();
@@ -12157,7 +12153,7 @@ function openAddMeeting(ctx) {
 function openEditMeeting(id) {
   const m = MEETINGS.find(x => x.id === id);
   if (!m) return;
-  openAddMeeting();
+  openMeetingSheet();
   document.getElementById('amExtras').style.display = 'none';   // edit = name/type/date/time lang
   editingMeetingId = id;
   document.getElementById('amTitle').textContent = 'Edit Meeting';
@@ -12216,6 +12212,28 @@ function meetingRebook(id) {
   haptic('medium');
   setTimeout(() => openAddMeeting(m), 260);
 }
+/* === START: SINGLE BOOKING SYSTEM (amx) === */
+function openAddMeeting(pre) {
+  if (document.getElementById('artimeetOverlay')) return;
+  if (pre && typeof pre.preventDefault === 'function') pre = null;   // galing sa onclick event
+  bookMeetingArtimeet();
+  if (!pre || !amx) return;
+  amx.name  = pre.name  || '';
+  amx.email = pre.email || '';
+  amx.org   = pre.org   || '';
+  amx.phone = pre.phone || '';
+  amx.notes = pre.notes || '';
+  if (pre.type) {
+    amx.type = pre.type;
+    amx.step = 1;                       // may type na, diretso sa date/time
+    if (pre.duration) amx.duration = pre.duration;
+    if (pre.recurrence) amx.recurrence = pre.recurrence;
+    if (pre.location) amx.location = pre.location;
+    if (pre.address) amx.address = pre.address;
+  }
+  amxRender();
+}
+/* === END: SINGLE BOOKING SYSTEM (amx) === */
 /* === END: TRUE REBOOK === */
 /* === START: MASCOTS === */
 const MASCOTS = [
