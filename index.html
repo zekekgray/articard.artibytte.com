@@ -2475,7 +2475,6 @@ body.public-mode .back-mascot-btn{display:none !important;}
     <div class="lic-demo-row">
       <button class="lic-demo-btn" data-lic="lifetime" onclick="renderLicenseState('lifetime')">Lifetime</button>
       <button class="lic-demo-btn" data-lic="active" onclick="renderLicenseState('active')">Active</button>
-      <button class="lic-demo-btn" data-lic="trial" onclick="renderLicenseState('trial')">Trial</button>
       <button class="lic-demo-btn" data-lic="expired" onclick="renderLicenseState('expired')">Expired</button>
       <button class="lic-demo-btn" data-lic="trial_available" onclick="renderLicenseState('trial_available')">No License</button>
     </div>
@@ -2485,7 +2484,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
 
     <div class="lic-trial-bar" id="licTrialBar" style="display:none;">
       <div style="display:flex;justify-content:space-between;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:10px;font-weight:700;color:rgba(60,60,67,0.45);letter-spacing:.04em;">
-        <span>TRIAL PERIOD</span>
+        <span>LICENSE PERIOD</span>
         <span id="licTrialPct"></span>
       </div>
       <div class="lic-trial-track"><div class="lic-trial-fill" id="licTrialFill" style="width:0%;"></div></div>
@@ -2515,7 +2514,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
     <div class="lic-divider"></div>
 
     <button class="btn-lic-proceed" id="licBtnProceed" onclick="closeLicenseScreen()" style="display:none;">▶ Enter ATH•NA OS</button>
-    <button class="btn-lic-trial" id="licBtnTrial" onclick="    haptic('light');showToast('Free trial: coming soon','neutral')" style="display:none;">🎁 Start 7-Day Free Trial</button>
+    <button class="btn-lic-trial" id="licBtnTrial" onclick="    haptic('light');window.location.href=supportMail('card')" style="display:none;">Get Annual License · ₱4,990</button>
     <button class="btn-lic-renew" id="licBtnRenew" onclick="    haptic('light');showToast('Renewal: coming soon','neutral')" style="display:none;">🔄 Request License Renewal</button>
     <button class="btn-lic-logout" onclick="closeLicenseScreen()">← Back</button>
   </div>
@@ -2532,7 +2531,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
   <div class="id-body">
     <div class="id-title">Create Your Identity</div>
     <div class="id-sub">Register once — your ATH•NA ID is your permanent digital identity.</div>
-    <div class="id-trial-pill"><span class="id-dot"></span> 7-DAY FREE TRIAL INCLUDED</div>
+    <div class="id-trial-pill"><span class="id-dot"></span> ANNUAL LICENSE · ₱4,990 / YEAR</div>
 
     <div class="id-field-label">Full Name *</div>
     <input type="text" class="id-input" id="idFullName" placeholder="e.g. Juan dela Cruz" oninput="clearIdErr('idFullName','idFullNameErr')"/>
@@ -2599,7 +2598,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <div class="tos-def"><b>"Visitor" / "Contact"</b> — Any third party who views the Client's digital vCard and voluntarily submits their contact details via the vCard Exchange Form.</div>
       <div class="tos-def"><b>"ATH•NA ID"</b> — The unique system-generated identifier (format: ATH-XXXXXXXXX) permanently assigned to a Client upon registration. It serves as the Client's username and cannot be transferred or reassigned.</div>
       <div class="tos-def"><b>"PIN"</b> — The 6-digit numeric credential paired with the ATH•NA ID for authentication. The Client is solely responsible for its confidentiality.</div>
-      <div class="tos-def"><b>"License"</b> — The right to access and use the System under one of three plans: (a) Free Trial, (b) Monthly Subscription, or (c) Lifetime Access.</div>
+      <div class="tos-def"><b>"License"</b> — The right to access and use the System under the Annual License (₱4,990 per year).</div>
       <div class="tos-def"><b>"OS Data"</b> — All data created or stored by the Client within the System, including contact records, transaction entries, wallet balances, meeting bookings, owner profile information, and view counts.</div>
       <div class="tos-def"><b>"Visitor Data"</b> — Personal information submitted by Visitors through the vCard Exchange Form: full name, title/company, email address, and mobile number.</div>
       <div class="tos-def"><b>"Personal Information"</b> — As defined under the Data Privacy Act of 2012 (RA 10173): any information that directly or indirectly identifies a natural person.</div>
@@ -2621,18 +2620,14 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <div class="tos-section-num">4</div>
       <div class="tos-section-title">License Plans, Fees &amp; Payment</div>
       <div class="tos-plan-card">
-        <div class="tos-plan-title">⏳ Free Trial — ₱0</div>
-        <div class="tos-section-body">7 calendar days of full System access, automatically activated upon registration. Only one (1) Free Trial is permitted per ATH•NA ID. Upon expiry, OS access is suspended until a paid plan is activated. OS Data is retained for 30 days after trial expiry before permanent deletion.</div>
+        <div class="tos-plan-title">🗓 Annual License — ₱4,990 per year</div>
+        <div class="tos-section-body">The only plan. 12 months of full System access, renewed manually by the Client. No automatic billing. Includes one (1) physical NFC card with shipping, delivered within 21 days of ordering, plus new card themes and mascots released during the license period. License activates within 1–2 business hours of payment verification. Non-refundable once activated, except as stated in Section 14.</div>
       </div>
       <div class="tos-plan-card">
-        <div class="tos-plan-title">📅 Monthly Subscription — ₱999/month</div>
-        <div class="tos-section-body">30-day rolling access, renewed manually by the Client. No automatic billing. License activates within 1–2 business hours of payment verification. Monthly licenses are non-refundable once activated.</div>
+        <div class="tos-plan-title">💳 Replacement NFC Card — ₱999</div>
+        <div class="tos-section-body">If the Client's physical NFC card is lost or damaged, or the Client wants a new design, a replacement card is ₱999 per card. The first card is already included in the Annual License.</div>
       </div>
-      <div class="tos-plan-card">
-        <div class="tos-plan-title">♾️ Lifetime Access — ₱9,999 one-time</div>
-        <div class="tos-section-body">Permanent, unrestricted access to the System for the lifetime of the ATH•NA platform. Includes all future feature updates at no additional charge. Strictly non-refundable once payment is verified.</div>
-      </div>
-      <div class="tos-section-body">Payment Process: All payments are made via manual bank transfer or e-wallet (GCash, BPI, Security Bank, PS Bank, Maya, GoTyme, Netbank, or CIMB Bank). The Client must submit their transaction reference number via the in-app payment form. License activation is manual and subject to ATH•NA's verification.<br><br>All fees are quoted in Philippine Peso (₱) and exclusive of applicable government taxes. ATH•NA reserves the right to adjust pricing with 30 days advance notice. Price changes do not apply retroactively to active Lifetime licenses.</div>
+      <div class="tos-section-body">Payment Process: All payments are made via manual bank transfer or e-wallet (GCash, BPI, Security Bank, PS Bank, Maya, GoTyme, Netbank, or CIMB Bank). The Client must submit their transaction reference number via the in-app payment form. License activation is manual and subject to ATH•NA's verification.<br><br>All fees are quoted in Philippine Peso (₱) and exclusive of applicable government taxes. ATH•NA reserves the right to adjust pricing with 30 days advance notice. Price changes do not apply to an active Annual License until its renewal date.</div>
     </div>
 
     <div class="tos-section">
@@ -2652,8 +2647,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <div class="tos-section-title">Data Ownership, Storage &amp; Retention</div>
       <div class="tos-section-body">The Client retains full ownership of all OS Data and Visitor Data. ATH•NA does not claim any ownership over Client or Visitor data.</div>
       <div class="tos-table-row"><span>Active License</span><span>Retained indefinitely</span></div>
-      <div class="tos-table-row"><span>After Free Trial expiry</span><span>30 days then deleted</span></div>
-      <div class="tos-table-row"><span>After Monthly non-renewal</span><span>30 days then deleted</span></div>
+      <div class="tos-table-row"><span>After Annual License expiry</span><span>30 days then deleted</span></div>
       <div class="tos-table-row"><span>Voluntary termination</span><span>Deleted in 15 business days</span></div>
       <div class="tos-table-row"><span>Termination for violation</span><span>Deleted immediately</span></div>
       <div class="tos-section-body" style="margin-top:10px;">The Client is strongly advised to use the Full Backup and Export CSV features regularly. ATH•NA does not sell, rent, or share Client or Visitor data with any third party.</div>
@@ -2692,7 +2686,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
     <div class="tos-section">
       <div class="tos-section-num">13</div>
       <div class="tos-section-title">Disclaimers &amp; Limitation of Liability</div>
-      <div class="tos-section-body">The System is provided "as-is" without warranties of any kind. <b>Maximum aggregate liability cap: ₱9,999</b> — regardless of plan type or amount paid. This does not limit liability for gross negligence, fraud, or anything that cannot be excluded under Philippine law.</div>
+      <div class="tos-section-body">The System is provided "as-is" without warranties of any kind. <b>Maximum aggregate liability cap: ₱4,990</b> — regardless of plan type or amount paid. This does not limit liability for gross negligence, fraud, or anything that cannot be excluded under Philippine law.</div>
     </div>
 
     <div class="tos-section">
@@ -2701,7 +2695,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <div class="tos-table-row"><span>Serious violations</span><span>Immediate, no refund</span></div>
       <div class="tos-table-row"><span>Acceptable Use violation</span><span>14-day cure period</span></div>
       <div class="tos-table-row"><span>Non-payment</span><span>7-day grace to renew</span></div>
-      <div class="tos-section-body" style="margin-top:10px;">ATH•NA may terminate without cause with 30 days' notice — pro-rated refund for Monthly, full ₱9,999 refund for Lifetime holders in the event of platform-wide discontinuation.</div>
+      <div class="tos-section-body" style="margin-top:10px;">ATH•NA may terminate without cause with 30 days' notice — pro-rated refund of the unused portion of the Annual License in the event of platform-wide discontinuation.</div>
     </div>
 
     <div class="tos-section">
@@ -2744,7 +2738,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <div class="id-banner-icon">🪪</div>
       <div style="flex:1;">
         <div class="id-banner-title">Create Your Identity</div>
-        <div class="id-banner-sub">Register for a permanent ATH•NA ID — 7-day free trial included.</div>
+        <div class="id-banner-sub">Register for a permanent ATH•NA ID. Annual License: ₱4,990 per year.</div>
       </div>
       <svg class="id-banner-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
@@ -2827,7 +2821,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <div class="os-row" onclick="openLicenseScreen()" style="cursor:pointer;">
         <div class="os-row-icon" style="background:#34C759;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
         <div class="os-row-text"><div class="os-row-title">Subscriptions &amp; License</div></div>
-        <span class="os-row-value">Lifetime</span>
+        <span class="os-row-value">Annual</span>
         <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </div>
@@ -3769,6 +3763,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
   }
 
   function recolorCardSVG(t) {
+    document.querySelectorAll('#skyFade stop').forEach(s => s.setAttribute('stop-color', t.bg));
     // Update all stroke/fill references in both card faces
     const a = t.accent, b = t.accentB;
     const hoLink = document.getElementById('holdOpenLink');
@@ -9674,6 +9669,8 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
   }
   async function cfmSelectMascot(id) {
     await pickMascot(id);
+    window._cfmFlipped = true;
+    cfmRenderPreview();
     const row = document.getElementById('cfm-mascots');
     if (row) row.innerHTML = cfmMascotBtns();
   }
@@ -9871,7 +9868,52 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     }
   }
 
-  async function cfmRenderPreview() {
+  window._cfmFlipped = false;
+  function cfmRenderPreview() {
+    const wrap = document.getElementById('cfm-clone-wrap');
+    if (!wrap) return;
+    const front = document.querySelector('#screenCard .face-front');
+    const back  = document.querySelector('#screenCard .face-back');
+    if (!front || !back) return;
+    const mk = (src, isBack) => {
+      const c = src.cloneNode(true);
+      c.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+      c.style.position = 'absolute'; c.style.top = '0'; c.style.left = '0';
+      c.style.width = '340px'; c.style.height = '580px';
+      c.style.boxShadow = 'none'; c.style.pointerEvents = 'none';
+      c.style.backfaceVisibility = 'hidden'; c.style.webkitBackfaceVisibility = 'hidden';
+      c.style.backgroundColor = activeTheme.bg;
+      c.style.transform = isBack ? 'rotateY(180deg)' : 'none';
+      const mb = c.querySelector('.back-mascot-btn'); if (mb) mb.style.display = 'none';
+      return c;
+    };
+    wrap.innerHTML = '';
+    wrap.style.perspective = '1200px';
+    wrap.style.pointerEvents = 'auto';
+    wrap.style.cursor = 'pointer';
+    wrap.setAttribute('role', 'button');
+    wrap.setAttribute('tabindex', '0');
+    wrap.setAttribute('aria-label', 'Flip card preview');
+    const flip = document.createElement('div');
+    flip.style.cssText = 'position:relative;width:340px;height:580px;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .7s cubic-bezier(0.23,1,0.32,1);';
+    flip.style.transform = window._cfmFlipped ? 'rotateY(180deg)' : 'none';
+    flip.appendChild(mk(front, false));
+    flip.appendChild(mk(back, true));
+    wrap.appendChild(flip);
+    wrap.onclick = () => {
+      window._cfmFlipped = !window._cfmFlipped;
+      flip.style.transform = window._cfmFlipped ? 'rotateY(180deg)' : 'none';
+      haptic('light');
+    };
+    if (!document.getElementById('cfm-flip-hint')) {
+      const h = document.createElement('div');
+      h.id = 'cfm-flip-hint';
+      h.style.cssText = "text-align:center;margin:-6px 0 14px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12px;color:rgba(60,60,67,0.5);";
+      h.textContent = 'Tap the card to flip';
+      wrap.parentElement.parentElement.insertAdjacentElement('afterend', h);
+    }
+  }
+  async function cfmRenderPreviewOld() {
     const wrap = document.getElementById('cfm-clone-wrap');
     if (!wrap) return;
     const face = document.querySelector('.face-front');
@@ -9947,7 +9989,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     let _cardType = 'standard';
     let _qty = 1;
     let _saveOn = false;
-    const PRICES = { standard: 899, metal: 2499 };
+    const PRICES = { standard: 0, metal: 999 };
     const QTY_OPTS = [
       { val:1,  label:'1 pc',   disc:0 },
       { val:3,  label:'3 pcs',  disc:5 },
@@ -9966,7 +10008,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
         <div id="phys-scroll-body" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 20px 36px;">
         <div style="margin-bottom:20px;">
           <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:21px;font-weight:700;color:#1c1c1e;letter-spacing:-.01em;">Order Physical NFC Card</div>
-          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.5);margin-top:3px;">Ring + QR design · NFC tap-to-share · Delivered to you</div>
+          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.5);margin-top:3px;">Ring + QR design · NFC tap-to-share · Delivered within 21 days</div>
         </div>
         <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(60,60,67,0.45);margin-bottom:8px;">Card Type</div>
         <div id="phys-type-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;"></div>
@@ -10001,7 +10043,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
         </div>
 
         <button onclick="submitPhysicalOrder()" style="width:100%;background:#1c1c1e;border:none;color:#ECE4D6;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15px;font-weight:600;padding:15px;border-radius:14px;cursor:pointer;margin-bottom:8px;">Send order request via Gmail →</button>
-        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12px;color:rgba(60,60,67,0.4);text-align:center;line-height:1.6;margin-bottom:12px;">No auto-billing — admin confirms your order within 24h</div>
+        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12px;color:rgba(60,60,67,0.4);text-align:center;line-height:1.6;margin-bottom:12px;">Admin confirms your order within 24h · Delivery within 21 days of ordering</div>
         <button onclick="closePhysOrderModal()" style="width:100%;background:rgba(0,0,0,0.06);border:none;color:rgba(60,60,67,0.55);font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;padding:14px;border-radius:14px;cursor:pointer;">Cancel</button>
       </div>`;
 
@@ -10015,6 +10057,20 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     }
 
     function renderTypes() {
+      const opts = [
+        ['standard', 'NFC Card', 'Included in your Annual License', 'Included ✓'],
+        ['metal', 'Replacement Card', 'Lost, damaged, or new design', '₱999']
+      ];
+      overlay.querySelector('#phys-type-grid').innerHTML = opts.map(o => `
+        <div onclick="window._physSelectType('${o[0]}')" style="border-radius:16px;padding:14px;cursor:pointer;transition:all .2s;
+          border:${_cardType===o[0]?'2px solid #1c1c1e':'1px solid rgba(0,0,0,0.08)'};
+          background:${_cardType===o[0]?'#1c1c1e':'rgba(255,255,255,0.72)'};">
+          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;color:${_cardType===o[0]?'#ECE4D6':'#1c1c1e'};margin-bottom:3px;">${o[1]}</div>
+          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12px;color:${_cardType===o[0]?'rgba(236,228,214,0.55)':'rgba(60,60,67,0.45)'};margin-bottom:10px;">${o[2]}</div>
+          <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:16px;font-weight:700;color:${_cardType===o[0]?'#E8CC7A':'#1c1c1e'};">${o[3]}</div>
+        </div>`).join('');
+    }
+    function renderTypesOld() {
       overlay.querySelector('#phys-type-grid').innerHTML = ['standard','metal'].map(type => `
         <div onclick="window._physSelectType('${type}')" style="border-radius:16px;padding:14px;cursor:pointer;transition:all .2s;
           border:${_cardType===type?'2px solid #1c1c1e':'1px solid rgba(0,0,0,0.08)'};
@@ -10026,6 +10082,10 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     }
 
     function renderQty() {
+      const q = overlay.querySelector('#phys-qty-row');
+      if (q) { q.style.display = 'none'; if (q.previousElementSibling) q.previousElementSibling.style.display = 'none'; }
+    }
+    function renderQtyOld() {
       overlay.querySelector('#phys-qty-row').innerHTML = QTY_OPTS.map(o => `
         <div onclick="window._physSelectQty(${o.val})" style="flex:1;border-radius:14px;padding:10px 6px;text-align:center;cursor:pointer;transition:all .2s;
           border:${_qty===o.val?'2px solid #1c1c1e':'1px solid rgba(0,0,0,0.08)'};
@@ -10036,6 +10096,37 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     }
 
     function renderSummary() {
+      const repl = _cardType === 'metal';
+      const row = "display:flex;justify-content:space-between;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;color:rgba(60,60,67,0.65);margin-bottom:7px;";
+      const ok = '<span style="color:#34C759;font-weight:600;">Included ✓</span>';
+      overlay.querySelector('#phys-summary').innerHTML = `
+        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(60,60,67,0.4);margin-bottom:12px;">Order Summary</div>
+        <div style="${row}"><span>${repl ? 'Replacement NFC Card × 1' : 'NFC Card × 1'}</span>${repl ? '<span>₱999</span>' : ok}</div>
+        <div style="${row}"><span>Custom design (theme + mascot)</span>${ok}</div>
+        <div style="${row}margin-bottom:12px;"><span>Shipping</span>${ok}</div>
+        <div style="height:1px;background:rgba(0,0,0,0.07);margin-bottom:12px;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:600;color:rgba(60,60,67,0.55);">Total</span>
+          <span style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:17px;font-weight:700;color:#1c1c1e;">${repl ? '₱999' : '₱0 · included in ₱4,990'}</span>
+        </div>`;
+    }
+    function renderSummaryOld() {
+      const repl = _cardType === 'metal';
+      const row = "display:flex;justify-content:space-between;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;color:rgba(60,60,67,0.65);margin-bottom:7px;";
+      const ok = '<span style="color:#34C759;font-weight:600;">Included ✓</span>';
+      overlay.querySelector('#phys-summary').innerHTML = `
+        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(60,60,67,0.4);margin-bottom:12px;">Order Summary</div>
+        <div style="${row}"><span>${repl ? 'Replacement NFC Card × 1' : 'NFC Card × 1'}</span>${repl ? '<span>₱999</span>' : ok}</div>
+        <div style="${row}"><span>Custom design (theme + mascot)</span>${ok}</div>
+        <div style="${row}"><span>Shipping</span>${ok}</div>
+        <div style="${row}margin-bottom:12px;"><span>Delivery</span><span style="color:#1c1c1e;font-weight:600;">Within 21 days of ordering</span></div>
+        <div style="height:1px;background:rgba(0,0,0,0.07);margin-bottom:12px;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:600;color:rgba(60,60,67,0.55);">Total</span>
+          <span style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:17px;font-weight:700;color:#1c1c1e;">${repl ? '₱999' : '₱0 · included in ₱4,990'}</span>
+        </div>`;
+    }
+    function renderSummaryOld() {
       const { base, disc, discounted } = calcTotal();
       overlay.querySelector('#phys-summary').innerHTML = `
         <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(60,60,67,0.4);margin-bottom:12px;">Order Summary</div>
@@ -10175,11 +10266,11 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     const pos      = currentEntry?.pos  || '—';
     const id       = currentEntry?.athid || '—';
     const mobile   = '+63' + raw.replace(/[^0-9]/g,'');
-    const cardType = window._physCardType === 'metal' ? 'Metal NFC (Stainless · Matte)' : 'Standard NFC (PVC · Tap-to-share)';
-    const qty      = window._physQty || 1;
-    const prices   = { standard: 899, metal: 2499 };
-    const price    = prices[window._physCardType || 'standard'];
-    const total    = price * qty;
+    const isRepl   = window._physCardType === 'metal';
+    const cardType = isRepl ? 'Replacement NFC Card' : 'NFC Card (included in Annual License)';
+    const qty      = 1;
+    const price    = isRepl ? 999 : 0;
+    const total    = price;
 
     haptic('success');
     document.getElementById('physOrderOverlay')?.remove();
@@ -10199,11 +10290,11 @@ I would like to order a Physical NFC Card for my ATH•NA OS membership.
   Card Theme   : ${(activeTheme && THEME_LABELS[activeTheme.id]) || '—'}
   Mascot       : ${((MASCOTS.find(m => m.id === activeMascot)) || {}).name || '—'}
   Quantity     : ${qty} pc${qty > 1 ? 's' : ''}
-  Unit Price   : ₱${price.toLocaleString('en-PH')}
-  Subtotal     : ₱${total.toLocaleString('en-PH')}
+  Price        : ${isRepl ? '₱999 (replacement)' : 'Included in Annual License (shipping included)'}
+  Delivery     : Within 21 days of ordering
   Delivery to  : ${address || '(to be confirmed)'}
 
-Please contact me via mobile/WhatsApp/Viber to confirm availability and arrange payment + shipping.
+Please contact me via mobile/WhatsApp/Viber to confirm my delivery details.
 
 — ${name} · ${id}`;
 
@@ -12972,7 +13063,7 @@ function stBuild() {
           <div class="st-cad" style="color:rgba(232,204,122,.5)">Per Year</div>
           <p class="st-note">≈ ₱416/month effective rate.<br>Fixed price. Non-negotiable.</p>
         </div>
-        <div class="st-scar"><div><div class="st-tag2" style="margin-bottom:4px">Included</div><p class="st-note">A premium articardd digital card — ring, QR, and your choice of theme and mascot.<br>New themes and limited-edition mascots every quarter for active license holders.</p></div></div>
+        <div class="st-scar"><div><div class="st-tag2" style="margin-bottom:4px">Included</div><p class="st-note">A premium articardd digital card plus a physical NFC card, with shipping included and delivery within 21 days of ordering — ring, QR, and your choice of theme and mascot. A replacement card is ₱999.<br>New themes and limited-edition mascots every quarter for active license holders.</p></div></div>
       </div>
       <a class="st-cta" href="mailto:support@artibytte.com" onclick="this.href=supportMail('card')">Get Your Card</a>`),
     /* 13 WHAT YOU RECEIVE */
