@@ -990,7 +990,8 @@ body.public-mode .back-mascot-btn{display:none !important;}
   .gt-input{width:100%;background:rgba(255,255,255,0.72);border:1px solid rgba(0,0,0,0.08);border-radius:14px;padding:16px;font-family:'Space Mono',monospace;font-size:17px;letter-spacing:.06em;text-align:center;color:#1c1c1e;outline:none;}
   .gt-input.err{border-color:#FF453A;background:rgba(255,69,58,0.05);}
   .gt-err{min-height:18px;font:400 12px -apple-system,'SF Pro Text',sans-serif;color:#FF453A;margin:7px 0 4px;}
-  .gt-btn{width:100%;height:52px;padding:0 28px;border-radius:26px;background:#F3EDE4;border:.6px solid rgba(0,0,0,0.08);box-shadow:0 4px 12px rgba(0,0,0,0.10);color:#1c1c1e;font:700 12px -apple-system,'SF Pro Text','Helvetica Neue',sans-serif;letter-spacing:.22em;cursor:pointer;transition:transform .1s,opacity .15s;-webkit-tap-highlight-color:transparent;}
+  .gt-btn{width:100%;height:52px;padding:0 28px;border-radius:26px;background:#fff;border:.6px solid rgba(0,0,0,0.08);box-shadow:0 4px 12px rgba(0,0,0,0.10);color:#1c1c1e;font:700 12px -apple-system,'SF Pro Text','Helvetica Neue',sans-serif;letter-spacing:.22em;cursor:pointer;transition:transform .1s,opacity .15s;-webkit-tap-highlight-color:transparent;}
+  .gt-btn{background:#fff !important;}
   .gt-btn:active{transform:scale(.98);opacity:.85;}
   .gt-btn:disabled{opacity:.4;cursor:not-allowed;}
   .gt-link{margin-top:20px;background:none;border:none;font:600 13px -apple-system,'SF Pro Text',sans-serif;color:#1c1c1e;cursor:pointer;padding:6px;}
@@ -2420,7 +2421,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
       </div>
       <div class="cp-info-row">
         <div class="cp-info-icon" style="color:#0A66C2;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
-        <div><div class="cp-info-label">ATH ID</div><div class="cp-info-value" id="cpLinkedin">—</div></div>
+        <div><div class="cp-info-label">articardd ID</div><div class="cp-info-value" id="cpLinkedin">—</div></div>
       </div>
 
       <button class="cf-submit" onclick="bookMeetingArtimeet()" style="background:#1c1c1e;color:#ECE4D6;box-shadow:none;margin-top:14px;">Book a Meeting →</button>
@@ -2839,7 +2840,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
       </div>
       <div class="os-row" style="cursor:default;">
         <div class="os-row-icon" style="background:#E8CC7A;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M6 9.82a6 6 0 0 1 0 4.36"/></svg></div>
-        <div class="os-row-text"><div class="os-row-title">ATH ID</div></div>
+        <div class="os-row-text"><div class="os-row-title">articardd ID</div></div>
         <span class="os-row-value" id="acctAthIdValue" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.04em;">—</span>
       </div>
     </div>
@@ -2873,9 +2874,28 @@ body.public-mode .back-mascot-btn{display:none !important;}
       </div>
     </div>
 
+    <!-- Invite Friends -->
+    <div class="acct-group">
+      <div class="os-row" onclick="haptic('light');openAuInvite()" style="cursor:pointer;">
+        <div class="os-row-icon" style="background:#B5583A;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="17" y1="11" x2="23" y2="11"/></svg></div>
+        <div class="os-row-text"><div class="os-row-title">Invite Friends</div><div class="os-row-sub">Share your link and earn ArtiStar Rewards</div></div>
+        <span class="os-row-value" style="color:#B5583A;font-weight:600;font-size:13px;">₱1,000</span>
+        <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <!-- Our Story -->
+    <div class="acct-group">
+      <div class="os-row" onclick="haptic('light');openStory()" style="cursor:pointer;">
+        <div class="os-row-icon" style="background:#2F343A;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#E8CC7A" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg></div>
+        <div class="os-row-text"><div class="os-row-title">Our Story</div><div class="os-row-sub">Why articardd exists, and where it is going</div></div>
+        <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
     <!-- Notifications -->
     <div class="acct-group">
-      <div class="os-row" onclick="haptic('light');showToast('Notification preferences — coming soon','neutral')" style="cursor:pointer;">
+      <div class="os-row" onclick="haptic('light');openNotifPrefs()" style="cursor:pointer;">
         <div class="os-row-icon" style="background:#FF453A;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
         <div class="os-row-text"><div class="os-row-title">Notifications</div><div class="os-row-sub">Meeting reminders, card views</div></div>
         <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
@@ -2888,6 +2908,15 @@ body.public-mode .back-mascot-btn{display:none !important;}
         <div class="os-row-icon" style="background:#34C759;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
         <div class="os-row-text"><div class="os-row-title">Subscriptions &amp; License</div></div>
         <span class="os-row-value">Annual</span>
+        <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <!-- Terms & Privacy -->
+    <div class="acct-group">
+      <div class="os-row" onclick="haptic('light');openTosScreen(true)" style="cursor:pointer;">
+        <div class="os-row-icon" style="background:#8E8E93;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="11" y2="11"/></svg></div>
+        <div class="os-row-text"><div class="os-row-title">Terms &amp; Privacy</div><div class="os-row-sub">Version 4.0</div></div>
         <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </div>
@@ -2942,7 +2971,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <div id="mpcCompletionWrap" style="width:100%;margin-bottom:16px;"></div>
 
       <div style="width:100%;background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:12px;">
-        <div onclick="copyPIAthId()" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.07);cursor:pointer;"><span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.5);">ATH ID</span><span id="mpcAthId" style="font-family:'Space Mono',monospace;font-size:12.5px;font-weight:600;color:#1c1c1e;">—</span></div>
+        <div onclick="copyPIAthId()" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.07);cursor:pointer;"><span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.5);">articardd ID</span><span id="mpcAthId" style="font-family:'Space Mono',monospace;font-size:12.5px;font-weight:600;color:#1c1c1e;">—</span></div>
         <div onclick="closeMyProfileCard();setTimeout(()=>openPIFieldEditor('company','Company','text'),260);" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.07);cursor:pointer;"><span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.5);">Company</span><span style="display:flex;align-items:center;gap:6px;"><span id="mpcCompany" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:600;color:#1c1c1e;text-align:right;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(60,60,67,0.3)" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span></div>
         <div onclick="closeMyProfileCard();setTimeout(()=>openPIListEditor('phones','Phone Numbers','tel'),260);" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.07);cursor:pointer;"><span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.5);">Mobile</span><span style="display:flex;align-items:center;gap:6px;"><span id="mpcMobile" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:600;color:#1c1c1e;">—</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(60,60,67,0.3)" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span></div>
         <div onclick="closeMyProfileCard();setTimeout(()=>openPIListEditor('emails','Email Addresses','email'),260);" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.07);cursor:pointer;"><span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.5);">Email</span><span style="display:flex;align-items:center;gap:6px;"><span id="mpcEmail" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:600;color:#1c1c1e;text-align:right;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(60,60,67,0.3)" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span></div>
@@ -3114,7 +3143,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B5583A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
           Notifications
         </button>
-        <button onclick="event.stopPropagation();closeAuMenu();openAuInvite();" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:11px;cursor:pointer;background:none;border:none;width:100%;text-align:left;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:500;color:#1c1c1e;">
+        <button hidden onclick="event.stopPropagation();closeAuMenu();openAuInvite();" style="display:none;align-items:center;gap:10px;padding:10px 12px;border-radius:11px;cursor:pointer;background:none;border:none;width:100%;text-align:left;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:500;color:#1c1c1e;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B5583A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="17" y1="11" x2="23" y2="11"/></svg>
           Invite Friends
         </button>
@@ -5487,7 +5516,7 @@ function fillConnectPreview() {
 
       <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(60,60,67,0.4);margin:0 2px 8px;">ArtiStar Rewards</div>
       <div style="background:rgba(181,88,58,0.07);border:1px solid rgba(181,88,58,0.16);border-radius:14px;padding:14px;">
-        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12.5px;color:#8a4a2f;line-height:1.55;">🎁 <b>₱1,000 Starbucks e-Gift Card</b> per qualified referral. Your code: <b>${auInviteCode()}</b>. Kapag may bumili ng Annual License gamit ang link o code mo at na-verify ang payment, sa iyo ang e-Gift Card. <a onclick="openRewardTerms()" style="font-weight:700;text-decoration:underline;cursor:pointer;">See terms</a></div>
+        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12.5px;color:#8a4a2f;line-height:1.55;">🎁 <b>₱1,000 Starbucks e-Gift Card</b> per qualified referral. Your code: <b>${auInviteCode()}</b>. When someone buys an Annual License using your link or code and the payment is verified, the e-Gift Card is yours. <a onclick="openRewardTerms()" style="font-weight:700;text-decoration:underline;cursor:pointer;">See terms</a></div>
       </div>
     `);
   }
@@ -9198,10 +9227,9 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
   async function captureCard() {
     const CARD_W = 340, CARD_H = 580;
     const DPR = Math.max(window.devicePixelRatio || 2, 2);
-    const SCALE = DPR * 2;
-
-    // Return cached result if already captured — front face only
-    if (faceCache.front) return faceCache.front;
+    const SCALE = Math.min(DPR, 2) * 1.5;
+    const sig = shareSig();
+    if (faceCache.front && faceCache.sig === sig) return faceCache.front;
 
     const liveScene = document.querySelector('.scene');
 
@@ -9342,13 +9370,57 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     const dataUrl = canvas.toDataURL('image/png');
     const blob = await new Promise(res => canvas.toBlob(b => res(b), 'image/png'));
 
-    faceCache.front = { dataUrl, blob };
+    faceCache.front = { dataUrl, blob }; faceCache.sig = sig;
     capturedDataUrl = dataUrl;
     capturedBlob = blob;
     return faceCache.front;
   }
 
-  async function shareCard() {
+  let _shareTok = 0, _sharePromise = null;
+  function shareSig() {
+    return [activeTheme && activeTheme.id, activeCW, currentEntry && currentEntry.name, currentEntry && currentEntry.pos, currentEntry && currentEntry.company, profilePhotoB64 ? profilePhotoB64.length : 0].join('|');
+  }
+  function shareCard() {
+    if (!currentEntry) return;
+    haptic('light');
+    document.body.style.overflow = 'hidden';
+    const tok = ++_shareTok;
+    const overlay = document.getElementById('shareOverlay');
+    document.body.appendChild(overlay);
+    const thumbEl = document.getElementById('shareThumb');
+    const stage = document.getElementById('shareThumbStage');
+    const veil = document.getElementById('shareThumbSpinnerVeil');
+    const titleCase = currentEntry.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+    document.getElementById('shareThumbName').textContent = titleCase;
+    document.getElementById('shareThumbSub').textContent = currentEntry.pos + ' · ' + currentEntry.athid;
+    stage.querySelector('.share-blur-clone')?.remove();
+    stage.style.background = '#2F343A';
+
+    const show = r => {
+      capturedDataUrl = r.dataUrl; capturedBlob = r.blob;
+      thumbEl.src = r.dataUrl; thumbEl.style.display = 'block';
+      veil.classList.add('hide');
+    };
+
+    if (faceCache.front && faceCache.sig === shareSig()) {   // walang binago: instant
+      show(faceCache.front);
+      _sharePromise = Promise.resolve(faceCache.front);
+      overlay.classList.add('show');
+      return;
+    }
+
+    capturedBlob = null; capturedDataUrl = null;
+    thumbEl.style.display = 'none';
+    veil.classList.remove('hide');
+    overlay.classList.add('show');
+
+    // hayaang mag-paint at maging pipindot ang sheet bago magsimula ang mabigat na capture
+    _sharePromise = new Promise(r => setTimeout(r, 380))
+      .then(() => tok === _shareTok ? captureCard() : null)
+      .then(r => { if (tok !== _shareTok || !r) return null; show(r); return r; })
+      .catch(() => { if (tok === _shareTok) veil.classList.add('hide'); return null; });
+  }
+  async function shareCardOld() {
     if (!currentEntry) return;
     haptic('light');
     document.body.style.overflow = 'hidden';
@@ -9420,6 +9492,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
   }
 
   function closeShare() {
+    _shareTok++;
     haptic('light');
     const overlay = document.getElementById('shareOverlay');
     const sheet   = overlay.querySelector('.share-sheet');
@@ -9444,7 +9517,8 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     const link = profileLink();
     const text = `${name} · ${pos} · ${id}\n${link}`;
 
-   if ((method === 'save' || method === 'copy-img') && !capturedDataUrl) { haptic('error'); showToast('Card image not ready. Try again', 'error'); return; }
+   if (!capturedBlob && _sharePromise && ['save','copy-img','native','airdrop','telegram','whatsapp','messenger'].includes(method)) { showToast('Preparing image…', 'neutral'); await _sharePromise; }
+    if ((method === 'save' || method === 'copy-img') && !capturedDataUrl) { haptic('error'); showToast('Card image not ready. Try again', 'error'); return; }
 
     if (method === 'save') {
       const a = document.createElement('a');
@@ -10675,6 +10749,122 @@ function closeRequestManager() {
 }
 /* === END: REQUEST MANAGER (OWNER) === */
 
+/* === START: LICENSE SCREEN === */
+const LIC_DEMO = false;   /* true = ipakita ang Lifetime/Active/Expired/No License na demo buttons */
+const LIC_PLAN = ['Digital card with ring + QR', 'Public card link, sharing & QR', 'Contacts, Calendar & Captures', 'Meeting booking + Request Manager', 'Card themes & mascots', '1 physical NFC card, shipping included'];
+const LIC_SOON = ['Automation Suite', 'Discover: people you should meet', 'Agentic Chief of Staff AI', 'New themes & mascots every quarter'];
+
+function licIso(off) { const d = new Date(); d.setDate(d.getDate() + off); return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+function licFmt(iso) { return iso ? new Date(String(iso).slice(0, 10) + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'; }
+function licDemo(s) {
+  if (s === 'lifetime') return { state: 'lifetime' };
+  if (s === 'active')   return { state: 'active', start: licIso(-100), end: licIso(265) };
+  if (s === 'expired')  return { state: 'expired', start: licIso(-375), end: licIso(-10) };
+  return { state: 'trial_available' };
+}
+/* totoong data: window.__LICENSE__ = { status, start, end } (galing sa card data kung meron) */
+function licCurrent() {
+  const L = window.__LICENSE__ || {}, st = String(L.status || '').toLowerCase();
+  const start = L.start ? String(L.start).slice(0, 10) : '', end = L.end ? String(L.end).slice(0, 10) : '';
+  if (st === 'lifetime') return { state: 'lifetime', start: start };
+  if (st === 'none') return { state: 'trial_available' };
+  if (!end) return { state: st === 'expired' ? 'expired' : 'active', start: start, end: '' };
+  return { state: new Date(end + 'T23:59:59') < new Date() ? 'expired' : 'active', start: start, end: end };
+}
+const licCheck = pro => `<div class="sub-feature-check${pro ? ' pro' : ''}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="${pro ? '#8a6e1a' : '#1c8a3e'}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>`;
+
+function licRender(d) {
+  const $ = id => document.getElementById(id);
+  if (!$('licInfoRows')) return;
+  const s = d.state, annual = s === 'active' || s === 'expired';
+  const B = { active: ['active', '● ACTIVE'], expired: ['expired', '● EXPIRED'], lifetime: ['lifetime', '★ LIFETIME'], trial_available: ['trial', '○ NO LICENSE'] }[s] || ['trial', '○ NO LICENSE'];
+  $('licBadgeWrap').innerHTML = `<span class="lic-badge ${B[0]}">${B[1]}</span>`;
+
+  const nm = currentEntry && currentEntry.name ? currentEntry.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()) : '—';
+  let rows = licRow('MEMBER', auEsc(nm)) + licRow('articardd ID', auEsc((currentEntry && currentEntry.athid) || '—'))
+           + licRow('PLAN', s === 'lifetime' ? 'Lifetime' : annual ? 'Annual License' : 'None');
+  if (annual) rows += licRow('PRICE', '₱4,990 / year');
+  if (d.start) rows += licRow('STARTED', licFmt(d.start));
+  if (annual && d.end) rows += licRow(s === 'expired' ? 'EXPIRED ON' : 'RENEWS ON', licFmt(d.end));
+  $('licInfoRows').innerHTML = rows;
+
+  /* progress + days */
+  let days = null, pct = null;
+  if (annual && d.end) {
+    const end = new Date(d.end + 'T23:59:59'), now = new Date();
+    days = Math.ceil((end - now) / 864e5);
+    if (d.start) { const t = end - new Date(d.start + 'T00:00:00'); pct = t > 0 ? Math.max(0, Math.min(100, Math.round((now - new Date(d.start + 'T00:00:00')) / t * 100))) : null; }
+  }
+  $('licTrialBar').style.display = (s === 'active' && pct !== null) ? 'block' : 'none';
+  if (pct !== null) { $('licTrialPct').textContent = pct + '% USED'; $('licTrialFill').style.width = pct + '%'; }
+  $('licDaysWrap').style.display = (s === 'active' && days !== null) ? 'block' : 'none';
+  if (days !== null) { $('licDaysNum').textContent = Math.max(0, days); $('licDaysLabel').textContent = days === 1 ? 'Day Remaining' : 'Days Remaining'; }
+  $('licExpiredMsg').style.display = s === 'expired' ? 'block' : 'none';
+
+  /* features */
+  $('licFreeFeatures').innerHTML = LIC_PLAN.map(t => `<div class="sub-feature-row">${licCheck(false)}<div class="sub-feature-text">${t}</div></div>`).join('');
+  $('licProFeatures').innerHTML = LIC_SOON.map(t => `<div class="sub-feature-row">${licCheck(true)}<div class="sub-feature-text">${t}</div><span class="sub-feature-soon">COMING SOON</span></div>`).join('');
+
+  /* buttons */
+  const near = s === 'active' && days !== null && days <= 30;
+  $('licBtnProceed').style.display = (s === 'active' || s === 'lifetime') ? 'block' : 'none';
+  $('licBtnTrial').style.display = s === 'trial_available' ? 'block' : 'none';
+  const rn = $('licBtnRenew');
+  rn.style.display = (s === 'expired' || near) ? 'block' : 'none';
+  rn.textContent = 'Renew License · ₱4,990';
+  rn.onclick = () => { haptic('light'); window.location.href = supportMail('card'); };
+
+  /* demo row */
+  const row = document.querySelector('.lic-demo-row');
+  if (row) { row.style.display = LIC_DEMO ? '' : 'none'; row.querySelectorAll('.lic-demo-btn').forEach(b => b.classList.toggle('active', LIC_DEMO && b.dataset.lic === s)); }
+}
+function renderLicenseState(s) { haptic('light'); licRender(licDemo(s)); }
+function openLicenseScreen() {
+  haptic('medium');
+  licRender(licCurrent());
+  const scr = document.getElementById('licenseScreen');
+  scr.classList.add('show');
+  const sc = scr.querySelector('.lic-scroll'); if (sc) sc.scrollTop = 0;
+}
+function closeLicenseScreen() { haptic('light'); document.getElementById('licenseScreen')?.classList.remove('show'); }
+
+/* redeem code */
+function openRedeemSheet() {
+  haptic('light');
+  const ov = document.getElementById('redeemOverlay'); if (!ov) return;
+  document.getElementById('redeemCode').value = '';
+  document.getElementById('redeemErr').style.display = 'none';
+  document.body.appendChild(ov);
+  ov.classList.add('show');
+  setTimeout(() => document.getElementById('redeemCode')?.focus(), 300);
+}
+function closeRedeemSheet() { dismissSheet('redeemOverlay', '.share-sheet'); }
+let _redeemBusy = false;
+async function submitRedeemCode() {
+  if (_redeemBusy) return;
+  const inp = document.getElementById('redeemCode'), err = document.getElementById('redeemErr');
+  const code = (inp.value || '').trim().toUpperCase();
+  if (!code) { err.textContent = 'Please enter a code'; err.style.display = 'block'; haptic('error'); return; }
+  if (!rmToken()) { rmExpired(); return; }
+  _redeemBusy = true;
+  const btn = document.querySelector('#redeemOverlay .am-btn-submit');
+  if (btn) { btn.textContent = 'Checking…'; btn.style.opacity = '.6'; btn.style.pointerEvents = 'none'; }
+  try {
+    const r = await apiPost('redeemCode', { token: rmToken(), code: code });
+    if (r && r.license) window.__LICENSE__ = r.license;
+    haptic('success');
+    closeRedeemSheet();
+    licRender(licCurrent());
+    showToast('Code redeemed', 'success');
+  } catch (e) {
+    err.textContent = String((e && e.message) || "Couldn't redeem this code");
+    err.style.display = 'block'; haptic('error');
+  }
+  _redeemBusy = false;
+  if (btn) { btn.textContent = 'Redeem'; btn.style.opacity = ''; btn.style.pointerEvents = ''; }
+}
+/* === END: LICENSE SCREEN === */
+
 function licRow(label, val) {
     return `<div class="lic-info-row"><span class="lic-info-label">${label}</span><span class="lic-info-val">${val}</span></div>`;
   }
@@ -10810,7 +11000,82 @@ function licRow(label, val) {
       <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </div>`;
   }
-  function copyPIAthId() {
+  /* === START: NOTIFICATION PREFERENCES === */
+const NOTIF_KEY = 'notif-prefs-v1';
+const NOTIF_ITEMS = [
+  ['requests',    'Meeting requests',   'When someone requests a meeting from your card', true],
+  ['reminders',   'Meeting reminders',  'Before a confirmed meeting starts', true],
+  ['connections', 'New connections',    'When someone shares their info through your card', true],
+  ['views',       'Card views',         'A weekly summary of card views', false],
+  ['discover',    'Discover matches',   'Strong mutual matches only, at most 2 a week', true],
+  ['product',     'Product updates',    'New themes, mascots and features', false]
+];
+let notifPrefs = null;
+
+async function notifLoad() {
+  if (notifPrefs) return notifPrefs;
+  const d = {}; NOTIF_ITEMS.forEach(i => { d[i[0]] = i[3]; });
+  try { const r = await window.storage.get(NOTIF_KEY, false); if (r && r.value) Object.assign(d, JSON.parse(r.value)); } catch (e) {}
+  notifPrefs = d;
+  return d;
+}
+
+function notifSwitch(k, on) {
+  return `<button type="button" role="switch" aria-checked="${on}" aria-label="${auEsc(k)}" onclick="notifToggle('${k}')" style="width:51px;height:31px;border-radius:16px;border:none;padding:0;position:relative;flex-shrink:0;cursor:pointer;background:${on ? '#34C759' : '#ddd'};transition:background .25s;-webkit-tap-highlight-color:transparent;">
+    <span style="position:absolute;top:2px;left:${on ? 22 : 2}px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.25);transition:left .25s cubic-bezier(0.25,0.1,0.25,1);"></span></button>`;
+}
+
+function notifBodyHtml() {
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  const rows = NOTIF_ITEMS.map((i, n) => `<div style="display:flex;align-items:center;gap:12px;padding:13px 16px;${n ? 'border-top:1px solid rgba(0,0,0,0.07);' : ''}">
+    <div style="flex:1;min-width:0;"><div style="${F}font-size:15px;font-weight:600;color:#1c1c1e;">${i[1]}</div><div style="${F}font-size:12px;color:rgba(60,60,67,0.55);margin-top:2px;line-height:1.4;">${i[2]}</div></div>
+    ${notifSwitch(i[0], !!notifPrefs[i[0]])}</div>`).join('');
+  return `<div id="notifPending"></div>
+    <div style="${F}font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(60,60,67,0.4);margin:0 2px 8px;">Alerts</div>
+    <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:12px;">${rows}</div>
+    <div style="${F}font-size:11.5px;color:rgba(60,60,67,0.5);line-height:1.55;margin:0 4px 16px;">These choices are saved on this device. Alerts appear inside the app. Push notifications to your lock screen need a server and are not available yet.</div>
+    <button onclick="closeAuGenericModal('notifOverlay')" style="width:100%;padding:14px;border-radius:14px;border:none;background:#1c1c1e;color:#ECE4D6;${F}font-size:14.5px;font-weight:700;cursor:pointer;">Done</button>`;
+}
+
+async function notifToggle(k) {
+  if (!notifPrefs) return;
+  haptic('light');
+  const prev = notifPrefs[k];
+  notifPrefs[k] = !prev;
+  let ok = false;
+  try { ok = !!(await window.storage.set(NOTIF_KEY, JSON.stringify(notifPrefs), false)); } catch (e) {}
+  if (!ok) { notifPrefs[k] = prev; haptic('error'); showToast("Couldn't save", 'error'); }
+  const host = document.getElementById('notifHost');
+  if (host) { host.innerHTML = notifBodyHtml(); notifFillPending(); }
+}
+
+async function notifFillPending() {
+  const el = document.getElementById('notifPending');
+  if (!el || !rmToken()) return;
+  try {
+    const list = await apiPost('ownerListMeetings', { token: rmToken() });
+    const n = list.filter(m => m.requestStatus === 'Requested').length;
+    const el2 = document.getElementById('notifPending'); if (!el2) return;
+    const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+    el2.innerHTML = n
+      ? `<div style="${F}font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(60,60,67,0.4);margin:0 2px 8px;">Needs attention</div>
+         <div onclick="closeAuGenericModal('notifOverlay');setTimeout(openRequestManager,260)" style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.72);border-radius:16px;padding:14px 16px;margin-bottom:16px;cursor:pointer;">
+           <span style="background:#FF453A;color:#fff;${F}font-size:13px;font-weight:700;min-width:24px;height:24px;padding:0 6px;box-sizing:border-box;border-radius:12px;display:flex;align-items:center;justify-content:center;">${n}</span>
+           <div style="flex:1;${F}font-size:14.5px;font-weight:600;color:#1c1c1e;">New meeting request${n > 1 ? 's' : ''}</div>
+           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(60,60,67,0.3)" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></div>`
+      : `<div style="background:rgba(255,255,255,0.72);border-radius:16px;padding:16px;text-align:center;margin-bottom:16px;${F}font-size:13px;color:rgba(60,60,67,0.45);">You're all caught up</div>`;
+  } catch (e) {}
+}
+
+async function openNotifPrefs() {
+  haptic('light');
+  await notifLoad();
+  auMakeSheet('notifOverlay', 'Notifications', `<div id="notifHost">${notifBodyHtml()}</div>`);
+  notifFillPending();
+}
+/* === END: NOTIFICATION PREFERENCES === */
+
+function copyPIAthId() {
     if (!currentEntry?.athid) return;
     const val = currentEntry.athid;
     if (navigator.clipboard?.writeText) navigator.clipboard.writeText(val).then(()=>{haptic('success');showToast('Copied','success');}).catch(()=>fallbackCopy(val));
@@ -10909,7 +11174,7 @@ function licRow(label, val) {
     html += piSectionLabel('Identity');
     html += `<div class="acct-group">
       <div class="os-row" style="cursor:pointer;" onclick="copyPIAthId()" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''">
-        <div class="os-row-text" style="flex:1;"><div class="os-row-title">OpenKEY ID</div></div>
+        <div class="os-row-text" style="flex:1;"><div class="os-row-title">articardd ID</div></div>
         <span class="os-row-value" style="font-family:'Space Mono',monospace;font-size:12px;">${currentEntry?.athid || '—'}</span>
       </div>
       <div class="os-row" style="cursor:pointer;" onclick="closePersonalInfoScreen();setTimeout(()=>exitOS(),260);" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''">
@@ -11301,6 +11566,8 @@ function licRow(label, val) {
   /* ── TERMS OF SERVICE DOCUMENT ── */
   function openTosScreen() {
     haptic('light');
+    const _agreeBar = document.querySelector('#tosScreen .tos-agree-bar');
+    if (_agreeBar) _agreeBar.style.display = (arguments[0] === true) ? 'none' : '';
     document.getElementById('tosScreen').classList.add('show');
   }
 
@@ -11421,7 +11688,7 @@ function licRow(label, val) {
 
   /* === START: ACCESSIBILITY LAYER === */
   (function a11yLayer() {
-    const DIALOG_SEL = '.share-overlay,.cf-overlay,.fb-overlay,.gs-overlay,#cardMenuOverlay,#cardFilterOverlay,#physOrderOverlay,#addContactScreen,#noteEditorScreen,#contactDetailScreen,#screenAccount,#personalInfoScreen,#identityScreen,#licenseScreen,#tosScreen,#screenOS,#artimeetOverlay,#requestMgrScreen';
+    const DIALOG_SEL = '.share-overlay,.cf-overlay,.fb-overlay,.gs-overlay,#cardMenuOverlay,#cardFilterOverlay,#physOrderOverlay,#addContactScreen,#noteEditorScreen,#contactDetailScreen,#screenAccount,#personalInfoScreen,#identityScreen,#licenseScreen,#tosScreen,#screenOS,#artimeetOverlay,#requestMgrScreen,#storyOverlay,#confirmDialogOverlay,#sampleCardOverlay,#publicCta';
     const CLICKABLE = '[onclick]:not(button):not(input):not(select):not(textarea):not(a[href]),.ab-row,.ab-tag,.theme-dot-wrap,.au-nomatch-row,.id-checkbox';
     const ERR_SEL = '.ac-err,.cf-fe,.id-err-msg,.err-msg';
     /* === START: KEEP BANNER === */
@@ -11442,7 +11709,7 @@ function licRow(label, val) {
       physOrderOverlay:'Order physical NFC card', appStoreGateOverlay:'Rate on the App Store'
     };
     const CLOSERS = {
-      artimeetOverlay:'closeArtimeet', requestMgrScreen:'closeRequestManager',
+      artimeetOverlay:'closeArtimeet', requestMgrScreen:'closeRequestManager', storyOverlay:'closeStory',
       addContactScreen:'requestCloseAddContact', noteEditorScreen:'requestCloseNoteEditor', contactDetailScreen:'requestCloseContactDetail',
       confirmDialogOverlay:'cancelConfirmDialog',
       screenAccount:'closeAccountPage', personalInfoScreen:'closePersonalInfoScreen', identityScreen:'closeIdentityScreen',
@@ -11846,6 +12113,7 @@ function applyRemoteCard(d, owner, fromCache) {
 
     const t = THEMES.find(function (x) { return x.id === d.theme; }); if (t) activeTheme = t;
    if (d.colorway && BUILDING_COLORWAYS[d.colorway]) activeCW = d.colorway;
+   if (owner) window.__LICENSE__ = d.license || null;
    if (d.mascotId && MASCOTS.some(function (m) { return m.id === d.mascotId; })) { activeMascot = d.mascotId; window.__MASCOT_REMOTE__ = true; }
 
     showCard(currentEntry);
@@ -12308,10 +12576,10 @@ const DC_PENDING_MAX = 3;
 const DC_STOP = new Set(['the','for','and','with','someone','help','need','looking','find','who','can','that','you','your','want','get','are','near']);
 /* TODO backend: palitan ng apiPost('discoverList') */
 const DC_PEOPLE = [
-  { id:'dc1', first:'Sarah', name:'Sarah C.', role:'AI engineer · Product', score:96, topic:'AI development', common:'AI and SaaS', tags:['AI','SaaS','Web development'], why:'She is looking for web development. You are looking for AI help. Both are in your profiles.', bg:'#3B6FB6' },
-  { id:'dc2', first:'Mark',  name:'Mark L.',  role:'ML engineer · Startups', score:93, topic:'machine learning', common:'machine learning and startups', tags:['Machine learning','Startups','Web'], why:'He offers ML engineering and is looking for a product partner, which matches what you offer.', bg:'#A8326B' }
+  { id:'dc1', first:'Sarah', name:'Sarah C.', role:'AI engineer · Product', score:96, topic:'AI development', common:'AI and SaaS', pron:'She', youWant:'AI help', theyWant:'Web development', tags:['AI','SaaS','Web development'], why:'She is looking for web development. You are looking for AI help. Both are in your profiles.', line:'Looking for web development.<br>You need AI help.', bg:'#3B6FB6' },
+  { id:'dc2', first:'Mark',  name:'Mark L.',  role:'ML engineer · Startups', score:93, topic:'machine learning', common:'machine learning and startups', pron:'He', youWant:'Machine learning help', theyWant:'A product partner', tags:['Machine learning','Startups','Web'], why:'He offers ML engineering and is looking for a product partner, which matches what you offer.', line:'Looking for a product partner.<br>You need ML help.', bg:'#A8326B' }
 ];
-let dcStore = { pending: [], connected: {}, declined: [], chats: {} };
+let dcStore = { pending: [], connected: {}, declined: [], chats: {}, ctx: {} };
 let dcView = 'discover', dcTarget = null, dcShare = 'chat', dcQuery = '', dcDecl = false, _dcLoaded = false;
 
 async function dcLoad() {
@@ -12319,7 +12587,7 @@ async function dcLoad() {
   _dcLoaded = true;
   try {
     const r = await window.storage.get(DC_KEY, false);
-    if (r && r.value) dcStore = Object.assign({ pending: [], connected: {}, declined: [], chats: {} }, JSON.parse(r.value));
+    if (r && r.value) dcStore = Object.assign({ pending: [], connected: {}, declined: [], chats: {}, ctx: {} }, JSON.parse(r.value));
   } catch (e) {}
 }
 async function dcCommit(fn) {
@@ -12344,13 +12612,31 @@ function dcMatches() {
 }
 
 /* ── views ── */
+function dcScore(p, fs) {
+  return `<div class="dc-score"${fs ? ` style="font-size:${fs}px;"` : ''}>${p.score}<small>MATCH</small></div>`;
+}
 function dcHead(p, size) {
   size = size || 46;
   return `<div class="dc-row"><div class="dc-av" style="width:${size}px;height:${size}px;background:${p.bg};font-size:${Math.round(size * .4)}px;">${auEsc(p.name[0])}</div>
     <div style="flex:1;min-width:0;"><div class="dc-name">${auEsc(p.name)}</div><div class="dc-role">${auEsc(p.role)}</div></div>
-    <div class="dc-score">${p.score}<small>BYTESENSE</small></div></div>`;
+    ${dcScore(p)}</div>`;
 }
 function dcCard(p) {
+  const pend = dcStore.pending.includes(p.id), con = dcStore.connected[p.id];
+  const btn = con ? `<button type="button" class="dc-btn" style="padding:12px;" onclick="dcOpenChat('${p.id}')">Open chat →</button>`
+    : pend ? `<button type="button" class="dc-btn alt" style="padding:12px;" onclick="dcGo('pending','${p.id}')">Request sent · View →</button>`
+    : `<button type="button" class="dc-btn" style="padding:12px;" onclick="dcIntro('${p.id}')">Introduce Me →</button>`;
+  return `<div class="dc-card" tabindex="0" style="padding:14px 16px;cursor:pointer;" onclick="if(!event.target.closest('button'))dcProfile('${p.id}')" onkeydown="if(event.key==='Enter'&&!event.target.closest('button'))dcProfile('${p.id}')">
+    <div class="dc-row">
+      <div class="dc-av" style="width:42px;height:42px;background:${p.bg};font-size:17px;">${auEsc(p.name[0])}</div>
+      <div style="flex:1;min-width:0;"><div class="dc-name">${auEsc(p.name)}</div><div class="dc-role">${auEsc(p.role)}</div></div>
+      ${dcScore(p, 24)}
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0 4px;"><div class="dc-note" style="min-width:0;">${p.tags.map(auEsc).join(' · ')}</div><button type="button" class="dc-lnk" style="margin:0;flex-shrink:0;font-size:13px;" onclick="dcProfile('${p.id}')">Profile ›</button></div>
+    <div class="dc-why" style="margin:0 0 12px;">${p.line || auEsc(p.why)}</div>
+    ${btn}</div>`;
+}
+function dcCardOld(p) {
   const pend = dcStore.pending.includes(p.id), con = dcStore.connected[p.id];
   const btn = con ? `<button type="button" class="dc-btn" onclick="dcOpenChat('${p.id}')">Open chat</button>`
     : pend ? `<button type="button" class="dc-btn alt" onclick="dcGo('pending','${p.id}')">Request sent · View</button>`
@@ -12359,11 +12645,23 @@ function dcCard(p) {
     <div class="dc-tags">${p.tags.map(t => `<span class="dc-tag">${auEsc(t)}</span>`).join('')}</div>
     <div class="dc-why">${auEsc(p.why)}</div>${btn}</div>`;
 }
+let dcAskOpen = false;
 function dcVDiscover() {
+  const list = dcMatches();
+  if (!list.length) return dcVEmpty();
+  const mine = (typeof dcMine === 'function') ? dcMine() : '';
+  const q = dcQuery ? `<div class="dc-note" style="margin:0 2px 10px;">Results for “${auEsc(dcQuery)}” · <button type="button" class="dc-lnk" style="min-height:0;margin:0;font-size:13px;" onclick="dcClearQ()">Clear</button></div>` : '';
+  const ask = dcAskOpen
+    ? `<div style="display:flex;gap:8px;"><input id="dcQuery" class="dc-in" type="text" value="${auEsc(dcQuery)}" placeholder="I need…" autocomplete="off" onkeydown="if(event.key==='Enter')dcRunQuery()"><button type="button" class="dc-btn" style="width:auto;padding:0 18px;" onclick="dcRunQuery()">Go</button></div>`
+    : `<button type="button" class="dc-btn alt" onclick="dcOpenAsk()">Need someone specific?</button>`;
+  return `${q}${mine}${list.map(dcCard).join('')}<div class="dc-ask">${ask}</div>`;
+}
+function dcOpenAsk() { haptic('light'); dcAskOpen = true; dcRender(true); setTimeout(() => document.getElementById('dcQuery')?.focus(), 50); }
+function dcVDiscoverOld() {
   const list = dcMatches(), n = list.length;
   if (!n) return dcVEmpty();
-  return `<div class="dc-h1">People you should meet</div>
-    <div class="dc-sub" style="margin-bottom:14px;">${n} strong match${n === 1 ? '' : 'es'}. Only mutual fits are shown.</div>
+  return `<div class="dc-h1">${dcQuery ? 'Best fits for “' + auEsc(dcQuery) + '”' : 'Who should you meet?'}</div>
+    <div class="dc-sub" style="margin-bottom:14px;">${n} strong match${n === 1 ? '' : 'es'}. Shown only when you would be relevant to them too. Nothing is shared until they accept.</div>
     ${dcMine()}
     ${list.map(dcCard).join('')}
     <div class="dc-ask">
@@ -12373,7 +12671,34 @@ function dcVDiscover() {
         <button type="button" class="dc-btn alt" style="width:auto;padding:0 18px;" onclick="dcRunQuery()">Discover</button>
       </div></div>`;
 }
+/* mga event na may dahilan: tinanggap ang intro mo, o may bagong strong match */
+function dcNotifItems() {
+  const acc = Object.keys(dcStore.connected).filter(id => dcPerson(id) && !dcStore.connected[id].seen).map(id => ({ k: 'accepted', p: dcPerson(id) }));
+  const nw = DC_PEOPLE.filter(p => !dcStore.declined.includes(p.id) && !dcStore.pending.includes(p.id) && !dcStore.connected[p.id]).map(p => ({ k: 'match', p: p }));
+  return acc.concat(nw);
+}
 function dcVAmbient() {
+  const items = dcNotifItems();
+  const back = `<button type="button" class="dc-lnk" onclick="dcGo('discover')">‹ Discover</button>`;
+  if (!items.length) {
+    return back + `<div class="dc-find" style="padding-top:40px;">
+      <div class="dc-eyebrow" style="margin-bottom:10px;">No action needed</div>
+      <div class="dc-sub" style="max-width:280px;">Discover is quiet. We'll let you know when someone relevant appears.</div></div>`;
+  }
+  const card = it => {
+    const p = it.p, acc = it.k === 'accepted';
+    const head = acc ? `${auEsc(p.first)} accepted your introduction` : 'New strong match';
+    const btn = acc
+      ? `<button type="button" class="dc-btn" onclick="dcOpenChat('${p.id}')">Open conversation →</button>`
+      : `<button type="button" class="dc-btn" onclick="dcProfile('${p.id}')">Meet ${auEsc(p.first)} →</button>`;
+    return `<div class="dc-card"><div class="dc-eyebrow" style="margin-bottom:12px;">${head}</div>
+      <div class="dc-row" style="margin-bottom:14px;"><div class="dc-av" style="width:46px;height:46px;background:${p.bg};font-size:18px;">${auEsc(p.name[0])}</div>
+        <div style="flex:1;min-width:0;"><div class="dc-name">${auEsc(p.name)}</div><div class="dc-role">${auEsc(p.role)}</div></div></div>
+      ${btn}</div>`;
+  };
+  return back + items.map(card).join('');
+}
+function dcVAmbientOld() {
   const quiet = `<div class="dc-note" style="margin:16px 2px;">At most 2 alerts a week, and only for mutual matches. Quiet is the default.</div>`;
   const p = DC_PEOPLE.find(x => !dcStore.declined.includes(x.id) && !dcStore.pending.includes(x.id) && !dcStore.connected[x.id]);
   const head = `<div class="dc-h1" style="padding-top:8px;">Nothing to search.</div><div class="dc-sub" style="margin-bottom:18px;">articardd speaks up only when someone becomes relevant to you.</div>`;
@@ -12414,7 +12739,7 @@ function dcVRecipient() {
     <div class="dc-h1">Someone wants to meet you</div>
     <div class="dc-card" style="margin-top:12px;"><div class="dc-row"><div class="dc-av" style="width:48px;height:48px;background:${avatarColorFromName(me.first)};font-size:19px;">${auEsc(me.ini)}</div>
       <div style="flex:1;min-width:0;"><div class="dc-name">${auEsc(me.short)}</div><div class="dc-role">${auEsc(me.role)}</div></div>
-      <div class="dc-score">${t.score}<small>BYTESENSE</small></div></div>
+      ${dcScore(t)}</div>
       <div class="dc-sys" style="margin:14px 0;">${auEsc(me.first)} wants to connect with you. They are building a product and looking for someone experienced in ${auEsc(t.topic)}.</div>
       <div class="dc-note">What you have in common</div>
       <div class="dc-tags" style="margin-top:6px;">${t.tags.map(x => `<span class="dc-tag">${auEsc(x)}</span>`).join('')}</div></div>
@@ -12443,10 +12768,35 @@ function dcVConfirm() {
     <div class="dc-note" style="font-weight:700;color:#1c1c1e;margin:0 2px 8px;">Share contact details with ${auEsc(t.first)}?</div>
     <div role="radiogroup" aria-label="Share contact details">${opts.map(o2 => {
       const on = dcShare === o2[0];
-      return `<button type="button" role="radio" aria-checked="${on}" class="dc-opt${on ? ' on' : ''}" ${o2[3] ? 'disabled' : ''} onclick="dcPick('${o2[0]}')"><span class="dc-dot"></span><span style="display:flex;flex-direction:column;"><span class="dc-ot">${o2[1]}</span><span class="dc-os">${auEsc(o2[2])}</span></span></button>`;
+      return `<button type="button" role="radio" aria-checked="${on}" class="dc-opt${on ? ' on' : ''}" ${o2[3] ? 'aria-disabled="true" data-fx="deny"' : ''} onclick="dcPick('${o2[0]}')"><span class="dc-dot"></span><span style="display:flex;flex-direction:column;"><span class="dc-ot">${o2[1]}</span><span class="dc-os">${auEsc(o2[2])}</span></span></button>`;
     }).join('')}</div>
     <div class="dc-note" style="margin:8px 2px 16px;">Each person decides separately, and you can change this later. ${auEsc(t.first)} keeps their own details private until they choose.</div>
     <button type="button" class="dc-btn" onclick="dcFinishConfirm()">Open chat</button>`;
+}
+/* unang message na dala ang dahilan ng introduction */
+function dcIntroLine(p) {
+  const c = (dcStore.ctx || {})[p.id] || {};
+  let need = String(c.q || p.youWant || '').trim().replace(/[.!?]+$/, '');
+  if (/^[A-Z][a-z]/.test(need)) need = need.charAt(0).toLowerCase() + need.slice(1);
+  return need
+    ? 'Hi ' + p.first + " — I'm looking for " + need + '. Your background in ' + p.topic + ' looked like a strong fit.'
+    : 'Hi ' + p.first + " — I'd love to connect. Your background in " + p.topic + ' looked like a strong fit.';
+}
+function dcStarters(p) {
+  const pos = p.pron === 'He' ? 'his' : p.pron === 'She' ? 'her' : 'their';
+  return [
+    { l: 'Say why you reached out', t: dcIntroLine(p) },
+    { l: 'Ask about ' + pos + ' ' + p.topic + ' experience', t: 'Hi ' + p.first + ', I saw your background in ' + p.topic + '. How did you get into it, and what have you learned?' },
+    { l: 'Suggest a quick call', t: 'Hi ' + p.first + ', would you be open to a quick 15-minute call this week?' }
+  ];
+}
+function dcStarter(i) {
+  const p = dcPerson(dcTarget); if (!p) return;
+  const s = dcStarters(p)[i]; const inp = document.getElementById('dcMsg');
+  if (!s || !inp) return;
+  haptic('light');
+  inp.value = s.t; inp.focus();
+  inp.setSelectionRange(inp.value.length, inp.value.length);
 }
 function dcVChat() {
   const t = dcPerson(dcTarget), con = dcStore.connected[t.id] || { share: 'chat' }, msgs = dcStore.chats[t.id] || [];
@@ -12454,11 +12804,19 @@ function dcVChat() {
   return `<div style="display:flex;flex-direction:column;flex:1;min-height:0;gap:10px;">
     <div class="dc-row" style="flex-shrink:0;"><div class="dc-av" style="width:44px;height:44px;background:${t.bg};font-size:18px;">${auEsc(t.name[0])}</div>
       <div style="flex:1;min-width:0;"><div class="dc-name">${auEsc(t.name)}</div><div class="dc-role">${auEsc(t.role)}</div></div>
-      <button type="button" class="dc-lnk" style="margin:0;" onclick="dcGo('discover')">Discover</button></div>
+      <button type="button" class="dc-lnk" style="margin:0;" onclick="dcConnSheet('${t.id}')">Details</button><button type="button" class="dc-lnk" style="margin:0;" onclick="dcGo('discover')">Discover</button></div>
     <div class="dc-msgs" id="dcMsgs" role="log" aria-live="polite">
-      <div class="dc-sys">Introduction accepted. You both have ${auEsc(t.common)} in common.</div>
+      ${msgs.length ? `<div class="dc-sys">Introduction accepted. You both have ${auEsc(t.common)} in common.</div>` : `<div style="text-align:center;padding:14px 0 4px;">
+        <div class="dc-av" style="width:64px;height:64px;background:${t.bg};font-size:26px;margin:0 auto 12px;">${auEsc(t.name[0])}</div>
+        <div class="dc-h1" style="font-size:22px;margin:0 0 4px;">You're connected.</div>
+        <div class="dc-name" style="font-size:15px;">${auEsc(t.name)}</div>
+        <div class="dc-role">${auEsc(t.role)}</div>
+        <div class="dc-note" style="margin-top:8px;">You both have ${auEsc(t.common)} in common.</div></div>`}
       <div class="dc-note" style="text-align:center;">${auEsc(share)}</div>
-      ${msgs.map(m => `<div class="dc-bub ${m.m ? 'me' : 'th'}">${auEsc(m.t)}</div>`).join('')}
+      ${msgs.length ? '' : `<div style="margin-top:6px;">
+        <div class="dc-note" style="font-weight:700;color:#1c1c1e;margin:0 2px 8px;">Start the conversation</div>
+        ${dcStarters(t).map((s, i) => `<button type="button" data-fx="light" onclick="dcStarter(${i})" style="display:block;width:100%;text-align:left;padding:12px 14px;margin-bottom:8px;border-radius:14px;border:1px solid rgba(0,0,0,0.08);background:rgba(255,255,255,0.72);color:#1c1c1e;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;">${auEsc(s.l)}</button>`).join('')}</div>`}
+      ${msgs.map(m => `<div class="dc-bub ${m.m ? 'me' : 'th'}">${auEsc(m.t)}</div>` + (m.c ? `<div class="dc-note" style="align-self:${m.m ? 'flex-end' : 'flex-start'};text-align:${m.m ? 'right' : 'left'};margin:-4px 4px 2px;"><b style="color:#1c1c1e;">Introduced through Discover</b><br>${(m.c.tags || []).map(auEsc).join(' · ')}</div>` : '')).join('')}
     </div>
     <div class="dc-compose"><input id="dcMsg" class="dc-in" type="text" aria-label="Message" placeholder="Write a message" autocomplete="off" onkeydown="if(event.key==='Enter')dcSend()">
       <button type="button" class="dc-btn" style="width:auto;padding:0 18px;height:48px;" onclick="dcSend()">Send</button></div></div>`;
@@ -12471,8 +12829,17 @@ function dcRender(keep) {
   if (!DC_DEMO && (v === 'recipient' || v === 'answered')) v = dcView = 'discover';
   if (['pending','recipient','answered','confirm','chat'].includes(v) && !dcPerson(dcTarget)) v = dcView = 'discover';
   const chat = v === 'chat', top = keep ? body.scrollTop : 0;
+const sh = document.getElementById('auSheet');
+if (sh) {
+  sh.style.setProperty('height', chat ? '100dvh' : '88vh', 'important');
+  sh.style.setProperty('max-height', chat ? '100dvh' : '88vh', 'important');
+  sh.style.borderRadius = chat ? '0' : '';
+  sh.style.paddingTop = chat ? 'env(safe-area-inset-top)' : '';
+}
   const V = { discover: dcVDiscover, ambient: dcVAmbient, empty: dcVEmpty, pending: dcVPending, recipient: dcVRecipient, answered: dcVAnswered, confirm: dcVConfirm, chat: dcVChat };
+  const _dm = document.getElementById('dcMsg'), _draft = (keep && _dm) ? _dm.value : '';
   body.innerHTML = V[v]();
+  if (_draft) { const _n = document.getElementById('dcMsg'); if (_n) _n.value = _draft; }
   body.style.display = chat ? 'flex' : 'block';
   body.style.flexDirection = 'column';
   body.style.minHeight = '0';
@@ -12506,7 +12873,7 @@ function openAuAbout() {
   haptic('light');
   const row = (n, t, b) => `<div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border-top:1px solid rgba(0,0,0,0.07);"><div style="width:24px;height:24px;border-radius:50%;background:#1c1c1e;color:#ECE4D6;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;flex-shrink:0;margin-top:1px;">${n}</div><div><div style="font-size:14px;font-weight:600;color:#1c1c1e;margin-bottom:2px;">${t}</div><div style="font-size:12.5px;color:rgba(60,60,67,0.6);line-height:1.5;">${b}</div></div></div>`;
   auMakeSheet('dcAboutOverlay', 'How Discover Works', `<div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:14px;">
-    ${row(1, 'Mutual matches only', 'You are shown people only when you would also be relevant to them. ByteSense scores how well two profiles fit.').replace('border-top:1px solid rgba(0,0,0,0.07);', '')}
+    ${row(1, 'Mutual matches only', 'You are shown people only when you would also be relevant to them. Each match gets a score, so the best fits come first.').replace('border-top:1px solid rgba(0,0,0,0.07);', '')}
     ${row(2, 'Introduce Me', 'They decide first. If they decline, you are never told.')}
     ${row(3, 'You choose what to share', 'Chat inside articardd, or share your email or number. Each side decides separately.')}
     ${row(4, 'Quiet by default', 'At most 2 alerts a week, and only for strong matches.')}</div>
@@ -12517,6 +12884,7 @@ function openAuAbout() {
 function dcRunQuery() {
   haptic('light');
   dcQuery = (document.getElementById('dcQuery')?.value || '').trim();
+  dcAskOpen = false;
   dcView = 'discover';
   dcRender();
 }
@@ -12537,11 +12905,17 @@ function dcMine() {
 async function dcIntro(id) {
   if (dcStore.pending.length >= DC_PENDING_MAX) { haptic('error'); showToast('You have ' + DC_PENDING_MAX + ' pending introductions. Wait for a reply or cancel one.', 'neutral'); return; }
   /* TODO backend: apiPost('discoverIntroduce', { personId: id }) */
-  if (!(await dcCommit(s => { if (!s.pending.includes(id)) s.pending.push(id); }))) return;
+  const why = dcQuery;
+  if (!(await dcCommit(s => { if (!s.pending.includes(id)) s.pending.push(id); s.ctx = s.ctx || {}; s.ctx[id] = { q: why, at: Date.now() }; }))) return;
   haptic('success');
   dcGo('pending', id);
 }
-async function dcCancel(id) {
+function dcCancel(id) {
+  const p = dcPerson(id); if (!p) return;
+  haptic('medium');
+  confirmDialog({ title: 'Cancel introduction to ' + p.first + '?', message: 'The request will be withdrawn.', confirmLabel: 'Cancel Introduction', cancelLabel: 'Keep', danger: true, onConfirm: () => dcCancelNow(id) });
+}
+async function dcCancelNow(id) {
   if (!(await dcCommit(s => { s.pending = s.pending.filter(x => x !== id); }))) return;
   haptic('light'); showToast('Request cancelled', 'neutral');
   dcGo('discover');
@@ -12552,18 +12926,27 @@ async function dcNotInterested(id) {
 }
 async function dcAccept() {          /* demo: ang recipient ang tumanggap */
   const id = dcTarget;
-  if (!(await dcCommit(s => { s.pending = s.pending.filter(x => x !== id); s.connected[id] = Object.assign({ share: 'chat', at: Date.now() }, s.connected[id]); }))) return;
+  if (!(await dcCommit(s => { s.pending = s.pending.filter(x => x !== id); s.connected[id] = Object.assign({ share: 'chat', at: Date.now(), seen: 1 }, s.connected[id]); }))) return;
   haptic('success');
-  dcGo('confirm');
+  dcGo('chat'); setTimeout(dcShareSheet, 320);
 }
 function dcNotNow() { dcDecl = false; dcGo('answered'); }
-async function dcDecline() {
+function dcDecline() {
+  const me = dcMe();
+  haptic('medium');
+  confirmDialog({ title: 'Decline this introduction?', message: me.first + ' is not notified, and you will not be suggested to each other again.', confirmLabel: 'Decline', cancelLabel: 'Keep', danger: true, onConfirm: dcDeclineNow });
+}
+async function dcDeclineNow() {
   const id = dcTarget;
   if (!(await dcCommit(s => { s.pending = s.pending.filter(x => x !== id); if (!s.declined.includes(id)) s.declined.push(id); }))) return;
   dcDecl = true;
   dcGo('answered');
 }
-function dcPick(s) { haptic('light'); dcShare = s; dcRender(true); }
+function dcPick(s) {
+  const o = ownerInfo();
+  if ((s === 'email' && !o.email) || (s === 'phone' && !o.phone)) { haptic('error'); showToast('Add it in Personal Information first', 'neutral'); return; }
+  haptic('light'); dcShare = s; dcRender(true);
+}
 async function dcFinishConfirm() {
   const id = dcTarget, o = ownerInfo();
   if ((dcShare === 'email' && !o.email) || (dcShare === 'phone' && !o.phone)) { haptic('error'); showToast('Add it in Personal Information first', 'error'); return; }
@@ -12572,15 +12955,22 @@ async function dcFinishConfirm() {
   haptic('success');
   dcGo('chat');
 }
-function dcOpenChat(id) { dcGo('chat', id); }
+function dcOpenChat(id) {
+  const c = dcStore.connected[id];
+  if (c && !c.seen) dcCommit(s => { if (s.connected[id]) s.connected[id].seen = 1; });
+  dcGo('chat', id);
+}
 async function dcSend() {
   const inp = document.getElementById('dcMsg'); if (!inp) return;
   const text = inp.value.trim(); if (!text) return;
   const id = dcTarget, t = dcPerson(id);
   const first = !(dcStore.chats[id] || []).some(m => !m.m);
-  const ok = await dcCommit(s => { s.chats[id] = (s.chats[id] || []).concat([{ m: 1, t: text }]).slice(-200); });
+  const ok = await dcCommit(s => {
+    const firstMsg = !(s.chats[id] || []).length;
+    s.chats[id] = (s.chats[id] || []).concat([firstMsg ? { m: 1, t: text, c: { tags: t.tags } } : { m: 1, t: text }]).slice(-200);
+  });
   if (!ok) return;
-  haptic('light');
+  haptic('success');
   dcRender();
   document.getElementById('dcMsg')?.focus();
   if (DC_DEMO && first) setTimeout(async () => {
@@ -12589,6 +12979,234 @@ async function dcSend() {
   }, 900);
 }
 
+/* === START: DISCOVER ASK BAR (need → intent) === */
+const DC_PROMPTS = [
+  'Someone to help me launch my SaaS',
+  'A photographer in Manila',
+  'Someone who knows Shopify',
+  'An investor for my startup',
+  'A reliable contractor',
+  'A designer for my brand',
+  'Someone in real estate',
+  'A developer who can help me build this'
+];
+/* demo lang: simpleng need → intent expansion. Papalitan ng backend (discoverList) */
+const DC_SYN = {
+  saas:['ai','saas','product','web'], launch:['product','startup','saas'], startup:['startups','product'],
+  developer:['engineer','web','development','ai'], build:['engineer','development','product'],
+  shopify:['web','development'], investor:['startups','investor'], ai:['ai','machine','learning']
+};
+function dcMatches() {
+  const words = dcQuery.toLowerCase().split(/\s+/).filter(w => w.length > 2 && !DC_STOP.has(w));
+  const terms = [...new Set(words.flatMap(w => [w].concat(DC_SYN[w] || [])))];
+  return DC_PEOPLE.filter(p => !dcStore.declined.includes(p.id) &&
+    (!terms.length || terms.some(w => (p.role + ' ' + p.topic + ' ' + p.tags.join(' ')).toLowerCase().includes(w))));
+}
+
+function dcAskBar() {
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  return `<div class="dc-ask">
+    <label for="dcQuery" style="display:block;${F}font-size:15px;font-weight:700;color:#1c1c1e;margin:0 2px 8px;">Who are you looking for?</label>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <input id="dcQuery" class="dc-in" type="text" value="" placeholder="${auEsc(DC_PROMPTS[0])}" autocomplete="off" enterkeyhint="go" style="border-radius:24px;padding:0 18px;" onkeydown="if(event.key==='Enter')dcRunQuery()">
+      <button type="button" aria-label="Find someone" onclick="dcRunQuery()" style="width:48px;height:48px;flex-shrink:0;border-radius:50%;border:none;background:#1c1c1e;color:#ECE4D6;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+      </button>
+    </div>
+    <div class="dc-note" style="margin:8px 2px 0;">Describe what you need. We only show people who fit you both ways.</div>
+  </div>`;
+}
+
+function dcVDiscover() {
+  const list = dcMatches();
+  const q = dcQuery ? `<div class="dc-note" style="margin:0 2px 10px;">Looking for “${auEsc(dcQuery)}” · <button type="button" class="dc-lnk" style="min-height:0;margin:0;font-size:13px;" onclick="dcClearQ()">Clear</button></div>` : '';
+  if (!list.length) return q + dcVEmpty() + dcAskBar();
+  const mine = (typeof dcMine === 'function') ? dcMine() : '';
+  return q + mine + list.map(dcCard).join('') + dcAskBar();
+}
+
+function dcRunQuery() {
+  const inp = document.getElementById('dcQuery');
+  const v = (inp && inp.value || '').trim();
+  if (!v) { haptic('error'); if (inp) inp.focus(); return; }
+  haptic('light');
+  dcQuery = v;
+  dcView = 'discover';
+  dcRender();
+  const b = document.getElementById('auBody'); if (b) b.scrollTop = 0;
+}
+
+/* rotating placeholder: humihinto kapag may tinitype o wala na ang input */
+let _dcRotTimer = null, _dcRotIdx = 0;
+function dcAskRotate() {
+  clearInterval(_dcRotTimer);
+  const inp = document.getElementById('dcQuery'); if (!inp) return;
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  _dcRotTimer = setInterval(() => {
+    const el = document.getElementById('dcQuery');
+    if (!el) { clearInterval(_dcRotTimer); return; }
+    if (el.value) return;
+    _dcRotIdx = (_dcRotIdx + 1) % DC_PROMPTS.length;
+    el.placeholder = DC_PROMPTS[_dcRotIdx];
+  }, 3000);
+}
+(function () {
+  const base = dcRender;
+  dcRender = function () { base.apply(this, arguments); dcAskRotate(); };
+})();
+/* === END: DISCOVER ASK BAR === */
+
+/* === START: DISCOVER LIVE ASK (type → arrow → finding → result) === */
+(function () {
+  if (document.getElementById('dcLiveCss')) return;
+  const st = document.createElement('style'); st.id = 'dcLiveCss';
+  st.textContent = `
+  #dcGoBtn{transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .2s,color .2s,box-shadow .25s;}
+  #dcGoBtn.ready{background:#E8CC7A !important;color:#1c1c1e !important;transform:scale(1.1);box-shadow:0 6px 16px rgba(201,162,39,.4);}
+  #dcGoBtn:active{transform:scale(.92);}
+  #dcQuery.has{border-color:#1c1c1e;}
+  .dc-find{display:flex;flex-direction:column;align-items:center;text-align:center;padding:44px 12px 24px;}
+  .dc-dots{display:flex;gap:8px;margin-bottom:16px;}
+  .dc-dots i{width:10px;height:10px;border-radius:50%;background:#1c1c1e;animation:dcSpring 1s infinite cubic-bezier(.34,1.56,.64,1);}
+  .dc-dots i:nth-child(2){animation-delay:.12s;background:#C9A227;}
+  .dc-dots i:nth-child(3){animation-delay:.24s;}
+  @keyframes dcSpring{0%,100%{transform:translateY(0) scale(1);opacity:.45;}40%{transform:translateY(-10px) scale(1.2);opacity:1;}}
+  .dc-echo{max-width:300px;padding:10px 16px;border-radius:20px;background:rgba(255,255,255,.72);font-size:14px;color:#1c1c1e;margin-bottom:22px;word-break:break-word;}
+  @media (prefers-reduced-motion:reduce){.dc-dots i{animation:none;opacity:1;}#dcGoBtn{transition:none;}}`;
+  document.head.appendChild(st);
+})();
+
+let dcLoading = false, dcFound = false, _dcTok = 0;
+
+function dcAskInput(el) {
+  const on = !!el.value.trim();
+  el.classList.toggle('has', on);
+  const b = document.getElementById('dcGoBtn'); if (b) b.classList.toggle('ready', on);
+  const h = document.getElementById('dcHint');
+  if (h) h.textContent = on ? 'Tap → to find people' : 'Describe what you need. We only show people who fit you both ways.';
+}
+
+function dcAskBar() {
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  return `<div class="dc-ask">
+    <label for="dcQuery" style="display:block;${F}font-size:15px;font-weight:700;color:#1c1c1e;margin:0 2px 8px;">Who are you looking for?</label>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <input id="dcQuery" class="dc-in" type="text" value="" placeholder="${auEsc(DC_PROMPTS[0])}" autocomplete="off" enterkeyhint="go" style="border-radius:24px;padding:0 18px;" oninput="dcAskInput(this)" onkeydown="if(event.key==='Enter')dcRunQuery()">
+      <button type="button" id="dcGoBtn" aria-label="Find someone" onclick="dcRunQuery()" style="width:48px;height:48px;flex-shrink:0;border-radius:50%;border:none;background:#1c1c1e;color:#ECE4D6;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+      </button>
+    </div>
+    <div id="dcHint" class="dc-note" style="margin:8px 2px 0;">Describe what you need. We only show people who fit you both ways.</div>
+  </div>`;
+}
+
+function dcVFinding() {
+  return `<div class="dc-find" role="status" aria-live="polite">
+    <div class="dc-echo">${auEsc(dcQuery)}</div>
+    <div class="dc-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="dc-h1" style="font-size:20px;margin:0;">Finding the right people…</div>
+    <div class="dc-note" style="margin-top:6px;">Checking who fits you both ways.</div>
+  </div>`;
+}
+
+function dcVDiscover() {
+  if (dcLoading) return dcVFinding();
+  const list = dcMatches(), n = list.length;
+  if (!n) return dcVEmpty() + dcAskBar();
+  const head = (dcQuery && dcFound) ? `<div class="dc-h1" style="font-size:22px;margin:2px 0 10px;">${n} ${n === 1 ? 'person' : 'people'} you should meet</div>` : '';
+  const q = dcQuery ? `<div class="dc-note" style="margin:0 2px 10px;">Looking for “${auEsc(dcQuery)}” · <button type="button" class="dc-lnk" style="min-height:0;margin:0;font-size:13px;" onclick="dcClearQ()">Clear</button></div>` : '';
+  const mine = (typeof dcMine === 'function') ? dcMine() : '';
+  return head + q + mine + list.map(dcCard).join('') + dcAskBar();
+}
+
+function dcRunQuery() {
+  if (dcLoading) return;
+  const inp = document.getElementById('dcQuery');
+  const v = (inp && inp.value || '').trim();
+  if (!v) { haptic('error'); if (inp) inp.focus(); return; }
+  haptic('light');
+  dcQuery = v; dcLoading = true; dcFound = false; dcView = 'discover';
+  const tok = ++_dcTok;
+  dcRender();
+  const b = document.getElementById('auBody'); if (b) b.scrollTop = 0;
+  /* TODO backend: await apiPost('discoverList', { need: v }) in parallel with this minimum delay */
+  setTimeout(() => {
+    if (tok !== _dcTok) return;
+    dcLoading = false; dcFound = true;
+    haptic('success');
+    if (dcView === 'discover') { dcRender(); const bb = document.getElementById('auBody'); if (bb) bb.scrollTop = 0; }
+  }, 1100);
+}
+/* === END: DISCOVER LIVE ASK === */
+
+/* === START: DISCOVER INTERACTION LANGUAGE (rest → press → spring → release) === */
+(function () {
+  const SEL = '#auOverlay .dc-btn,#auOverlay .dc-opt,#auOverlay .dc-lnk,#auOverlay #dcGoBtn,#auOverlay #auPlusBtn,#auOverlay #auMicBtn,#auOverlay [data-fx]';
+  const DEPTH = { light: .96, medium: .94 };
+  const SPRING = 'transform .45s cubic-bezier(0.34,1.56,0.64,1)';
+  const reduce = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* generic :active rules must not fight the spring */
+  const st = document.createElement('style');
+  st.textContent = '#auOverlay .dc-btn:active,#auOverlay .dc-opt:active{opacity:1 !important;} .dc-opt[aria-disabled="true"]{opacity:.45;cursor:default;}';
+  document.head.appendChild(st);
+
+  /* one tick per touch: skip a light/medium that follows another within 250ms. success/error always fire */
+  const _haptic = haptic; let _hAt = 0;
+  haptic = function (type) {
+    if (type === 'light' || type === 'medium') {
+      const n = Date.now(); if (n - _hAt < 250) return; _hAt = n;
+    }
+    return _haptic(type);
+  };
+
+  function strength(el) {
+    const d = el.dataset.fx; if (d === 'light' || d === 'medium' || d === 'deny') return d;
+    if (el.matches('.dc-btn.alt,.dc-btn.link,.dc-lnk,#auPlusBtn,#auMicBtn')) return 'light';
+    return 'medium'; /* primary .dc-btn, .dc-opt, #dcGoBtn */
+  }
+
+  let cur = null;
+  function release() {
+    const el = cur; if (!el) return; cur = null;
+    if (el._fx === 'deny') return;
+    el.style.transition = SPRING;
+    el.style.transform = el.classList.contains('ready') ? 'scale(1.1)' : 'scale(1)';
+    clearTimeout(el._fxT);
+    el._fxT = setTimeout(() => { el.style.transform = ''; el.style.transition = ''; }, 480);
+  }
+
+  document.addEventListener('pointerdown', e => {
+    const el = e.target.closest && e.target.closest(SEL);
+    if (!el || el.disabled) return;
+    release();
+    const s = strength(el); el._fx = s;
+    if (s === 'deny') return;
+    haptic(s);
+    if (reduce()) return;
+    clearTimeout(el._fxT);
+    el.style.transition = 'transform .09s ease-out';
+    el.style.transform = 'scale(' + DEPTH[s] + ')';
+    cur = el;
+  }, true);
+  ['pointerup', 'pointercancel'].forEach(t => window.addEventListener(t, release, true));
+  document.addEventListener('pointerleave', release, true);
+
+  /* unavailable action: nudge (the action itself fires haptic('error')) */
+  document.addEventListener('click', e => {
+    const el = e.target.closest && e.target.closest('#auOverlay [data-fx="deny"]');
+    if (!el || reduce() || !el.animate) return;
+    el.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(-4px)' }, { transform: 'translateX(0)' }], { duration: 280, easing: 'ease-out' });
+  }, true);
+
+  /* header buttons: replace their one-off inline handlers with the shared language */
+  document.querySelectorAll('#auOverlay button[aria-label="Menu"]').forEach(b => {
+    b.removeAttribute('onpointerdown'); b.removeAttribute('onpointerup'); b.removeAttribute('onpointerleave');
+    b.style.transition = ''; b.dataset.fx = 'light';
+  });
+})();
+/* === END: DISCOVER INTERACTION LANGUAGE === */
+
 /* menu label: About AU → How Discover Works */
 (function dcChrome() {
   document.querySelectorAll('#auMenuDropdown button').forEach(b => b.childNodes.forEach(n => {
@@ -12596,6 +13214,121 @@ async function dcSend() {
   }));
 })();
 dcLoad();
+/* === START: DISCOVER MODAL LAYERS (L2 sheets + L4 confirms) === */
+(function () {
+  if (document.getElementById('dcSheetCss')) return;
+  const st = document.createElement('style'); st.id = 'dcSheetCss';
+  st.textContent = '#dcShareOverlay button,#dcProfileOverlay button,#dcConnOverlay button{font-family:inherit;}';
+  document.head.appendChild(st);
+})();
+const DC_F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+
+/* L2: person's deeper profile */
+function dcProfile(id) {
+  const p = dcPerson(id); if (!p) return;
+  haptic('light');
+  const con = dcStore.connected[id], pend = dcStore.pending.includes(id);
+  const pr = p.pron || 'They';
+  const close = js => `closeAuGenericModal('dcProfileOverlay');setTimeout(()=>${js},260)`;
+  const primary = con
+    ? `<button type="button" class="dc-btn" onclick="${close(`dcOpenChat('${id}')`)}">Open chat →</button>`
+    : pend
+    ? `<button type="button" class="dc-btn alt" onclick="${close(`dcGo('pending','${id}')`)}">Request sent · View →</button>`
+    : `<button type="button" class="dc-btn" onclick="${close(`dcIntro('${id}')`)}">Introduce Me</button>`;
+  const secondary = (con || pend) ? '' : `<button type="button" class="dc-btn link" style="margin-top:4px;" onclick="${close(`dcNotInterested('${id}')`)}">Not interested</button>`;
+  const want = (k, v, first) => `<div style="padding:12px 14px;${first ? '' : 'border-top:1px solid rgba(0,0,0,0.07);'}"><div class="dc-note">${k}</div><div class="dc-ot" style="font-size:15px;margin-top:2px;">${auEsc(v || '—')}</div></div>`;
+  auMakeSheet('dcProfileOverlay', auEsc(p.name), `<div style="${DC_F}">
+    <div class="dc-row"><div class="dc-av" style="width:56px;height:56px;background:${p.bg};font-size:22px;">${auEsc(p.name[0])}</div>
+      <div style="flex:1;min-width:0;"><div class="dc-name">${auEsc(p.name)}</div><div class="dc-role">${auEsc(p.role)}</div></div>
+      ${dcScore(p)}</div>
+    <div class="dc-note" style="font-weight:700;color:#1c1c1e;margin:16px 2px 0;">Why you two</div>
+    <div class="dc-tags">${p.tags.map(t => `<span class="dc-tag">${auEsc(t)}</span>`).join('')}</div>
+    <div class="dc-why">${auEsc(p.why)}</div>
+    <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:14px;">
+      ${want('You are looking for', p.youWant, 1)}${want(pr + ' is looking for', p.theyWant)}</div>
+    <div class="dc-note" style="margin:0 2px 14px;">Your email and number stay private until you choose to share them.</div>
+    ${primary}${secondary}</div>`);
+}
+function dcProfileOld(id) {
+  const p = dcPerson(id); if (!p) return;
+  haptic('light');
+  const con = dcStore.connected[id], pend = dcStore.pending.includes(id);
+  const act = con
+    ? `<button type="button" class="dc-btn" onclick="closeAuGenericModal('dcProfileOverlay');setTimeout(()=>dcOpenChat('${id}'),260)">Open chat →</button>`
+    : pend
+    ? `<button type="button" class="dc-btn alt" onclick="closeAuGenericModal('dcProfileOverlay');setTimeout(()=>dcGo('pending','${id}'),260)">Request sent · View →</button>`
+    : `<button type="button" class="dc-btn" onclick="closeAuGenericModal('dcProfileOverlay');setTimeout(()=>dcIntro('${id}'),260)">Introduce Me →</button>`;
+  auMakeSheet('dcProfileOverlay', 'Profile', `<div style="${DC_F}">
+    ${dcHead(p, 56)}
+    <div class="dc-tags">${p.tags.map(t => `<span class="dc-tag">${auEsc(t)}</span>`).join('')}</div>
+    <div class="dc-why">${auEsc(p.why)}</div>
+    <div class="dc-note" style="margin:0 2px 16px;">Your email and number stay private until you choose to share them.</div>
+    ${act}</div>`);
+}
+
+/* L2: sharing contact details */
+function dcShareBodyHtml() {
+  const t = dcPerson(dcTarget), o = ownerInfo();
+  const opts = [
+    ['chat',  'Chat in articardd only', 'Nothing else is revealed.', false],
+    ['email', 'Share my email', o.email ? `Only ${t.first} sees it, for this introduction.` : 'Add your email in Personal Information first.', !o.email],
+    ['phone', 'Share my phone number', o.phone ? `Only ${t.first} sees it, for this introduction.` : 'Add your phone in Personal Information first.', !o.phone]
+  ];
+  return `<div class="dc-note" style="margin:-4px 2px 12px;">${auEsc(t.first)} accepted. Choose what, if anything, to share beyond chat.</div>
+    <div role="radiogroup" aria-label="Share contact details">${opts.map(o2 => {
+      const on = dcShare === o2[0];
+      return `<button type="button" role="radio" aria-checked="${on}" class="dc-opt${on ? ' on' : ''}" ${o2[3] ? 'aria-disabled="true"' : ''} onclick="dcSharePick('${o2[0]}')"><span class="dc-dot"></span><span style="display:flex;flex-direction:column;text-align:left;"><span class="dc-ot">${o2[1]}</span><span class="dc-os">${auEsc(o2[2])}</span></span></button>`;
+    }).join('')}</div>
+    <div class="dc-note" style="margin:8px 2px 16px;">Each person decides separately, and you can change this later.</div>
+    <button type="button" class="dc-btn" onclick="dcShareSave()">Done</button>`;
+}
+function dcShareSheet() {
+  if (!dcPerson(dcTarget)) return;
+  dcShare = (dcStore.connected[dcTarget] || {}).share || 'chat';
+  auMakeSheet('dcShareOverlay', 'Share contact details', `<div id="dcShareBody" style="${DC_F}">${dcShareBodyHtml()}</div>`);
+}
+function dcSharePick(s) {
+  const o = ownerInfo();
+  if ((s === 'email' && !o.email) || (s === 'phone' && !o.phone)) { haptic('error'); showToast('Add it in Personal Information first', 'neutral'); return; }
+  haptic('light'); dcShare = s;
+  const b = document.getElementById('dcShareBody'); if (b) b.innerHTML = dcShareBodyHtml();
+}
+async function dcShareSave() {
+  const id = dcTarget, o = ownerInfo();
+  if ((dcShare === 'email' && !o.email) || (dcShare === 'phone' && !o.phone)) { haptic('error'); showToast('Add it in Personal Information first', 'error'); return; }
+  if (!(await dcCommit(s => { s.connected[id] = Object.assign({ at: Date.now() }, s.connected[id], { share: dcShare }); }))) return;
+  haptic('success');
+  closeAuGenericModal('dcShareOverlay');
+  if (dcView === 'chat') dcRender(true);
+}
+
+/* L2: connection details */
+function dcConnSheet(id) {
+  const p = dcPerson(id); if (!p) return;
+  dcTarget = id; haptic('light');
+  const con = dcStore.connected[id] || { share: 'chat' };
+  const what = con.share === 'email' ? 'Your email' : con.share === 'phone' ? 'Your phone number' : 'Nothing (chat only)';
+  const since = con.at ? new Date(con.at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+  const row = (k, v, first) => `<div style="display:flex;justify-content:space-between;gap:10px;padding:12px 14px;${first ? '' : 'border-top:1px solid rgba(0,0,0,0.07);'}"><span class="dc-note">${k}</span><span class="dc-ot" style="font-size:14px;text-align:right;">${auEsc(v)}</span></div>`;
+  auMakeSheet('dcConnOverlay', auEsc(p.name), `<div style="${DC_F}">
+    ${dcHead(p, 48)}
+    <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin:14px 0;">${row('Connected since', since, 1)}${row('You share', what)}</div>
+    <button type="button" class="dc-btn alt" onclick="closeAuGenericModal('dcConnOverlay');setTimeout(dcShareSheet,260)">Change what I share</button>
+    <button type="button" class="dc-btn link" style="color:#FF453A;margin-top:4px;" onclick="closeAuGenericModal('dcConnOverlay');setTimeout(()=>dcRemoveConn('${id}'),260)">Remove connection</button></div>`);
+}
+
+/* L4: remove connection */
+function dcRemoveConn(id) {
+  const p = dcPerson(id); if (!p) return;
+  haptic('medium');
+  confirmDialog({ title: 'Remove ' + p.first + '?', message: 'The chat will be deleted. You can be introduced again later.', confirmLabel: 'Remove', cancelLabel: 'Keep', danger: true, onConfirm: () => dcRemoveNow(id) });
+}
+async function dcRemoveNow(id) {
+  if (!(await dcCommit(s => { delete s.connected[id]; delete s.chats[id]; s.pending = s.pending.filter(x => x !== id); }))) return;
+  haptic('success'); showToast('Connection removed', 'neutral');
+  dcGo('discover');
+}
+/* === END: DISCOVER MODAL LAYERS === */
 /* === END: DISCOVER === */
 
 /* === START: MASCOTS === */
@@ -13732,14 +14465,105 @@ function openRewardTerms() {
       <div style="${F}font-size:26px;font-weight:700;color:#E8CC7A;">₱1,000</div>
       <div style="${F}font-size:12px;color:#F3EDE4;margin-top:3px;">Starbucks e-Gift Card per qualified referral</div></div>
     <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:12px;">
-      ${li('<b>1.</b> Ibigay ang link o code mo sa bagong bibili.').replace('border-top:1px solid rgba(0,0,0,0.07);', '')}
-      ${li('<b>2.</b> Dapat sabihin nila ang code <b>bago magbayad</b>.')}
-      ${li('<b>3.</b> Kapag na-verify ang payment at na-activate ang license, may <b>14-araw na hold</b>.')}
-      ${li('<b>4.</b> Pagkatapos ng hold, ipapadala ang e-Gift Card sa email o mobile mo.')}</div>
-    <div style="${F}font-size:12px;color:rgba(60,60,67,0.6);line-height:1.6;margin:0 4px 14px;">Bagong customer lang ang qualified. Walang self-referral at duplicate. Isang beses lang kada bumili (hindi kasama ang renewals). Kapag na-refund o na-cancel ang purchase sa loob ng hold, hindi ito mabibilang. Kumpletong terms: Section 19 ng Terms of Service.</div>
+      ${li('<b>1.</b> Share your link or code with a new buyer.').replace('border-top:1px solid rgba(0,0,0,0.07);', '')}
+      ${li('<b>2.</b> They must state your code <b>before paying</b>.')}
+      ${li('<b>3.</b> Once payment is verified and the license is activated, a <b>14-day hold</b> applies.')}
+      ${li('<b>4.</b> After the hold, the e-Gift Card is sent to your email or mobile number.')}</div>
+    <div style="${F}font-size:12px;color:rgba(60,60,67,0.6);line-height:1.6;margin:0 4px 14px;">Only new customers qualify. No self-referrals or duplicates. One reward per buyer (renewals do not count). If the purchase is refunded or cancelled during the hold, it will not count. Full terms: Section 19 of the Terms of Service.</div>
     <button onclick="closeAuGenericModal('rewardTermsOverlay')" style="width:100%;padding:14px;border-radius:14px;border:none;background:#1c1c1e;color:#ECE4D6;${F}font-size:14.5px;font-weight:700;cursor:pointer;">Got it</button>`);
 }
 /* === END: REFERRALS === */
+
+/* === START: TERMS v4.0 === */
+(function () {
+  var host = document.querySelector('#tosScreen .tos-body'); if (!host) return;
+  var n = 0;
+  var S = function (t, b) { n++; return '<div class="tos-section"><div class="tos-section-num">' + n + '</div><div class="tos-section-title">' + t + '</div>' + b + '</div>'; };
+  var B = function (h) { return '<div class="tos-section-body">' + h + '</div>'; };
+  var D = function (t, d) { return '<div class="tos-def"><b>' + t + '</b> — ' + d + '</div>'; };
+  var R = function (a, b) { return '<div class="tos-table-row"><span>' + a + '</span><span>' + b + '</span></div>'; };
+  var html =
+  '<div class="tos-header"><div class="tos-title">articardd.<br>Terms of Service, EULA &amp;<br>Privacy Policy</div>' +
+  '<div class="tos-version">Version 4.0 · Effective October 5, 2026 · Supersedes all prior versions</div></div>' +
+  '<div class="tos-badges"><span class="tos-badge">LEGALLY BINDING</span><span class="tos-badge">RA 10173 COMPLIANT</span><span class="tos-badge">PHILIPPINE LAW</span><span class="tos-badge">CLICKWRAP CONSENT</span></div>' +
+  '<div class="tos-notice"><b>IMPORTANT — PLEASE READ CAREFULLY.</b> This is a legally binding agreement between you ("Client") and ArtiByte Apostrophe Inc., operator of articardd. ("articardd," "Provider," "we," "us"). By ticking the checkbox and registering, or by continuing to use the Service, you confirm you have read, understood, and agree to every provision herein. If you do not agree, do not register or use the Service.</div>' +
+
+  S('Definitions',
+    D('"articardd" / "Service"', 'The articardd. digital card and everything around it: the public card page and QR, Contacts, Calendar, Captures, Request Manager, meeting booking, Discover, CardKit (physical card ordering), the Account area, and the supporting back-end.') +
+    D('"Provider"', 'ArtiByte Apostrophe Inc., reachable at support@artibytte.com.') +
+    D('"Client" / "Owner" / "You"', 'Any individual or business that holds an articardd. card and signs in to the Service under an Annual License or any other license the Provider grants.') +
+    D('"Visitor"', 'Any person who opens a Client\'s public card and voluntarily submits details, whether through the Connect form or a meeting request.') +
+    D('"Card ID"', 'The public identifier of a card (format C-XXXXXX) used in the card link and QR.') +
+    D('"articardd ID"', 'The identifier shown on the Client\'s account and on the back of the card (format ARTICARD-XXXXXX).') +
+    D('"Private Key"', 'The secret key (format AK-…) the Client uses to sign in to the owner area. The Client alone is responsible for keeping it confidential.') +
+    D('"License"', 'The right to use the Service under the Annual License (₱4,990 per year).') +
+    D('"Client Data"', 'Everything the Client creates or stores in the Service: card details, Contacts, Captures, Calendar entries, meeting requests received, preferences, and Discover profile information.') +
+    D('"Visitor Data"', 'Personal information a Visitor submits: name, title or organization, email, mobile number, and the details of a meeting request (date, time, type, location, notes).') +
+    D('"Personal Information"', 'As defined under the Data Privacy Act of 2012 (RA 10173).')) +
+
+  S('Acceptance &amp; Eligibility',
+    B('This Agreement is accepted through the clickwrap on the registration screen: ticking the Terms checkbox and submitting the form. By accepting, the Client represents that they are (a) at least 18 years old, (b) legally able to enter binding contracts under Philippine law, and (c) using the Service for legitimate professional or business purposes.<br><br>Visitors are not parties to this Agreement. Visitors are subject to the notice shown where they submit their details.')) +
+
+  S('Card ID, articardd ID &amp; Private Key',
+    B('Each card has a unique Card ID and articardd ID, which are permanent and non-transferable. The Client signs in to the owner area with a Private Key. Anyone holding the Private Key can access and change the account, so the Client must keep it secret and must not share it.<br><br>If a Private Key is lost or exposed, contact support@artibytte.com immediately. Reissuing a key requires identity verification and is at the Provider\'s discretion. The Client is responsible for all activity done with their key until the Provider is notified.')) +
+
+  S('License, Fees &amp; Payment',
+    '<div class="tos-plan-card"><div class="tos-plan-title">🗓 Annual License — ₱4,990 per year</div><div class="tos-section-body">The only plan. 12 months of access, renewed manually. No automatic billing. Includes one (1) physical NFC card with shipping, delivered within 21 days of ordering, plus new card themes and mascots the Provider releases during the license period. Activation follows payment verification. Non-refundable once activated, except as stated in Section 17.</div></div>' +
+    '<div class="tos-plan-card"><div class="tos-plan-title">💳 Replacement NFC Card — ₱999</div><div class="tos-section-body">If the physical card is lost or damaged, or the Client wants a new design, a replacement is ₱999 per card.</div></div>' +
+    B('Payment is by manual bank transfer or e-wallet (GCash, BPI, Security Bank, PS Bank, Maya, GoTyme, Netbank, or CIMB Bank). Activation is manual and subject to the Provider\'s verification. Prices are in Philippine Peso and exclusive of applicable taxes. The Provider may change prices with 30 days\' notice; a change does not affect an active License until its renewal date.')) +
+
+  S('What the Service Includes',
+    B('📇 <b>Digital card</b> — a ring with a QR at its center, your name and title, your chosen theme and mascot, a public card link, and sharing by link, image or QR.<br><br>🤝 <b>Connect</b> — Visitors can share their details with you and save your contact.<br><br>📅 <b>Meeting booking</b> — Visitors request a meeting; you manage requests in the Request Manager and Calendar.<br><br>👥 <b>Contacts</b> — import from your phone or a .vcf / .csv file, duplicate detection, merge with undo, and CSV export.<br><br>📝 <b>Captures</b> — personal notes.<br><br>🧭 <b>Discover</b> — see Section 10.<br><br>💳 <b>CardKit</b> — see Section 11.<br><br><b>Not guaranteed:</b> uptime, uninterrupted operation, or that any feature will remain available in its current form. Features marked "coming soon" or "beta" may change or be withdrawn.')) +
+
+  S('License Grant &amp; Restrictions',
+    B('The Provider grants the Client a limited, personal, non-exclusive, non-transferable, revocable license to use the Service for their own professional purposes during the License period.<br><br>Prohibited: sharing a Private Key or card with other people; reverse-engineering, copying or cloning the Service\'s design or code; using one License for multiple people; bypassing license checks; scraping or bulk-collecting data from public cards. One License covers one card for one individual.')) +
+
+  S('Your Data: Ownership, Storage &amp; Retention',
+    B('The Client owns their Client Data and, as Personal Information Controller, is responsible for Visitor Data they receive. The Provider claims no ownership and does not sell or rent Client Data or Visitor Data.<br><br><b>Where data lives.</b> Some data is stored on your own device in the browser (Contacts, Captures, preferences, photo, and Discover activity). Clearing browser data, changing devices or using "Delete Account" in the app erases it, so export your Contacts regularly. Card details, meeting requests and Visitor submissions are handled through Google services (Google Apps Script, Sheets, Calendar, Gmail and Meet) that the Provider uses to run the Service.') +
+    R('Active License', 'Retained while active') + R('After License expiry', '30 days, then deleted') + R('Voluntary termination', 'Deleted in 15 business days') + R('Termination for violation', 'Deleted immediately') +
+    B('<div style="margin-top:10px;">Deletion requests for records held on the Provider\'s side can be sent to support@artibytte.com.</div>')) +
+
+  S('Privacy Policy &amp; RA 10173',
+    B('<b>8.1 Law</b> — Personal data is processed under the Data Privacy Act of 2012 (RA 10173), its IRR, and NPC issuances.<br><br><b>8.2 Roles</b> — The Provider is the Personal Information Processor for Client account data. The Client is the Personal Information Controller for Visitor Data collected through their card and is responsible for lawful use of it.<br><br><b>8.3 Data collected</b> — From Clients: name, position, company, mobile, email, website or LinkedIn, profile photo, articardd ID, card appearance choices, and optional profile fields. From Visitors: name, title or organization, email, mobile, and meeting request details. The Service does not use advertising trackers or third-party analytics. It uses your browser\'s local storage to keep your data and preferences, and it loads some libraries and fonts from third-party hosts.<br><br><b>8.4 Third-party services</b> — Google (Apps Script, Sheets, Calendar, Gmail, Meet, Fonts) is used to operate the Service. Their privacy terms also apply.<br><br><b>8.5 Visitor rights</b> — Visitors keep their rights under RA 10173: access, correction, erasure, objection, portability, and complaint to the NPC. Visitors can contact the Client or support@artibytte.com.<br><br><b>8.6 Breach</b> — The Provider will notify the affected Client within 72 hours of discovering a breach affecting their data.<br><br><b>8.7 Client duties</b> — Collect only what you need, use it only for legitimate networking and the meeting requested, never sell it, and answer data requests within 15 business days.')) +
+
+  S('Meeting Requests &amp; Booking',
+    B('A meeting request is not a confirmed meeting until the Client confirms it. The Client may confirm, mark as reviewing, request a reschedule, or cancel, and the guest may be notified by email. Video calls may use a Google Meet link created through Google Calendar. The Provider only supplies the tools and is not a party to any meeting or to anything agreed in it. Times are shown in the timezone of the person viewing them. Guests must give accurate details and must not use booking for spam or harassment.')) +
+
+  S('Discover (Beta)',
+    B('Discover suggests people who may be relevant to you based on profile information. It may be offered in limited or preview form. Matches are suggestions only: the Provider does not verify people, does not guarantee any match, introduction, or outcome, and is not responsible for what happens between users.<br><br>An introduction is only sent when you choose "Introduce Me". The other person decides first. Your email and phone number are shared only if you choose to share them, and each person decides separately. You can hide a person, cancel a pending introduction, or remove a connection at any time. Use Discover respectfully and do not use it to pressure, mislead or solicit.')) +
+
+  S('Physical NFC Cards (CardKit)',
+    B('Orders are placed through CardKit and confirmed by the Provider. You choose the theme and mascot before ordering. Delivery is within 21 days of ordering and depends on the courier. The first card is included in the Annual License with shipping. Replacement cards are ₱999. You must give an accurate mobile number and delivery address. Cards are custom-made and are not refundable once production starts, except for defects or errors on the Provider\'s side.')) +
+
+  S('Acceptable Use',
+    B('Strictly prohibited, and may lead to immediate suspension without refund: spam, phishing, scams or impersonation; collecting Visitor Data without a proper notice; sending unsolicited bulk messages through the Service; uploading unlawful or infringing content; injecting malicious code or attacking the Service; and any use that violates RA 10175, RA 8484, RA 10173 or other applicable law.')) +
+
+  S('Intellectual Property',
+    B('The articardd. name, logo, card design, mascots, interface and source code belong to the Provider and are protected under RA 8293. The Client keeps ownership of their own content and Client Data. Limited-edition mascots and themes are licensed for use on your card and are not transferable. No IP rights pass to the Client under this Agreement.')) +
+
+  S('AI &amp; Automated Features',
+    B('Features that suggest, match or summarize (including Discover and any AI assistant) may be inaccurate or incomplete. They are aids, not professional, legal, financial or tax advice, and you are responsible for decisions you make using them. The Service does not hold or move money and is not a financial institution.')) +
+
+  S('Support',
+    B('Support is available at support@artibytte.com, Monday to Friday, 8:00 AM to 5:00 PM (Philippine Time), excluding public holidays. Target first response is 24 to 48 business hours. Support does not cover recovery of a lost Private Key without verification, third-party outages, or professional advice.')) +
+
+  S('Disclaimers &amp; Limitation of Liability',
+    B('The Service is provided "as is," without warranties of any kind. <b>The Provider\'s maximum total liability is ₱4,990</b>, regardless of plan or amount paid. This does not limit liability for gross negligence, fraud, or anything that cannot be limited under Philippine law. The Client is responsible for backing up their data, including exporting Contacts.')) +
+
+  S('Termination, Suspension &amp; Force Majeure',
+    R('Serious violations', 'Immediate, no refund') + R('Acceptable Use violation', '14-day cure period') + R('Non-payment', '7-day grace to renew') +
+    B('<div style="margin-top:10px;">The Provider may end the Service without cause with 30 days\' notice and will refund the unused portion of the Annual License pro rata if the platform is discontinued. The Provider is not liable for delays caused by events beyond its reasonable control, such as disasters, government action, power or internet outages, or failures of third-party platforms such as Google. License periods are not automatically extended for such events.</div>')) +
+
+  S('Amendments, Governing Law &amp; Disputes',
+    B('<b>Amendments</b> — Material changes need 30 days\' notice by email or in the app. Continued use after the effective date means acceptance.<br><br><b>Governing law</b> — The laws of the Republic of the Philippines; venue is the courts of Pasig City, Metro Manila.<br><br><b>Disputes</b> — Direct negotiation (15 days), written demand (15 days), mediation (30 days), then litigation in Pasig City courts.<br><br>This is the entire agreement. If a provision is invalid, the rest remains in effect.')) +
+
+  S('ArtiStar Rewards (Referral Program)',
+    B('<b>19.1 Reward</b> — A Qualified Referral earns the referrer one (1) ₱1,000 Starbucks e-Gift Card. If unavailable, the Provider may substitute a gift card or equivalent of the same value. It has no cash value and is not transferable.<br><br><b>19.2 Qualified Referral</b> — The buyer must be a new customer who has never held an articardd license, must buy the Annual License at the regular price, and must state the referrer\'s code or use the referrer\'s link <b>before paying</b>. Payment must be verified and the license activated.<br><br><b>19.3 One-time</b> — One reward per buyer. Renewals do not qualify.<br><br><b>19.4 Hold period</b> — The reward is released 14 days after the buyer\'s license is activated. If the purchase is refunded, cancelled or reversed in that period, the referral is void.<br><br><b>19.5 Not allowed</b> — Self-referrals (same person, email, mobile number or business), repeated referrals of the same buyer, fake or paid-for accounts, and unsolicited bulk messaging or misleading claims. The Provider may void any referral it reasonably believes breaks these rules.<br><br><b>19.6 Eligibility and delivery</b> — The referrer must hold an active license when the reward is released. The e-Gift Card is sent to the email or mobile number on the referrer\'s card. Rewards may be subject to applicable taxes.<br><br><b>19.7 Changes</b> — The Provider may change or end the program at any time. Qualified Referrals already verified before a change will be honored. The Provider\'s decision on whether a referral qualifies is final.')) +
+
+  '<div class="tos-footer">By tapping I Agree, you confirm you are at least 18 years old, have read and understood this Agreement, and agree to be bound by it.<br><br>articardd. · Version 4.0 · Effective October 5, 2026<br>Support: support@artibytte.com · Venue: Pasig City, Metro Manila, Philippines</div>';
+  host.innerHTML = html;
+})();
+/* === END: TERMS v4.0 === */
 
 /* === START: READY FLAG === */
   window.__ATHNA_READY__ = true;
