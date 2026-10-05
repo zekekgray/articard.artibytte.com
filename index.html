@@ -5088,8 +5088,8 @@ function fillConnectPreview() {
   }
   async function markCoachSeen() {
     if (coachSeen) return;
-    coachSeen = true; syncCoachPill();
-    try { await window.storage.set(COACH_KEY, '1', false); } catch (e) {}
+        coachSeen = true; syncCoachPill();
+    /* pill stays until you clear it manually (testing) */
   }
   (async () => {
     try { const r = await window.storage.get(COACH_KEY, false); if (r && r.value) coachSeen = true; } catch (e) {}
