@@ -749,6 +749,8 @@ body.public-mode .back-mascot-btn{display:none !important;}
   .hold-open.holding{opacity:.7;}
 }
 /* === END: HOLD TO OPEN === */
+/* old moving gold TAP & HOLD: permanently off (coach pill replaces it) */
+.hold-pulse,.hold-hint{display:none !important;}
 /* === START: COACH PILL (static, opacity-only) === */
 .coach-pill{position:absolute;left:50%;top:342px;transform:translateX(-50%);z-index:7;display:flex;align-items:center;gap:7px;height:34px;padding:0 14px 0 11px;border-radius:17px;background:#F3EDE4;border:.6px solid rgba(0,0,0,0.08);box-shadow:0 4px 12px rgba(0,0,0,0.10);color:#1c1c1e;font:700 10px -apple-system,'SF Pro Text','Helvetica Neue',sans-serif;letter-spacing:.16em;white-space:nowrap;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity .25s ease;}
 .coach-pill:active{opacity:.7;}
@@ -12362,6 +12364,7 @@ function dcVDiscover() {
   if (!n) return dcVEmpty();
   return `<div class="dc-h1">People you should meet</div>
     <div class="dc-sub" style="margin-bottom:14px;">${n} strong match${n === 1 ? '' : 'es'}. Only mutual fits are shown.</div>
+    ${dcMine()}
     ${list.map(dcCard).join('')}
     <div class="dc-ask">
       <label for="dcQuery" class="dc-note" style="display:block;margin-bottom:6px;">What are you looking for? (optional)</label>
@@ -12389,7 +12392,7 @@ function dcVEmpty() {
       <div style="height:8px;border-radius:4px;background:rgba(0,0,0,0.08);overflow:hidden;margin-bottom:12px;"><div style="width:${pct}%;height:100%;background:#1c1c1e;border-radius:4px;"></div></div>
       <div class="dc-note" style="margin-bottom:12px;">Add what you are offering, so people looking for your skills can be matched to you.</div>
       <button type="button" class="dc-btn alt" onclick="openPIFieldEditor('aiBio','AI Notes / Bio','textarea')">Add Looking for / Offering</button></div>
-    <button type="button" class="dc-btn" onclick="dcClearQ()">Back to Discover</button>`;
+    ${dcQuery ? '<button type="button" class="dc-btn" onclick="dcClearQ()">Clear search</button>' : '<button type="button" class="dc-btn alt" onclick="dcResetDeclined()">Show hidden people again</button>'}`;
 }
 function dcVPending() {
   const t = dcPerson(dcTarget), n = dcStore.pending.length;
@@ -12470,10 +12473,11 @@ function dcRender(keep) {
   const chat = v === 'chat', top = keep ? body.scrollTop : 0;
   const V = { discover: dcVDiscover, ambient: dcVAmbient, empty: dcVEmpty, pending: dcVPending, recipient: dcVRecipient, answered: dcVAnswered, confirm: dcVConfirm, chat: dcVChat };
   body.innerHTML = V[v]();
-  body.style.display = chat ? 'flex' : '';
-  body.style.flexDirection = chat ? 'column' : '';
-  body.style.overflowY = chat ? 'hidden' : '';
-  body.style.paddingBottom = chat ? 'max(12px,env(safe-area-inset-bottom))' : (v === 'discover' ? '0' : '');
+  body.style.display = chat ? 'flex' : 'block';
+  body.style.flexDirection = 'column';
+  body.style.minHeight = '0';
+  body.style.overflowY = chat ? 'hidden' : 'auto';
+  body.style.paddingBottom = chat ? 'max(12px,env(safe-area-inset-bottom))' : (v === 'discover' ? '0' : '30px');
   body.scrollTop = top;
   if (chat) { const m = document.getElementById('dcMsgs'); if (m) m.scrollTop = m.scrollHeight; }
 }
@@ -12517,6 +12521,19 @@ function dcRunQuery() {
   dcRender();
 }
 function dcClearQ() { dcQuery = ''; dcGo('discover'); }
+async function dcResetDeclined() {
+  if (!(await dcCommit(s => { s.declined = []; }))) return;
+  dcGo('discover');
+}
+function dcMine() {
+  const rows = [];
+  dcStore.pending.forEach(id => { const p = dcPerson(id); if (p) rows.push([p, 'Waiting for ' + p.first, "dcGo('pending','" + id + "')"]); });
+  Object.keys(dcStore.connected).forEach(id => { const p = dcPerson(id); if (p) rows.push([p, 'Connected · Open chat', "dcOpenChat('" + id + "')"]); });
+  if (!rows.length) return '';
+  return `<div class="dc-note" style="font-weight:700;color:#1c1c1e;margin:0 2px 8px;">Your introductions</div>` +
+    rows.map(r => `<button type="button" class="dc-opt" onclick="${r[2]}"><span class="dc-av" style="width:36px;height:36px;background:${r[0].bg};font-size:14px;">${auEsc(r[0].name[0])}</span><span style="flex:1;display:flex;flex-direction:column;text-align:left;"><span class="dc-ot">${auEsc(r[0].name)}</span><span class="dc-os">${auEsc(r[1])}</span></span><span style="color:rgba(60,60,67,.3);font-size:18px;">›</span></button>`).join('') +
+    `<div style="height:8px"></div>`;
+}
 async function dcIntro(id) {
   if (dcStore.pending.length >= DC_PENDING_MAX) { haptic('error'); showToast('You have ' + DC_PENDING_MAX + ' pending introductions. Wait for a reply or cancel one.', 'neutral'); return; }
   /* TODO backend: apiPost('discoverIntroduce', { personId: id }) */
@@ -12885,7 +12902,7 @@ function closeSampleCard() {
 /* === START: STORY VIEWER (public, articardd origin document) === */
 var STORY = null, stCur = 0, stX = 0, stY = 0;
 function stFounderErr(im) {
-  const alt = ['/assets/founder.jpg', '/assets/founder.jpeg', '/assets/founder.png'];
+  const alt = ['/assets/founder.jpeg', '/assets/founder.png', '/assets/founder.webp', '/assets/founder.JPG'];
   const i = +(im.dataset.try || 0);
   if (i < alt.length) { im.dataset.try = i + 1; im.src = alt[i]; return; }
   im.onerror = null;
