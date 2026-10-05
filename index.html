@@ -12497,9 +12497,10 @@ if (idFromUrl()) { setPublic(true); window.__AUTO_CONNECT__ = true; syncCardOnBo
 else if (sessionStorage.getItem(SESSION)) { setPublic(false); syncCardOnBoot(true, ''); if (wantsRM()) setTimeout(openRequestManager, 600); }
 /* === END: RM DEEP LINK (WITH SESSION) === */
   /* === START: RM DEEP LINK (NO SESSION) === */
+else showGate();
+});
 })();
 /* === END: CARD GATE === */
-
 /* === START: UNIFIED MEETINGS (articardd Calendar → Meetings sheet) === */
 /* Ang mga function na ito ay nag-o-override sa lumang local (window.storage) na version sa itaas. */
 function mtgDateToKey(s) {
