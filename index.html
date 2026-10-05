@@ -1943,8 +1943,9 @@ body.public-mode .back-mascot-btn{display:none !important;}
           <svg width="24" height="24" viewBox="0 0 24 24" fill="#ECE4D6"><circle cx="12" cy="8.5" r="4"/><path d="M4 21c0-4.2 3.6-7.5 8-7.5s8 3.3 8 7.5"/></svg>
         </div>
         <div style="flex:1;min-width:0;">
-          <div id="abMyProfileName" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15.5px;font-weight:600;color:#1c1c1e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">My Card</div>
-          <div id="abMyProfileSub" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12.5px;color:rgba(60,60,67,0.55);margin-top:1px;">Tap to view your profile</div>
+          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8a6e1a;margin-bottom:2px;">My articardd account</div>
+<div id="abMyProfileName" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15.5px;font-weight:600;color:#1c1c1e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">My articardd</div>
+          <div id="abMyProfileSub" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12.5px;color:rgba(60,60,67,0.55);margin-top:1px;">View &amp; edit your account</div>
         </div>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(60,60,67,0.3)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
@@ -2584,8 +2585,8 @@ body.public-mode .back-mascot-btn{display:none !important;}
     </button>
   </div>
   <div class="id-body">
-    <div class="id-title">Create Your Identity</div>
-    <div class="id-sub">Register once — your ATH•NA ID is your permanent digital identity.</div>
+    <div class="id-title">Create Your articardd Profile</div>
+    <div class="id-sub">Register once. Your articardd ID stays with your card for good.</div>
     <div class="id-trial-pill"><span class="id-dot"></span> ANNUAL LICENSE · ₱4,990 / YEAR</div>
 
     <div class="id-field-label">Full Name *</div>
@@ -2615,11 +2616,11 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <div class="id-checkbox" id="idTosCheckbox" onclick="toggleIdTos()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ECE4D6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" id="idTosCheckIcon" style="display:none;"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <div class="id-tos-text">I agree to the <a onclick="openTosScreen()">Terms of Service</a> and <a onclick="openTosScreen()">Privacy Policy</a> of ATH•NA Intelligence OS.</div>
+      <div class="id-tos-text">I agree to the <a onclick="openTosScreen()">Terms of Service</a> and <a onclick="openTosScreen()">Privacy Policy</a> of articardd.</div>
     </div>
     <div class="id-err-msg" id="idTosErr">You must agree to the Terms of Service to continue</div>
 
-    <button class="id-generate-btn" id="idGenerateBtn" onclick="submitIdentityForm()">Generate My ATH•NA ID →</button>
+    <button class="id-generate-btn" id="idGenerateBtn" onclick="submitIdentityForm()">Create My articardd Profile →</button>
     <div class="id-login-link">Already registered? <a onclick="    haptic('light');showToast('Login — coming soon','neutral')">Log in here</a></div>
   </div>
 </div>
@@ -2795,8 +2796,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
     <button class="acct-back" onclick="haptic('light');closeAccountPage()">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
-    <div class="acct-topbar-title">ATH•NA Account</div>
-    <button onclick="openEditProfileSheet()" style="position:absolute;right:12px;top:max(12px,env(safe-area-inset-top));font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;color:#1c1c1e;background:none;border:none;cursor:pointer;padding:8px 4px;">Edit</button>
+    <div class="acct-topbar-title">articardd Account</div>
   </div>
   <div class="acct-body">
 
@@ -2804,8 +2804,8 @@ body.public-mode .back-mascot-btn{display:none !important;}
     <div id="acctIdentityBanner" class="id-banner" onclick="openIdentityScreen()" style="width:100%;margin-bottom:16px;">
       <div class="id-banner-icon">🪪</div>
       <div style="flex:1;">
-        <div class="id-banner-title">Create Your Identity</div>
-        <div class="id-banner-sub">Register for a permanent ATH•NA ID. Annual License: ₱4,990 per year.</div>
+        <div class="id-banner-title">Create Your articardd Profile</div>
+        <div class="id-banner-sub">Set up your articardd profile and card. Annual License: ₱4,990 per year.</div>
       </div>
       <svg class="id-banner-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
@@ -2821,10 +2821,17 @@ body.public-mode .back-mascot-btn{display:none !important;}
     </div>
 
     <div class="acct-name" id="acctName">—</div>
-    <div class="acct-sub" id="acctSub">—</div>
+    <div class="acct-sub" id="acctSub" style="margin-bottom:10px;">—</div>
+    <div id="acctHeadId" onclick="copyPIAthId()" role="button" tabindex="0" aria-label="Copy articardd ID" style="display:none;align-items:center;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.04em;color:rgba(60,60,67,0.7);background:rgba(0,0,0,0.06);padding:5px 12px;border-radius:14px;margin-bottom:6px;cursor:pointer;"></div>
 
     <!-- Profile completion bar -->
-    <div id="acctCompletionWrap" style="width:100%;max-width:340px;margin:10px 0 22px;"></div>
+    <div id="acctCompletionWrap" style="width:100%;max-width:340px;margin:10px 0 16px;"></div>
+
+    <!-- Header actions -->
+    <div style="display:flex;gap:10px;width:100%;max-width:340px;margin:0 0 22px;">
+      <button type="button" onclick="haptic('light');openEditProfileSheet()" style="flex:1;padding:13px;border-radius:13px;border:none;background:#1c1c1e;color:#ECE4D6;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">Edit Profile</button>
+      <button type="button" onclick="viewMyCard()" style="flex:1;padding:13px;border-radius:13px;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.72);color:#1c1c1e;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">View Card</button>
+    </div>
 
     <!-- Personal info + Security + ATH ID -->
     <div class="acct-group">
@@ -2833,15 +2840,25 @@ body.public-mode .back-mascot-btn{display:none !important;}
         <div class="os-row-text"><div class="os-row-title">Personal Information</div><div class="os-row-sub" id="acctPersonalSub">Name, title, company</div></div>
         <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
+      <div class="os-row" onclick="openPublicCard()" style="cursor:pointer;">
+        <div class="os-row-icon" style="background:#E8CC7A;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.5-1.5 1.5-2 3-2s2.5.5 3 2M15 10h4M15 14h3"/></svg></div>
+        <div class="os-row-text"><div class="os-row-title">Public Card</div><div class="os-row-sub">What other people see when they open your link</div></div>
+        <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
       <div class="os-row" onclick="openSecuritySheet()" style="cursor:pointer;">
         <div class="os-row-icon" style="background:#8E8E93;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
-        <div class="os-row-text"><div class="os-row-title">Sign-In &amp; Security</div><div class="os-row-sub">PIN, linked devices</div></div>
+        <div class="os-row-text"><div class="os-row-title">Sign-In &amp; Security</div><div class="os-row-sub">Private Key, sign-in</div></div>
         <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
       <div class="os-row" style="cursor:default;">
         <div class="os-row-icon" style="background:#E8CC7A;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M6 9.82a6 6 0 0 1 0 4.36"/></svg></div>
-        <div class="os-row-text"><div class="os-row-title">articardd ID</div></div>
+        <div class="os-row-text"><div class="os-row-title">articardd ID</div><div class="os-row-sub">Your permanent account ID</div></div>
         <span class="os-row-value" id="acctAthIdValue" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.04em;">—</span>
+      </div>
+      <div class="os-row" style="cursor:default;">
+        <div class="os-row-icon" style="background:#8E8E93;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+        <div class="os-row-text"><div class="os-row-title">Card ID</div><div class="os-row-sub">Public. Used in your card link &amp; QR</div></div>
+        <span class="os-row-value" id="acctCardIdValue" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.04em;">—</span>
       </div>
     </div>
 
@@ -2975,7 +2992,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
         <div onclick="closeMyProfileCard();setTimeout(()=>openPIFieldEditor('company','Company','text'),260);" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.07);cursor:pointer;"><span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.5);">Company</span><span style="display:flex;align-items:center;gap:6px;"><span id="mpcCompany" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:600;color:#1c1c1e;text-align:right;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(60,60,67,0.3)" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span></div>
         <div onclick="closeMyProfileCard();setTimeout(()=>openPIListEditor('phones','Phone Numbers','tel'),260);" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.07);cursor:pointer;"><span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.5);">Mobile</span><span style="display:flex;align-items:center;gap:6px;"><span id="mpcMobile" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:600;color:#1c1c1e;">—</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(60,60,67,0.3)" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span></div>
         <div onclick="closeMyProfileCard();setTimeout(()=>openPIListEditor('emails','Email Addresses','email'),260);" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.07);cursor:pointer;"><span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.5);">Email</span><span style="display:flex;align-items:center;gap:6px;"><span id="mpcEmail" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:600;color:#1c1c1e;text-align:right;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(60,60,67,0.3)" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span></div>
-        <div onclick="closeMyProfileCard();setTimeout(()=>openPIFieldEditor('website','Website / LinkedIn','url'),260);" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;"><span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.5);">LinkedIn</span><span style="display:flex;align-items:center;gap:6px;"><span id="mpcLinkedin" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:600;color:#1c1c1e;text-align:right;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(60,60,67,0.3)" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+        <div onclick="closeMyProfileCard();setTimeout(()=>openPIFieldEditor('linkedin','LinkedIn','url'),260);" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;"><span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.5);">LinkedIn</span><span style="display:flex;align-items:center;gap:6px;"><span id="mpcLinkedin" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;font-weight:600;color:#1c1c1e;text-align:right;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(60,60,67,0.3)" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span></div>
       </div>
 
       <div onclick="haptic('light');closeMyProfileCard();setTimeout(()=>openAccountPage(),260);"
@@ -3039,9 +3056,9 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:20px;font-weight:700;color:#1c1c1e;margin-bottom:16px;">Sign-In &amp; Security</div>
 
       <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:12px;">
-        <div class="os-row" onclick="haptic('light');showToast('Change PIN — coming soon','neutral')" style="cursor:pointer;">
+        <div class="os-row" onclick="haptic('light');showToast('To reissue a Private Key, email support@artibytte.com','neutral')" style="cursor:pointer;">
           <div class="os-row-icon" style="background:#8E8E93;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
-          <div class="os-row-text"><div class="os-row-title">Change PIN</div><div class="os-row-sub">Update your 6-digit access PIN</div></div>
+          <div class="os-row-text"><div class="os-row-title">Private Key</div><div class="os-row-sub">Your sign-in key. Never share it.</div></div>
           <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
         <div class="os-row" onclick="haptic('light');showToast('Biometrics — coming soon','neutral')" style="cursor:pointer;">
@@ -4092,7 +4109,7 @@ function fillConnectPreview() {
       `URL:${currentEntry.qrLink || BASE_URL}`,
       `item1.URL:${link}`,
       'item1.X-ABLabel:Artimeet — Book a Meeting',
-      `NOTE:${vcfEsc(o.athid)} · Book a meeting: ${vcfEsc(link)}`,
+      `NOTE:${currentEntry.cardId ? 'Card ID ' + vcfEsc(currentEntry.cardId) + ' · ' : ''}Book a meeting: ${vcfEsc(link)}`,
       'END:VCARD'
     ].filter(Boolean).join('\r\n');
     const blob = new Blob([vcf], { type: 'text/vcard;charset=utf-8' });
@@ -6279,6 +6296,11 @@ function fillConnectPreview() {
 
   /* ── PROFILE COMPLETION ── */
   function calcProfileCompletion() {
+    const P = PERSONAL_INFO;
+    const checks = [!!piName(), !!(P.title || currentEntry?.pos), !!P.company, !!(P.emails && P.emails[0]), !!(P.phones && P.phones[0]), !!P.linkedin, !!profilePhotoB64];
+    return Math.round(checks.filter(Boolean).length / checks.length * 100);
+  }
+  function calcProfileCompletionLegacy() {
     let score = 0, total = 6;
     if (currentEntry?.name && currentEntry.name !== '—') score++;
     if (currentEntry?.pos && currentEntry.pos !== '—') score++;
@@ -6292,7 +6314,33 @@ function fillConnectPreview() {
     return Math.round((score / Math.max(total,1)) * 100);
   }
 
+  /* ── ACCOUNT HEADER: title · company + articardd ID ── */
+  function acctSubLine() {
+    if (!currentEntry) return '';
+    const P = (typeof PERSONAL_INFO !== 'undefined') ? PERSONAL_INFO : {};
+    return [currentEntry.pos, currentEntry.company || P.company || ''].filter(Boolean).join(' · ');
+  }
+  function acctSyncHeader() {
+    if (!currentEntry) return;
+    const s = document.getElementById('acctSub');
+    if (s) s.textContent = acctSubLine();
+    const chip = document.getElementById('acctHeadId');
+    if (chip) {
+      chip.textContent = currentEntry.athid ? 'articardd ID · ' + currentEntry.athid : '';
+      chip.style.display = currentEntry.athid ? 'inline-flex' : 'none';
+    }
+  }
+  function viewMyCard() {
+    haptic('light');
+    closeAccountPage();
+    setTimeout(() => {
+      const os = document.getElementById('screenOS');
+      if (os && os.classList.contains('active')) exitOS();
+    }, 290);
+  }
+
   function renderProfileCompletion(pct) {
+    acctSyncHeader();
     const wrap = document.getElementById('acctCompletionWrap');
     if (!wrap) return;
     const color = pct >= 80 ? '#34C759' : pct >= 50 ? '#FF9F0A' : '#FF453A';
@@ -6307,7 +6355,14 @@ function fillConnectPreview() {
       </div>`;
   }
 
-  /* ── ATH•NA ACCOUNT PAGE ── */
+  /* ── PUBLIC CARD (what visitors see) ── */
+  function openPublicCard() {
+    if (!currentEntry || !currentEntry.cardId) { haptic('error'); showToast('Your public card link is not ready yet', 'neutral'); return; }
+    haptic('light');
+    window.open(profileLink(), '_blank', 'noopener');
+  }
+
+  /* ── ARTICARDD ACCOUNT PAGE ── */
   function openAccountPage() {
     if (document.body.classList.contains('public-mode')) return;
     haptic('medium');
@@ -6322,9 +6377,10 @@ function fillConnectPreview() {
       document.getElementById('acctName').textContent = titleCase;
       document.getElementById('acctSub').textContent = currentEntry.pos;
       document.getElementById('acctAthIdValue').textContent = currentEntry.athid;
+      document.getElementById('acctCardIdValue').textContent = currentEntry.cardId || '—';
     } else {
-      document.getElementById('acctName').textContent = 'Set up your identity';
-      document.getElementById('acctSub').textContent = 'Tap below to create your ATH•NA ID';
+      document.getElementById('acctName').textContent = 'Set up your profile';
+      document.getElementById('acctSub').textContent = 'Tap below to create your articardd profile';
     }
 
     applyAvatarEverywhere();
@@ -6483,8 +6539,8 @@ function fillConnectPreview() {
       nameEl.textContent = titleCase;
       subEl.textContent  = currentEntry.pos + ' · ' + currentEntry.athid;
     } else {
-      nameEl.textContent = 'My Card';
-      subEl.textContent  = 'Tap to set up your profile';
+      nameEl.textContent = 'My articardd';
+      subEl.textContent  = 'Set up your articardd account';
     }
     if (avEl) {
       if (typeof profilePhotoB64 !== 'undefined' && profilePhotoB64) {
@@ -6519,7 +6575,7 @@ function fillConnectPreview() {
     setMpc('mpcCompany',  P.company  || (typeof profileExtra !== 'undefined' && profileExtra.company));
     setMpc('mpcMobile',   (P.phones && P.phones[0]) || (typeof profileExtra !== 'undefined' && profileExtra.mobile));
     setMpc('mpcEmail',    (P.emails && P.emails[0]) || (typeof profileExtra !== 'undefined' && profileExtra.email));
-    setMpc('mpcLinkedin', P.website || (typeof profileExtra !== 'undefined' && profileExtra.linkedin));
+    setMpc('mpcLinkedin', P.linkedin || (typeof profileExtra !== 'undefined' && profileExtra.linkedin));
 
     const compWrap = document.getElementById('mpcCompletionWrap');
     if (compWrap) {
@@ -9513,7 +9569,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     haptic('light');
     const name = currentEntry?.name || '';
     const pos  = currentEntry?.pos || '';
-    const id   = currentEntry?.athid || '';
+    const id   = currentEntry?.cardId || currentEntry?.athid || '';
     const link = profileLink();
     const text = `${name} · ${pos} · ${id}\n${link}`;
 
@@ -10888,7 +10944,7 @@ function licRow(label, val) {
         epCircle.style.background = avatarColorFromName(currentEntry.name);
       }
     }
-    document.getElementById('epName').value = currentEntry?.name || '';
+    document.getElementById('epName').value = piName() || currentEntry?.name || '';
     document.getElementById('epPosition').value = currentEntry?.pos || '';
     document.getElementById('epCompany').value = profileExtra.company || '';
     document.getElementById('epEmail').value = profileExtra.email || '';
@@ -10902,6 +10958,26 @@ function licRow(label, val) {
   }
 
   async function saveProfileEdits() {
+    const g = id => (document.getElementById(id)?.value || '').trim();
+    const P = PERSONAL_INFO, snap = JSON.stringify(P);
+    const name = g('epName'), pos = g('epPosition'), email = g('epEmail'), mobile = g('epMobile');
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { haptic('error'); showToast('Enter a valid email address', 'error'); return; }
+    if (name) P.displayName = name;
+    if (pos) P.title = pos;
+    P.company = g('epCompany');
+    P.linkedin = g('epLinkedin');
+    const lead = (a, v) => [v].concat((a || []).filter(x => x !== v));
+    P.emails = email ? lead(P.emails, email) : (P.emails || []).slice(1);     /* blangko = tinanggal ang primary */
+    P.phones = mobile ? lead(P.phones, mobile) : (P.phones || []).slice(1);
+    if (!(await savePI())) { PERSONAL_INFO = JSON.parse(snap); haptic('error'); showToast("Couldn't save profile", 'error'); return; }
+    closeEditProfileSheet();
+    piSyncToCard();
+    renderProfileCompletion(calcProfileCompletion());
+    haptic('success');
+    showToast('Profile updated', 'success');
+  }
+
+  async function saveProfileEditsLegacy() {
     const name = document.getElementById('epName').value.trim();
     const pos  = document.getElementById('epPosition').value.trim();
     const prevExtra = profileExtra;
@@ -10949,7 +11025,7 @@ function licRow(label, val) {
   const PI_KEY = 'personal-info-v1';
   let PERSONAL_INFO = {
     displayName:'', firstName:'', middleName:'', lastName:'', preferredName:'', username:'', bio:'',
-    title:'', company:'', department:'', occupation:'', industry:'',
+    title:'', company:'', linkedin:'', department:'', occupation:'', industry:'',
     phones:[], emails:[], website:'', address:'', socialLinks:[],
     dob:'', gender:'', nationality:'', language:'', timezone:'',
     seniority:'', yearsExperience:'', companySize:'',
@@ -10964,6 +11040,8 @@ function licRow(label, val) {
   };
   async function loadPI() {
     try { const r = await window.storage.get(PI_KEY, false); if (r && r.value) PERSONAL_INFO = Object.assign(PERSONAL_INFO, JSON.parse(r.value)); } catch(e) {}
+    if (!PERSONAL_INFO.linkedin && /linkedin\.com/i.test(PERSONAL_INFO.website || '')) { PERSONAL_INFO.linkedin = PERSONAL_INFO.website; PERSONAL_INFO.website = ''; }
+    if (currentEntry && piUnsynced()) { piDerive(); piRefreshSurfaces(); }
   }
  async function savePI() { let ok = false; try { ok = !!(await window.storage.set(PI_KEY, JSON.stringify(PERSONAL_INFO), false)); } catch(e) {} return ok; }
   loadPI();
@@ -10975,7 +11053,7 @@ function licRow(label, val) {
     if (!PERSONAL_INFO.company && profileExtra?.company) PERSONAL_INFO.company = profileExtra.company;
     if ((!PERSONAL_INFO.emails || !PERSONAL_INFO.emails.length) && profileExtra?.email) PERSONAL_INFO.emails = [profileExtra.email];
     if ((!PERSONAL_INFO.phones || !PERSONAL_INFO.phones.length) && profileExtra?.mobile) PERSONAL_INFO.phones = [profileExtra.mobile];
-    if (!PERSONAL_INFO.website && profileExtra?.linkedin) PERSONAL_INFO.website = profileExtra.linkedin;
+    if (!PERSONAL_INFO.linkedin && profileExtra?.linkedin) PERSONAL_INFO.linkedin = profileExtra.linkedin;
     if (!PERSONAL_INFO.displayName && (currentEntry?.name || full)) PERSONAL_INFO.displayName = currentEntry?.name || full;
     renderPersonalInfoScreen();
     const scr = document.getElementById('personalInfoScreen');
@@ -11133,6 +11211,7 @@ function copyPIAthId() {
       ${piRowSimple('Industry', P.industry, "openPIFieldEditor('industry','Industry','text')")}
       ${piRowSimple('Company Size', P.companySize, "openPIPickerEditor('companySize','Company Size',['Solo / Freelance','2–10','11–50','51–200','200+'])")}
       ${piRowSimple('Website', P.website, "openPIFieldEditor('website','Website','url')")}
+      ${piRowSimple('LinkedIn', P.linkedin, "openPIFieldEditor('linkedin','LinkedIn','url')")}
     </div>`;
 
     html += piSectionLabel('Interests');
@@ -11221,7 +11300,74 @@ function copyPIAthId() {
     }
   }
   /* === START: PI SYNC TO CARD === */
+  /* === PERSONAL INFO = SOURCE OF TRUTH === */
+  const PI_PENDING_KEY = 'ac-pi-unsynced';
+  let _piLastSig = '', _piPushT = null;
+  function piUnsynced() { try { return localStorage.getItem(PI_PENDING_KEY) === '1'; } catch (e) { return false; } }
+  function piSetUnsynced(on) { try { on ? localStorage.setItem(PI_PENDING_KEY, '1') : localStorage.removeItem(PI_PENDING_KEY); } catch (e) {} }
+  function piName() {
+    const P = PERSONAL_INFO;
+    return String(P.displayName || [P.firstName, P.middleName, P.lastName].filter(Boolean).join(' ') || '').trim();
+  }
+  /* ang eksaktong pino-push sa card backend */
+  function piCardFields() {
+    const P = PERSONAL_INFO;
+    return { name: piName(), position: P.title || '', company: P.company || '',
+      phone: (P.phones && P.phones[0]) || '', email: (P.emails && P.emails[0]) || '',
+      linkedin: P.linkedin || '', website: P.website || '' };
+  }
+  /* P → currentEntry + legacy profileExtra mirror. Walang UI, walang push. */
+  function piDerive() {
+    const P = PERSONAL_INFO, X = profileExtra, name = piName();
+    if (currentEntry) {
+      if (name) currentEntry.name = name.toUpperCase();
+      if (P.title) currentEntry.pos = P.title;
+      currentEntry.company = P.company || '';
+    }
+    X.company = P.company || '';
+    X.email = (P.emails && P.emails[0]) || '';
+    X.mobile = (P.phones && P.phones[0]) || '';
+    X.linkedin = P.linkedin || '';
+    try { Promise.resolve(window.storage.set(EP_STORE_KEY, JSON.stringify(X), false)).catch(function () {}); } catch (e) {}
+  }
+  function piRefreshSurfaces() {
+    if (!currentEntry) return;
+    const pn = document.getElementById('pillName'), pp = document.getElementById('pillPos');
+    if (pn) pn.textContent = formatPillName(currentEntry.name);
+    if (pp) pp.textContent = (currentEntry.pos || '').toUpperCase() + (currentEntry.company ? ' | ' + currentEntry.company.toUpperCase() : '');
+    fitPillName();
+    const nm = document.getElementById('acctName');
+    if (nm) nm.textContent = currentEntry.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+    if (typeof acctSyncHeader === 'function') acctSyncHeader();
+    else { const sb = document.getElementById('acctSub'); if (sb) sb.textContent = currentEntry.pos || ''; }
+    const op = document.getElementById('osProfileName'); if (op) op.textContent = currentEntry.name;
+    const os = document.getElementById('osProfileSub'); if (os) os.textContent = (currentEntry.pos || '') + ' · ' + (currentEntry.athid || '');
+    renderAddressBookProfileCard();
+    applyAvatarEverywhere();
+  }
+  function piPushSoon() { clearTimeout(_piPushT); _piPushT = setTimeout(piPush, 800); }
+  async function piPush() {
+    if (!rmToken()) return false;               /* walang owner session; mananatiling "unsynced" hanggang sa susunod na login */
+    const sig = JSON.stringify(piCardFields());
+    try {
+      await apiPost('ownerUpdateCard', { token: rmToken(), fields: piCardFields() });
+      _piLastSig = sig; piSetUnsynced(false);
+      return true;
+    } catch (e) {
+      if (!/session|sign in/i.test(String(e && e.message))) showToast('Saved on this device. Cloud sync pending', 'neutral');
+      return false;
+    }
+  }
+  /* ito lang ang tatawagin pagkatapos ng kahit anong edit sa Personal Information */
   function piSyncToCard() {
+    piDerive();
+    piRefreshSurfaces();
+    if (JSON.stringify(piCardFields()) === _piLastSig) return;   /* walang totoong binago */
+    piSetUnsynced(true);
+    piPushSoon();
+  }
+
+  function piSyncToCardLegacy() {
     const P = PERSONAL_INFO;
     if (currentEntry) {
       if (P.displayName) currentEntry.name = P.displayName.toUpperCase();
@@ -11233,7 +11379,7 @@ function copyPIAthId() {
       const nm = document.getElementById('acctName');
       if (nm) nm.textContent = currentEntry.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
       const sb = document.getElementById('acctSub');
-      if (sb) sb.textContent = currentEntry.pos;
+      if (sb) sb.textContent = acctSubLine();
     }
     if (typeof profileExtra !== 'undefined' && P.company) profileExtra.company = P.company;
   }
@@ -11698,7 +11844,7 @@ function copyPIAthId() {
 
     const LABELS = {
       addContactScreen:'New contact', noteEditorScreen:'Note editor', contactDetailScreen:'Contact details',
-      screenAccount:'ATH•NA Account', personalInfoScreen:'Personal information', identityScreen:'Create your identity',
+      screenAccount:'articardd account', personalInfoScreen:'Personal information', identityScreen:'Create your identity',
       licenseScreen:'License verification', tosScreen:'Terms of Service and Privacy Policy', screenOS:'ATH•NA OS',
       cardMenuOverlay:'Card menu', gsOverlay:'Search', shareOverlay:'Share card', fbOverlay:'Rate this card',
       reviewOverlay:'Review details', redeemOverlay:'Redeem code', dupSheetOverlay:'Duplicate contacts',
@@ -12103,13 +12249,21 @@ function applyRemoteCard(d, owner, fromCache) {
     };
     entries.length = 0; entries.push(currentEntry);
 
-    P.displayName = d.name;
-    P.title = d.position || '';
-    P.company = d.company || '';
-    P.phones = owner ? lead(P.phones, d.phone) : (d.phone ? [d.phone] : []);
-    P.emails = owner ? lead(P.emails, d.email) : (d.email ? [d.email] : []);
-    P.website = d.linkedin || d.website || (owner ? P.website : '');
+    const keepLocal = owner && piUnsynced();   /* may edit pa na hindi na-push: huwag i-overwrite */
+    if (!keepLocal) {
+      P.displayName = d.name;
+      P.title = d.position || '';
+      P.company = d.company || '';
+      P.phones = owner ? lead(P.phones, d.phone) : (d.phone ? [d.phone] : []);
+      P.emails = owner ? lead(P.emails, d.email) : (d.email ? [d.email] : []);
+      P.linkedin = d.linkedin || '';
+      P.website = d.website || '';
+    }
     X.company = d.company || ''; X.mobile = d.phone || ''; X.email = d.email || ''; X.linkedin = d.linkedin || d.website || '';
+    if (owner) {
+      piDerive();                               /* currentEntry + X ay galing na sa Personal Information */
+      if (keepLocal) piPushSoon(); else _piLastSig = JSON.stringify(piCardFields());
+    }
 
     const t = THEMES.find(function (x) { return x.id === d.theme; }); if (t) activeTheme = t;
    if (d.colorway && BUILDING_COLORWAYS[d.colorway]) activeCW = d.colorway;
