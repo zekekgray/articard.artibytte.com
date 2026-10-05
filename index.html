@@ -2,8 +2,24 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>articardd. Setup</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#ECE4D6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="articardd">
+<link rel="manifest" href="/manifest.json">
+{
+  "name": "articardd.",
+  "short_name": "articardd",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ECE4D6",
+  "theme_color": "#ECE4D6",
+  "icons": [
+    { "src": "/assets/favicon-192.png", "sizes": "192x192", "type": "image/png" }
+  ]
+}
+<title>articardd.</title>
 <!-- === START: FAVICON === -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
@@ -1236,8 +1252,8 @@ body.public-mode .back-mascot-btn{display:none !important;}
         </g>
         <circle cx="0" cy="0" r="1.5" fill="#E8CC7A"/>
       </svg>
-      <div class="setup-title">Create Your OpenKey</div>
-      <div class="setup-sub" style="margin-bottom:0;">Your verified identity on OpenKey, by BlockPingg</div>
+      <div class="setup-title">Create Your articardd</div>
+      <div class="setup-sub" style="margin-bottom:0;">Your verified identity on articardd</div>
     </div>
 
     <!-- Name + Position + ATH ID — single clean group, no icons -->
@@ -1263,7 +1279,8 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <button class="btn-main" id="submitBtn" onclick="openReviewModal()">Continue</button>
     </div>
 
-    <div style="font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;font-size:9px;font-weight:500;letter-spacing:.06em;color:rgba(28,28,30,0.35);text-align:center;margin-top:2px;">OpenKey · developed by BlockPingg</div>
+    <div style="font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;font-size:9px;font-weight:500;letter-spacing:.06em;color:rgba(28,28,30,0.35);text-align:center;margin-top:2px;">articardd
+</div>
   </div>
 </div>
 
@@ -1285,7 +1302,6 @@ body.public-mode .back-mascot-btn{display:none !important;}
     </div>
     <div class="congrats-sub">WELCOME TO</div>
     <div class="congrats-title">ArtiCard</div>
-    <div class="congrats-sub">BY BLOCKPINGG</div>
     <div class="congrats-line"></div>
     <div class="congrats-name" id="congratsName">—</div>
     <div class="congrats-msg">YOUR PERSONALIZED OS CARD<br>HAS BEEN SUCCESSFULLY GENERATED.<br>YOUR IDENTITY IS NOW ENCODED.</div>
@@ -1849,7 +1865,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
   </div>
 </div>
 
-<!-- ══ SCREEN 4: ATH•NA OS SHELL (Apple Settings style) ══ -->
+<!-- ══ SCREEN 4: articardd SHELL (Apple Settings style) ══ -->
 <div id="screenOS">
   <button class="os-back os-back-home" id="osBackBtn" onclick="osBackTapped()">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
@@ -1887,7 +1903,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
         <div class="os-row" onclick="switchOSTab('address')" style="cursor:pointer;">
           <div class="os-row-icon" style="background:#34C759;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7"><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="10" r="2.5"/><path d="M8 17c.6-2 2-3 4-3s3.4 1 4 3"/></svg></div>
           <div class="os-row-text"><div class="os-row-title">Contacts</div></div>
-          <span class="os-row-value" id="osAddressPreview">5 contacts</span>
+          <span class="os-row-value" id="osAddressPreview"></span>
           <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
         <div class="os-row" onclick="switchOSTab('upcoming')" style="cursor:pointer;">
@@ -2525,8 +2541,8 @@ body.public-mode .back-mascot-btn{display:none !important;}
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
-    <div class="lic-logo">ATH•NA</div>
-    <div class="lic-sub">vCard OS · License Verification</div>
+    <div class="lic-logo">articardd</div>
+    <div class="lic-sub">License</div>
 
     <div class="lic-demo-row">
       <button class="lic-demo-btn" data-lic="lifetime" onclick="renderLicenseState('lifetime')">Lifetime</button>
@@ -2552,12 +2568,12 @@ body.public-mode .back-mascot-btn{display:none !important;}
     </div>
 
     <div class="lic-expired-msg" id="licExpiredMsg" style="display:none;">
-      Your license has expired. Renew now to continue accessing ATH•NA OS and all your data.
+      Your license has expired. Renew now to continue accessing articardd and all your data.
     </div>
 
     <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;color:rgba(60,60,67,0.5);text-transform:uppercase;margin:4px 2px 8px;">Plan Features</div>
     <div class="lic-info-group" style="margin-bottom:12px;"><div id="licFreeFeatures"></div></div>
-    <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;color:rgba(60,60,67,0.5);text-transform:uppercase;margin:4px 2px 8px;">ATH•NA Pro</div>
+    <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;color:rgba(60,60,67,0.5);text-transform:uppercase;margin:4px 2px 8px;">articardd Pro</div>
     <div class="lic-info-group" style="margin-bottom:16px;"><div id="licProFeatures"></div></div>
     <div class="lic-info-group" style="margin-bottom:16px;">
       <div class="os-row" onclick="openRedeemSheet()" style="cursor:pointer;">
@@ -2569,7 +2585,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
 
     <div class="lic-divider"></div>
 
-    <button class="btn-lic-proceed" id="licBtnProceed" onclick="closeLicenseScreen()" style="display:none;">▶ Enter ATH•NA OS</button>
+    <button class="btn-lic-proceed" id="licBtnProceed" onclick="closeLicenseScreen()" style="display:none;">▶ Enter articardd</button>
     <button class="btn-lic-trial" id="licBtnTrial" onclick="    haptic('light');window.location.href=supportMail('card')" style="display:none;">Get Annual License · ₱4,990</button>
     <button class="btn-lic-renew" id="licBtnRenew" onclick="    haptic('light');showToast('Renewal: coming soon','neutral')" style="display:none;">🔄 Request License Renewal</button>
     <button class="btn-lic-logout" onclick="closeLicenseScreen()">← Back</button>
@@ -2634,7 +2650,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
   </div>
   <div class="tos-body">
     <div class="tos-header">
-      <div class="tos-title">ATH•NA EXECUTIVE vCARD OS<br>Terms of Service, EULA &amp;<br>Privacy Policy</div>
+      <div class="tos-title">articardd EXECUTIVE vCARD OS<br>Terms of Service, EULA &amp;<br>Privacy Policy</div>
       <div class="tos-version">Version 3.0 · Effective May 11, 2026 · Supersedes all prior versions</div>
     </div>
     <div class="tos-badges">
@@ -2643,17 +2659,17 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <span class="tos-badge">PHILIPPINE LAW</span>
       <span class="tos-badge">CLICKWRAP CONSENT</span>
     </div>
-    <div class="tos-notice"><b>IMPORTANT — PLEASE READ CAREFULLY.</b> This is a legally binding agreement between you ("Client") and ATH•NA Executive vCard OS ("ATH•NA," "Provider," "we," "us"). By ticking the checkbox and tapping Generate My ATH•NA ID, you confirm you have read, understood, and agree to every provision herein. This constitutes valid clickwrap consent under Philippine contract law. If you do not agree, do not register or use the System.</div>
+    <div class="tos-notice"><b>IMPORTANT — PLEASE READ CAREFULLY.</b> This is a legally binding agreement between you ("Client") and articardd Executive vCard OS ("articardd," "Provider," "we," "us"). By ticking the checkbox and tapping Generate My articardd ID, you confirm you have read, understood, and agree to every provision herein. This constitutes valid clickwrap consent under Philippine contract law. If you do not agree, do not register or use the System.</div>
 
     <div class="tos-section">
       <div class="tos-section-num">1</div>
       <div class="tos-section-title">Definitions</div>
-      <div class="tos-def"><b>"ATH•NA" / "System"</b> — The ATH•NA Executive vCard OS in its entirety: the web-based digital vCard, ATH•NA OS (including Address Book, Upcoming, and Tag modules), ATH•NA ID authentication system, vCard Generator tool, license management engine, and all associated back-end infrastructure.</div>
-      <div class="tos-def"><b>"Provider" / "ATH•NA"</b> — The individual or entity operating ATH•NA Executive vCard OS, reachable at phpx.migratex@gmail.com.</div>
-      <div class="tos-def"><b>"Client" / "Owner" / "You"</b> — Any individual or business entity that registers an ATH•NA ID and accesses the System, whether on a Free Trial, Monthly, or Lifetime plan.</div>
+      <div class="tos-def"><b>"articardd" / "System"</b> — The articardd Executive vCard OS in its entirety: the web-based digital vCard, articardd (including Address Book, Upcoming, and Tag modules), articardd ID authentication system, vCard Generator tool, license management engine, and all associated back-end infrastructure.</div>
+      <div class="tos-def"><b>"Provider" / "articardd"</b> — The individual or entity operating articardd Executive vCard OS, reachable at phpx.migratex@gmail.com.</div>
+      <div class="tos-def"><b>"Client" / "Owner" / "You"</b> — Any individual or business entity that registers an articardd ID and accesses the System, whether on a Free Trial, Monthly, or Lifetime plan.</div>
       <div class="tos-def"><b>"Visitor" / "Contact"</b> — Any third party who views the Client's digital vCard and voluntarily submits their contact details via the vCard Exchange Form.</div>
-      <div class="tos-def"><b>"ATH•NA ID"</b> — The unique system-generated identifier (format: ATH-XXXXXXXXX) permanently assigned to a Client upon registration. It serves as the Client's username and cannot be transferred or reassigned.</div>
-      <div class="tos-def"><b>"PIN"</b> — The 6-digit numeric credential paired with the ATH•NA ID for authentication. The Client is solely responsible for its confidentiality.</div>
+      <div class="tos-def"><b>"articardd ID"</b> — The unique system-generated identifier (format: ATH-XXXXXXXXX) permanently assigned to a Client upon registration. It serves as the Client's username and cannot be transferred or reassigned.</div>
+      <div class="tos-def"><b>"PIN"</b> — The 6-digit numeric credential paired with the articardd ID for authentication. The Client is solely responsible for its confidentiality.</div>
       <div class="tos-def"><b>"License"</b> — The right to access and use the System under the Annual License (₱4,990 per year).</div>
       <div class="tos-def"><b>"OS Data"</b> — All data created or stored by the Client within the System, including contact records, transaction entries, wallet balances, meeting bookings, owner profile information, and view counts.</div>
       <div class="tos-def"><b>"Visitor Data"</b> — Personal information submitted by Visitors through the vCard Exchange Form: full name, title/company, email address, and mobile number.</div>
@@ -2668,8 +2684,8 @@ body.public-mode .back-mascot-btn{display:none !important;}
 
     <div class="tos-section">
       <div class="tos-section-num">3</div>
-      <div class="tos-section-title">ATH•NA ID &amp; Authentication</div>
-      <div class="tos-section-body">Upon successful registration, the Client receives a permanent ATH•NA ID (e.g., ATH-000000001) and a system-generated 6-digit PIN. These credentials are displayed once at registration and must be saved immediately by the Client. ATH•NA does not store PIN values in recoverable form.<br><br>ATH•NA cannot recover a lost PIN. If the Client loses their PIN, the account is inaccessible. The Client acknowledges this limitation and accepts sole responsibility for credential custody.<br><br>The Client may change their PIN at any time via Tag → Change PIN, provided they can authenticate with the current PIN. Each ATH•NA ID is unique, permanent, non-transferable, and tied to one (1) individual Client only.<br><br>The Client is solely responsible for all activity occurring under their ATH•NA ID. Any suspected unauthorized access must be reported immediately to phpx.migratex@gmail.com.</div>
+      <div class="tos-section-title">articardd ID &amp; Authentication</div>
+      <div class="tos-section-body">Upon successful registration, the Client receives a permanent articardd ID (e.g., ATH-000000001) and a system-generated 6-digit PIN. These credentials are displayed once at registration and must be saved immediately by the Client. articardd does not store PIN values in recoverable form.<br><br>articardd cannot recover a lost PIN. If the Client loses their PIN, the account is inaccessible. The Client acknowledges this limitation and accepts sole responsibility for credential custody.<br><br>The Client may change their PIN at any time via Tag → Change PIN, provided they can authenticate with the current PIN. Each articardd ID is unique, permanent, non-transferable, and tied to one (1) individual Client only.<br><br>The Client is solely responsible for all activity occurring under their articardd ID. Any suspected unauthorized access must be reported immediately to phpx.migratex@gmail.com.</div>
     </div>
 
     <div class="tos-section">
@@ -2683,36 +2699,36 @@ body.public-mode .back-mascot-btn{display:none !important;}
         <div class="tos-plan-title">💳 Replacement NFC Card — ₱999</div>
         <div class="tos-section-body">If the Client's physical NFC card is lost or damaged, or the Client wants a new design, a replacement card is ₱999 per card. The first card is already included in the Annual License.</div>
       </div>
-      <div class="tos-section-body">Payment Process: All payments are made via manual bank transfer or e-wallet (GCash, BPI, Security Bank, PS Bank, Maya, GoTyme, Netbank, or CIMB Bank). The Client must submit their transaction reference number via the in-app payment form. License activation is manual and subject to ATH•NA's verification.<br><br>All fees are quoted in Philippine Peso (₱) and exclusive of applicable government taxes. ATH•NA reserves the right to adjust pricing with 30 days advance notice. Price changes do not apply to an active Annual License until its renewal date.</div>
+      <div class="tos-section-body">Payment Process: All payments are made via manual bank transfer or e-wallet (GCash, BPI, Security Bank, PS Bank, Maya, GoTyme, Netbank, or CIMB Bank). The Client must submit their transaction reference number via the in-app payment form. License activation is manual and subject to articardd's verification.<br><br>All fees are quoted in Philippine Peso (₱) and exclusive of applicable government taxes. articardd reserves the right to adjust pricing with 30 days advance notice. Price changes do not apply to an active Annual License until its renewal date.</div>
     </div>
 
     <div class="tos-section">
       <div class="tos-section-num">5</div>
       <div class="tos-section-title">Scope of System &amp; Features</div>
-      <div class="tos-section-body">📇 <b>Digital vCard</b> — Shareable NFC/QR business card with contact exchange form, .vcf download, booking request, and social links.<br><br>👥 <b>Address Book</b> — Contact management with tagging, social profiles, and .vcf export.<br><br>📅 <b>Upcoming / Calendar</b> — Meeting scheduler with list and calendar view.<br><br>🏷 <b>Tag &amp; Profile</b> — Owner profile management, social links, and account settings.<br><br><b>Not Included &amp; Not Guaranteed:</b> ATH•NA is not a licensed financial advisor, accountant, or legal consultant. The Financial Tools are organizational aids only. ATH•NA does not guarantee uptime, data persistence, or error-free operation.</div>
+      <div class="tos-section-body">📇 <b>Digital vCard</b> — Shareable NFC/QR business card with contact exchange form, .vcf download, booking request, and social links.<br><br>👥 <b>Address Book</b> — Contact management with tagging, social profiles, and .vcf export.<br><br>📅 <b>Upcoming / Calendar</b> — Meeting scheduler with list and calendar view.<br><br>🏷 <b>Tag &amp; Profile</b> — Owner profile management, social links, and account settings.<br><br><b>Not Included &amp; Not Guaranteed:</b> articardd is not a licensed financial advisor, accountant, or legal consultant. The Financial Tools are organizational aids only. articardd does not guarantee uptime, data persistence, or error-free operation.</div>
     </div>
 
     <div class="tos-section">
       <div class="tos-section-num">6</div>
       <div class="tos-section-title">License Grant &amp; Restrictions</div>
-      <div class="tos-section-body">ATH•NA grants the Client a limited, personal, non-exclusive, non-sublicensable, non-transferable, revocable license to access and use the System solely for their own professional purposes during the active License period.<br><br>Strictly prohibited: sharing or transferring the ATH•NA ID; reverse-engineering or decompiling the System; copying or cloning ATH•NA's design or codebase; using one License for multiple users; circumventing license verification.<br><br>Each License covers one (1) ATH•NA ID for one (1) individual Client.</div>
+      <div class="tos-section-body">articardd grants the Client a limited, personal, non-exclusive, non-sublicensable, non-transferable, revocable license to access and use the System solely for their own professional purposes during the active License period.<br><br>Strictly prohibited: sharing or transferring the articardd ID; reverse-engineering or decompiling the System; copying or cloning articardd's design or codebase; using one License for multiple users; circumventing license verification.<br><br>Each License covers one (1) articardd ID for one (1) individual Client.</div>
     </div>
 
     <div class="tos-section">
       <div class="tos-section-num">7</div>
       <div class="tos-section-title">Data Ownership, Storage &amp; Retention</div>
-      <div class="tos-section-body">The Client retains full ownership of all OS Data and Visitor Data. ATH•NA does not claim any ownership over Client or Visitor data.</div>
+      <div class="tos-section-body">The Client retains full ownership of all OS Data and Visitor Data. articardd does not claim any ownership over Client or Visitor data.</div>
       <div class="tos-table-row"><span>Active License</span><span>Retained indefinitely</span></div>
       <div class="tos-table-row"><span>After Annual License expiry</span><span>30 days then deleted</span></div>
       <div class="tos-table-row"><span>Voluntary termination</span><span>Deleted in 15 business days</span></div>
       <div class="tos-table-row"><span>Termination for violation</span><span>Deleted immediately</span></div>
-      <div class="tos-section-body" style="margin-top:10px;">The Client is strongly advised to use the Full Backup and Export CSV features regularly. ATH•NA does not sell, rent, or share Client or Visitor data with any third party.</div>
+      <div class="tos-section-body" style="margin-top:10px;">The Client is strongly advised to use the Full Backup and Export CSV features regularly. articardd does not sell, rent, or share Client or Visitor data with any third party.</div>
     </div>
 
     <div class="tos-section">
       <div class="tos-section-num">8</div>
       <div class="tos-section-title">Privacy Policy &amp; RA 10173 Compliance</div>
-      <div class="tos-section-body"><b>8.1 Governing Law</b> — All personal data processing is governed by the Data Privacy Act of 2012 (RA 10173), its IRR, and applicable NPC Circulars.<br><br><b>8.2 Roles</b> — ATH•NA is the Personal Information Processor (PIP) for Client account data. The Client is the Personal Information Controller (PIC) for all Visitor Data collected through the vCard Exchange Form, and assumes full legal responsibility for lawful collection and use of that data.<br><br><b>8.3 Data Collected</b> — From Clients: name, position, company, mobile, email, LinkedIn, ATH•NA ID. From Visitors: name, title/company, email, mobile. ATH•NA does not use cookies, tracking pixels, or third-party analytics SDKs.<br><br><b>8.4 Visitor Consent</b> — Visitors are shown a consent notice before submitting their info and retain rights under RA 10173 (Access, Correction, Erasure, Objection, Portability, and to lodge a complaint with the NPC).<br><br><b>8.5 Data Security</b> — In the event of a data breach, ATH•NA will notify the affected Client within 72 hours of discovery.<br><br><b>8.6 Client Obligations</b> — The Client agrees to collect minimal data, use it only for legitimate networking, never sell or share it, and respond to data subject requests within 15 business days.</div>
+      <div class="tos-section-body"><b>8.1 Governing Law</b> — All personal data processing is governed by the Data Privacy Act of 2012 (RA 10173), its IRR, and applicable NPC Circulars.<br><br><b>8.2 Roles</b> — articardd is the Personal Information Processor (PIP) for Client account data. The Client is the Personal Information Controller (PIC) for all Visitor Data collected through the vCard Exchange Form, and assumes full legal responsibility for lawful collection and use of that data.<br><br><b>8.3 Data Collected</b> — From Clients: name, position, company, mobile, email, LinkedIn, articardd ID. From Visitors: name, title/company, email, mobile. articardd does not use cookies, tracking pixels, or third-party analytics SDKs.<br><br><b>8.4 Visitor Consent</b> — Visitors are shown a consent notice before submitting their info and retain rights under RA 10173 (Access, Correction, Erasure, Objection, Portability, and to lodge a complaint with the NPC).<br><br><b>8.5 Data Security</b> — In the event of a data breach, articardd will notify the affected Client within 72 hours of discovery.<br><br><b>8.6 Client Obligations</b> — The Client agrees to collect minimal data, use it only for legitimate networking, never sell or share it, and respond to data subject requests within 15 business days.</div>
     </div>
 
     <div class="tos-section">
@@ -2724,13 +2740,13 @@ body.public-mode .back-mascot-btn{display:none !important;}
     <div class="tos-section">
       <div class="tos-section-num">10</div>
       <div class="tos-section-title">Intellectual Property</div>
-      <div class="tos-section-body">The ATH•NA name, brand, logo, vCard design, OS interface, and source code are the exclusive intellectual property of ATH•NA, protected under RA 8293. The Client retains full ownership of their profile information and OS Data. This Agreement transfers no IP rights to the Client.</div>
+      <div class="tos-section-body">The articardd name, brand, logo, vCard design, OS interface, and source code are the exclusive intellectual property of articardd, protected under RA 8293. The Client retains full ownership of their profile information and OS Data. This Agreement transfers no IP rights to the Client.</div>
     </div>
 
     <div class="tos-section">
       <div class="tos-section-num">11</div>
       <div class="tos-section-title">Financial Tools Disclaimer</div>
-      <div class="tos-section-body">ATH•NA is not a licensed financial institution, accounting firm, or financial advisor. The Financial Tools are personal organizational aids only and are not substitutes for professional accounting, tax filing, or financial planning. The Client is solely responsible for the accuracy of their financial data and compliance with BIR requirements.</div>
+      <div class="tos-section-body">articardd is not a licensed financial institution, accounting firm, or financial advisor. The Financial Tools are personal organizational aids only and are not substitutes for professional accounting, tax filing, or financial planning. The Client is solely responsible for the accuracy of their financial data and compliance with BIR requirements.</div>
     </div>
 
     <div class="tos-section">
@@ -2751,13 +2767,13 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <div class="tos-table-row"><span>Serious violations</span><span>Immediate, no refund</span></div>
       <div class="tos-table-row"><span>Acceptable Use violation</span><span>14-day cure period</span></div>
       <div class="tos-table-row"><span>Non-payment</span><span>7-day grace to renew</span></div>
-      <div class="tos-section-body" style="margin-top:10px;">ATH•NA may terminate without cause with 30 days' notice — pro-rated refund of the unused portion of the Annual License in the event of platform-wide discontinuation.</div>
+      <div class="tos-section-body" style="margin-top:10px;">articardd may terminate without cause with 30 days' notice — pro-rated refund of the unused portion of the Annual License in the event of platform-wide discontinuation.</div>
     </div>
 
     <div class="tos-section">
       <div class="tos-section-num">15</div>
       <div class="tos-section-title">Force Majeure</div>
-      <div class="tos-section-body">ATH•NA is not liable for delays caused by circumstances beyond its reasonable control — natural disasters, government actions, internet/power outages, third-party platform failures, or pandemics. License periods are not automatically extended for such events.</div>
+      <div class="tos-section-body">articardd is not liable for delays caused by circumstances beyond its reasonable control — natural disasters, government actions, internet/power outages, third-party platform failures, or pandemics. License periods are not automatically extended for such events.</div>
     </div>
 
     <div class="tos-section">
@@ -2769,18 +2785,18 @@ body.public-mode .back-mascot-btn{display:none !important;}
     <div class="tos-section">
       <div class="tos-section-num">19</div>
       <div class="tos-section-title">ArtiStar Rewards (Referral Program)</div>
-      <div class="tos-section-body"><b>19.1 Reward</b> — A Qualified Referral earns the referrer one (1) ₱1,000 Starbucks e-Gift Card. If that card is unavailable, ATH•NA may substitute a gift card or equivalent of the same value. The reward has no cash value and is not transferable.<br><br>
-      <b>19.2 Qualified Referral</b> — The buyer must be a new customer who has never held an articardd license, must buy the Annual License at the regular price, and must state the referrer's code or use the referrer's link <b>before paying</b>. Payment must be verified and the license activated by ATH•NA.<br><br>
+      <div class="tos-section-body"><b>19.1 Reward</b> — A Qualified Referral earns the referrer one (1) ₱1,000 Starbucks e-Gift Card. If that card is unavailable, articardd may substitute a gift card or equivalent of the same value. The reward has no cash value and is not transferable.<br><br>
+      <b>19.2 Qualified Referral</b> — The buyer must be a new customer who has never held an articardd license, must buy the Annual License at the regular price, and must state the referrer's code or use the referrer's link <b>before paying</b>. Payment must be verified and the license activated by articardd.<br><br>
       <b>19.3 One-time</b> — One reward per buyer. Renewals do not qualify.<br><br>
       <b>19.4 Hold period</b> — The reward is released 14 days after the buyer's license is activated. If the purchase is refunded, cancelled, or reversed within that period, the referral is void and no reward is due.<br><br>
-      <b>19.5 Not allowed</b> — Self-referrals (including the same person, email, mobile number, or business), duplicate or repeated referrals of the same buyer, fake or paid-for accounts, and unsolicited bulk messaging or misleading claims. ATH•NA may void any referral it reasonably believes breaks these rules.<br><br>
+      <b>19.5 Not allowed</b> — Self-referrals (including the same person, email, mobile number, or business), duplicate or repeated referrals of the same buyer, fake or paid-for accounts, and unsolicited bulk messaging or misleading claims. articardd may void any referral it reasonably believes breaks these rules.<br><br>
       <b>19.6 Eligibility and delivery</b> — The referrer must hold an active license when the reward is released. The e-Gift Card is sent to the email or mobile number on the referrer's card. Rewards may be subject to applicable taxes.<br><br>
-      <b>19.7 Changes</b> — ATH•NA may change or end this program at any time. Qualified Referrals already verified before a change will still be honored. ATH•NA's decision on whether a referral qualifies is final.</div>
+      <b>19.7 Changes</b> — articardd may change or end this program at any time. Qualified Referrals already verified before a change will still be honored. articardd's decision on whether a referral qualifies is final.</div>
     </div>
 
     <div class="tos-footer">
       By tapping I Agree, you confirm you are at least 18 years of age, have fully read and understood this Agreement, and unconditionally agree to be bound by all its terms.<br><br>
-      ATH•NA Executive vCard OS · Version 3.0 · Effective May 11, 2026<br>
+      articardd Executive vCard OS · Version 3.0 · Effective May 11, 2026<br>
       Support: phpx.migratex@gmail.com · Venue: Pasig City, Metro Manila, Philippines
     </div>
   </div>
@@ -2790,7 +2806,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
   </div>
 </div>
 
-<!-- ══ ATH•NA ACCOUNT PAGE (Apple Account style, full screen) ══ -->
+<!-- ══ articardd ACCOUNT PAGE (Apple Account style, full screen) ══ -->
 <div id="screenAccount">
   <div class="acct-topbar">
     <button class="acct-back" onclick="haptic('light');closeAccountPage()">
@@ -3064,11 +3080,11 @@ body.public-mode .back-mascot-btn{display:none !important;}
         <div class="os-row" onclick="haptic('light');showToast('Biometrics — coming soon','neutral')" style="cursor:pointer;">
           <div class="os-row-icon" style="background:#4A9DE0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M12 2a7 7 0 0 1 7 7v1a7 7 0 0 1-14 0V9a7 7 0 0 1 7-7z"/><path d="M8 11v1a4 4 0 0 0 8 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/></svg></div>
           <div class="os-row-text"><div class="os-row-title">Face ID / Fingerprint</div><div class="os-row-sub">Biometric unlock</div></div>
-          <span class="os-row-value" style="font-size:12px;color:#34C759;">On</span>
+          <span class="os-row-value" style="font-size:12px;">Soon</span>
         </div>
         <div class="os-row" onclick="haptic('light');showToast('Linked devices — coming soon','neutral')" style="cursor:pointer;">
           <div class="os-row-icon" style="background:#9B59B6;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
-          <div class="os-row-text"><div class="os-row-title">Linked Devices</div><div class="os-row-sub">1 device active</div></div>
+          <div class="os-row-text"><div class="os-row-title">Linked Devices</div><div class="os-row-sub">Coming soon</div></div>
           <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
       </div>
@@ -3099,7 +3115,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
 <div class="fb-overlay" id="reviewOverlay" onclick="if(event.target===this) closeReviewModal()">
   <div class="fb-modal">
     <div style="text-align:center;margin-bottom:18px;">
-      <div style="font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;font-size:11px;font-weight:600;letter-spacing:4px;color:var(--gold);opacity:.6;margin-bottom:6px;">ATH•NA</div>
+      <div style="font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;font-size:11px;font-weight:600;letter-spacing:4px;color:var(--gold);opacity:.6;margin-bottom:6px;">articardd</div>
       <div style="font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;font-size:18px;font-weight:600;letter-spacing:.5px;color:#fff;">REVIEW DETAILS</div>
       <div style="width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:10px auto 0;"></div>
     </div>
@@ -3131,7 +3147,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
     <div style="padding:0 20px 8px;">
       <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:20px;font-weight:700;color:#1c1c1e;margin-bottom:16px;">Redeem Code</div>
       <div class="am-field-label" style="margin-top:0;">Promo / Gift Code</div>
-      <input type="text" class="am-input" id="redeemCode" placeholder="e.g. ATHNA2026" style="text-transform:uppercase;letter-spacing:.04em;" oninput="document.getElementById('redeemErr').style.display='none'"/>
+      <input type="text" class="am-input" id="redeemCode" placeholder="e.g. ARTI-XXXX" style="text-transform:uppercase;letter-spacing:.04em;" oninput="document.getElementById('redeemErr').style.display='none'"/>
       <div id="redeemErr" style="display:none;color:#FF453A;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11.5px;margin-top:5px;">Please enter a code</div>
       <div class="am-actions">
         <button class="am-btn am-btn-cancel" onclick="closeRedeemSheet()">Cancel</button>
@@ -3226,7 +3242,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
           <span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:20px;font-weight:700;color:#fff;">AU</span>
         </div>
         <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:19px;font-weight:700;color:#1c1c1e;margin-bottom:4px;">Meet AU</div>
-        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13.5px;color:rgba(60,60,67,0.6);line-height:1.55;max-width:280px;">AU is an AI-powered Discovery Engine — your intelligent guide across the OpenKey ecosystem for finding the right people and opportunities.</div>
+        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13.5px;color:rgba(60,60,67,0.6);line-height:1.55;max-width:280px;">AU is an AI-powered Discovery Engine — your intelligent guide across the articardd ecosystem for finding the right people and opportunities.</div>
       </div>
 
       <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(60,60,67,0.4);margin:0 2px 8px;">How It Works</div>
@@ -3267,7 +3283,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
         </div>
         <div id="auOppHeroCount" style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:24px;font-weight:700;color:#1c1c1e;margin-bottom:4px;">— New Today</div>
         <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;font-weight:600;letter-spacing:.04em;color:#B5583A;text-transform:uppercase;margin-bottom:8px;">AU Intelligence · Auto-Scanning</div>
-        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12.5px;color:rgba(60,60,67,0.6);line-height:1.5;margin-bottom:14px;">Based on your OpenKey profile, AU found high-quality opportunities today.</div>
+        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12.5px;color:rgba(60,60,67,0.6);line-height:1.5;margin-bottom:14px;">Based on your articardd profile, AU found high-quality opportunities today.</div>
         <div style="display:flex;align-items:center;gap:6px;min-width:0;">
           <span style="width:6px;height:6px;border-radius:50%;background:#34C759;flex-shrink:0;animation:auPulse 1.6s ease-in-out infinite;"></span>
           <span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;color:rgba(60,60,67,0.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Scanning automatically · Last scan 2 mins ago</span>
@@ -3450,8 +3466,8 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:rgba(60,60,67,0.45);">Remarks <span style="font-weight:400;text-transform:none;letter-spacing:0;opacity:.7;">(optional)</span></div>
       <span id="fbCharCount" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11px;color:rgba(60,60,67,0.4);">0/300</span>
     </div>
-    <textarea class="fb-textarea" id="fbDetails" maxlength="300" oninput="updateFbCharCount()" placeholder="What do you think about your ATH•NA OS Card?" style="border-radius:12px;min-height:88px;font-size:14px;font-family:-apple-system,'SF Pro Text',sans-serif;background:rgba(255,255,255,0.72);border:1px solid rgba(0,0,0,0.08);color:#1c1c1e;"></textarea>
-    <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11.5px;color:rgba(60,60,67,0.4);line-height:1.6;margin-top:8px;margin-bottom:18px;">Responses are reviewed by the ATH•NA team and kept confidential.</div>
+    <textarea class="fb-textarea" id="fbDetails" maxlength="300" oninput="updateFbCharCount()" placeholder="What do you think about your articardd Card?" style="border-radius:12px;min-height:88px;font-size:14px;font-family:-apple-system,'SF Pro Text',sans-serif;background:rgba(255,255,255,0.72);border:1px solid rgba(0,0,0,0.08);color:#1c1c1e;"></textarea>
+    <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11.5px;color:rgba(60,60,67,0.4);line-height:1.6;margin-top:8px;margin-bottom:18px;">Responses are reviewed by the articardd team and kept confidential.</div>
     <div class="fb-actions">
       <button class="fb-btn fb-btn-cancel" onclick="closeFeedback()" style="border-radius:12px;font-size:14px;font-weight:600;background:rgba(0,0,0,0.06);color:#1c1c1e;">Cancel</button>
       <button class="fb-btn fb-btn-submit" onclick="submitFeedback()" style="border-radius:12px;font-size:14px;font-weight:600;background:#1c1c1e;color:#ECE4D6;">Submit</button>
@@ -3464,7 +3480,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
 (function () {
   var errs = [];
   function banner(msg) {
-    errs.push(msg);
+    errs.push(msg); console.error('[articardd]', msg); return;
     var b = document.getElementById('athnaErrBanner');
     if (!b) {
       b = document.createElement('div');
@@ -3474,7 +3490,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
       (document.body || document.documentElement).appendChild(b);
     }
     /* === START: SHOW FIRST ERRORS === */
-    b.textContent = 'ATH•NA JS error (tap to dismiss):\n' + errs.slice(0, 4).join('\n');
+    b.textContent = 'articardd JS error (tap to dismiss):\n' + errs.slice(0, 4).join('\n');
     /* === END: SHOW FIRST ERRORS === */
   }
 
@@ -5497,7 +5513,7 @@ function fillConnectPreview() {
 
   function auInviteCode() {
     const id = (currentEntry && currentEntry.cardId) || '';
-    return id || 'OPENKEY';
+    return id;
   }
   function auInviteLink() {
     return `${BASE_URL}?ref=${auInviteCode()}`;
@@ -5543,7 +5559,7 @@ function fillConnectPreview() {
     const link = auInviteLink();
     const text = `Get your own articardd. card. Use my link: ${link}`;
     if (navigator.share) {
-      navigator.share({ title: 'Join me on OpenKey', text, url: link }).catch(() => {});
+      navigator.share({ title: 'Join me on articardd', text, url: link }).catch(() => {});
     } else {
       auCopyInviteLink();
     }
@@ -5624,9 +5640,9 @@ function fillConnectPreview() {
     auMakeSheet('auContactOverlay', 'Contact Support', `
       <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.55);line-height:1.5;margin:-6px 2px 16px;">We typically respond within 24–48 business hours.</div>
       <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;">
-        <div style="display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;" onclick="window.location.href='mailto:phpx.migratex@gmail.com'" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''">
+        <div style="display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;" onclick="window.location.href='mailto:support@artibytte.com'" onpointerdown="this.style.background='rgba(0,0,0,0.04)'" onpointerup="this.style.background=''" onpointerleave="this.style.background=''">
           <div style="width:34px;height:34px;border-radius:9px;background:#1c6ef3;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 8.97 6a2 2 0 0 0 2.06 0L22 7"/></svg></div>
-          <div style="flex:1;"><div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;color:#1c1c1e;">Email Support</div><div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12px;color:rgba(60,60,67,0.5);margin-top:1px;">phpx.migratex@gmail.com</div></div>
+          <div style="flex:1;"><div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;color:#1c1c1e;">Email Support</div><div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12px;color:rgba(60,60,67,0.5);margin-top:1px;">support@artibytte.com</div></div>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(60,60,67,0.3)" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
       </div>
@@ -5637,7 +5653,7 @@ function fillConnectPreview() {
     haptic('light');
     const isBug = kind === 'bug';
     const title = isBug ? 'Report a Bug' : 'Feature Request';
-    const placeholder = isBug ? 'What happened? Steps to reproduce, if any…' : 'What would you like to see in ATH•NA OS?';
+    const placeholder = isBug ? 'What happened? Steps to reproduce, if any…' : 'What would you like to see in articardd?';
     const overlayId = isBug ? 'auBugOverlay' : 'auFeatureOverlay';
     auMakeSheet(overlayId, title, `
       <textarea id="auFeedbackText" maxlength="500" placeholder="${placeholder}" style="width:100%;min-height:110px;background:rgba(255,255,255,0.72);border:1px solid rgba(0,0,0,0.08);border-radius:14px;padding:13px 14px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;color:#1c1c1e;outline:none;resize:vertical;box-sizing:border-box;margin-bottom:14px;"></textarea>
@@ -5665,10 +5681,10 @@ function fillConnectPreview() {
   function openAuFaqs() {
     haptic('light');
     const faqs = [
-      ['How do I share my digital card?', 'Tap the OPENKEY pill on your card, or use the AI/Share icon to open sharing options like QR, link, or NFC tap.'],
+      ['How do I share my digital card?', 'Tap the Share icon at the lower right of your card to share by link, image or QR.'],
       ['Can I change my card theme?', 'Open the hamburger menu on your card, or use the appearance settings to switch themes and skyline colorways.'],
-      ['How do I add a new contact?', 'Go to Contacts inside your OpenKey account, then tap the + button to add a new entry.'],
-      ['Can I use ATH•NA OS offline?', 'Most features work offline; syncing and AI search require an internet connection.'],
+      ['How do I add a new contact?', 'Go to Contacts inside your articardd account, then tap the + button to add a new entry.'],
+      ['Can I use articardd offline?', 'Most features work offline; syncing and AI search require an internet connection.'],
     ];
     auMakeSheet('auFaqOverlay', 'FAQs', `
       <div id="auFaqList">
@@ -6178,7 +6194,7 @@ function fillConnectPreview() {
   async function loadProfilePhoto() {
     try {
       const res = await window.storage.get(PROFILE_PHOTO_KEY, false);
-      if (res && res.value) { profilePhotoB64 = res.value; applyAvatarEverywhere(); }
+      if (res && res.value && !document.body.classList.contains('public-mode')) { profilePhotoB64 = res.value; applyAvatarEverywhere(); }
     } catch(e) {}
   }
 
@@ -6188,6 +6204,7 @@ function fillConnectPreview() {
     let ok = false;
     try { ok = !!(await window.storage.set(PROFILE_PHOTO_KEY, b64, false)); } catch(e) {}
     if (!ok) profilePhotoB64 = prev;
+    else if (rmToken()) apiPost('ownerUpdateCard', { token: rmToken(), fields: { photo: b64 } }).catch(function () { showToast('Photo saved on this device. Cloud sync pending', 'neutral'); });
     applyAvatarEverywhere();
     return ok;
   }
@@ -6282,7 +6299,7 @@ function fillConnectPreview() {
           const s = Math.min(img.width, img.height);
           const ox = (img.width - s) / 2, oy = (img.height - s) / 2;
           ctx.drawImage(img, ox, oy, s, s, 0, 0, 200, 200);
-         saveProfilePhoto(canvas.toDataURL('image/jpeg', 0.85)).then(ok => {
+         saveProfilePhoto(canvas.toDataURL('image/jpeg', 0.7)).then(ok => {
             if (ok) { haptic('success'); showToast('Photo updated', 'success'); }
             else { haptic('error'); showToast("Couldn't save photo", 'error'); }
           });
@@ -6527,6 +6544,7 @@ function fillConnectPreview() {
     { id:5, name:'Pio Reyes',       role:'CFO',          company:'StarVentures',  tag:'Client',  tagBg:'#34C759', tagFg:'#fff',    avatarBg:'#8E44AD', mobile:'+63 917 000 0005', email:'pio@starv.ph',     address:'Ortigas Center',    notes:'Reviewing the lifetime seat pricing model.' },
   ];
   ADDRESS_BOOK.splice(0, ADDRESS_BOOK.length, ...ADDRESS_BOOK.map(c => normalizeContact(Object.assign({ source: 'seed' }, c))));
+  ADDRESS_BOOK.length = 0; /* no demo contacts for real users */
   let activeContact = null;
 
   function renderAddressBookProfileCard() {
@@ -6941,7 +6959,7 @@ function fillConnectPreview() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `ATHNA-AddressBook-${todayKey()}.csv`;
+    a.download = ` articardd-AddressBook-${todayKey()}.csv`;
     document.body.appendChild(a);
     a.click();
     setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
@@ -7286,7 +7304,7 @@ function buildScrubberRaw(activeLetters) {
 
     const screen = document.createElement('div');
     screen.id = 'contactDetailScreen';
-    // ── Always use the ATH•NA OS system color — same as the address book ──
+    // ── Always use the articardd system color — same as the address book ──
     const bg      = '#ECE4D6';
     const surface = 'rgba(255,255,255,0.72)';
     const surfaceBorder = 'rgba(0,0,0,0.08)';
@@ -9109,7 +9127,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
       { id:'n3', title:'Meeting Follow-ups',       body:'Send proposal to Ana Lim re: loyalty pilot…',         pinned:false, ts: Date.now() - 1000*60*60*72 },
       { id:'n4', title:'License Renewal Reminder', body:'Lifetime plan active — no action needed.',           pinned:false, ts: Date.now() - 1000*60*60*168 },
     ];
-    await saveNotes();
+    NOTES = []; await saveNotes();
     renderNotes();
   }
 
@@ -9562,7 +9580,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
 
   function getShareFile() {
     if (!capturedBlob) return null;
-    return new File([capturedBlob], `ATHNA-${currentEntry.athid}.png`, { type: 'image/png' });
+    return new File([capturedBlob], ` articardd-${currentEntry.athid}.png`, { type: 'image/png' });
   }
 
   async function shareVia(method) {
@@ -9579,7 +9597,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     if (method === 'save') {
       const a = document.createElement('a');
       a.href = capturedDataUrl;
-      a.download = `ATHNA-${id}.png`;
+      a.download = ` articardd-${id}.png`;
       a.click();
       haptic('success'); closeShare(); showToast('Image downloaded', 'success'); return;
     }
@@ -9607,9 +9625,9 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
       if (navigator.share) {
         try {
           if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({ title: `ATH•NA — ${name}`, text, files: [file] });
+            await navigator.share({ title: `articardd — ${name}`, text, files: [file] });
           } else {
-            await navigator.share({ title: `ATH•NA — ${name}`, text, url: link });
+            await navigator.share({ title: `articardd — ${name}`, text, url: link });
           }
           haptic('success'); closeShare(); showToast('Shared successfully', 'success'); return;
         } catch (e) {
@@ -9622,7 +9640,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
       // fallback: save
       const a = document.createElement('a');
       a.href = capturedDataUrl;
-      a.download = `ATHNA-${id}.png`;
+      a.download = ` articardd-${id}.png`;
       a.click();
       closeShare(); showToast('Saved (share not supported)', 'neutral'); return;
     }
@@ -9633,7 +9651,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     const P2 = 'https:' + String.fromCharCode(47, 47);
     /* === END: NO-DOUBLE-SLASH SHARE URLS === */
     const urls = {
-      email:    `mailto:?subject=${encodeURIComponent('ATH•NA Card — ' + name)}&body=${encodedText}`,
+      email:    `mailto:?subject=${encodeURIComponent('articardd Card — ' + name)}&body=${encodedText}`,
       telegram: P2 + 't.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(name + ' · ' + pos),
       whatsapp: P2 + 'wa.me/?text=' + encodedText,
       imessage: `sms:${/iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent) ? '&' : '?'}body=${encodedText}`,
@@ -9702,7 +9720,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
       titleEl.textContent = 'Rate This Card';
       subtitleEl.style.display = 'none';
       badgeEl.style.display = 'none';
-      textarea.placeholder = 'What do you think about your ATH•NA OS Card?';
+      textarea.placeholder = 'What do you think about your articardd Card?';
       catSection.style.display = 'none';
       document.getElementById('fbCategoryChips').innerHTML = '';
     }
@@ -9809,7 +9827,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     closeFeedback();
 
     if (ratingVal >= 4) {
-      setTimeout(() => showAppStoreGate(), 320);
+      showToast('Thank you for the great rating!', 'success');
     } else {
       const first = currentEntry?.name?.split(' ')[0] || 'Member';
       const firstName = first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
@@ -9838,8 +9856,8 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     overlay.innerHTML = `
       <div class="fb-modal" style="background:#ECE4D6;border:1px solid rgba(0,0,0,0.06);box-shadow:0 24px 60px rgba(0,0,0,0.18),0 0 0 .5px rgba(0,0,0,0.04);text-align:center;">
         <div style="font-size:34px;margin-bottom:10px;">🌟</div>
-        <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:18px;font-weight:700;color:#1c1c1e;margin-bottom:6px;">Loving ATH•NA OS?</div>
-        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.55);line-height:1.55;margin-bottom:22px;">Your rating helps other professionals discover ATH•NA. Got a second to rate us on the App Store?</div>
+        <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:18px;font-weight:700;color:#1c1c1e;margin-bottom:6px;">Loving articardd?</div>
+        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.55);line-height:1.55;margin-bottom:22px;">Your rating helps other professionals discover articardd. Got a second to rate us on the App Store?</div>
         <button onclick="window.open(APP_STORE_URL,'_blank');document.getElementById('appStoreGateOverlay').remove();haptic('success');" style="width:100%;background:#1c1c1e;border:none;border-radius:12px;padding:13px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14.5px;font-weight:700;color:#ECE4D6;cursor:pointer;margin-bottom:10px;">⭐ Rate on the App Store</button>
         <button onclick="document.getElementById('appStoreGateOverlay').remove();" style="width:100%;background:rgba(0,0,0,0.06);border:none;border-radius:12px;padding:13px;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;color:rgba(60,60,67,0.6);cursor:pointer;">Not Now</button>
       </div>`;
@@ -9980,7 +9998,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     // render preview after paint
     requestAnimationFrame(() => cfmRenderPreview());
 
-    // ── Save as Default toggle — mirrors the main ATH•NA OS slide switch exactly ──
+    // ── Save as Default toggle — mirrors the main articardd slide switch exactly ──
     const cfmTrack = overlay.querySelector('#cfm-save-track');
     const cfmKnob  = overlay.querySelector('#cfm-save-knob');
     if (cfmTrack && cfmKnob) {
@@ -10350,7 +10368,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
 
     setTimeout(() => overlay.querySelector('#physMobileInput')?.focus(), 320);
 
-    // ── ATH•NA-style toggle — mirrors the main ATH•NA OS slide switch exactly ──
+    // ── articardd-style toggle — mirrors the main articardd slide switch exactly ──
     const track = overlay.querySelector('#phys-toggle-track');
     const knob  = overlay.querySelector('#phys-toggle-knob');
     if (track && knob) {
@@ -10467,11 +10485,11 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     haptic('success');
     document.getElementById('physOrderOverlay')?.remove();
 
-    const subject = `ATH•NA Physical NFC Card Order — ${id}`;
+    const subject = `articardd Physical NFC Card Order — ${id}`;
     const body =
-`Hello ATH•NA Admin,
+`Hello articardd Admin,
 
-I would like to order a Physical NFC Card for my ATH•NA OS membership.
+I would like to order a Physical NFC Card for my articardd membership.
 
   Full Name    : ${name}
   Position     : ${pos}
@@ -10491,9 +10509,9 @@ Please contact me via mobile/WhatsApp/Viber to confirm my delivery details.
 — ${name} · ${id}`;
 
     /* === START: NO-DOUBLE-SLASH GMAIL URL === */
-    const gmailUrl = 'https:' + String.fromCharCode(47, 47) + 'mail.google.com/mail/?view=cm&to=phpx.migratex@gmail.com&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    const gmailUrl = 'https:' + String.fromCharCode(47, 47) + 'mail.google.com/mail/?view=cm&to=support@artibytte.com&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
     /* === END: NO-DOUBLE-SLASH GMAIL URL === */
-    const mailtoUrl = `mailto:phpx.migratex@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const mailtoUrl = `mailto:support@artibytte.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
     const opened = window.open(gmailUrl, '_blank');
     if (!opened) window.location.href = mailtoUrl;
@@ -10642,7 +10660,7 @@ function openConnectForm() {
     const vName = cfVal('cfName');
    const visitor = newContact({ source: 'connect', name: vName, role: cfVal('cfTitle'), company: '—', mobile: acNormalizePhone(cfVal('cfMobile')), email: cfVal('cfEmail').toLowerCase(), address: '', notes: 'Via Connect form', tag: 'New', tagBg: '#9B59B6', tagFg: '#fff', avatarBg: avatarColorFromName(vName) });
     let saved = true;
-    if (!(acFindMatch(visitor) || {}).match) {
+    if (!document.body.classList.contains('public-mode') && !(acFindMatch(visitor) || {}).match) {
       visitor.id = ADDRESS_BOOK.reduce((m, c) => Math.max(m, c.id || 0), 0) + 1;
       ADDRESS_BOOK.push(visitor);
       saved = await saveAddressBook();
@@ -10651,12 +10669,16 @@ function openConnectForm() {
     if (sendBtn) { delete sendBtn.dataset.busy; sendBtn.textContent = 'Send & Connect'; sendBtn.style.opacity = ''; }
     if (!saved) { haptic('error'); showToast("Couldn't save your info", 'error'); return; }
     haptic('success');
-    apiPost('saveLead', { cardId: (currentEntry && currentEntry.cardId) || '', name: cfVal('cfName'), title: cfVal('cfTitle'), email: cfVal('cfEmail'), mobile: cfVal('cfMobile') }).catch(function () {});
+    try {
+      await apiPost('saveLead', { cardId: (currentEntry && currentEntry.cardId) || '', name: cfVal('cfName'), title: cfVal('cfTitle'), email: cfVal('cfEmail'), mobile: cfVal('cfMobile') });
+    } catch (e) { haptic('error'); showToast(String((e && e.message) || "Couldn't send your info"), 'error'); return; }
     document.getElementById('csName').textContent = cfVal('cfName');
     document.getElementById('csRole').textContent = cfVal('cfTitle');
     document.getElementById('csMobile').textContent = cfVal('cfMobile');
     document.getElementById('csEmail').textContent = cfVal('cfEmail');
     document.getElementById('csLinkedin').textContent = '—';
+    const sv = document.querySelector('#connectFormSuccess .cp-save-btn');
+    if (sv && document.body.classList.contains('public-mode')) { sv.setAttribute('onclick', 'saveOwnContactVcf()'); sv.lastChild.textContent = ' Save Their Contact'; }
 
     document.getElementById('connectFormBody').style.display = 'none';
     document.getElementById('connectFormSuccess').style.display = 'block';
@@ -11589,7 +11611,7 @@ function copyPIAthId() {
   /* ── SIGN OUT ── */
   function confirmSignOut() {
     haptic('medium');
-    confirmDialog({ title: 'Sign out of ATH•NA OS?', confirmLabel: 'Sign Out', onConfirm: executeSignOut });
+    confirmDialog({ title: 'Sign out of articardd?', confirmLabel: 'Sign Out', onConfirm: executeSignOut });
   }
   function confirmSignOutLegacy() {
     haptic('medium');
@@ -11600,7 +11622,7 @@ function copyPIAthId() {
     btn.id = 'signOutConfirm';
     btn.style.cssText = 'margin:12px 0 0;background:rgba(255,69,58,0.08);border:1px solid rgba(255,69,58,0.25);border-radius:14px;padding:14px;text-align:center;animation:screenFadeIn .2s ease;';
     btn.innerHTML = `
-      <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13.5px;font-weight:600;color:#1c1c1e;margin-bottom:10px;">Sign out of ATH•NA OS?</div>
+      <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13.5px;font-weight:600;color:#1c1c1e;margin-bottom:10px;">Sign out of articardd?</div>
       <div style="display:flex;gap:8px;">
         <button onclick="document.getElementById('signOutConfirm').remove()" style="flex:1;padding:11px;border-radius:12px;border:none;background:rgba(0,0,0,0.07);font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13.5px;font-weight:600;color:#1c1c1e;cursor:pointer;">Cancel</button>
         <button onclick="executeSignOut()" style="flex:1;padding:11px;border-radius:12px;border:none;background:#FF453A;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13.5px;font-weight:700;color:#fff;cursor:pointer;">Sign Out</button>
@@ -11626,7 +11648,7 @@ function copyPIAthId() {
   /* ── DELETE ACCOUNT ── */
   function confirmDeleteAccount() {
     haptic('error');
-    confirmDialog({ title: 'Delete account?', message: 'This will permanently delete your ATH•NA ID, card, contacts, and all data. This cannot be undone.', confirmLabel: 'Delete Forever', danger: true, onConfirm: executeDeleteAccount });
+    confirmDialog({ title: 'Delete account?', message: 'This will permanently delete your articardd ID, card, contacts, and all data. This cannot be undone.', confirmLabel: 'Delete Forever', danger: true, onConfirm: executeDeleteAccount });
   }
   function confirmDeleteAccountLegacy() {
     haptic('error');
@@ -11637,7 +11659,7 @@ function copyPIAthId() {
     box.style.cssText = 'margin:12px 0 0;background:rgba(255,69,58,0.08);border:1px solid rgba(255,69,58,0.3);border-radius:14px;padding:16px;animation:screenFadeIn .2s ease;';
     box.innerHTML = `
       <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13.5px;font-weight:700;color:#FF453A;margin-bottom:6px;">Delete Account</div>
-      <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12.5px;color:rgba(60,60,67,0.65);line-height:1.55;margin-bottom:14px;">This will permanently delete your ATH•NA ID, card, contacts, and all data. This cannot be undone.</div>
+      <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12.5px;color:rgba(60,60,67,0.65);line-height:1.55;margin-bottom:14px;">This will permanently delete your articardd ID, card, contacts, and all data. This cannot be undone.</div>
       <div style="display:flex;gap:8px;">
         <button onclick="document.getElementById('deleteAcctConfirm').remove()" style="flex:1;padding:11px;border-radius:12px;border:none;background:rgba(0,0,0,0.07);font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13.5px;font-weight:600;color:#1c1c1e;cursor:pointer;">Cancel</button>
         <button onclick="executeDeleteAccount()" style="flex:1;padding:11px;border-radius:12px;border:none;background:#FF453A;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13.5px;font-weight:700;color:#fff;cursor:pointer;">Delete Forever</button>
@@ -11647,6 +11669,11 @@ function copyPIAthId() {
   }
 
  async function executeDeleteAccount() {
+    if (rmToken()) {
+      try { await apiPost('ownerDeleteAccount', { token: rmToken(), confirm: 'DELETE' }); }
+      catch (e) { haptic('error'); showToast(String((e && e.message) || "Couldn't delete your account"), 'error'); return; }
+    }
+    try { localStorage.removeItem('athna-owner-remember'); localStorage.removeItem('athna-card-cache-v1:owner'); localStorage.removeItem('athna-card-cache-v1:pub'); sessionStorage.clear(); } catch (e) {}
     haptic('error');
     let failed = false;
     try {
@@ -11845,7 +11872,7 @@ function copyPIAthId() {
     const LABELS = {
       addContactScreen:'New contact', noteEditorScreen:'Note editor', contactDetailScreen:'Contact details',
       screenAccount:'articardd account', personalInfoScreen:'Personal information', identityScreen:'Create your identity',
-      licenseScreen:'License verification', tosScreen:'Terms of Service and Privacy Policy', screenOS:'ATH•NA OS',
+      licenseScreen:'License verification', tosScreen:'Terms of Service and Privacy Policy', screenOS:'articardd',
       cardMenuOverlay:'Card menu', gsOverlay:'Search', shareOverlay:'Share card', fbOverlay:'Rate this card',
       reviewOverlay:'Review details', redeemOverlay:'Redeem code', dupSheetOverlay:'Duplicate contacts',
       syncContactsOverlay:'Import contacts', addMeetingOverlay:'Meeting', connectFormOverlay:'Connect',
@@ -12196,7 +12223,7 @@ function copyPIAthId() {
   document.addEventListener('DOMContentLoaded', function bootCard() {
     const screenCard = document.getElementById('screenCard');
     /* === START: SKIP DEMO CARD ON PUBLIC LINK === */
-    if (!screenCard || currentEntry || /\/c\/[A-Za-z0-9-]+/.test(location.pathname) || /[?&](c|id)=/.test(location.search)) return;
+    if (!screenCard || currentEntry || sessionStorage.getItem('athna-owner-token') || /\/c\/[A-Za-z0-9-]+/.test(location.pathname) || /[?&](c|id)=/.test(location.search)) return;
     /* === END: SKIP DEMO CARD ON PUBLIC LINK === */
     const entry = {
       no: 1,
@@ -12224,6 +12251,32 @@ function cardCacheWrite(d, owner) {
   try { Promise.resolve(window.storage.set('card-cache-' + kind, rec, false)).catch(function () {}); } catch (e) {}
 }
 
+async function syncLeads() {
+  if (!rmToken() || document.body.classList.contains('public-mode')) return;
+  let leads;
+  try { leads = await apiPost('ownerListLeads', { token: rmToken() }); } catch (e) { return; }
+  if (!Array.isArray(leads) || !leads.length) return;
+  let seen = {};
+  try { const r = await window.storage.get('leads-seen', false); if (r && r.value) seen = JSON.parse(r.value); } catch (e) {}
+  const added = [];
+  leads.forEach(l => {
+    if (!l.leadId || seen[l.leadId]) return;
+    seen[l.leadId] = 1;
+    const c = newContact({ source: 'connect', name: l.name, role: l.title, mobile: acNormalizePhone(l.mobile), email: String(l.email || '').toLowerCase(), notes: 'Via Connect form' + (l.notes ? ' · ' + l.notes : ''), tag: 'New', avatarBg: avatarColorFromName(l.name) });
+    if ((acFindMatch(c) || {}).match) return;
+    c.id = ADDRESS_BOOK.reduce((m, x) => Math.max(m, x.id || 0), 0) + 1;
+    ADDRESS_BOOK.push(c); added.push(c);
+  });
+  if (added.length && !(await saveAddressBook())) {
+    added.forEach(c => { const i = ADDRESS_BOOK.indexOf(c); if (i !== -1) ADDRESS_BOOK.splice(i, 1); });
+    return;                                   /* not marked seen, will retry */
+  }
+  try { await window.storage.set('leads-seen', JSON.stringify(seen), false); } catch (e) {}
+  if (added.length) {
+    filterAddressBook(document.getElementById('abSearchInput')?.value || '');
+    showToast(added.length + ' new connection' + (added.length > 1 ? 's' : ''), 'success');
+  }
+}
 /* === START: PUBLIC AUTO-OPEN === */
 function publicConnectSync() {
   const ov = document.getElementById('connectFormOverlay');
@@ -12267,6 +12320,9 @@ function applyRemoteCard(d, owner, fromCache) {
 
     const t = THEMES.find(function (x) { return x.id === d.theme; }); if (t) activeTheme = t;
    if (d.colorway && BUILDING_COLORWAYS[d.colorway]) activeCW = d.colorway;
+   if (d.photo) profilePhotoB64 = d.photo;
+   else if (!owner) profilePhotoB64 = null;
+   else if (profilePhotoB64 && rmToken()) apiPost('ownerUpdateCard', { token: rmToken(), fields: { photo: profilePhotoB64 } }).catch(function () {});
    if (owner) window.__LICENSE__ = d.license || null;
    if (d.mascotId && MASCOTS.some(function (m) { return m.id === d.mascotId; })) { activeMascot = d.mascotId; window.__MASCOT_REMOTE__ = true; }
 
@@ -12276,6 +12332,7 @@ function applyRemoteCard(d, owner, fromCache) {
     if (owner) { savePI(); try { window.storage.set(EP_STORE_KEY, JSON.stringify(X), false); } catch (e) {} }
     if (!owner) publicConnectSync(); /* PUBLIC AUTO-OPEN */
     if (owner) loadMeetings(); /* UNIFIED MEETINGS: kunin sa Meetings sheet pagka-login/boot */
+    if (owner) setTimeout(syncLeads, 1500);
     if (!fromCache) cardCacheWrite(d, owner);
     return true;
   } catch (e) { console.error('applyRemoteCard failed', e); return false; }
@@ -12445,6 +12502,7 @@ $('gtSwitch').style.display = 'none';
 
   /* boot: scanned QR / shared link → diretso sa public card. May owner session → full app. Wala → gate. */
   /* === START: PUBLIC LINK AUTO-OPEN === */
+document.addEventListener('DOMContentLoaded', function () {
 if (idFromUrl()) { setPublic(true); window.__AUTO_CONNECT__ = true; syncCardOnBoot(false, idFromUrl()); }
 /* === END: PUBLIC LINK AUTO-OPEN === */
   /* === START: RM DEEP LINK (WITH SESSION) === */
@@ -12452,11 +12510,13 @@ else if (sessionStorage.getItem(SESSION)) { setPublic(false); syncCardOnBoot(tru
 /* === END: RM DEEP LINK (WITH SESSION) === */
   /* === START: RM DEEP LINK (NO SESSION) === */
 else { if (wantsRM()) window.__OPEN_RM__ = true; showGate(); }
+});
+});
 /* === END: RM DEEP LINK (NO SESSION) === */
 })();
 /* === END: CARD GATE === */
 
-/* === START: UNIFIED MEETINGS (ATH•NA Calendar → Meetings sheet) === */
+/* === START: UNIFIED MEETINGS (articardd Calendar → Meetings sheet) === */
 /* Ang mga function na ito ay nag-o-override sa lumang local (window.storage) na version sa itaas. */
 function mtgDateToKey(s) {
   const m = /^([A-Za-z]+) (\d{1,2}), (\d{4})$/.exec(String(s || '').trim());
@@ -12562,7 +12622,7 @@ function meetingRebook(id) {
 }
 /* alisin ang lumang local dataset (kasama ang sample na Juan/Carlo/Pio) */
 try { window.storage.delete('upcoming-meetings', false); } catch (e) {}
-document.addEventListener('visibilitychange', () => { if (!document.hidden && rmToken()) loadMeetings(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden && rmToken()) { loadMeetings(); syncLeads(); } });
 setInterval(() => { if (!document.hidden && rmToken()) loadMeetings(); }, 60000);
 /* === END: UNIFIED MEETINGS === */
 /* === START: TRUE REBOOK === */
@@ -12725,7 +12785,7 @@ function openAddMeeting(pre) {
 /* === END: TRUE REBOOK === */
 /* === START: DISCOVER (replaces AU) === */
 const DC_KEY = 'discover-state-v1';
-const DC_DEMO = true;            /* false sa production: itatago ang "Demo:" buttons + auto-reply */
+const DC_DEMO = false;            /* false sa production: itatago ang "Demo:" buttons + auto-reply */
 const DC_PENDING_MAX = 3;
 const DC_STOP = new Set(['the','for','and','with','someone','help','need','looking','find','who','can','that','you','your','want','get','are','near']);
 /* TODO backend: palitan ng apiPost('discoverList') */
@@ -14065,7 +14125,7 @@ function stVisHub() {
     ${pills}
     ${stQrGlyph(160, 125, .8)}
   </svg>
-  <div class="st-cap">Runs inside the Google ecosystem you already own</div></div></div>`;
+  <div class="st-cap">Runs on the Google tools you already use</div></div></div>`;
 }
 /* === END: STORY v2 HUB === */
 
@@ -14092,7 +14152,7 @@ function stVisHubLegacy() {
 function stVisOwnership() {
   const T = (x, y, s, w, f, o, extra) => `<text x="${x}" y="${y}" font-family="${ST_FONT}" font-size="${s}" font-weight="${w}" fill="${f}" opacity="${o}" ${extra || ''}>`;
   return `<div class="st-vis"><div class="st-fig">
-  <svg viewBox="0 0 320 196" role="img" aria-label="Typical platforms keep your data on their servers. articardd keeps it in your own Google account.">
+  <svg viewBox="0 0 320 196" role="img" aria-label="Typical platforms keep your data on their servers. articardd runs on Google tools and never sells your data.">
     ${T(16, 18, 8.5, 700, '#1c1c1e', .5, 'letter-spacing="2"')}TYPICAL PLATFORMS</text>
     <circle cx="40" cy="54" r="14" fill="#8E8E93"/>
     <line x1="60" y1="54" x2="196" y2="54" stroke="#1c1c1e" stroke-opacity=".35" stroke-width="1.4" stroke-dasharray="2 5" stroke-linecap="round"/>
@@ -14105,11 +14165,11 @@ function stVisOwnership() {
     <circle cx="40" cy="154" r="14" fill="#1c1c1e"/>
     <line class="st-draw" style="--l:136" x1="60" y1="154" x2="196" y2="154" stroke="#C9A227" stroke-width="2" stroke-linecap="round"/>
     <rect x="200" y="140" width="76" height="28" rx="14" fill="#E8CC7A"/>
-    ${T(238, 158, 9.5, 800, '#1c1c1e', 1, 'text-anchor="middle"')}Your Google</text>
+    ${T(238, 158, 9.5, 800, '#1c1c1e', 1, 'text-anchor="middle"')}Google-hosted</text>
     <path d="M238 172 Q238 186 150 186 Q40 186 40 172" fill="none" stroke="#C9A227" stroke-width="1.3" stroke-linecap="round" opacity=".7"/>
     <path d="M36 178 L40 171 L45 177" fill="none" stroke="#C9A227" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>
   </svg>
-  <div class="st-cap">Your data is yours. Entirely.</div></div></div>`;
+  <div class="st-cap">Your data is never sold or shared.</div></div></div>`;
 }
 /* === END: STORY VISUAL HELPERS === */
 
@@ -14145,10 +14205,10 @@ function stVisSimLife() {
 function stVisCompare() {
   const rows = [
     ['Email, company &amp; notes',       'n','m','m','y'],
-    ['Survives a new phone or SIM',      'n','m','m','y'],
+    ['Moves to a new phone (export / import)',      'n','m','m','y'],
     ['Searchable, duplicates merged',    'n','n','n','y'],
     ['Takes meeting requests',           'n','n','n','y'],
-    ['Backed up in your own Google',     'n','n','m','y'],
+    ['Export to CSV / .vcf any time',     'n','n','m','y'],
     ['Room for a whole network',         'n','n','y','y']
   ];
   const sym = { y:'✓', n:'✕', m:'~' };
@@ -14289,7 +14349,7 @@ function stBuild() {
       ${li('IV', 'Lost, damaged, deactivated', 'SIMs get lost, cracked, locked or swapped. A prepaid number that lapses can be deactivated, and numbers can be recycled. The contacts leave with it.')}
       ${li('V', 'No backup, no search, no merge', "No duplicate detection. No export you control. No history. When it's gone, it's gone.")}</div>
       ${q(`A SIM can tell the network <strong>who you are.</strong><br>It was never meant to remember <strong>who you know.</strong>`)}
-      ${p(`articardd keeps every connection in your own Contacts and Google Sheet, with email, company and notes, independent of any phone, SIM or number. Change all three tomorrow. <strong>Your network stays.</strong>`)}
+      ${p(`articardd keeps every connection in your Contacts, with email, company and notes, independent of any SIM or number. Export them to CSV or .vcf any time and move them to a new phone. <strong>Your network travels with you.</strong>`)}
       <p class="st-note" style="margin-top:14px">Storage limits and carrier policies vary by SIM, phone and provider.</p>`),
     /* === END: SIM INTERLUDE === */
     /* 9-10 CH IV */
@@ -14321,10 +14381,10 @@ function stBuild() {
       ${li('02', 'Fewer missed leads', 'Meeting requests wait in your Request Manager and Calendar until you confirm, reschedule or cancel. Nothing slips because you were busy.')}
       ${li('03', 'A sharper first impression', 'A premium ring-and-QR card with your theme and mascot, instead of a stack of paper that ends up in a drawer.')}
       ${li('04', 'Always current', 'Update your details once. Every scan opens the latest version of your card.')}
-      ${li('05', 'A network that cannot vanish', 'Not on a SIM, not on one phone, not on someone else’s servers. In your own Google account.')}
+      ${li('05', 'A network you can take with you', 'Not locked to a SIM or a number. Export your Contacts to CSV or .vcf any time and keep your own copy.')}
       ${li('06', 'One price', '₱4,990 a year, fixed. No tiers, no per-contact fees, no surprise upgrades.')}</div>`),
     L('Your Scorecard', `<div class="st-lab">Your Scorecard</div><h2 class="st-h">Measure It.<br>Don’t Take Our Word.</h2>${rule()}
-      ${p(`Four numbers tell you whether your card has paid for itself. All four are already inside the app.`, 'dc')}
+      ${p(`Four numbers tell you whether your card has paid for itself. Three you can read from your Contacts, Request Manager and Calendar. The fourth you log yourself.`, 'dc')}
       ${need('Count 01', 'Connections Made', 'People added to your Contacts through your card this month.')}
       ${need('Count 02', 'Meeting Requests Received', 'Requests waiting in your Request Manager.')}
       ${need('Count 03', 'Meetings Confirmed', 'The ones that reached your Calendar.')}
@@ -14351,24 +14411,24 @@ function stBuild() {
       ${feat('02', 'Choose Your Look — Themes & Mascots', 'Pick from ' + THEMES.length + ' card themes and a mascot for the back of your card — including limited editions. New drops every quarter for active license holders.')}
       ${feat('03', 'Meeting Booking — Direct to Your Calendar', 'Anyone who opens your card can request a meeting — pick a date and time, by video call, phone or in person. It lands in your Request Manager and your Calendar; you confirm, reschedule or cancel. No back-and-forth. No scheduling apps.')}
       ${feat('04', 'Captures — Your Notes, Always Close', 'Pin what matters, keep the rest within reach. Ideas, follow-ups and deadlines live in one quiet place inside your card.')}
-      ${feat('05', 'Google Calendar & Gmail Integration', "Everything runs inside Google's ecosystem — 99.9% uptime, no exotic databases, no third-party risk. Your data stays in infrastructure you already own.")}
+      ${feat('05', 'Google Calendar & Gmail Integration', "Everything runs on Google's ecosystem: Sheets, Calendar, Gmail and Meet. Reliable, familiar, and no exotic databases to break.")}
       ${feat('06', 'Contacts — Import, Merge, Export', 'Everyone who connects with you lands in your Contacts and your Google Sheet. Import from your phone or a .vcf / .csv file, catch duplicates and merge them with undo, export to CSV any time.')}
       ${feat('07', 'iPhone Shortcut & Siri Setup — Free', 'We configure your iPhone so one press launches your card. Siri-enabled. No fumbling. Your card is always one gesture away.')}</div>
       <div class="st-lab" style="margin-top:22px">Launching Soon</div>
       ${need('Coming', 'Automation Suite', 'Automatic thank-you emails after every tap, follow-ups at 24 hours, lead scoring and a weekly report every Monday. Your Gmail does the work. You show up to close.')}
       ${need('Coming', 'Discover — People You Should Meet', 'articardd quietly surfaces the people most relevant to you, ranked by ByteSense. Only mutual matches are shown, and nobody sees your details until they accept. In development.')}
-      ${need('Coming', 'Agentic Chief of Staff AI', "An AI that doesn't just chat — it acts. Emails on your behalf, manages automations, operates as your executive proxy. 5 years ahead of the market. Available now via prompt injection through Grok while the full command center is completed.")}
+      ${need('Coming', 'Agentic Chief of Staff AI', "An AI that doesn't just chat — it acts. Emails on your behalf, manages automations, operates as your executive proxy. In development.")}
       ${need('Coming', 'The Collection — Themes & Mascots', 'Every quarter, active license holders receive new card themes and limited-edition mascots — free. Yours to collect, yours to keep.')}
       <div class="st-dk"><div class="st-lab">Also Included</div>
-        <p>• Free 10-minute setup + 1-hour onboarding training</p><p>• 24/7 maintenance, support & help desk</p>
-        <p>• Your own AI support — active now, while the full console is built</p><p>• Your data is yours — entirely. We store nothing on our servers.</p></div>
+        <p>• Free 10-minute setup + 1-hour onboarding training</p><p>• Email support, Monday to Friday (see Terms)</p>
+        <p>• Your data is yours. We never sell it or share it.</p></div>
       <a class="st-cta" style="margin-top:0" href="mailto:support@artibytte.com" onclick="this.href=supportMail('card')">Get My Card</a>
       <div class="st-sub" style="text-align:center;margin-top:12px">₱4,990 per year · Non-negotiable</div>`),
     /* 14 CLOSING */
     L('A Closing Word', `<div class="st-lab">A Closing Word</div><h2 class="st-h" style="margin-bottom:18px">You Have Earned This.</h2>${rule()}
       ${p('Yes — it costs more than you expected. We will not apologize for that. But we will ask you to weigh it honestly against what you have already lost: the client who never followed up, the contact buried in a drawer, the conversation that simply… disappeared. That cost was silent. This one is not.', 'dc')}
-      ${p('And here is what most platforms will never tell you — <strong>your data is yours. Entirely.</strong> We do not hold it. We do not sell it. We do not benefit from it. Ninety-nine percent of the tools you use today store your most valuable professional relationships on servers you will never see, controlled by people you will never meet — to be leveraged in ways you will never know.')}
-      ${p('articardd is built on Google\'s ecosystem — not because it is fashionable, but because it is the one infrastructure that already lives in your hands. 99.9% uptime. No exotic databases. No over-engineered architecture that collapses the moment a developer moves on. Just a system that works, quietly and completely, every single day.')}
+      ${p('And here is what most platforms will never tell you — <strong>your data is yours.</strong> We do not sell it. We do not rent it. We do not profit from it. Ninety-nine percent of the tools you use today store your most valuable professional relationships on servers you will never see, controlled by people you will never meet — to be leveraged in ways you will never know.')}
+      ${p('articardd is built on Google\'s ecosystem — not because it is fashionable, but because it is dependable and familiar. No exotic databases. No over-engineered architecture that collapses the moment a developer moves on. Just a system that works, quietly and completely, every single day.')}
       ${stVisOwnership()}${q('While others sell features — while startups chase the AI gold rush and wrap APIs in promises — <strong>we sell results.</strong> We cut everything that does not serve you. That simplicity cost us more to build than complexity ever would have.')}
       ${p('We are not in the business of selling technology. We are in the business of returning to you what was always yours: your time, your relationships, your reputation — running on a system that works as hard as you do.')}
       ${p('You have spent years building something worth being remembered for. You have shown up, sacrificed, navigated the uncertainty, and earned your seat at every table you now occupy.')}
@@ -14720,6 +14780,11 @@ function openRewardTerms() {
 /* === END: TERMS v4.0 === */
 
 /* === START: READY FLAG === */
+  /* Discover stays hidden until it runs on real data */
+  (function () {
+    const r = document.querySelector('rect[onclick*="openAuSearch"]');
+    if (r) { r.style.display = 'none'; if (r.previousElementSibling) r.previousElementSibling.style.display = 'none'; }
+  })();
   window.__ATHNA_READY__ = true;
   /* === END: READY FLAG === */
 </script>
