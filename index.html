@@ -12774,10 +12774,7 @@ const DC_DEMO = false;            /* false sa production: itatago ang "Demo:" bu
 const DC_PENDING_MAX = 3;
 const DC_STOP = new Set(['the','for','and','with','someone','help','need','looking','find','who','can','that','you','your','want','get','are','near']);
 /* TODO backend: palitan ng apiPost('discoverList') */
-const DC_PEOPLE = [
-  { id:'dc1', first:'Sarah', name:'Sarah C.', role:'AI engineer · Product', score:96, topic:'AI development', common:'AI and SaaS', pron:'She', youWant:'AI help', theyWant:'Web development', tags:['AI','SaaS','Web development'], why:'She is looking for web development. You are looking for AI help. Both are in your profiles.', line:'Looking for web development.<br>You need AI help.', bg:'#3B6FB6' },
-  { id:'dc2', first:'Mark',  name:'Mark L.',  role:'ML engineer · Startups', score:93, topic:'machine learning', common:'machine learning and startups', pron:'He', youWant:'Machine learning help', theyWant:'A product partner', tags:['Machine learning','Startups','Web'], why:'He offers ML engineering and is looking for a product partner, which matches what you offer.', line:'Looking for a product partner.<br>You need ML help.', bg:'#A8326B' }
-];
+const DC_PEOPLE = [];   /* real people will come from the backend (discoverList) */
 let dcStore = { pending: [], connected: {}, declined: [], chats: {}, ctx: {} };
 let dcView = 'discover', dcTarget = null, dcShare = 'chat', dcQuery = '', dcDecl = false, _dcLoaded = false;
 
