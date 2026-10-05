@@ -899,6 +899,50 @@ body.public-mode .back-mascot-btn{display:none !important;}
   .au-loading-text{font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.5);}
   .au-results-count{font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12.5px;color:rgba(60,60,67,0.5);margin:0 4px 14px;}
   .au-other-label{font-family:-apple-system,'SF Pro Text',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(60,60,67,0.4);margin:18px 4px 8px;}
+  /* === START: DISCOVER CSS === */
+  #auSearchBarWrap{display:none !important;}
+  #auSheet{height:88vh !important;max-height:88vh !important;}
+  #auBody{font-family:-apple-system,'SF Pro Text',sans-serif;}
+  #auBody button,#auBody input{font-family:inherit;}
+  .dc-h1{font-family:-apple-system,'SF Pro Display',sans-serif;font-size:26px;font-weight:700;letter-spacing:-.01em;color:#1c1c1e;line-height:1.2;margin:6px 0 4px;}
+  .dc-sub{font-size:14px;line-height:1.5;color:rgba(60,60,67,0.6);}
+  .dc-note{font-size:12.5px;line-height:1.5;color:rgba(60,60,67,0.55);}
+  .dc-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8a6e1a;}
+  .dc-card{background:rgba(255,255,255,0.72);border-radius:18px;padding:16px;margin-bottom:10px;}
+  .dc-card.hi{border:2px solid #1c1c1e;}
+  .dc-row{display:flex;align-items:center;gap:12px;}
+  .dc-av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0;}
+  .dc-name{font-size:16px;font-weight:700;color:#1c1c1e;}
+  .dc-role{font-size:13px;color:rgba(60,60,67,0.6);margin-top:1px;}
+  .dc-score{font-family:-apple-system,'SF Pro Display',sans-serif;font-size:28px;font-weight:700;line-height:1;color:#1c1c1e;text-align:right;flex-shrink:0;}
+  .dc-score small{display:block;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.08em;color:rgba(60,60,67,0.5);margin-top:4px;}
+  .dc-tags{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 10px;}
+  .dc-tag{font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:12px;background:rgba(0,0,0,0.05);color:#1c1c1e;}
+  .dc-why{font-size:13px;line-height:1.5;color:rgba(60,60,67,0.75);margin-bottom:12px;}
+  .dc-btn{width:100%;padding:14px;border-radius:14px;border:none;background:#1c1c1e;color:#ECE4D6;font-size:14.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .12s,opacity .12s;}
+  .dc-btn:active{transform:scale(.97);opacity:.85;}
+  .dc-btn:disabled{opacity:.4;cursor:default;}
+  .dc-btn.alt{background:rgba(255,255,255,0.72);color:#1c1c1e;border:1px solid rgba(0,0,0,0.1);}
+  .dc-btn.link{background:none;color:rgba(60,60,67,0.6);font-weight:600;}
+  .dc-lnk{background:none;border:none;color:#1c1c1e;font-size:14px;font-weight:700;cursor:pointer;min-height:44px;padding:0 4px;margin:0 0 4px -4px;-webkit-tap-highlight-color:transparent;}
+  .dc-in{flex:1;min-width:0;height:48px;box-sizing:border-box;border:1px solid rgba(0,0,0,0.08);border-radius:14px;padding:0 14px;font-size:16px;background:#fff;color:#1c1c1e;outline:none;}
+  .dc-ask{position:sticky;bottom:0;margin:0 -20px;padding:10px 20px max(14px,env(safe-area-inset-bottom));background:rgba(236,228,214,0.92);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-top:0.6px solid rgba(0,0,0,0.08);}
+  .dc-opt{display:flex;align-items:center;gap:12px;width:100%;min-height:60px;box-sizing:border-box;padding:10px 14px;margin-bottom:8px;background:rgba(255,255,255,0.72);border:1px solid rgba(0,0,0,0.08);border-radius:14px;cursor:pointer;text-align:left;-webkit-tap-highlight-color:transparent;}
+  .dc-opt.on{border:2px solid #1c1c1e;}
+  .dc-opt:disabled{opacity:.45;cursor:default;}
+  .dc-dot{width:20px;height:20px;border-radius:50%;border:2px solid rgba(60,60,67,0.3);box-sizing:border-box;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .dc-opt.on .dc-dot{border-color:#1c1c1e;background:#1c1c1e;}
+  .dc-opt.on .dc-dot::after{content:'';width:8px;height:8px;border-radius:50%;background:#ECE4D6;}
+  .dc-ot{font-size:15px;font-weight:700;color:#1c1c1e;}
+  .dc-os{font-size:12px;color:rgba(60,60,67,0.6);margin-top:1px;}
+  .dc-sys{background:rgba(232,204,122,0.25);border-radius:12px;padding:11px 14px;font-size:13px;line-height:1.5;color:#1c1c1e;}
+  .dc-msgs{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:10px;padding:2px 0 8px;}
+  .dc-bub{max-width:78%;padding:10px 14px;font-size:14px;line-height:1.4;word-break:break-word;}
+  .dc-bub.me{align-self:flex-end;background:#1c1c1e;color:#ECE4D6;border-radius:16px 16px 4px 16px;}
+  .dc-bub.th{align-self:flex-start;background:rgba(255,255,255,0.9);color:#1c1c1e;border-radius:16px 16px 16px 4px;}
+  .dc-compose{display:flex;gap:8px;flex-shrink:0;}
+  .dc-demo{display:inline-block;background:#1c1c1e;color:#E8CC7A;font-size:10.5px;font-weight:700;letter-spacing:.1em;padding:6px 12px;border-radius:12px;margin-bottom:6px;}
+  /* === END: DISCOVER CSS === */
   .au-back-row{display:flex;align-items:center;gap:8px;padding:2px 4px 10px;cursor:pointer;color:#B5583A;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13.5px;font-weight:600;-webkit-tap-highlight-color:transparent;}
   /* ── AU LAUNCHER GRID (Apple-style tiles — each opens its own clean modal) ── */
   .au-tile-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 10px;padding:8px 2px 10px;}
@@ -1296,7 +1340,12 @@ body.public-mode .back-mascot-btn{display:none !important;}
               </svg>
             </span>
           </button>
-          <!-- HOLD HINT removed: replaced by #coachPill -->
+          <!-- === START: HOLD HINT === -->
+<span class="hold-pulse" aria-hidden="true"></span>
+<div class="hold-hint" aria-hidden="true">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E8CC7A" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3" fill="#E8CC7A" stroke="none"/><circle cx="12" cy="12" r="8"/></svg>
+  TAP &amp; HOLD
+</div>
 <!-- === END: HOLD HINT === -->
           <!-- === START: COACH PILL === -->
           <button type="button" id="coachPill" class="coach-pill hide" onclick="event.stopPropagation();openCoach()" aria-label="How to use your card">
@@ -3054,8 +3103,8 @@ body.public-mode .back-mascot-btn{display:none !important;}
         <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
       </button>
       <div style="text-align:center;">
-        <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:38px;font-weight:800;color:#1c1c1e;letter-spacing:-.01em;line-height:1;">AU</div>
-        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#1c1c1e;margin-top:2px;">Human Discovery Engine</div>
+        <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:26px;font-weight:700;color:#1c1c1e;letter-spacing:-.01em;line-height:1.1;">Discover</div>
+        <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#1c1c1e;margin-top:3px;">People you should meet</div>
       </div>
       <div style="width:38px;height:38px;flex-shrink:0;"></div>
       <div id="auMenuDropdown" style="position:absolute;top:42px;left:8px;min-width:206px;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:0.6px solid rgba(255,255,255,0.9);border-radius:16px;box-shadow:0 12px 32px rgba(0,0,0,0.18),inset 0 1px 0 rgba(255,255,255,0.8);padding:6px;opacity:0;transform:translateY(-8px) scale(0.96);pointer-events:none;transition:opacity .18s cubic-bezier(0.34,1.56,0.64,1),transform .22s cubic-bezier(0.34,1.56,0.64,1);z-index:20;">
@@ -3330,11 +3379,11 @@ body.public-mode .back-mascot-btn{display:none !important;}
     <div style="text-align:center;margin-bottom:18px;">
       <div id="fbAuBadgeWrap" style="display:none;justify-content:center;margin-bottom:10px;">
         <div style="width:44px;height:44px;border-radius:14px;background:#B5583A;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(181,88,58,0.28);">
-          <span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:16px;font-weight:800;color:#fff;">AU</span>
+          <span style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:16px;font-weight:800;color:#fff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="15.5 8.5 13.5 13.5 8.5 15.5 10.5 10.5 15.5 8.5"/></svg></span>
         </div>
       </div>
       <div style="font-family:-apple-system,'SF Pro Display',sans-serif;font-size:19px;font-weight:700;color:#1c1c1e;letter-spacing:-.01em;" id="fbTitleText">Rate This Card</div>
-      <div id="fbSubtitleText" style="display:none;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12px;color:rgba(60,60,67,0.5);margin-top:4px;">Human Discovery Engine</div>
+      <div id="fbSubtitleText" style="display:none;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12px;color:rgba(60,60,67,0.5);margin-top:4px;">People you should meet</div>
       <div style="width:40px;height:1px;background:rgba(0,0,0,0.12);margin:10px auto 0;"></div>
     </div>
     <div style="display:flex;gap:2px;justify-content:center;" id="fbStars">
@@ -4983,7 +5032,7 @@ function fillConnectPreview() {
   let coachSeen = false;
   function syncCoachPill() {
     const p = document.getElementById('coachPill');
-    if (p) p.classList.remove('hide');
+    if (p) p.classList.toggle('hide', coachSeen);
   }
   async function markCoachSeen() {
     if (coachSeen) return;
@@ -5421,7 +5470,7 @@ function fillConnectPreview() {
     const copyIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
 
     auMakeSheet('auInviteOverlay', 'Invite Friends', `
-      <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.55);line-height:1.5;margin:-6px 2px 18px;">Share AU with friends and grow your network.</div>
+      <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:13px;color:rgba(60,60,67,0.55);line-height:1.5;margin:-6px 2px 18px;">Share articardd with friends and grow your network.</div>
 
       <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:18px;">
         ${auInviteRow('#B5583A', linkIcon, 'Share Link', 'auShareLink()')}
@@ -5600,7 +5649,7 @@ function fillConnectPreview() {
     haptic('light');
     const components = [
       ['Digital Card & QR', 'Operational'],
-      ['AI Search (AU)', 'Operational'],
+      ['Discover', 'Operational'],
       ['Cloud Sync', 'Operational'],
       ['Notifications', 'Operational'],
     ];
@@ -9511,12 +9560,12 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     const catSection = document.getElementById('fbCategorySection');
 
     if (window._fbContext === 'au') {
-      titleEl.textContent = 'Rate AU';
+      titleEl.textContent = 'Rate Discover';
       subtitleEl.style.display = 'block';
       badgeEl.style.display = 'flex';
       textarea.placeholder = "What's on your mind about AU?";
       catSection.style.display = 'block';
-      renderFbCategoryChips(['Search Accuracy','Match Quality','Speed','Design / UI','Something Else']);
+      renderFbCategoryChips(['Match Quality','Relevance','Speed','Design / UI','Something Else']);
     } else {
       titleEl.textContent = 'Rate This Card';
       subtitleEl.style.display = 'none';
@@ -11386,7 +11435,7 @@ function licRow(label, val) {
       reviewOverlay:'Review details', redeemOverlay:'Redeem code', dupSheetOverlay:'Duplicate contacts',
       syncContactsOverlay:'Import contacts', addMeetingOverlay:'Meeting', connectFormOverlay:'Connect',
       editProfileOverlay:'Edit profile', securitySheetOverlay:'Sign-in and security', colorwaySheetOverlay:'Card appearance',
-      myProfileCardOverlay:'My profile', auOverlay:'AU Human Discovery Engine', auAboutOverlay:'About AU',
+      myProfileCardOverlay:'My profile', auOverlay:'Discover', auAboutOverlay:'How Discover works',
       auOppOverlay:'AU Opportunities', auOppDetailOverlay:'Opportunity details', cardFilterOverlay:'Card appearance',
       physOrderOverlay:'Order physical NFC card', appStoreGateOverlay:'Rate on the App Store'
     };
@@ -11413,7 +11462,7 @@ function licRow(label, val) {
     ];
     const ONCLICK_LABELS = [
       [/enterOS\('address'\)/, 'Open contacts'], [/enterOS\('upcoming'\)/, 'Open calendar'],
-      [/openAuSearch/, 'Open AU discovery engine'], [/openFeedbackChoice/, 'Rate this card'],
+      [/openAuSearch/, 'Open Discover'], [/openFeedbackChoice/, 'Rate this card'],
       [/shareCard\(\)/, 'Share card'], [/triggerPhotoUpload/, 'Change profile photo'],
       [/removePIListItem/, 'Remove item'], [/addPIListItem/, 'Add item'],
       [/closeContactDetailScreen|backToPreviewStep|closeAccountPage|closePersonalInfoScreen|closeIdentityScreen|closeTosScreen/, 'Back'],
@@ -12250,6 +12299,288 @@ function openAddMeeting(pre) {
 }
 /* === END: SINGLE BOOKING SYSTEM (amx) === */
 /* === END: TRUE REBOOK === */
+/* === START: DISCOVER (replaces AU) === */
+const DC_KEY = 'discover-state-v1';
+const DC_DEMO = true;            /* false sa production: itatago ang "Demo:" buttons + auto-reply */
+const DC_PENDING_MAX = 3;
+const DC_STOP = new Set(['the','for','and','with','someone','help','need','looking','find','who','can','that','you','your','want','get','are','near']);
+/* TODO backend: palitan ng apiPost('discoverList') */
+const DC_PEOPLE = [
+  { id:'dc1', first:'Sarah', name:'Sarah C.', role:'AI engineer · Product', score:96, topic:'AI development', common:'AI and SaaS', tags:['AI','SaaS','Web development'], why:'She is looking for web development. You are looking for AI help. Both are in your profiles.', bg:'#3B6FB6' },
+  { id:'dc2', first:'Mark',  name:'Mark L.',  role:'ML engineer · Startups', score:93, topic:'machine learning', common:'machine learning and startups', tags:['Machine learning','Startups','Web'], why:'He offers ML engineering and is looking for a product partner, which matches what you offer.', bg:'#A8326B' }
+];
+let dcStore = { pending: [], connected: {}, declined: [], chats: {} };
+let dcView = 'discover', dcTarget = null, dcShare = 'chat', dcQuery = '', dcDecl = false, _dcLoaded = false;
+
+async function dcLoad() {
+  if (_dcLoaded) return;
+  _dcLoaded = true;
+  try {
+    const r = await window.storage.get(DC_KEY, false);
+    if (r && r.value) dcStore = Object.assign({ pending: [], connected: {}, declined: [], chats: {} }, JSON.parse(r.value));
+  } catch (e) {}
+}
+async function dcCommit(fn) {
+  const snap = JSON.stringify(dcStore);
+  fn(dcStore);
+  let ok = false;
+  try { ok = !!(await window.storage.set(DC_KEY, JSON.stringify(dcStore), false)); } catch (e) {}
+  if (!ok) { dcStore = JSON.parse(snap); haptic('error'); showToast("Couldn't save", 'error'); }
+  return ok;
+}
+
+const dcPerson = id => DC_PEOPLE.find(p => p.id === id);
+function dcMe() {
+  const n = ((currentEntry && currentEntry.name) || 'Someone').toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+  const p = n.split(/\s+/).filter(Boolean);
+  return { first: p[0], short: p.length > 1 ? p[0] + ' ' + p[p.length - 1][0] + '.' : p[0], ini: p[0][0].toUpperCase(), role: (currentEntry && currentEntry.pos) || 'Member' };
+}
+function dcMatches() {
+  const words = dcQuery.toLowerCase().split(/\s+/).filter(w => w.length > 2 && !DC_STOP.has(w));
+  return DC_PEOPLE.filter(p => !dcStore.declined.includes(p.id) &&
+    (!words.length || words.some(w => (p.role + ' ' + p.topic + ' ' + p.tags.join(' ')).toLowerCase().includes(w))));
+}
+
+/* ── views ── */
+function dcHead(p, size) {
+  size = size || 46;
+  return `<div class="dc-row"><div class="dc-av" style="width:${size}px;height:${size}px;background:${p.bg};font-size:${Math.round(size * .4)}px;">${auEsc(p.name[0])}</div>
+    <div style="flex:1;min-width:0;"><div class="dc-name">${auEsc(p.name)}</div><div class="dc-role">${auEsc(p.role)}</div></div>
+    <div class="dc-score">${p.score}<small>BYTESENSE</small></div></div>`;
+}
+function dcCard(p) {
+  const pend = dcStore.pending.includes(p.id), con = dcStore.connected[p.id];
+  const btn = con ? `<button type="button" class="dc-btn" onclick="dcOpenChat('${p.id}')">Open chat</button>`
+    : pend ? `<button type="button" class="dc-btn alt" onclick="dcGo('pending','${p.id}')">Request sent · View</button>`
+    : `<button type="button" class="dc-btn" onclick="dcIntro('${p.id}')">Introduce Me</button>`;
+  return `<div class="dc-card">${dcHead(p)}
+    <div class="dc-tags">${p.tags.map(t => `<span class="dc-tag">${auEsc(t)}</span>`).join('')}</div>
+    <div class="dc-why">${auEsc(p.why)}</div>${btn}</div>`;
+}
+function dcVDiscover() {
+  const list = dcMatches(), n = list.length;
+  if (!n) return dcVEmpty();
+  return `<div class="dc-h1">People you should meet</div>
+    <div class="dc-sub" style="margin-bottom:14px;">${n} strong match${n === 1 ? '' : 'es'}. Only mutual fits are shown.</div>
+    ${list.map(dcCard).join('')}
+    <div class="dc-ask">
+      <label for="dcQuery" class="dc-note" style="display:block;margin-bottom:6px;">What are you looking for? (optional)</label>
+      <div style="display:flex;gap:8px;">
+        <input id="dcQuery" class="dc-in" type="text" value="${auEsc(dcQuery)}" placeholder="Someone to help me launch my SaaS" autocomplete="off" onkeydown="if(event.key==='Enter')dcRunQuery()">
+        <button type="button" class="dc-btn alt" style="width:auto;padding:0 18px;" onclick="dcRunQuery()">Discover</button>
+      </div></div>`;
+}
+function dcVAmbient() {
+  const quiet = `<div class="dc-note" style="margin:16px 2px;">At most 2 alerts a week, and only for mutual matches. Quiet is the default.</div>`;
+  const p = DC_PEOPLE.find(x => !dcStore.declined.includes(x.id) && !dcStore.pending.includes(x.id) && !dcStore.connected[x.id]);
+  const head = `<div class="dc-h1" style="padding-top:8px;">Nothing to search.</div><div class="dc-sub" style="margin-bottom:18px;">articardd speaks up only when someone becomes relevant to you.</div>`;
+  if (!p) return head + quiet + `<button type="button" class="dc-btn alt" onclick="dcGo('discover')">Discover people</button>`;
+  return head + `<div class="dc-card hi"><div class="dc-eyebrow" style="margin-bottom:12px;">New strong match</div>${dcHead(p, 48)}
+    <div class="dc-why" style="margin:14px 0;">You share ${auEsc(p.common)} interests, and your skills complement each other.</div>
+    <button type="button" class="dc-btn" onclick="dcGo('discover')">Meet ${auEsc(p.first)}</button>
+    <button type="button" class="dc-btn link" style="margin-top:4px;" onclick="dcNotInterested('${p.id}')">Not interested</button></div>` + quiet +
+    `<button type="button" class="dc-btn alt" onclick="dcGo('discover')">Discover people</button>`;
+}
+function dcVEmpty() {
+  const pct = calcProfileCompletion();
+  return `<div class="dc-h1" style="padding-top:8px;">No strong matches yet.</div>
+    <div class="dc-sub" style="margin-bottom:18px;">We will let you know when someone relevant joins. We would rather show you nobody than someone weak.</div>
+    <div class="dc-card"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;"><span class="dc-name" style="font-size:15px;">Profile strength</span><span style="font-size:18px;font-weight:700;color:#8a6e1a;">${pct}%</span></div>
+      <div style="height:8px;border-radius:4px;background:rgba(0,0,0,0.08);overflow:hidden;margin-bottom:12px;"><div style="width:${pct}%;height:100%;background:#1c1c1e;border-radius:4px;"></div></div>
+      <div class="dc-note" style="margin-bottom:12px;">Add what you are offering, so people looking for your skills can be matched to you.</div>
+      <button type="button" class="dc-btn alt" onclick="openPIFieldEditor('aiBio','AI Notes / Bio','textarea')">Add Looking for / Offering</button></div>
+    <button type="button" class="dc-btn" onclick="dcClearQ()">Back to Discover</button>`;
+}
+function dcVPending() {
+  const t = dcPerson(dcTarget), n = dcStore.pending.length;
+  return `<button type="button" class="dc-lnk" onclick="dcGo('discover')">‹ Discover</button>
+    <div class="dc-h1">Introduction sent</div>
+    <div class="dc-sub" style="margin-bottom:14px;">${auEsc(t.first)} decides first. You will be asked about sharing contact details only if ${auEsc(t.first)} accepts.</div>
+    <div class="dc-card">${dcHead(t)}
+      <div style="display:flex;flex-direction:column;gap:9px;margin-top:14px;font-size:14px;color:#1c1c1e;">
+        <div class="dc-row" style="gap:10px;"><span style="width:10px;height:10px;border-radius:50%;background:#1c1c1e;"></span>Request sent</div>
+        <div class="dc-row" style="gap:10px;color:rgba(60,60,67,0.6);"><span style="width:10px;height:10px;border-radius:50%;border:2px solid rgba(60,60,67,0.5);box-sizing:border-box;"></span>Waiting for ${auEsc(t.first)}</div>
+      </div></div>
+    <div class="dc-note" style="margin:6px 2px 16px;">${n} of ${DC_PENDING_MAX} pending introductions used. If an introduction is not accepted, nothing is shown here.</div>
+    ${DC_DEMO ? `<button type="button" class="dc-btn" onclick="dcGo('recipient')">Demo: switch to ${auEsc(t.first)}'s phone</button>` : ''}
+    <button type="button" class="dc-btn link" style="margin-top:4px;" onclick="dcCancel('${t.id}')">Cancel request</button>`;
+}
+function dcVRecipient() {
+  const t = dcPerson(dcTarget), me = dcMe();
+  return `<div class="dc-demo">DEMO · viewing as ${auEsc(t.first)} (recipient)</div>
+    <div class="dc-h1">Someone wants to meet you</div>
+    <div class="dc-card" style="margin-top:12px;"><div class="dc-row"><div class="dc-av" style="width:48px;height:48px;background:${avatarColorFromName(me.first)};font-size:19px;">${auEsc(me.ini)}</div>
+      <div style="flex:1;min-width:0;"><div class="dc-name">${auEsc(me.short)}</div><div class="dc-role">${auEsc(me.role)}</div></div>
+      <div class="dc-score">${t.score}<small>BYTESENSE</small></div></div>
+      <div class="dc-sys" style="margin:14px 0;">${auEsc(me.first)} wants to connect with you. They are building a product and looking for someone experienced in ${auEsc(t.topic)}.</div>
+      <div class="dc-note">What you have in common</div>
+      <div class="dc-tags" style="margin-top:6px;">${t.tags.map(x => `<span class="dc-tag">${auEsc(x)}</span>`).join('')}</div></div>
+    <div class="dc-note" style="margin:6px 2px 16px;">${auEsc(me.first)} sees only your first name until you accept. Your email and number stay private.</div>
+    <button type="button" class="dc-btn" onclick="dcAccept()">Accept introduction</button>
+    <button type="button" class="dc-btn alt" style="margin-top:8px;" onclick="dcNotNow()">Not now</button>
+    <button type="button" class="dc-btn link" style="margin-top:4px;" onclick="dcDecline()">Decline (${auEsc(me.first)} is not notified)</button>`;
+}
+function dcVAnswered() {
+  const me = dcMe();
+  return `<div class="dc-demo">DEMO · viewing as ${auEsc(dcPerson(dcTarget).first)} (recipient)</div>
+    <div class="dc-h1" style="padding-top:20px;">${dcDecl ? 'Declined' : 'Saved for later'}</div>
+    <div class="dc-sub" style="margin-bottom:24px;">${dcDecl ? `${auEsc(me.first)} is not notified, and you will not be suggested to each other again.` : `The request stays in your inbox. ${auEsc(me.first)} is not notified either way.`}</div>
+    <button type="button" class="dc-btn" onclick="dcGo('${dcDecl ? 'discover' : 'pending'}')">Demo: back to ${auEsc(me.first)}'s phone</button>`;
+}
+function dcVConfirm() {
+  const t = dcPerson(dcTarget), o = ownerInfo();
+  const opts = [
+    ['chat',  'Chat in articardd only', 'Nothing else is revealed.', false],
+    ['email', 'Share my email', o.email ? `Only ${t.first} sees it, for this introduction.` : 'Add your email in Personal Information first.', !o.email],
+    ['phone', 'Share my phone number', o.phone ? `Only ${t.first} sees it, for this introduction.` : 'Add your phone in Personal Information first.', !o.phone]
+  ];
+  return `<div class="dc-row" style="gap:14px;margin-bottom:12px;"><div class="dc-av" style="width:56px;height:56px;background:${t.bg};font-size:22px;border:2px solid #1c1c1e;box-sizing:border-box;">${auEsc(t.name[0])}</div>
+    <div><div class="dc-h1" style="font-size:22px;margin:0;">${auEsc(t.first)} accepted</div><div class="dc-role">${auEsc(t.role)} · ByteSense ${t.score}</div></div></div>
+    <div class="dc-sub" style="margin-bottom:14px;">You can chat right away. Choose what, if anything, to share beyond that.</div>
+    <div class="dc-note" style="font-weight:700;color:#1c1c1e;margin:0 2px 8px;">Share contact details with ${auEsc(t.first)}?</div>
+    <div role="radiogroup" aria-label="Share contact details">${opts.map(o2 => {
+      const on = dcShare === o2[0];
+      return `<button type="button" role="radio" aria-checked="${on}" class="dc-opt${on ? ' on' : ''}" ${o2[3] ? 'disabled' : ''} onclick="dcPick('${o2[0]}')"><span class="dc-dot"></span><span style="display:flex;flex-direction:column;"><span class="dc-ot">${o2[1]}</span><span class="dc-os">${auEsc(o2[2])}</span></span></button>`;
+    }).join('')}</div>
+    <div class="dc-note" style="margin:8px 2px 16px;">Each person decides separately, and you can change this later. ${auEsc(t.first)} keeps their own details private until they choose.</div>
+    <button type="button" class="dc-btn" onclick="dcFinishConfirm()">Open chat</button>`;
+}
+function dcVChat() {
+  const t = dcPerson(dcTarget), con = dcStore.connected[t.id] || { share: 'chat' }, msgs = dcStore.chats[t.id] || [];
+  const share = con.share === 'email' ? `You shared your email with ${t.first}.` : con.share === 'phone' ? `You shared your phone number with ${t.first}.` : 'You are chatting inside articardd. No contact details were shared.';
+  return `<div style="display:flex;flex-direction:column;flex:1;min-height:0;gap:10px;">
+    <div class="dc-row" style="flex-shrink:0;"><div class="dc-av" style="width:44px;height:44px;background:${t.bg};font-size:18px;">${auEsc(t.name[0])}</div>
+      <div style="flex:1;min-width:0;"><div class="dc-name">${auEsc(t.name)}</div><div class="dc-role">${auEsc(t.role)}</div></div>
+      <button type="button" class="dc-lnk" style="margin:0;" onclick="dcGo('discover')">Discover</button></div>
+    <div class="dc-msgs" id="dcMsgs" role="log" aria-live="polite">
+      <div class="dc-sys">Introduction accepted. You both have ${auEsc(t.common)} in common.</div>
+      <div class="dc-note" style="text-align:center;">${auEsc(share)}</div>
+      ${msgs.map(m => `<div class="dc-bub ${m.m ? 'me' : 'th'}">${auEsc(m.t)}</div>`).join('')}
+    </div>
+    <div class="dc-compose"><input id="dcMsg" class="dc-in" type="text" aria-label="Message" placeholder="Write a message" autocomplete="off" onkeydown="if(event.key==='Enter')dcSend()">
+      <button type="button" class="dc-btn" style="width:auto;padding:0 18px;height:48px;" onclick="dcSend()">Send</button></div></div>`;
+}
+
+/* ── render + navigation ── */
+function dcRender(keep) {
+  const body = document.getElementById('auBody'); if (!body) return;
+  let v = dcView;
+  if (!DC_DEMO && (v === 'recipient' || v === 'answered')) v = dcView = 'discover';
+  if (['pending','recipient','answered','confirm','chat'].includes(v) && !dcPerson(dcTarget)) v = dcView = 'discover';
+  const chat = v === 'chat', top = keep ? body.scrollTop : 0;
+  const V = { discover: dcVDiscover, ambient: dcVAmbient, empty: dcVEmpty, pending: dcVPending, recipient: dcVRecipient, answered: dcVAnswered, confirm: dcVConfirm, chat: dcVChat };
+  body.innerHTML = V[v]();
+  body.style.display = chat ? 'flex' : '';
+  body.style.flexDirection = chat ? 'column' : '';
+  body.style.overflowY = chat ? 'hidden' : '';
+  body.style.paddingBottom = chat ? 'max(12px,env(safe-area-inset-bottom))' : (v === 'discover' ? '0' : '');
+  body.scrollTop = top;
+  if (chat) { const m = document.getElementById('dcMsgs'); if (m) m.scrollTop = m.scrollHeight; }
+}
+function dcGo(view, id) {
+  haptic('light');
+  dcView = view;
+  if (id) dcTarget = id;
+  if (view === 'confirm') dcShare = 'chat';
+  dcRender();
+}
+async function dcOpen(view) {
+  haptic('medium');
+  if (!_auDragInit) { _auDragInit = true; initSheetDragHandle('auHandle', 'auSheet', 'auOverlay', () => {}); }
+  await dcLoad();
+  dcQuery = ''; dcView = view || 'discover';
+  closeAuMenu();
+  dcRender();
+  const ov = document.getElementById('auOverlay');
+  document.body.appendChild(ov);
+  ov.classList.add('show');
+}
+/* same names as AU para hindi na galawin ang call sites */
+function openAuSearch() { dcOpen('discover'); }
+function openAuNotifications() { dcGo('ambient'); }
+function openAuAbout() {
+  haptic('light');
+  const row = (n, t, b) => `<div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border-top:1px solid rgba(0,0,0,0.07);"><div style="width:24px;height:24px;border-radius:50%;background:#1c1c1e;color:#ECE4D6;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;flex-shrink:0;margin-top:1px;">${n}</div><div><div style="font-size:14px;font-weight:600;color:#1c1c1e;margin-bottom:2px;">${t}</div><div style="font-size:12.5px;color:rgba(60,60,67,0.6);line-height:1.5;">${b}</div></div></div>`;
+  auMakeSheet('dcAboutOverlay', 'How Discover Works', `<div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:14px;">
+    ${row(1, 'Mutual matches only', 'You are shown people only when you would also be relevant to them. ByteSense scores how well two profiles fit.').replace('border-top:1px solid rgba(0,0,0,0.07);', '')}
+    ${row(2, 'Introduce Me', 'They decide first. If they decline, you are never told.')}
+    ${row(3, 'You choose what to share', 'Chat inside articardd, or share your email or number. Each side decides separately.')}
+    ${row(4, 'Quiet by default', 'At most 2 alerts a week, and only for strong matches.')}</div>
+    <button onclick="closeAuGenericModal('dcAboutOverlay')" style="width:100%;padding:14px;border-radius:14px;border:none;background:#1c1c1e;color:#ECE4D6;font-size:14.5px;font-weight:700;cursor:pointer;">Got it</button>`);
+}
+
+/* ── actions ── */
+function dcRunQuery() {
+  haptic('light');
+  dcQuery = (document.getElementById('dcQuery')?.value || '').trim();
+  dcView = 'discover';
+  dcRender();
+}
+function dcClearQ() { dcQuery = ''; dcGo('discover'); }
+async function dcIntro(id) {
+  if (dcStore.pending.length >= DC_PENDING_MAX) { haptic('error'); showToast('You have ' + DC_PENDING_MAX + ' pending introductions. Wait for a reply or cancel one.', 'neutral'); return; }
+  /* TODO backend: apiPost('discoverIntroduce', { personId: id }) */
+  if (!(await dcCommit(s => { if (!s.pending.includes(id)) s.pending.push(id); }))) return;
+  haptic('success');
+  dcGo('pending', id);
+}
+async function dcCancel(id) {
+  if (!(await dcCommit(s => { s.pending = s.pending.filter(x => x !== id); }))) return;
+  haptic('light'); showToast('Request cancelled', 'neutral');
+  dcGo('discover');
+}
+async function dcNotInterested(id) {
+  if (!(await dcCommit(s => { if (!s.declined.includes(id)) s.declined.push(id); }))) return;
+  dcGo('discover');
+}
+async function dcAccept() {          /* demo: ang recipient ang tumanggap */
+  const id = dcTarget;
+  if (!(await dcCommit(s => { s.pending = s.pending.filter(x => x !== id); s.connected[id] = Object.assign({ share: 'chat', at: Date.now() }, s.connected[id]); }))) return;
+  haptic('success');
+  dcGo('confirm');
+}
+function dcNotNow() { dcDecl = false; dcGo('answered'); }
+async function dcDecline() {
+  const id = dcTarget;
+  if (!(await dcCommit(s => { s.pending = s.pending.filter(x => x !== id); if (!s.declined.includes(id)) s.declined.push(id); }))) return;
+  dcDecl = true;
+  dcGo('answered');
+}
+function dcPick(s) { haptic('light'); dcShare = s; dcRender(true); }
+async function dcFinishConfirm() {
+  const id = dcTarget, o = ownerInfo();
+  if ((dcShare === 'email' && !o.email) || (dcShare === 'phone' && !o.phone)) { haptic('error'); showToast('Add it in Personal Information first', 'error'); return; }
+  /* TODO backend: apiPost('discoverShare', { personId: id, share: dcShare }) */
+  if (!(await dcCommit(s => { s.connected[id] = Object.assign({ at: Date.now() }, s.connected[id], { share: dcShare }); }))) return;
+  haptic('success');
+  dcGo('chat');
+}
+function dcOpenChat(id) { dcGo('chat', id); }
+async function dcSend() {
+  const inp = document.getElementById('dcMsg'); if (!inp) return;
+  const text = inp.value.trim(); if (!text) return;
+  const id = dcTarget, t = dcPerson(id);
+  const first = !(dcStore.chats[id] || []).some(m => !m.m);
+  const ok = await dcCommit(s => { s.chats[id] = (s.chats[id] || []).concat([{ m: 1, t: text }]).slice(-200); });
+  if (!ok) return;
+  haptic('light');
+  dcRender();
+  document.getElementById('dcMsg')?.focus();
+  if (DC_DEMO && first) setTimeout(async () => {
+    await dcCommit(s => { s.chats[id] = (s.chats[id] || []).concat([{ m: 0, t: 'Hi ' + dcMe().first + ', thanks for reaching out. What are you building?' }]); });
+    if (dcView === 'chat' && dcTarget === id) dcRender();
+  }, 900);
+}
+
+/* menu label: About AU → How Discover Works */
+(function dcChrome() {
+  document.querySelectorAll('#auMenuDropdown button').forEach(b => b.childNodes.forEach(n => {
+    if (n.nodeType === 3 && n.nodeValue.indexOf('About AU') > -1) n.nodeValue = n.nodeValue.replace('About AU', 'How Discover Works');
+  }));
+})();
+dcLoad();
+/* === END: DISCOVER === */
+
 /* === START: MASCOTS === */
 const MASCOTS = [
   { id:'m01', name:'Mascot 1', src:'/assets/mascots/mascot-01.webp' },
@@ -13120,7 +13451,7 @@ function stBuild() {
       ${feat('07', 'iPhone Shortcut & Siri Setup — Free', 'We configure your iPhone so one press launches your card. Siri-enabled. No fumbling. Your card is always one gesture away.')}</div>
       <div class="st-lab" style="margin-top:22px">Launching Soon</div>
       ${need('Coming', 'Automation Suite', 'Automatic thank-you emails after every tap, follow-ups at 24 hours, lead scoring and a weekly report every Monday. Your Gmail does the work. You show up to close.')}
-      ${need('Coming', 'AU — Human Discovery Engine', 'Tell AU what you need — a designer, an investor, a supplier — and it finds the right people near you, ranked by match. In development.')}
+      ${need('Coming', 'Discover — People You Should Meet', 'articardd quietly surfaces the people most relevant to you, ranked by ByteSense. Only mutual matches are shown, and nobody sees your details until they accept. In development.')}
       ${need('Coming', 'Agentic Chief of Staff AI', "An AI that doesn't just chat — it acts. Emails on your behalf, manages automations, operates as your executive proxy. 5 years ahead of the market. Available now via prompt injection through Grok while the full command center is completed.")}
       ${need('Coming', 'The Collection — Themes & Mascots', 'Every quarter, active license holders receive new card themes and limited-edition mascots — free. Yours to collect, yours to keep.')}
       <div class="st-dk"><div class="st-lab">Also Included</div>
