@@ -1,0 +1,11 @@
+{
+  "name": "articardd.",
+  "short_name": "articardd",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ECE4D6",
+  "theme_color": "#ECE4D6",
+  "icons": [
+    { "src": "/assets/favicon-192.png", "sizes": "192x192", "type": "image/png" }
+  ]
+}
