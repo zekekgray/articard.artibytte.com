@@ -12497,10 +12497,6 @@ if (idFromUrl()) { setPublic(true); window.__AUTO_CONNECT__ = true; syncCardOnBo
 else if (sessionStorage.getItem(SESSION)) { setPublic(false); syncCardOnBoot(true, ''); if (wantsRM()) setTimeout(openRequestManager, 600); }
 /* === END: RM DEEP LINK (WITH SESSION) === */
   /* === START: RM DEEP LINK (NO SESSION) === */
-else { if (wantsRM()) window.__OPEN_RM__ = true; showGate(); }
-});
-});
-/* === END: RM DEEP LINK (NO SESSION) === */
 })();
 /* === END: CARD GATE === */
 
