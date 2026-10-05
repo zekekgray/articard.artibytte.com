@@ -12903,7 +12903,8 @@ function closeSampleCard() {
 var STORY = null, stCur = 0, stX = 0, stY = 0;
 function stFounderErr(im) {
   const alt = ['/assets/founder.jpeg', '/assets/founder.png', '/assets/founder.webp', '/assets/founder.JPG'];
-  const i = +(im.dataset.try || 0);
+    const i = +(im.dataset.try || 0);
+  console.warn('founder img failed:', im.src, '-> try', i);
   if (i < alt.length) { im.dataset.try = i + 1; im.src = alt[i]; return; }
   im.onerror = null;
   im.src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76 76"><rect width="76" height="76" fill="#2F343A"/><text x="38" y="46" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="24" font-weight="700" fill="#E8CC7A">ET</text></svg>');
