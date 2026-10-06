@@ -1,0 +1,462 @@
+-- =====================================================================
+-- articardd / Artimeet  ·  Supabase schema  (001_articardd_schema.sql)
+-- Replaces the Google Sheets tabs: Cards, Meetings, Leads, Feedback,
+-- Sessions, Contacts, Referrals, Codes, Settings, Logs
+--
+-- Run in: Supabase Dashboard → SQL Editor  (or  supabase db push)
+-- Safe to re-run: uses IF NOT EXISTS / OR REPLACE / ON CONFLICT.
+--
+-- SECURITY MODEL
+--   • RLS is ON for every table and there are NO policies for anon /
+--     authenticated, so the browser can NOT read or write tables directly.
+--   • Public card data is exposed only through the view  public_cards.
+--   • Everything else (login, saveMeeting, owner actions...) goes through
+--     Edge Functions using the service_role key (which bypasses RLS).
+--   • NEVER put the service_role key in index.html.
+-- =====================================================================
+
+-- ---------- 0. Extensions ----------
+create extension if not exists btree_gist;   -- needed for the no-overlap constraint
+
+-- ---------- 1. Sequences (replace MTG_COUNTER / CARD_COUNTER) ----------
+create sequence if not exists public.meeting_seq start 1;
+create sequence if not exists public.card_seq    start 1;
+
+-- ---------- 2. Helper: updated_at trigger ----------
+create or replace function public.set_updated_at()
+returns trigger language plpgsql as $$
+begin
+  new.updated_at := now();
+  return new;
+end $$;
+
+-- =====================================================================
+-- 3. TABLES
+-- =====================================================================
+
+-- ---------- settings (key/value, same keys as the old Settings sheet) ----------
+create table if not exists public.settings (
+  key         text primary key,
+  value       text not null default '',
+  description text not null default ''
+);
+
+-- ---------- cards ----------
+create table if not exists public.cards (
+  card_id           text primary key
+                    check (card_id ~ '^C-[A-Z0-9]{4,10}$'),
+  ath_id            text not null unique,
+  card_no           integer not null default 0,
+  name              text not null,
+  position          text not null default '',
+  company           text not null default '',
+  phone             text not null default '',
+  email             text not null default '',
+  website           text not null default '',
+  linkedin          text not null default '',
+  qr_link           text not null default '',
+  key_hash          text not null default '',          -- sha256(pepper|owner|AK-...)
+  status            text not null default 'Active'
+                    check (status in ('Active','Suspended','Revoked','Deleted')),
+  plan              text not null default 'Trial'
+                    check (plan in ('Trial','Annual','Monthly','Lifetime')),
+  license_expiry    date,                              -- null = no expiry set
+  public_visible    boolean not null default true,
+  show_phone        boolean not null default true,
+  show_email        boolean not null default true,
+  theme             text not null default '',
+  colorway          text not null default '',
+  mascot_id         text not null default '',
+  photo_path        text not null default '',          -- path in Storage bucket "card-photos"
+  views             integer not null default 0,
+  contacts_synced_at timestamptz,                      -- replaces the '__sync__' marker row
+  notes             text not null default '',
+  last_login_at     timestamptz,
+  created_at        timestamptz not null default now(),
+  updated_at        timestamptz not null default now()
+);
+create index if not exists cards_key_hash_idx on public.cards (key_hash) where key_hash <> '';
+create index if not exists cards_status_idx   on public.cards (status);
+
+drop trigger if exists cards_updated_at on public.cards;
+create trigger cards_updated_at before update on public.cards
+  for each row execute function public.set_updated_at();
+
+-- ---------- sessions (owner login tokens; only the hash is stored) ----------
+create table if not exists public.sessions (
+  token_hash text primary key,
+  card_id    text not null references public.cards(card_id) on delete cascade,
+  created_at timestamptz not null default now(),
+  expires_at timestamptz not null,
+  revoked    boolean not null default false
+);
+create index if not exists sessions_card_idx    on public.sessions (card_id);
+create index if not exists sessions_expires_idx on public.sessions (expires_at);
+
+-- ---------- meetings ----------
+create table if not exists public.meetings (
+  meeting_id       text primary key default ('MT-' || lpad(nextval('public.meeting_seq')::text, 6, '0')),
+  host_handle      text not null default 'artibyte',
+  card_id          text references public.cards(card_id) on delete cascade,   -- null = handle-only host
+  created_at       timestamptz not null default now(),
+  updated_at       timestamptz not null default now(),
+
+  guest_name       text not null,
+  guest_email      text not null default '',
+  guest_org        text not null default '',
+  guest_phone      text not null default '',
+  notes            text not null default '',
+
+  type             text not null,
+  date_text        text not null,                      -- "September 30, 2026"  (as the app sends it)
+  time_text        text not null,                      -- "9:15 AM"
+  start_at         timestamptz not null,               -- computed by the Edge Function using `timezone`
+  end_at           timestamptz not null,
+  duration         text not null default '30 min'
+                   check (duration in ('30 min','45 min','60 min','Flexible')),
+  duration_mins    integer not null default 30 check (duration_mins between 5 and 600),
+  recurrence       text not null default 'One-time'
+                   check (recurrence in ('One-time','Weekly','Monthly','Quarterly')),
+  location         text not null
+                   check (location in ('Videocall / Virtual Call','Phone Call','In Person')),
+  location_address text not null default '',
+  timezone         text not null default 'Asia/Manila',
+
+  meeting_link     text not null default '',
+  request_status   text not null default 'Requested'
+                   check (request_status in ('Requested','Reviewing','Confirmed','Reschedule Requested','Cancelled')),
+  calendar_status  text not null default 'Not synced',
+  calendar_event_id text not null default '',
+  notified_status  text not null default 'Requested',
+  reminder_sent_at timestamptz,
+  source           text not null default 'artimeet',
+  host_notes       text not null default '',
+
+  -- Apps Script sync tracking (calendar + email), so failures can be retried
+  sync_status      text not null default 'pending'
+                   check (sync_status in ('pending','ok','failed','skipped')),
+  sync_attempts    integer not null default 0,
+  sync_error       text not null default '',
+
+  -- generated: one "calendar" per card, or per handle when there is no card
+  host_key         text generated always as (
+                     case when card_id is not null then 'c:' || card_id else 'h:' || host_handle end
+                   ) stored,
+
+  check (end_at > start_at)
+);
+create index if not exists meetings_card_idx    on public.meetings (card_id);
+create index if not exists meetings_start_idx   on public.meetings (start_at);
+create index if not exists meetings_status_idx  on public.meetings (request_status);
+create index if not exists meetings_email_idx   on public.meetings (lower(guest_email));
+create index if not exists meetings_sync_idx    on public.meetings (sync_status) where sync_status in ('pending','failed');
+
+-- Atomic double-booking protection (replaces LockService + confirmedBlocks_/clashes_).
+-- Same rule as before: only CONFIRMED meetings block each other.
+-- On violation Postgres raises SQLSTATE 23P01 → show "That time slot is no longer available".
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conname = 'meetings_no_overlap') then
+    alter table public.meetings
+      add constraint meetings_no_overlap
+      exclude using gist (host_key with =, tstzrange(start_at, end_at) with &&)
+      where (request_status = 'Confirmed');
+  end if;
+end $$;
+
+drop trigger if exists meetings_updated_at on public.meetings;
+create trigger meetings_updated_at before update on public.meetings
+  for each row execute function public.set_updated_at();
+
+-- ---------- leads (Connect form) ----------
+create table if not exists public.leads (
+  lead_id    text primary key default ('LD-' || upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 8))),
+  created_at timestamptz not null default now(),
+  card_id    text references public.cards(card_id) on delete cascade,
+  name       text not null,
+  title      text not null default '',
+  email      text not null,
+  mobile     text not null default '',
+  source     text not null default 'connect',
+  status     text not null default 'New' check (status in ('New','Contacted','Qualified','Closed')),
+  notes      text not null default ''
+);
+create index if not exists leads_card_idx on public.leads (card_id);
+
+-- ---------- feedback (feedback / bug / feature) ----------
+create table if not exists public.feedback (
+  feedback_id text primary key default ('FB-' || upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 8))),
+  created_at  timestamptz not null default now(),
+  type        text not null default 'feedback' check (type in ('feedback','bug','feature')),
+  context     text not null default '',
+  category    text not null default '',
+  ath_id      text not null default '',
+  name        text not null default '',
+  stars       numeric(2,1) not null default 0 check (stars >= 0 and stars <= 5),
+  remarks     text not null default '',
+  client_ts   text not null default '',
+  status      text not null default 'New' check (status in ('New','Reviewed','Resolved')),
+  admin_notes text not null default ''
+);
+create index if not exists feedback_created_idx on public.feedback (created_at desc);
+create index if not exists feedback_type_idx    on public.feedback (type, status);
+
+-- ---------- contacts (owner's address book; one row per contact, JSON body) ----------
+create table if not exists public.contacts (
+  card_id    text not null references public.cards(card_id) on delete cascade,
+  contact_id text not null,
+  data       jsonb not null,
+  updated_at timestamptz not null default now(),
+  primary key (card_id, contact_id)
+);
+
+-- ---------- codes (redeem codes) ----------
+create table if not exists public.codes (
+  code        text primary key,
+  plan        text not null default 'Annual' check (plan in ('Annual','Lifetime')),
+  days        integer not null default 365,
+  status      text not null default 'Available' check (status in ('Available','Redeemed','Void')),
+  redeemed_by text references public.cards(card_id) on delete set null,
+  redeemed_at timestamptz,
+  created_at  timestamptz not null default now(),
+  notes       text not null default ''
+);
+
+-- ---------- referrals (ArtiStar Rewards) ----------
+create table if not exists public.referrals (
+  referral_id      text primary key default ('RF-' || upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 6))),
+  created_at       timestamptz not null default now(),
+  updated_at       timestamptz not null default now(),
+  referrer_card_id text references public.cards(card_id) on delete set null,
+  referrer_name    text not null default '',
+  buyer_name       text not null,
+  buyer_email      text not null,
+  buyer_mobile     text not null default '',
+  status           text not null default 'Pending' check (status in ('Pending','Eligible','Sent','Void')),
+  activated_at     timestamptz,
+  release_after    timestamptz,
+  reward_sent_at   timestamptz,
+  reward_ref       text not null default '',
+  notes            text not null default ''
+);
+create index if not exists referrals_buyer_email_idx on public.referrals (lower(buyer_email));
+create index if not exists referrals_status_idx      on public.referrals (status, release_after);
+
+drop trigger if exists referrals_updated_at on public.referrals;
+create trigger referrals_updated_at before update on public.referrals
+  for each row execute function public.set_updated_at();
+
+-- ---------- rate_limits (replaces CacheService rate limiting) ----------
+create table if not exists public.rate_limits (
+  bucket       text primary key,
+  window_start timestamptz not null default now(),
+  hits         integer not null default 0
+);
+
+-- ---------- logs ----------
+create table if not exists public.logs (
+  id      bigint generated always as identity primary key,
+  ts      timestamptz not null default now(),
+  level   text not null default 'INFO',
+  action  text not null default '',
+  message text not null default '',
+  detail  text not null default ''
+);
+create index if not exists logs_ts_idx on public.logs (ts);
+
+-- =====================================================================
+-- 4. FUNCTIONS (called by Edge Functions with the service_role key)
+-- =====================================================================
+
+-- Atomic rate limiter. Returns TRUE if still within the limit, FALSE if exceeded.
+--   select rate_hit('mail:juan@x.com', 5, 3600);
+create or replace function public.rate_hit(p_bucket text, p_limit integer, p_window_seconds integer)
+returns boolean language plpgsql as $$
+declare v_hits integer;
+begin
+  insert into public.rate_limits as r (bucket, window_start, hits)
+  values (p_bucket, now(), 1)
+  on conflict (bucket) do update set
+    hits = case when r.window_start < now() - make_interval(secs => p_window_seconds)
+                then 1 else r.hits + 1 end,
+    window_start = case when r.window_start < now() - make_interval(secs => p_window_seconds)
+                        then now() else r.window_start end
+  returning hits into v_hits;
+  return v_hits <= p_limit;
+end $$;
+
+-- Read-only peek (e.g. count failed logins before counting a new failure).
+create or replace function public.rate_peek(p_bucket text, p_window_seconds integer)
+returns integer language sql stable as $$
+  select coalesce((select hits from public.rate_limits
+                   where bucket = p_bucket
+                     and window_start >= now() - make_interval(secs => p_window_seconds)), 0);
+$$;
+
+-- Increment card views (replaces bumpViews_).
+create or replace function public.bump_card_views(p_card_id text)
+returns void language sql as $$
+  update public.cards set views = views + 1 where card_id = p_card_id;
+$$;
+
+-- Next ATH ID number for new cards (replaces CARD_COUNTER).
+create or replace function public.next_card_no()
+returns integer language sql as $$
+  select nextval('public.card_seq')::integer;
+$$;
+
+-- Daily cleanup (replaces purgeSessions_ / purgeLogs_). Returns rows deleted.
+create or replace function public.purge_expired(p_log_days integer default 30)
+returns table (sessions_deleted bigint, logs_deleted bigint, rate_deleted bigint)
+language plpgsql as $$
+declare s bigint; l bigint; r bigint;
+begin
+  delete from public.sessions where revoked or expires_at < now();
+  get diagnostics s = row_count;
+  delete from public.logs where ts < now() - make_interval(days => p_log_days);
+  get diagnostics l = row_count;
+  delete from public.rate_limits where window_start < now() - interval '1 day';
+  get diagnostics r = row_count;
+  return query select s, l, r;
+end $$;
+
+-- =====================================================================
+-- 5. PUBLIC VIEW  (the ONLY thing the browser may read directly)
+--    Mirrors publicCard_() + the checks in actCard_():
+--    Active, public_visible, license not expired. Phone/email hidden if toggled off.
+--    Usage:  supabase.from('public_cards').select('*').or('card_id.eq.C-XXXX,ath_id.eq.ARTICARD-XXXX')
+-- =====================================================================
+create or replace view public.public_cards as
+select
+  c.card_id,
+  c.ath_id,
+  c.name,
+  c.position,
+  c.company,
+  case when c.show_phone then c.phone else '' end as phone,
+  case when c.show_email then c.email else '' end as email,
+  c.website,
+  c.linkedin,
+  c.theme,
+  c.colorway,
+  c.mascot_id,
+  c.qr_link,
+  c.photo_path
+from public.cards c
+where c.status = 'Active'
+  and c.public_visible
+  and (c.plan = 'Lifetime'
+       or c.license_expiry is null
+       or (c.license_expiry::timestamptz + interval '1 day') >= now());
+
+-- =====================================================================
+-- 6. ROW LEVEL SECURITY  (deny-all for anon/authenticated; service_role bypasses)
+-- =====================================================================
+alter table public.settings    enable row level security;
+alter table public.cards       enable row level security;
+alter table public.sessions    enable row level security;
+alter table public.meetings    enable row level security;
+alter table public.leads       enable row level security;
+alter table public.feedback    enable row level security;
+alter table public.contacts    enable row level security;
+alter table public.codes       enable row level security;
+alter table public.referrals   enable row level security;
+alter table public.rate_limits enable row level security;
+alter table public.logs        enable row level security;
+
+-- Supabase grants table access to anon/authenticated by default; take it away.
+revoke all on all tables    in schema public from anon, authenticated;
+revoke all on all sequences in schema public from anon, authenticated;
+revoke all on all functions in schema public from anon, authenticated, public;
+
+-- Only the public view is readable from the browser.
+grant select on public.public_cards to anon, authenticated;
+
+-- Functions are callable by the backend only.
+grant execute on all functions in schema public to service_role;
+
+-- Future tables/functions stay locked by default as well.
+alter default privileges in schema public revoke all on tables    from anon, authenticated;
+alter default privileges in schema public revoke all on functions from anon, authenticated, public;
+
+-- =====================================================================
+-- 7. STORAGE  (profile photos; replaces the base64 `photo` column)
+--    Public READ so the public card can show the photo by URL.
+--    No write policies → only the service_role (Edge Function) can upload.
+--    Path convention:  card-photos/<CARD_ID>.jpg
+-- =====================================================================
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('card-photos', 'card-photos', true, 102400, array['image/jpeg'])
+on conflict (id) do update
+  set public = excluded.public,
+      file_size_limit = excluded.file_size_limit,
+      allowed_mime_types = excluded.allowed_mime_types;
+
+-- =====================================================================
+-- 8. SEED SETTINGS  (never overwrites values you already edited)
+-- =====================================================================
+insert into public.settings (key, value, description) values
+  ('BRAND_NAME', 'Artimeet', 'Name shown in emails'),
+  ('HOST_NAME', 'ArtiByte', 'Default host display name'),
+  ('HOST_EMAIL', '', 'Default host email. Blank = the Google account that owns the Apps Script'),
+  ('ADMIN_EMAIL', '', 'Receives bug reports and low-rating alerts. Blank = HOST_EMAIL'),
+  ('SUPPORT_EMAIL', 'support@artibytte.com', 'Shown in email footers'),
+  ('HOST_TIMEZONE', 'Asia/Manila', 'Timezone of the slots below (used when the guest sends no timezone)'),
+  ('BASE_URL', 'https://articardd.com', 'Card site (used for QR links)'),
+  ('ARTIMEET_URL', 'https://artimeet.artibytte.com', 'Artimeet site'),
+  ('SLOTS', '9:00 AM,10:00 AM,11:00 AM,1:00 PM,2:00 PM,3:00 PM,4:00 PM', 'Bookable start times'),
+  ('WORK_DAYS', 'Mon,Tue,Wed,Thu,Fri,Sat,Sun', 'Used by the availability action'),
+  ('CALENDAR_ID', 'primary', 'Google Calendar that receives events'),
+  ('CREATE_CALENDAR_EVENTS', 'TRUE', 'Create tentative events + Google Meet links via Apps Script'),
+  ('NOTIFY_GUEST', 'TRUE', 'Email the guest on every status change'),
+  ('NOTIFY_HOST', 'TRUE', 'Email the host on new requests and leads'),
+  ('EMAIL_GUEST_ON_REQUEST', 'FALSE', 'Email the guest right when they request (can be abused to email strangers)'),
+  ('SEND_REMINDERS', 'TRUE', 'Hourly job emails a reminder before Confirmed meetings'),
+  ('REMINDER_HOURS', '24', 'How many hours before the meeting'),
+  ('SESSION_HOURS', '12', 'Owner session length'),
+  ('REMEMBER_DAYS', '30', 'Session length when owner ticks "Remember this device"'),
+  ('MAX_REQUESTS_PER_EMAIL_HOUR', '5', 'Meeting requests per email per hour'),
+  ('MAX_REQUESTS_GLOBAL_HOUR', '200', 'Meeting requests per hour, all guests'),
+  ('MAX_LOGIN_FAILS_15MIN', '100', 'Failed owner logins per 15 min before lockout (global)'),
+  ('LOG_RETENTION_DAYS', '30', 'Logs older than this are purged daily'),
+  ('REFERRAL_ENABLED', 'TRUE', 'ArtiStar Rewards on/off'),
+  ('REFERRAL_HOLD_DAYS', '14', 'Days after license activation before the reward can be sent'),
+  ('REFERRAL_REWARD_TEXT', '₱1,000 Starbucks e-Gift Card', 'Reward name used in emails')
+on conflict (key) do nothing;
+
+-- =====================================================================
+-- 9. SCHEDULED JOBS  (enable AFTER: Dashboard → Database → Extensions → pg_cron, pg_net)
+--    Uncomment and run separately. Replace the URL / secret placeholders.
+--    Secrets: store them in Vault, do not hard-code in production.
+-- =====================================================================
+-- select cron.schedule('purge-expired-daily', '0 19 * * *',        -- 03:00 Asia/Manila (UTC+8)
+--   $$ select * from public.purge_expired(30) $$);
+--
+-- -- Hourly: ask an Edge Function to send reminders + retry failed Apps Script syncs
+-- select cron.schedule('meeting-reminders-hourly', '0 * * * *', $$
+--   select net.http_post(
+--     url     := 'https://<PROJECT_REF>.supabase.co/functions/v1/cron-reminders',
+--     headers := jsonb_build_object('Content-Type','application/json','x-cron-secret','<CRON_SECRET>'),
+--     body    := '{}'::jsonb
+--   );
+-- $$);
+
+-- =====================================================================
+-- 10. MIGRATION HINTS  (one-time, after importing your CSV data)
+-- =====================================================================
+-- Move the counters past your existing data:
+--   select setval('public.meeting_seq',
+--     (select coalesce(max(substring(meeting_id from 4)::int), 0) from public.meetings) + 1, false);
+--   select setval('public.card_seq',
+--     (select coalesce(max(card_no), 0) from public.cards) + 1, false);
+--
+-- Sheet column → table column: camelCase becomes snake_case
+--   (cardId→card_id, athId→ath_id, keyHash→key_hash, licenseExpiry→license_expiry, ...)
+-- Empty-string cardId in Meetings/Leads must become NULL (foreign keys).
+-- publicVisible/showPhone/showEmail: 'TRUE'/'FALSE' text → boolean.
+-- Meetings: compute start_at / end_at / duration_mins from date + time + timezone.
+-- Cards.photo (base64): decode, upload to bucket card-photos as <CARD_ID>.jpg,
+--   then set photo_path = '<CARD_ID>.jpg'.
+-- The '__sync__' marker row in Contacts → set cards.contacts_synced_at = now().
+-- Keep your old PEPPER (Apps Script property) as a Supabase secret, otherwise
+--   existing Private Keys will no longer match key_hash.
