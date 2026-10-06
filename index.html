@@ -250,6 +250,12 @@
   .ab-tag:active { opacity:.7; transform:scale(0.94); }
   .ab-tag.filtering { outline:2px solid #1c1c1e; outline-offset:1px; }
   .ab-empty-search { padding:32px 16px; text-align:center; font-family:-apple-system,'SF Pro Text',sans-serif; font-size:13px; color:rgba(60,60,67,0.4); }
+.ab-quickbar { display:flex; gap:8px; margin-bottom:12px; }
+.ab-qb { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; gap:5px; background:transparent; border:none; border-radius:14px; padding:8px 2px 6px; cursor:pointer; color:#1c1c1e; -webkit-tap-highlight-color:transparent; transition:transform .12s, opacity .12s, background .15s; }
+.ab-qb:active { transform:scale(0.93); opacity:.75; }
+.ab-qb.on { background:#1c1c1e; color:#ECE4D6; }
+.ab-qb span { font-family:-apple-system,'SF Pro Text',sans-serif; font-size:10.5px; font-weight:600; white-space:nowrap; }
+.ab-footer { display:flex; justify-content:space-between; align-items:center; gap:10px; font-family:-apple-system,'SF Pro Text',sans-serif; font-size:11.5px; color:rgba(60,60,67,0.45); padding:18px 6px 10px; }
 
   /* ── AB SECTION HEADERS ── */
   .ab-section-header { font-family:-apple-system,'SF Pro Text',sans-serif; font-size:13px; font-weight:700; color:rgba(60,60,67,0.55); background:transparent; padding:5px 4px 4px; letter-spacing:.01em; }
@@ -1950,7 +1956,19 @@ body.public-mode .back-mascot-btn{display:none !important;}
         </button>
       </div>
 
-      <!-- My Profile Card — tap to view/edit your own profile -->
+      <div class="ab-quickbar">
+  <button class="ab-qb" onclick="haptic('light');switchOSTab('home')" aria-label="Home">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>Home</span></button>
+  <button class="ab-qb" onclick="openContactsMoreMenu()" aria-label="Settings">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="17" x2="20" y2="17"/><circle cx="9" cy="7" r="2.4" fill="#ECE4D6"/><circle cx="15" cy="17" r="2.4" fill="#ECE4D6"/></svg><span>Settings</span></button>
+  <button class="ab-qb" id="abQbGroups" onclick="abOpenGroups()" aria-label="Groups">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Groups</span></button>
+  <button class="ab-qb" id="abQbFav" onclick="abToggleFavView()" aria-label="Favorites">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l2.9 6.6 7.1.6-5.4 4.8 1.7 7-6.3-3.9-6.3 3.9 1.7-7L2 9.7l7.1-.6z"/></svg><span>Favorites</span></button>
+  <button class="ab-qb" onclick="abOpenRecents()" aria-label="Recents">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 16 14"/></svg><span>Recents</span></button>
+</div>
+<!-- My Profile Card — tap to view/edit your own profile -->
       <div id="abMyProfileCard" onclick="haptic('light');openAccountPage()" style="display:flex;align-items:center;gap:13px;background:rgba(255,255,255,0.72);border-radius:16px;padding:14px 16px;margin-bottom:10px;cursor:pointer;" onpointerdown="this.style.opacity='.7'" onpointerup="this.style.opacity=''" onpointerleave="this.style.opacity=''">
         <div id="abMyProfileAvatar" style="width:46px;height:46px;border-radius:50%;background:#8E8E93;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="#ECE4D6"><circle cx="12" cy="8.5" r="4"/><path d="M4 21c0-4.2 3.6-7.5 8-7.5s8 3.3 8 7.5"/></svg>
@@ -1980,6 +1998,7 @@ body.public-mode .back-mascot-btn{display:none !important;}
         <div id="abList"></div>
       </div>
       <div id="abEmptyState" style="display:none;"></div>
+<div id="abFooter" class="ab-footer"></div>
 
 <!-- ══ DUPLICATES SHEET ══ -->
 <div class="cf-overlay" id="dupSheetOverlay" onclick="if(event.target===this)closeDupSheet()">
@@ -6420,7 +6439,8 @@ function fillConnectPreview() {
   const CONTACT_SCHEMA_VERSION = 2;
   const TAG_STYLES = {
     Lead:{ bg:'#E8CC7A', fg:'#1c1c1e' }, Client:{ bg:'#34C759', fg:'#fff' },
-    Partner:{ bg:'#4A9DE0', fg:'#fff' }, New:{ bg:'#9B59B6', fg:'#fff' }
+    Partner:{ bg:'#4A9DE0', fg:'#fff' }, New:{ bg:'#9B59B6', fg:'#fff' },
+    Family:{ bg:'#FF9F0A', fg:'#fff' }, Work:{ bg:'#1c1c1e', fg:'#ECE4D6' }, Friends:{ bg:'#FF6B35', fg:'#fff' }
   };
   const tagStyle = t => TAG_STYLES[t] || { bg:'#8E8E93', fg:'#fff' };
 
@@ -7011,6 +7031,153 @@ function fillConnectPreview() {
   }
   /* === END: CONTACTS MORE MENU === */
 
+  /* === START: CONTACT GROUPS + VEX AI === */
+  const GROUP_PRESETS = ['Family', 'Work', 'Client', 'Friends', 'Partner', 'Lead'];
+  const VEX_FAMILY_NAME = /\b(mom|mama|mommy|dad|papa|daddy|nanay|tatay|ate|kuya|tita|tito|lola|lolo|sister|brother|cousin|aunt|uncle)\b/i;
+  const VEX_RULES = [
+    ['Friends', /\b(friend|friends|kaibigan|barkada|classmate|batchmate|schoolmate)\b/i],
+    ['Client',  /\b(client|customer|buyer|patient)\b/i],
+    ['Partner', /\b(partner|supplier|vendor|distributor|reseller|investor)\b/i],
+    ['Work',    /\b(ceo|cfo|coo|cto|founder|manager|director|engineer|developer|designer|accountant|lawyer|attorney|colleague|officer|president|supervisor|consultant|inc|corp|ltd|llc)\b/i]
+  ];
+  let _vex = null, _vexBusy = false;
+
+  function abAllGroups() {
+    return [...new Set([...GROUP_PRESETS, ...ADDRESS_BOOK.map(c => c.tag).filter(t => t && t !== 'New')])];
+  }
+  function abSyncGroupPill(c) {
+    const el = document.getElementById('cdfs-tag');
+    if (!el || !activeContact || activeContact.id !== c.id) return;
+    el.textContent = c.tag; el.style.background = c.tagBg; el.style.color = c.tagFg;
+    el.style.display = c.tag ? 'inline-block' : 'none';
+  }
+
+  /* ── MANUAL ── */
+  function abGroupSheet(id) {
+    const c = ADDRESS_BOOK.find(x => x.id === id); if (!c) return;
+    haptic('light');
+    const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+    const rows = abAllGroups().map(g => {
+      const on = c.tag === g;
+      return `<div class="os-row" style="cursor:pointer;" onclick="abAssignGroup(${id},decodeURIComponent('${encodeURIComponent(g)}'))">
+        <div class="os-row-text"><div class="os-row-title"${on ? ' style="font-weight:700;"' : ''}>${auEsc(g)}</div></div>
+        ${on ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : ''}</div>`;
+    }).join('');
+    const hasGroup = c.tag && c.tag !== 'New';
+    auMakeSheet('abGroupSheetOverlay', 'Group', `
+      <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:12px;">${rows}</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <input id="abNewGroupInput" class="am-input" type="text" maxlength="24" placeholder="New group name" style="flex:1;" onkeydown="if(event.key==='Enter')abAssignNewGroup(${id})">
+        <button type="button" aria-label="Add group" onclick="abAssignNewGroup(${id})" style="flex-shrink:0;width:46px;border-radius:12px;border:none;background:#1c1c1e;color:#ECE4D6;font-size:20px;cursor:pointer;">+</button>
+      </div>
+      ${hasGroup ? `<button type="button" onclick="abAssignGroup(${id},'')" style="width:100%;padding:13px;border-radius:14px;border:none;background:rgba(0,0,0,0.06);color:rgba(60,60,67,0.7);${F}font-size:14px;font-weight:600;cursor:pointer;">Remove from group</button>` : ''}`);
+  }
+  function abAssignNewGroup(id) {
+    const v = ctClean(document.getElementById('abNewGroupInput')?.value || '');
+    if (!v) { haptic('error'); document.getElementById('abNewGroupInput')?.focus(); return; }
+    abAssignGroup(id, v.charAt(0).toUpperCase() + v.slice(1));
+  }
+  async function abAssignGroup(id, name) {
+    const c = ADDRESS_BOOK.find(x => x.id === id); if (!c) return;
+    name = ctClean(name) || 'New';   /* 'New' = walang group */
+    if (name === c.tag) { closeAuGenericModal('abGroupSheetOverlay'); return; }
+    const prev = c.tags.slice();
+    c.tag = name;
+    const ok = await saveAddressBook();
+    if (!ok) { c.tags = prev; haptic('error'); showToast("Couldn't save group", 'error'); return; }
+    haptic('success');
+    closeAuGenericModal('abGroupSheetOverlay');
+    abSyncGroupPill(c);
+    abRefreshList();
+    showToast(name === 'New' ? 'Removed from group' : 'Added to ' + name, 'success');
+  }
+
+  /* ── VEX AI ── */
+  function vexCandidates() { return ADDRESS_BOOK.filter(c => !c.tag || c.tag === 'New'); }
+
+  /* TODO backend: palitan ng apiPost('vexGroupContacts', { contacts }) kapag may VEX endpoint na. Parehong return shape: { g, why } o null */
+  function vexSuggest(c) {
+    if (VEX_FAMILY_NAME.test(c.name) || /\b(family|pamilya)\b/i.test(c.notes)) return { g: 'Family', why: 'Name or notes mention family' };
+    const hay = [c.role, c.company, c.notes].join(' ');
+    for (const [g, re] of VEX_RULES) { const m = hay.match(re); if (m) return { g, why: '“' + m[0] + '” in role, company or notes' }; }
+    if (c.company) return { g: 'Work', why: 'Has a company listed' };
+    if (c.source === 'connect' || c.source === 'meeting') return { g: 'Lead', why: 'Reached out through your card' };
+    return null;
+  }
+
+  function vexOpen() {
+    const list = vexCandidates();
+    if (!list.length) { haptic('error'); showToast('Everything is already grouped', 'neutral'); return; }
+    haptic('light');
+    _vex = { items: list.map(c => { const s = vexSuggest(c); return { c, g: s ? s.g : '', why: s ? s.why : 'No clear signal. Skipped by default' }; }) };
+    auMakeSheet('vexOverlay', 'Organize with VEX AI', '<div id="vexBody"></div>');
+    vexRender();
+  }
+
+  function vexSet(i, v) { if (!_vex) return; _vex.items[i].g = v; vexRender(); }
+
+  function vexRender() {
+    const wrap = document.getElementById('vexBody'); if (!wrap || !_vex) return;
+    const sheet = document.getElementById('vexOverlay-sheet'), keep = sheet ? sheet.scrollTop : 0;
+    const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+    const groups = abAllGroups();
+    const n = _vex.items.filter(x => x.g).length;
+    const rows = _vex.items.map((x, i) => {
+      const opts = ['<option value=""' + (x.g ? '' : ' selected') + '>Skip</option>']
+        .concat(groups.concat(x.g && !groups.includes(x.g) ? [x.g] : []).map(g => `<option value="${auEsc(g)}"${x.g === g ? ' selected' : ''}>${auEsc(g)}</option>`)).join('');
+      return `<div style="padding:12px 14px;${i ? 'border-top:1px solid rgba(0,0,0,0.07);' : ''}">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:38px;height:38px;border-radius:50%;background:${x.c.avatarBg};display:flex;align-items:center;justify-content:center;${F}font-size:13px;font-weight:600;color:#fff;flex-shrink:0;">${auEsc(initials2(x.c.name))}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="${F}font-size:14.5px;font-weight:600;color:#1c1c1e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${auEsc(x.c.name)}</div>
+            <div style="${F}font-size:11.5px;color:rgba(60,60,67,0.55);margin-top:1px;">${auEsc(x.why)}</div>
+          </div>
+          <select class="am-input" aria-label="Group for ${auEsc(x.c.name)}" onchange="vexSet(${i},this.value)" style="width:auto;max-width:112px;padding:8px 10px;font-size:13px;flex-shrink:0;">${opts}</select>
+        </div></div>`;
+    }).join('');
+    wrap.innerHTML = `
+      <div style="${F}font-size:13px;color:rgba(60,60,67,0.6);line-height:1.5;margin:-6px 2px 14px;">VEX AI suggested a group for each contact. Change a group, or pick Skip. Nothing is saved until you tap Apply.</div>
+      <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:16px;">${rows}</div>
+      <button id="vexApplyBtn" ${n ? '' : 'disabled'} onclick="vexApply()" style="width:100%;padding:14px;border-radius:14px;border:none;background:#1c1c1e;color:#ECE4D6;${F}font-size:14.5px;font-weight:700;cursor:pointer;margin-bottom:8px;${n ? '' : 'opacity:.35;cursor:not-allowed;'}">${n ? 'Apply to ' + n + ' contact' + (n > 1 ? 's' : '') : 'Nothing to apply'}</button>
+      <button onclick="closeAuGenericModal('vexOverlay');_vex=null;" style="width:100%;padding:13px;border-radius:14px;border:none;background:rgba(0,0,0,0.06);color:rgba(60,60,67,0.6);${F}font-size:14px;font-weight:600;cursor:pointer;">Cancel</button>`;
+    if (sheet) sheet.scrollTop = keep;
+  }
+
+  async function vexApply() {
+    if (_vexBusy || !_vex) return;
+    const todo = _vex.items.filter(x => x.g);
+    if (!todo.length) return;
+    _vexBusy = true;
+    const btn = document.getElementById('vexApplyBtn');
+    if (btn) { btn.textContent = 'Applying…'; btn.style.pointerEvents = 'none'; btn.style.opacity = '.6'; }
+    const rec = abNewRec();
+    todo.forEach(x => { if (!rec.journal.has(x.c)) rec.journal.set(x.c, Object.assign({}, x.c)); x.c.tag = x.g; });
+    const ok = await saveAddressBook();
+    _vexBusy = false;
+    if (!ok) {
+      abRestore(rec);
+      if (btn) { btn.style.pointerEvents = ''; btn.style.opacity = ''; }
+      vexRender();
+      haptic('error'); showToast("Couldn't apply groups", 'error'); return;
+    }
+    haptic('success');
+    closeAuGenericModal('vexOverlay'); _vex = null;
+    abRefreshList();
+    showUndoToast(todo.length + ' contact' + (todo.length > 1 ? 's' : '') + ' grouped', () => vexUndo(rec));
+  }
+
+  async function vexUndo(rec) {
+    haptic('light');
+    const after = new Map([...rec.journal.keys()].map(o => [o, Object.assign({}, o)]));
+    abRestore(rec);
+    if (!(await saveAddressBook())) {
+      after.forEach((s, o) => Object.assign(o, s));
+      haptic('error'); showToast("Couldn't undo", 'error'); return;
+    }
+    haptic('success'); abRefreshList(); showToast('Grouping undone', 'success');
+  }
+  /* === END: CONTACT GROUPS + VEX AI === */
+
   function exportAddressBookCSV() {
     haptic('medium');
     if (!ADDRESS_BOOK.length) { haptic('error'); showToast('No contacts to export', 'error'); return; }
@@ -7082,7 +7249,9 @@ const RECENT_IDS_KEY = 'ab-recent-ids';
   function renderAddressBook(list, scrubbing = false) {
     abUpdateMoreBadge();
     renderAddressBookProfileCard();
-    if (activeTagFilter) list = list.filter(c => c.tag === activeTagFilter);   /* list and pill can't disagree, whatever the call site */
+    if (activeTagFilter) list = list.filter(c => c.tag === activeTagFilter);
+    if (abFavOnly) list = list.filter(c => abFavIds.includes(c.id));
+    abRenderFooter(); abSyncQuickbar();   /* list and pill can't disagree, whatever the call site */
     renderAbFilterBar(list.length);
     const wrap  = document.getElementById('abList');
     const empty = document.getElementById('abEmptyState');
@@ -7206,7 +7375,81 @@ function toggleTagFilter(tag) {
   }
 
   /* ── SEARCH CANCEL ── */
-  let _abCancelTimer = null;
+  /* ── CONTACTS QUICKBAR: Groups / Favorites / Recents + footer ── */
+var AB_FAV_KEY = 'ab-fav-ids', abFavIds = [], abFavOnly = false;
+(async () => { try { const r = await window.storage.get(AB_FAV_KEY, false); if (r && r.value) { abFavIds = JSON.parse(r.value); abSyncQuickbar(); } } catch (e) {} })();
+async function abSaveFavs() { try { return !!(await window.storage.set(AB_FAV_KEY, JSON.stringify(abFavIds), false)); } catch (e) { return false; } }
+
+function abSyncQuickbar() {
+  document.getElementById('abQbFav')?.classList.toggle('on', abFavOnly);
+  document.getElementById('abQbGroups')?.classList.toggle('on', !!activeTagFilter);
+}
+
+function abRenderFooter() {
+  const el = document.getElementById('abFooter'); if (!el) return;
+  const n = ADDRESS_BOOK.length;
+  const last = ADDRESS_BOOK.map(c => c.updatedAt).filter(Boolean).sort().pop();
+  let t = '';
+  if (last) {
+    const d = new Date(last);
+    const tm = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    const day = d.toDateString() === new Date().toDateString() ? 'today' : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    t = ' · Updated ' + day + ' ' + tm;
+  }
+  el.innerHTML = n ? '<span>' + n + ' contact' + (n === 1 ? '' : 's') + '</span>' + (t ? '<span>Updated ' + auEsc(t.replace(' · Updated ', '').replace(/^(today|[A-Za-z]{3} \d+) /, '$1, ')) + '</span>' : '') : '';
+}
+
+function abRefreshList() { filterAddressBook(document.getElementById('abSearchInput')?.value || ''); }
+
+function abToggleFavView() {
+  if (!abFavOnly && !abFavIds.length) { haptic('error'); showToast('No favorites yet. Open a contact, tap ••• then Add to Favorites', 'neutral'); return; }
+  haptic('light');
+  abFavOnly = !abFavOnly;
+  abRefreshList();
+}
+
+function abOpenRecents() {
+  if (!recentIds.some(id => ADDRESS_BOOK.find(c => c.id === id))) { haptic('error'); showToast('No recent contacts yet', 'neutral'); return; }
+  openRecentsAll();
+}
+
+function abSetGroup(t) {
+  activeTagFilter = t || null;
+  if (!t) abFavOnly = false;
+  abRefreshList();
+}
+
+function abOpenGroups() {
+  haptic('light');
+  const tags = [...new Set(ADDRESS_BOOK.map(c => c.tag).filter(Boolean))].sort();
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  const row = (label, n, js, on) => `<div class="os-row" style="cursor:pointer;" onclick="closeAuGenericModal('abGroupsOverlay');setTimeout(()=>${js},260);">
+      <div class="os-row-text"><div class="os-row-title"${on ? ' style="font-weight:700;"' : ''}>${auEsc(label)}</div></div>
+      <span class="os-row-value">${n}</span>
+      ${on ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : ''}</div>`;
+  const rows = row('All Contacts', ADDRESS_BOOK.length, 'abSetGroup(null)', !activeTagFilter) +
+    tags.map(t => row(t, ADDRESS_BOOK.filter(c => c.tag === t).length, "abSetGroup(decodeURIComponent('" + encodeURIComponent(t) + "'))", activeTagFilter === t)).join('');
+  const vexN = vexCandidates().length;
+  const vexBanner = `<div onclick="closeAuGenericModal('abGroupsOverlay');setTimeout(vexOpen,260);" style="display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(232,204,122,0.22),rgba(232,204,122,0.08));border:1px solid rgba(201,162,39,0.3);border-radius:16px;padding:14px 16px;margin-bottom:12px;cursor:pointer;">
+    <div style="width:36px;height:36px;border-radius:10px;background:#1c1c1e;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E8CC7A" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l2.9 6.6 7.1.6-5.4 4.8 1.7 7-6.3-3.9-6.3 3.9 1.7-7L2 9.7l7.1-.6z"/></svg></div>
+    <div style="flex:1;min-width:0;"><div style="${F}font-size:14.5px;font-weight:700;color:#1c1c1e;">Organize with VEX AI</div>
+    <div style="${F}font-size:12px;color:rgba(60,60,67,0.6);margin-top:2px;">${vexN ? vexN + ' contact' + (vexN === 1 ? '' : 's') + ' can be grouped' : 'Everything is grouped'}</div></div>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(60,60,67,0.3)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>`;
+  auMakeSheet('abGroupsOverlay', 'Groups', vexBanner
+    + `<div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;">${rows}</div>`
+    + `<div style="${F}font-size:12px;color:rgba(60,60,67,0.5);line-height:1.5;margin:10px 4px 0;">${tags.length ? '' : 'No groups yet. '}To group manually: open a contact, tap ••• then Set Group.</div>`);
+}
+
+async function abToggleFav(id) {
+  const had = abFavIds.includes(id), prev = abFavIds.slice();
+  abFavIds = had ? abFavIds.filter(x => x !== id) : abFavIds.concat(id);
+  if (!(await abSaveFavs())) { abFavIds = prev; haptic('error'); showToast("Couldn't save", 'error'); return; }
+  haptic('success');
+  showToast(had ? 'Removed from Favorites' : 'Added to Favorites', 'success');
+  abRefreshList();
+}
+
+let _abCancelTimer = null;
   function showAbCancel() {
     clearTimeout(_abCancelTimer);
     document.getElementById('abCancelBtn').classList.add('visible');
@@ -7843,6 +8086,9 @@ function openContactActionsMenu() {
     </div>`;
   auMakeSheet('cdActionsOverlay', auEsc(c.name), `
     <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;margin-bottom:12px;">
+      ${row('#FF9F0A', '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l2.9 6.6 7.1.6-5.4 4.8 1.7 7-6.3-3.9-6.3 3.9 1.7-7L2 9.7l7.1-.6z"/></svg>', abFavIds.includes(c.id) ? 'Remove from Favorites' : 'Add to Favorites', "closeAuGenericModal('cdActionsOverlay');setTimeout(()=>abToggleFav(" + c.id + "),260);")}
+      ${row('#4A9DE0', '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>', 'Set Group' + (c.tag && c.tag !== 'New' ? ' · ' + auEsc(c.tag) : ''), "closeAuGenericModal('cdActionsOverlay');setTimeout(()=>abGroupSheet(" + c.id + "),260);")}
+      ${row('#4A9DE0', '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>', 'Set Group' + (c.tag && c.tag !== 'New' ? ' · ' + auEsc(c.tag) : ''), "closeAuGenericModal('cdActionsOverlay');setTimeout(()=>abGroupSheet(" + c.id + "),260);")}
       ${row('#8E8E93', icEdit, 'Edit Contact', "closeAuGenericModal('cdActionsOverlay');setTimeout(()=>toggleContactEdit(),260);")}
     </div>
     <div style="background:rgba(255,255,255,0.72);border-radius:16px;overflow:hidden;">
