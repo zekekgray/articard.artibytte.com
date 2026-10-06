@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#ECE4D6">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -209,6 +209,15 @@
   .acct-name { font-family:-apple-system,'SF Pro Display',sans-serif; font-size:26px; font-weight:700; color:#1c1c1e; text-align:center; }
   .acct-sub { font-family:-apple-system,'SF Pro Text',sans-serif; font-size:15px; color:rgba(60,60,67,0.55); margin-top:4px; margin-bottom:28px; }
   .acct-group { width:100%; background:rgba(255,255,255,0.72); border-radius:20px; overflow:hidden; box-shadow:0 1px 2px rgba(0,0,0,0.04); margin-bottom:16px; flex-shrink:0; }
+
+  /* === START: ACCOUNT SECTION LABEL === */
+  .acct-section-label { width:100%; box-sizing:border-box; padding:0 6px; margin:6px 0 8px; font-family:-apple-system,'SF Pro Text',sans-serif; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:rgba(60,60,67,0.5); }
+  /* === END: ACCOUNT SECTION LABEL === */
+
+  /* === START: ADD CONTACT NO-ZOOM === */
+  #addContactScreen { touch-action: pan-y; overscroll-behavior: contain; -webkit-text-size-adjust: 100%; }
+  #addContactScreen input, #addContactScreen textarea { font-size: 16px; touch-action: manipulation; } /* 16px = hindi nagza-zoom ang iOS pag nag-focus */
+  /* === END: ADD CONTACT NO-ZOOM === */
 
   /* === START: CONTACTS HIERARCHY EDIT === */
   #abSyncBtn, #abExportBtn, #abDupBanner { display:none !important; }
@@ -2837,7 +2846,10 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <button type="button" onclick="viewMyCard()" style="flex:1;padding:13px;border-radius:13px;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.72);color:#1c1c1e;font-family:-apple-system,'SF Pro Text',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">View Card</button>
     </div>
 
-    <!-- Personal info + Security + ATH ID -->
+    <!-- === START: ACCOUNT GROUPS (iOS Settings style) === -->
+
+    <!-- 1. MY CARD -->
+    <div class="acct-section-label">My Card</div>
     <div class="acct-group">
       <div class="os-row" onclick="openPersonalInfoScreen()" style="cursor:pointer;">
         <div class="os-row-icon" style="background:#4A9DE0;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.2 3.6-7.5 8-7.5s8 3.3 8 7.5"/></svg></div>
@@ -2849,25 +2861,16 @@ body.public-mode .back-mascot-btn{display:none !important;}
         <div class="os-row-text"><div class="os-row-title">Public Card</div><div class="os-row-sub">What other people see when they open your link</div></div>
         <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
-      <div class="os-row" onclick="openSecuritySheet()" style="cursor:pointer;">
-        <div class="os-row-icon" style="background:#8E8E93;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
-        <div class="os-row-text"><div class="os-row-title">Sign-In &amp; Security</div><div class="os-row-sub">Private Key, sign-in</div></div>
-        <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <div class="os-row" style="cursor:default;">
+        <div class="os-row-icon" style="background:#8E8E93;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+        <div class="os-row-text"><div class="os-row-title">Card ID</div><div class="os-row-sub">Public. Used in your card link &amp; QR</div></div>
+        <span class="os-row-value" id="acctCardIdValue" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.04em;">—</span>
       </div>
       <div class="os-row" style="cursor:default;">
         <div class="os-row-icon" style="background:#E8CC7A;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M6 9.82a6 6 0 0 1 0 4.36"/></svg></div>
         <div class="os-row-text"><div class="os-row-title">articardd ID</div><div class="os-row-sub">Your permanent account ID</div></div>
         <span class="os-row-value" id="acctAthIdValue" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.04em;">—</span>
       </div>
-      <div class="os-row" style="cursor:default;">
-        <div class="os-row-icon" style="background:#8E8E93;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
-        <div class="os-row-text"><div class="os-row-title">Card ID</div><div class="os-row-sub">Public. Used in your card link &amp; QR</div></div>
-        <span class="os-row-value" id="acctCardIdValue" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.04em;">—</span>
-      </div>
-    </div>
-
-    <!-- === START: REQUEST MANAGER ROW === -->
-    <div class="acct-group">
       <div class="os-row" onclick="openRequestManager()" style="cursor:pointer;">
         <div class="os-row-icon" style="background:#4A9DE0;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/><path d="M9 15l2 2 4-4"/></svg></div>
         <div class="os-row-text"><div class="os-row-title">Request Manager</div><div class="os-row-sub">Meeting requests from your card</div></div>
@@ -2875,28 +2878,25 @@ body.public-mode .back-mascot-btn{display:none !important;}
         <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </div>
-    <!-- === END: REQUEST MANAGER ROW === -->
 
-    <!-- === START: GUIDE ROW === -->
-<div class="acct-group">
-  <div class="os-row" onclick="haptic('light');guideOpen()" style="cursor:pointer;">
-    <div class="os-row-icon" style="background:#E8CC7A;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
-    <div class="os-row-text"><div class="os-row-title">How to Use articard</div><div class="os-row-sub">Home Screen &amp; Siri setup</div></div>
-    <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-  </div>
-</div>
-<!-- === END: GUIDE ROW === -->
-    <!-- How to use -->
+    <!-- 2. USE & CONNECT -->
+    <div class="acct-section-label">Use &amp; Connect</div>
     <div class="acct-group">
+      <div class="os-row" onclick="haptic('light');guideOpen()" style="cursor:pointer;">
+        <div class="os-row-icon" style="background:#E8CC7A;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+        <div class="os-row-text"><div class="os-row-title">How to Use articardd</div><div class="os-row-sub">Home Screen &amp; Siri setup</div></div>
+        <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
       <div class="os-row" onclick="openCoach()" style="cursor:pointer;">
         <div class="os-row-icon" style="background:#1c1c1e;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#E8CC7A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg></div>
         <div class="os-row-text"><div class="os-row-title">How to Use Your Card</div><div class="os-row-sub">Tap &amp; hold, flip, mascots, share</div></div>
         <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
-    </div>
-
-    <!-- Invite Friends -->
-    <div class="acct-group">
+      <div class="os-row" onclick="haptic('light');orderPhysicalCard()" style="cursor:pointer;">
+        <div class="os-row-icon" style="background:#1c1c1e;"><svg width="19" height="19" viewBox="0 4 24 16" fill="none" stroke="#E8CC7A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M6 9.82a6 6 0 0 1 0 4.36"/><path d="M9.2 8a9 9 0 0 1 0 8"/><path d="M12.4 6.2a12 12 0 0 1 0 11.6"/></svg></div>
+        <div class="os-row-text"><div class="os-row-title">CardKit</div><div class="os-row-sub">Order your physical NFC card: ring, QR &amp; your mascot</div></div>
+        <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
       <div class="os-row" onclick="haptic('light');openAuInvite()" style="cursor:pointer;">
         <div class="os-row-icon" style="background:#B5583A;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="17" y1="11" x2="23" y2="11"/></svg></div>
         <div class="os-row-text"><div class="os-row-title">Invite Friends</div><div class="os-row-sub">Share your link and earn ArtiStar Rewards</div></div>
@@ -2905,26 +2905,14 @@ body.public-mode .back-mascot-btn{display:none !important;}
       </div>
     </div>
 
-    <!-- Our Story -->
-    <div class="acct-group">
-      <div class="os-row" onclick="haptic('light');openStory()" style="cursor:pointer;">
-        <div class="os-row-icon" style="background:#2F343A;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#E8CC7A" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg></div>
-        <div class="os-row-text"><div class="os-row-title">Our Story</div><div class="os-row-sub">Why articardd exists, and where it is going</div></div>
-        <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
-    </div>
-
-    <!-- Notifications -->
+    <!-- 3. PREFERENCES -->
+    <div class="acct-section-label">Preferences</div>
     <div class="acct-group">
       <div class="os-row" onclick="haptic('light');openNotifPrefs()" style="cursor:pointer;">
         <div class="os-row-icon" style="background:#FF453A;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
         <div class="os-row-text"><div class="os-row-title">Notifications</div><div class="os-row-sub">Meeting reminders, card views</div></div>
         <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
-    </div>
-
-    <!-- License -->
-    <div class="acct-group">
       <div class="os-row" onclick="openLicenseScreen()" style="cursor:pointer;">
         <div class="os-row-icon" style="background:#34C759;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
         <div class="os-row-text"><div class="os-row-title">Subscriptions &amp; License</div></div>
@@ -2933,25 +2921,34 @@ body.public-mode .back-mascot-btn{display:none !important;}
       </div>
     </div>
 
-    <!-- Terms & Privacy -->
+    <!-- 4. ACCOUNT & SECURITY -->
+    <div class="acct-section-label">Account &amp; Security</div>
     <div class="acct-group">
+      <div class="os-row" onclick="openSecuritySheet()" style="cursor:pointer;">
+        <div class="os-row-icon" style="background:#8E8E93;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+        <div class="os-row-text"><div class="os-row-title">Sign-In &amp; Security</div><div class="os-row-sub">Private Key, sign-in</div></div>
+        <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <!-- 5. ABOUT ARTICARDD -->
+    <div class="acct-section-label">About articardd</div>
+    <div class="acct-group">
+      <div class="os-row" onclick="haptic('light');openStory()" style="cursor:pointer;">
+        <div class="os-row-icon" style="background:#2F343A;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#E8CC7A" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg></div>
+        <div class="os-row-text"><div class="os-row-title">Our Story</div><div class="os-row-sub">Why articardd exists, and where it is going</div></div>
+        <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
       <div class="os-row" onclick="haptic('light');openTosScreen(true)" style="cursor:pointer;">
         <div class="os-row-icon" style="background:#8E8E93;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="11" y2="11"/></svg></div>
         <div class="os-row-text"><div class="os-row-title">Terms &amp; Privacy</div><div class="os-row-sub">Version 4.0</div></div>
         <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </div>
-
-    <!-- Order NFC Card -->
-    <div class="acct-group">
-      <div class="os-row" onclick="haptic('light');orderPhysicalCard()" style="cursor:pointer;">
-        <div class="os-row-icon" style="background:#1c1c1e;"><svg width="19" height="19" viewBox="0 4 24 16" fill="none" stroke="#E8CC7A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M6 9.82a6 6 0 0 1 0 4.36"/><path d="M9.2 8a9 9 0 0 1 0 8"/><path d="M12.4 6.2a12 12 0 0 1 0 11.6"/></svg></div>
-        <div class="os-row-text"><div class="os-row-title">CardKit</div><div class="os-row-sub">Order your physical NFC card: ring, QR &amp; your mascot</div></div>
-        <svg class="os-row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
-    </div>
+    <!-- === END: ACCOUNT GROUPS === -->
 
     <!-- Sign Out + Delete Account -->
+    <div class="acct-section-label">Account Actions</div>
     <div class="acct-group" style="margin-top:4px;">
       <div class="os-row" onclick="confirmSignOut()" style="cursor:pointer;">
         <div class="os-row-icon" style="background:#FF9F0A;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div>
@@ -5092,11 +5089,13 @@ function fillConnectPreview() {
   }
   async function markCoachSeen() {
     if (coachSeen) return;
-        coachSeen = true; syncCoachPill();
-    /* pill stays until you clear it manually (testing) */
+    coachSeen = true; syncCoachPill();
+    try { await window.storage.set(COACH_KEY, '1', false); } catch (e) {}
+    try { localStorage.setItem(COACH_KEY, '1'); } catch (e) {}   /* backup kung pumalya ang storage */
   }
   (async () => {
     try { const r = await window.storage.get(COACH_KEY, false); if (r && r.value) coachSeen = true; } catch (e) {}
+    try { if (localStorage.getItem(COACH_KEY)) coachSeen = true; } catch (e) {}
     syncCoachPill();
   })();
   /* matagumpay na hold = alam na ng user, kaya itago ang pill */
@@ -6265,7 +6264,8 @@ function fillConnectPreview() {
     return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
   }
 
-  function avatarColorFromName(name) {
+  function avatarColorFromName(name) { return '#8E8E93'; }   /* isang kulay lang */
+  function avatarColorFromNameOld(name) {
     const colors = ['#3B6FB6','#D2691E','#C9A227','#A8326B','#27AE60','#8E44AD','#C0392B','#4A9DE0'];
     let h = 0;
     for (let i = 0; i < (name||'').length; i++) h = (h*31 + name.charCodeAt(i)) & 0xffffffff;
@@ -6454,7 +6454,7 @@ function fillConnectPreview() {
     set tagBg(v) {}
     get tagFg() { return tagStyle(this.tag).fg; }
     set tagFg(v) {}
-    get avatarBg() { return this.avatar.bg; }
+    get avatarBg() { return '#8E8E93'; }   /* isang kulay para sa lahat ng contact */
     set avatarBg(v) { this.avatar = Object.assign({}, this.avatar, { bg: v }); }
     get linkedin() { return this.socials.linkedin || ''; }
     set linkedin(v) { const s = Object.assign({}, this.socials); v = ctClean(v); if (v) s.linkedin = v; else delete s.linkedin; this.socials = s; }
@@ -6648,11 +6648,81 @@ function fillConnectPreview() {
   const AB_LEGACY_KEY = 'address-book-v1';
   let importCandidates = [];
 
+  /* === START: CONTACTS CLOUD SYNC === */
+  const AB_DIRTY_KEY = 'ac-ab-unsynced', AB_OWNER_KEY = 'ac-ab-owner';
+  let _abPushT = null, _abPushing = false, _abPulled = false, _abVer = 0, _abPullP = null;
+
+  function abDirty() { try { return localStorage.getItem(AB_DIRTY_KEY) === '1'; } catch (e) { return false; } }
+  function abSetDirty(on) { try { on ? localStorage.setItem(AB_DIRTY_KEY, '1') : localStorage.removeItem(AB_DIRTY_KEY); } catch (e) {} }
+
+  /* tinatawag pagkatapos ng bawat matagumpay na local save */
+  function abCloudMarkDirty() {
+    abSetDirty(true); _abVer++;
+    clearTimeout(_abPushT);
+    _abPushT = setTimeout(abCloudPush, 1500);
+  }
+
+  async function abCloudPush() {
+    if (!rmToken() || _abPushing || !_abPulled) return false;   /* hindi mag-push hangga't hindi pa nakukuha ang cloud (iwas mabura) */
+    _abPushing = true;
+    const v = _abVer;
+    try {
+      await apiPost('ownerSaveContacts', { token: rmToken(), contacts: ADDRESS_BOOK.map(normalizeContact) });
+      if (v === _abVer) abSetDirty(false);
+      else { clearTimeout(_abPushT); _abPushT = setTimeout(abCloudPush, 400); }   /* may bagong edit habang nagpu-push */
+      return true;
+    } catch (e) {
+      if (/session|sign in/i.test(String(e && e.message))) return false;
+      showToast('Contacts saved on this device. Cloud sync pending', 'neutral');
+      return false;
+    } finally { _abPushing = false; }
+  }
+
+  async function abCloudFlush() {
+    clearTimeout(_abPushT);
+    if (abDirty() && _abPulled) await abCloudPush();
+  }
+
+  async function abPullRun() {
+    if (!rmToken() || document.body.classList.contains('public-mode')) return false;
+    const cid = (currentEntry && currentEntry.cardId) || '';
+    if (!cid) return false;
+    let owner = '';
+    try { owner = localStorage.getItem(AB_OWNER_KEY) || ''; } catch (e) {}
+    if (owner && owner !== cid) {   /* ibang account sa parehong device: huwag ipakita/i-upload ang contacts ng iba */
+      ADDRESS_BOOK.length = 0; abSetDirty(false);
+      try { await window.storage.set(AB_STORE_KEY, JSON.stringify({ v: CONTACT_SCHEMA_VERSION, contacts: [] }), false); } catch (e) {}
+    }
+    try { localStorage.setItem(AB_OWNER_KEY, cid); } catch (e) {}
+
+    let r;
+    try { r = await apiPost('ownerGetContacts', { token: rmToken() }); }
+    catch (e) { if (/session|sign in/i.test(String(e && e.message))) rmExpired(); return false; }
+
+    _abPulled = true;
+    const cloud = (r && Array.isArray(r.contacts)) ? r.contacts : [];
+    if (abDirty() || !(r && r.exists)) {   /* may unsynced edit, o first time pa lang: ang device ang mauuna */
+      if (ADDRESS_BOOK.length || abDirty()) abCloudMarkDirty();
+      return true;
+    }
+    ADDRESS_BOOK.length = 0;
+    cloud.forEach(c => ADDRESS_BOOK.push(normalizeContact(c)));
+    try { await window.storage.set(AB_STORE_KEY, JSON.stringify({ v: CONTACT_SCHEMA_VERSION, contacts: ADDRESS_BOOK.map(normalizeContact) }), false); } catch (e) {}
+    abRememberHashes();
+    filterAddressBook(document.getElementById('abSearchInput')?.value || '');
+    return true;
+  }
+  function abCloudPull() {
+    if (!_abPullP) _abPullP = abPullRun().then(ok => { if (!ok) _abPullP = null; return ok; });
+    return _abPullP;
+  }
+  /* === END: CONTACTS CLOUD SYNC === */
+
   async function saveAddressBook() {
     try {
       abStampChanged();
       const r = await window.storage.set(AB_STORE_KEY, JSON.stringify({ v: CONTACT_SCHEMA_VERSION, contacts: ADDRESS_BOOK.map(normalizeContact) }), false);
-      if (r) abRememberHashes();
+      if (r) { abRememberHashes(); abCloudMarkDirty(); }
       return !!r; // storage.set returns null on failure
     } catch (e) { console.error('saveAddressBook failed', e); return false; }
   }
@@ -8425,6 +8495,15 @@ function toggleContactEdit() {
     }
   }
 
+  /* === START: ADD CONTACT NO-ZOOM LOCK === */
+  (function acLockGestures() {
+    const scr = document.getElementById('addContactScreen'); if (!scr) return;
+    ['gesturestart', 'gesturechange', 'gestureend'].forEach(t => scr.addEventListener(t, e => e.preventDefault()));   /* iOS pinch */
+    scr.addEventListener('touchmove', e => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });   /* two-finger */
+    scr.addEventListener('dblclick', e => e.preventDefault());   /* double-tap zoom */
+  })();
+  /* === END: ADD CONTACT NO-ZOOM LOCK === */
+
   function openAddContactModal(triggerBtn) {
     haptic('light');
     ['acFirstName','acLastName','acCompany','acPosition','acPhone','acEmail','acLinkedin','acNotes'].forEach(id => {
@@ -8440,6 +8519,7 @@ function toggleContactEdit() {
     if (osBackBtn) osBackBtn.style.visibility = 'hidden';
 
     const scr = document.getElementById('addContactScreen');
+    document.body.appendChild(scr);   /* labas ng .os-pane (may transform), para full-screen talaga */
     scr.style.display = 'flex';
     scr.style.opacity = '0';
     scr.style.transform = 'translateY(0)';
@@ -9191,6 +9271,7 @@ confirmDialog({ title: 'Cancel meeting with ' + m.name + '?', message: 'The meet
     document.getElementById('notePinBtn').style.color = _noteCurrentPinned ? '#E8CC7A' : 'rgba(60,60,67,0.4)';
 
     const scr = document.getElementById('noteEditorScreen');
+    document.body.appendChild(scr);
     scr.style.display = 'flex';
     scr.style.transition = 'none';
     scr.style.opacity = '0';
@@ -10705,6 +10786,52 @@ async function rmRefreshBadge() {
   } catch (e) {}
 }
 
+/* === START: RM ADD TO CONTACTS === */
+/* guest ng meeting request -> Contact (lahat ng info) */
+function rmGuestContact(m) {
+  const name = String(m.guestName || '').trim();
+  if (!name) return null;
+  const meta = [m.meetingId, [m.date, m.time].filter(Boolean).join(' · '), m.type].filter(Boolean).join(' · ');
+  const notes = ['Via meeting request' + (meta ? ' ' + meta : ''), m.notes ? String(m.notes).trim() : ''].filter(Boolean).join('\n');
+  return newContact({
+    source: 'meeting', name: name, role: '', company: m.guestOrg || '',
+    mobile: acNormalizePhone(m.guestPhone || ''), email: String(m.guestEmail || '').toLowerCase(),
+    notes: notes, tag: 'New', avatarBg: avatarColorFromName(name)
+  });
+}
+
+/* lalabas lang kung wala pa sa Contacts (match by phone / email / pangalan) */
+function rmAddBtn(m) {
+  const c = rmGuestContact(m);
+  if (!c || (acFindMatch(c) || {}).match) return '';
+  const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
+  return `<button onclick="rmAddToContacts('${auEsc(m.meetingId)}')" style="padding:9px 13px;border-radius:12px;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.9);color:#1c1c1e;${F}font-size:12.5px;font-weight:600;cursor:pointer;">＋ Add to Contacts</button>`;
+}
+
+let _rmAdding = false;
+async function rmAddToContacts(id) {
+  if (_rmAdding) return;
+  const m = _rmMeetings.find(x => x.meetingId === id);
+  const c = m && rmGuestContact(m);
+  if (!c) { haptic('error'); showToast('No guest details to add', 'error'); return; }
+  if ((acFindMatch(c) || {}).match) { renderRequestManager(); showToast('Already in Contacts', 'neutral'); return; }
+  _rmAdding = true;
+  haptic('light');
+  c.id = ADDRESS_BOOK.reduce((x, y) => Math.max(x, y.id || 0), 0) + 1;
+  ADDRESS_BOOK.push(c);
+  const ok = await saveAddressBook();
+  _rmAdding = false;
+  if (!ok) {
+    const i = ADDRESS_BOOK.indexOf(c); if (i !== -1) ADDRESS_BOOK.splice(i, 1);
+    haptic('error'); showToast("Couldn't add contact", 'error'); return;
+  }
+  haptic('success');
+  showToast((c.name.length > 22 ? c.name.slice(0, 21) + '…' : c.name) + ' added to Contacts', 'success');
+  renderRequestManager();   /* mawawala na ang button dahil nasa Contacts na */
+  filterAddressBook(document.getElementById('abSearchInput')?.value || '');
+}
+/* === END: RM ADD TO CONTACTS === */
+
 function rmCardHtml(m) {
   const F = "font-family:-apple-system,'SF Pro Text',sans-serif;";
   const p = RM_PILL[m.requestStatus] || RM_PILL['Requested'];
@@ -10733,7 +10860,7 @@ function rmCardHtml(m) {
     </div>
     ${notes}
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
-      ${join}${btn('Confirmed', 'Confirm', 'primary')}${btn('Reviewing', 'Reviewing')}${btn('Reschedule Requested', 'Reschedule')}${btn('Cancelled', 'Cancel', 'danger')}
+      ${join}${rmAddBtn(m)}${btn('Confirmed', 'Confirm', 'primary')}${btn('Reviewing', 'Reviewing')}${btn('Reschedule Requested', 'Reschedule')}${btn('Cancelled', 'Cancel', 'danger')}
     </div>
   </div>`;
 }
@@ -11628,9 +11755,10 @@ function copyPIAthId() {
     closeAccountPage();
     (function () {
       var tok = sessionStorage.getItem('athna-owner-token');
-      Promise.resolve(tok ? apiPost('ownerLogout', { token: tok }).catch(function () {}) : null).then(function () {
+      Promise.resolve(abCloudFlush().catch(function () {})).then(function () { return tok ? apiPost('ownerLogout', { token: tok }).catch(function () {}) : null; }).then(function () {
         window.forgetDevice && window.forgetDevice();
         try { localStorage.removeItem('athna-card-cache-v1:owner'); localStorage.removeItem('athna:card-cache-owner'); } catch (e) {}
+        try { window.storage.delete(AB_STORE_KEY, false); window.storage.delete(AB_LEGACY_KEY, false); abSetDirty(false); localStorage.removeItem(AB_OWNER_KEY); } catch (e) {}
         sessionStorage.removeItem('athna-owner-token'); sessionStorage.removeItem('athna-owner-session');
         location.replace(location.pathname);
       });
@@ -12324,7 +12452,7 @@ function applyRemoteCard(d, owner, fromCache) {
     if (owner) { savePI(); try { window.storage.set(EP_STORE_KEY, JSON.stringify(X), false); } catch (e) {} }
     if (!owner) publicConnectSync(); /* PUBLIC AUTO-OPEN */
     if (owner) loadMeetings(); /* UNIFIED MEETINGS: kunin sa Meetings sheet pagka-login/boot */
-    if (owner) setTimeout(syncLeads, 1500);
+    if (owner) abCloudPull().then(function () { setTimeout(syncLeads, 300); });
     if (!fromCache) cardCacheWrite(d, owner);
     return true;
   } catch (e) { console.error('applyRemoteCard failed', e); return false; }
