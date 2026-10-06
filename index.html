@@ -7274,7 +7274,7 @@ const RECENT_IDS_KEY = 'ab-recent-ids';
       grouped[letter].forEach((c) => {
         html += `
         <div class="ab-row-wrap" data-id="${c.id}" style="position:relative;overflow:hidden;">
-          ${abswipeactions(c)}<div class="ab-row" data-id="${c.id}" style="display:flex;align-items:center;gap:13px;padding:12px 14px;background:#fff;position:relative;cursor:pointer;will-change:transform;">
+          ${abSwipeActions(c)}<div class="ab-row" data-id="${c.id}" style="display:flex;align-items:center;gap:13px;padding:12px 14px;background:#fff;position:relative;cursor:pointer;will-change:transform;">
             <div class="ab-avatar" style="background:${c.avatarBg};width:36px;height:36px;font-size:13px;flex-shrink:0;">${initials2(c.name)}</div>
             <div style="flex:1;min-width:0;">
               <div class="ab-row-name" style="font-size:15px;">${auEsc(c.name)}</div>
