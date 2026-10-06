@@ -221,7 +221,8 @@
 
   /* === START: CONTACTS HIERARCHY EDIT === */
   #abSyncBtn, #abExportBtn, #abDupBanner { display:none !important; }
-  #abMoreBtn { position:relative; }
+  .ab-qb { position:relative; }
+  .ab-qb #abMoreBadge { top:6px; right:calc(50% - 18px); }
   #abMoreBadge { position:absolute; top:2px; right:2px; width:9px; height:9px; border-radius:50%; background:#FF453A; border:2px solid #ECE4D6; display:none; }
   /* === END: CONTACTS HIERARCHY EDIT === */
 
@@ -237,6 +238,16 @@
   .ab-row-wrap + .ab-row-wrap .ab-row::before { content:''; position:absolute; top:0; left:67px; right:0; height:1px; background:rgba(0,0,0,0.07); }
   .ab-row { display:flex; align-items:center; gap:13px; padding:13px 14px; position:relative; cursor:pointer; background:#fff; transition:background .12s, transform .05s; will-change:transform; }
   .ab-row.pressing { background:rgba(0,0,0,0.06); transform:scale(0.992); }
+  /* swipe: nagsha-shrink ang pill, lumalabas ang quick actions */
+  .ab-row-wrap, .ab-row-wrap .ab-row { touch-action:pan-y; }
+  .ab-row-wrap .ab-row { margin-right:var(--sw,0px); }
+  .ab-row-wrap.sw-on .ab-row { border-radius:16px; box-shadow:0 1px 6px rgba(0,0,0,0.08); }
+  .ab-row-wrap.sw-anim .ab-row { transition:margin-right .36s cubic-bezier(0.25,0.8,0.25,1), border-radius .3s, box-shadow .3s; }
+  .ab-sw-tray { position:absolute; top:0; bottom:0; right:0; width:156px; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .ab-row-wrap:not(.sw-on) .ab-sw-tray { visibility:hidden; }
+  .ab-sw-btn { width:42px; height:42px; border-radius:50%; border:none; padding:0; flex-shrink:0; color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; transform:scale(var(--p,0)); opacity:var(--p,0); -webkit-tap-highlight-color:transparent; }
+  .ab-row-wrap.sw-anim .ab-sw-btn { transition:transform .42s cubic-bezier(0.34,1.56,0.64,1), opacity .25s; }
+  .ab-sw-btn:active { filter:brightness(.9); }
   /* swipe action tray */
   .ab-swipe-tray { position:absolute; right:0; top:0; bottom:0; display:flex; align-items:stretch; pointer-events:none; }
   .ab-swipe-action { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; min-width:72px; padding:0 10px; cursor:pointer; border:none; font-family:-apple-system,'SF Pro Text',sans-serif; font-size:11.5px; font-weight:600; color:#fff; letter-spacing:.01em; }
@@ -250,7 +261,7 @@
   .ab-tag:active { opacity:.7; transform:scale(0.94); }
   .ab-tag.filtering { outline:2px solid #1c1c1e; outline-offset:1px; }
   .ab-empty-search { padding:32px 16px; text-align:center; font-family:-apple-system,'SF Pro Text',sans-serif; font-size:13px; color:rgba(60,60,67,0.4); }
-.ab-quickbar { display:flex; gap:8px; margin-bottom:12px; }
+.ab-quickbar { display:flex; gap:4px; margin-bottom:12px; }
 .ab-qb { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; gap:5px; background:transparent; border:none; border-radius:14px; padding:8px 2px 6px; cursor:pointer; color:#1c1c1e; -webkit-tap-highlight-color:transparent; transition:transform .12s, opacity .12s, background .15s; }
 .ab-qb:active { transform:scale(0.93); opacity:.75; }
 .ab-qb.on { background:#1c1c1e; color:#ECE4D6; }
@@ -1925,17 +1936,6 @@ body.public-mode .back-mascot-btn{display:none !important;}
           <div class="os-title" style="padding:6px 0 0 4px;">Contacts</div>
           <span class="ab-count" id="abCount">(5)</span>
         </div>
-        <!-- === START: CONTACTS MORE BUTTON === -->
-        <button id="abMoreBtn" aria-label="More actions"
-          onpointerdown="this.style.transition='transform .08s cubic-bezier(0.34,1.56,0.64,1),opacity .08s';this.style.transform='scale(0.88)';this.style.opacity='.7';"
-          onpointerup="this.style.transform='';this.style.opacity='1';"
-          onpointerleave="this.style.transform='';this.style.opacity='';"
-          onclick="openContactsMoreMenu()"
-          style="width:40px;height:40px;background:rgba(255,255,255,0.72);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex-shrink:0;margin-right:8px;-webkit-tap-highlight-color:transparent;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#1c1c1e"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>
-          <span id="abMoreBadge"></span>
-        </button>
-        <!-- === END: CONTACTS MORE BUTTON === -->
         <button id="abSyncBtn"
           onpointerdown="haptic('light');this.style.transition='transform .08s cubic-bezier(0.34,1.56,0.64,1),opacity .08s';this.style.transform='scale(0.88)';this.style.opacity='.7';"
           onpointerup="this.style.transform='scale(1.06)';this.style.opacity='1';setTimeout(()=>{this.style.transform='';},120);"
@@ -1959,8 +1959,10 @@ body.public-mode .back-mascot-btn{display:none !important;}
       <div class="ab-quickbar">
   <button class="ab-qb" onclick="haptic('light');switchOSTab('home')" aria-label="Home">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>Home</span></button>
+  <button class="ab-qb" onclick="haptic('light');openAccountPage()" aria-label="Profile">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.2 3.6-7.5 8-7.5s8 3.3 8 7.5"/></svg><span>Profile</span></button>
   <button class="ab-qb" onclick="openContactsMoreMenu()" aria-label="Settings">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="17" x2="20" y2="17"/><circle cx="9" cy="7" r="2.4" fill="#ECE4D6"/><circle cx="15" cy="17" r="2.4" fill="#ECE4D6"/></svg><span>Settings</span></button>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="17" x2="20" y2="17"/><circle cx="9" cy="7" r="2.4" fill="#ECE4D6"/><circle cx="15" cy="17" r="2.4" fill="#ECE4D6"/></svg><span>Settings</span><span id="abMoreBadge"></span></button>
   <button class="ab-qb" id="abQbGroups" onclick="abOpenGroups()" aria-label="Groups">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Groups</span></button>
   <button class="ab-qb" id="abQbFav" onclick="abToggleFavView()" aria-label="Favorites">
@@ -1968,19 +1970,6 @@ body.public-mode .back-mascot-btn{display:none !important;}
   <button class="ab-qb" onclick="abOpenRecents()" aria-label="Recents">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 16 14"/></svg><span>Recents</span></button>
 </div>
-<!-- My Profile Card — tap to view/edit your own profile -->
-      <div id="abMyProfileCard" onclick="haptic('light');openAccountPage()" style="display:flex;align-items:center;gap:13px;background:rgba(255,255,255,0.72);border-radius:16px;padding:14px 16px;margin-bottom:10px;cursor:pointer;" onpointerdown="this.style.opacity='.7'" onpointerup="this.style.opacity=''" onpointerleave="this.style.opacity=''">
-        <div id="abMyProfileAvatar" style="width:46px;height:46px;border-radius:50%;background:#8E8E93;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="#ECE4D6"><circle cx="12" cy="8.5" r="4"/><path d="M4 21c0-4.2 3.6-7.5 8-7.5s8 3.3 8 7.5"/></svg>
-        </div>
-        <div style="flex:1;min-width:0;">
-          <div style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8a6e1a;margin-bottom:2px;">My articardd account</div>
-<div id="abMyProfileName" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:15.5px;font-weight:600;color:#1c1c1e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">My articardd</div>
-          <div id="abMyProfileSub" style="font-family:-apple-system,'SF Pro Text',sans-serif;font-size:12.5px;color:rgba(60,60,67,0.55);margin-top:1px;">View &amp; edit your account</div>
-        </div>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(60,60,67,0.3)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
-
       <!-- Duplicates Banner -->
       <div id="abDupBanner" style="background:rgba(255,255,255,0.72);border-radius:16px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="openDupSheet()">
         <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,159,10,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -7277,8 +7266,7 @@ const RECENT_IDS_KEY = 'ab-recent-ids';
     const letters = Object.keys(grouped).sort((a, b) => a === '#' ? 1 : b === '#' ? -1 : a.localeCompare(b));
 
     // recents strip only when showing full list and not scrubbing
-    const isFiltered = list.length !== ADDRESS_BOOK.length || activeTagFilter;
-    let html = (!scrubbing && !isFiltered) ? renderRecentStrip() : '';
+    let html = '';
 
     letters.forEach(letter => {
       html += `<div class="ab-section-header" data-letter="${letter}">${letter}</div>`;
@@ -7286,7 +7274,7 @@ const RECENT_IDS_KEY = 'ab-recent-ids';
       grouped[letter].forEach((c) => {
         html += `
         <div class="ab-row-wrap" data-id="${c.id}" style="position:relative;overflow:hidden;">
-          <div class="ab-row" data-id="${c.id}" style="display:flex;align-items:center;gap:13px;padding:12px 14px;background:#fff;position:relative;cursor:pointer;will-change:transform;">
+          ${abswipeactions(c)}<div class="ab-row" data-id="${c.id}" style="display:flex;align-items:center;gap:13px;padding:12px 14px;background:#fff;position:relative;cursor:pointer;will-change:transform;">
             <div class="ab-avatar" style="background:${c.avatarBg};width:36px;height:36px;font-size:13px;flex-shrink:0;">${initials2(c.name)}</div>
             <div style="flex:1;min-width:0;">
               <div class="ab-row-name" style="font-size:15px;">${auEsc(c.name)}</div>
@@ -7317,6 +7305,88 @@ const RECENT_IDS_KEY = 'ab-recent-ids';
       });
     });
   }
+
+  /* === START: CONTACT ROW SWIPE === */
+  const AB_SW_MAX = 156;
+  let _abSwOpen = null, _abSwSuppress = 0;
+
+  function abSwEnabled(c, a) {
+    if (a === 'email') return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(c.email || '').trim());
+    const n = abDigits(c.mobile).length; return n >= 7 && n <= 15;
+  }
+  function abSwipeActions(c) {
+    const b = (a, bg, label) => {
+      const on = abSwEnabled(c, a);
+      return `<button type="button" class="ab-sw-btn" aria-label="${label} ${auEsc(c.name)}" ${on ? '' : 'disabled aria-disabled="true"'} onclick="event.stopPropagation();abSwipeAct(${c.id},'${a}')" style="background:${bg};${on ? '' : 'opacity:.38 !important;'}">${CD_QUICK_ICONS[a]}</button>`;
+    };
+    return `<div class="ab-sw-tray">${b('message', '#34C759', 'Message')}${b('call', '#34C759', 'Call')}${b('email', '#4A9DE0', 'Email')}</div>`;
+  }
+  function abSwSet(wrap, x) {
+    wrap.style.setProperty('--sw', x + 'px');
+    wrap.style.setProperty('--p', Math.min(1, x / AB_SW_MAX).toFixed(3));
+    if (x > 0) wrap.classList.add('sw-on');
+  }
+  function abSwSettle(wrap, open) {
+    wrap.classList.add('sw-anim');
+    abSwSet(wrap, open ? AB_SW_MAX : 0);
+    if (open) { _abSwOpen = wrap; return; }
+    if (_abSwOpen === wrap) _abSwOpen = null;
+    setTimeout(() => { if (!wrap.style.getPropertyValue('--sw') || wrap.style.getPropertyValue('--sw') === '0px') wrap.classList.remove('sw-on', 'sw-anim'); }, 420);
+  }
+  function abSwipeAct(id, type) {
+    const c = ADDRESS_BOOK.find(x => x.id === id); if (!c) return;
+    if (_abSwOpen) abSwSettle(_abSwOpen, false);
+    activeContact = c;
+    cdfsAction(type);   /* parehong guards + lastContactedAt gaya ng contact detail */
+  }
+  (function abSwipeInit() {
+    const list = document.getElementById('abList'); if (!list) return;
+    let st = null;
+    list.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      const row = e.target.closest('.ab-row'); if (!row) return;
+      const wrap = row.closest('.ab-row-wrap'); if (!wrap) return;
+      if (_abSwOpen && !_abSwOpen.isConnected) _abSwOpen = null;
+      if (_abSwOpen && _abSwOpen !== wrap) abSwSettle(_abSwOpen, false);
+      wrap.classList.remove('sw-anim');
+      st = { wrap, id: e.pointerId, x: e.clientX, y: e.clientY, base: wrap === _abSwOpen ? AB_SW_MAX : 0, mode: null, cur: wrap === _abSwOpen ? AB_SW_MAX : 0 };
+    });
+    list.addEventListener('pointermove', e => {
+      if (!st || e.pointerId !== st.id) return;
+      const dx = e.clientX - st.x, dy = e.clientY - st.y;
+      if (!st.mode) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        if (Math.abs(dx) > Math.abs(dy) * 1.2 && (dx < 0 || st.base)) {
+          st.mode = 'x';
+          try { list.setPointerCapture(e.pointerId); } catch (_) {}
+          haptic('light');
+        } else { st = null; return; }
+      }
+      let x = st.base - dx;                                   /* hila pakaliwa = positive */
+      if (x > AB_SW_MAX) x = AB_SW_MAX + (x - AB_SW_MAX) * 0.25;   /* rubber band */
+      if (x < 0) x = 0;
+      st.cur = x;
+      abSwSet(st.wrap, x);
+    });
+    const end = e => {
+      if (!st || e.pointerId !== st.id) return;
+      const s = st; st = null;
+      if (s.mode !== 'x') return;
+      _abSwSuppress = Date.now() + 350;                        /* huwag buksan ang contact pagkabitaw */
+      try { list.releasePointerCapture(e.pointerId); } catch (_) {}
+      abSwSettle(s.wrap, s.cur > AB_SW_MAX * (s.base ? 0.6 : 0.35));
+    };
+    list.addEventListener('pointerup', end);
+    list.addEventListener('pointercancel', end);
+    list.addEventListener('click', e => {
+      if (Date.now() < _abSwSuppress) { e.stopPropagation(); e.preventDefault(); return; }
+      if (e.target.closest('.ab-sw-btn')) return;
+      if (_abSwOpen && _abSwOpen.isConnected) { e.stopPropagation(); e.preventDefault(); abSwSettle(_abSwOpen, false); }  /* tap kahit saan = sara muna */
+    }, true);
+    const body = document.getElementById('osBody');
+    if (body) body.addEventListener('scroll', () => { if (_abSwOpen && _abSwOpen.isConnected) abSwSettle(_abSwOpen, false); }, { passive: true });
+  })();
+  /* === END: CONTACT ROW SWIPE === */
 
   function filterAddressBook(q) {
     const term = (q || '').trim().toLowerCase();
