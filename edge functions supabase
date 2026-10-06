@@ -1,0 +1,239 @@
+// supabase/functions/api/index.ts
+// Same contract as Code.gs: POST {action, payload} -> {success, data} | {success:false, error}
+// Hashing matches Code.gs (sha256(PEPPER|scope|secret)) so existing Private Keys keep working
+// after you copy the Script Property PEPPER into the PEPPER secret.
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
+const PEPPER = Deno.env.get("PEPPER")!;
+const SESSION_HOURS = 12, REMEMBER_DAYS = 30;
+const CORS = {
+  "Access-Control-Allow-Origin": Deno.env.get("ALLOWED_ORIGIN") ?? "*",   // set to https://articardd.com in production
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
+class UserError extends Error {}
+const enc = new TextEncoder();
+async function sha(s: string) {
+  const b = await crypto.subtle.digest("SHA-256", enc.encode(s));
+  return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("");
+}
+const hashSecret = (s: string) => sha(`${PEPPER}|${s}`);
+function randHex(n: number) {
+  const a = new Uint8Array(Math.ceil(n / 2)); crypto.getRandomValues(a);
+  return [...a].map((x) => x.toString(16).padStart(2, "0")).join("").slice(0, n);
+}
+const nowIso = () => new Date().toISOString();
+const json = (o: unknown) => new Response(JSON.stringify(o), { headers: { ...CORS, "Content-Type": "application/json" } });
+
+/* ---- validators (trimmed port of Code.gs) ---- */
+function str(v: unknown, max: number, label: string, req = false) {
+  const s = String(v ?? "").replace(/[\u0000-\u001f\u007f]+/g, " ").replace(/\s+/g, " ").trim();
+  if (req && !s) throw new UserError(label + " is required.");
+  if (s.length > max) throw new UserError(label + " is too long.");
+  return s;
+}
+function email(v: unknown) {
+  const s = String(v ?? "").trim().toLowerCase();
+  if (!s || s.length > 254 || !/^[^\s@,;]+@[^\s@,;]+\.[^\s@.,;]{2,}$/.test(s) || s.includes("..")) throw new UserError("Enter a valid email address.");
+  return s;
+}
+function phone(v: unknown) {
+  const s = String(v ?? "").trim();
+  if (!s) return "";
+  if (!/^[+\d\s().-]{5,40}$/.test(s)) throw new UserError("Enter a valid phone number.");
+  return s;
+}
+function url(v: unknown) {
+  const s = String(v ?? "").trim();
+  if (!s) return "";
+  if (s.length > 200 || /\s/.test(s) || (/^[a-z][a-z0-9+.-]*:/i.test(s) && !/^https?:/i.test(s))) throw new UserError("Enter a valid link.");
+  return s;
+}
+function slug(v: unknown) {
+  const s = String(v ?? "").trim().toLowerCase();
+  if (!/^[a-z0-9-]{0,40}$/.test(s)) throw new UserError("Invalid value.");
+  return s;
+}
+
+/* ---- cards ---- */
+async function findCard(id: unknown) {
+  const key = String(id ?? "").trim().toUpperCase();
+  if (!/^[A-Z0-9-]{1,40}$/.test(key)) return null;
+  const { data } = await db.from("cards").select("*").or(`cardId.eq.${key},athId.eq.${key}`).limit(1);
+  return data?.[0] ?? null;
+}
+const licenseExpired = (c: any) => c.plan !== "Lifetime" && c.licenseExpiry && (Date.parse(c.licenseExpiry) + 864e5) < Date.now();
+function licenseOf(c: any) {
+  if (c.plan === "Lifetime") return { status: "lifetime", start: "", end: "" };
+  const end = c.licenseExpiry ? String(c.licenseExpiry).slice(0, 10) : "";
+  if (!end) return { status: "none", start: "", end: "" };
+  return { status: "active", start: String(c.createdAt || "").slice(0, 10), end };
+}
+function publicCard(c: any) {
+  return {
+    cardId: c.cardId, athId: c.athId, name: c.name, position: c.position, company: c.company,
+    phone: c.showPhone === "FALSE" ? "" : c.phone, email: c.showEmail === "FALSE" ? "" : c.email,
+    website: c.website, linkedin: c.linkedin, theme: c.theme, colorway: c.colorway, mascotId: c.mascotId, qrLink: c.qrLink,
+    bookingUrl: "https://artimeet.artibytte.com?id=" + encodeURIComponent(c.cardId), photo: c.photo || "",
+  };
+}
+function ownerCard(c: any) { const o = { ...c }; delete o.keyHash; o.license = licenseOf(c); return o; }
+
+async function session(p: any) {
+  const tok = String(p.token ?? "").trim();
+  if (!/^[a-f0-9]{40}$/.test(tok)) throw new UserError("Please sign in again.");
+  const h = await hashSecret("sess|" + tok);
+  const { data: s } = await db.from("sessions").select("*").eq("tokenHash", h).maybeSingle();
+  if (!s || s.revoked === "TRUE" || Date.parse(s.expiresAt) < Date.now()) throw new UserError("Your session has expired. Please sign in again.");
+  const { data: c } = await db.from("cards").select("*").eq("cardId", s.cardId).maybeSingle();
+  if (!c || c.status !== "Active") throw new UserError("This card is not active.");
+  return c;
+}
+
+/* ---- actions ---- */
+const H: Record<string, (p: any) => Promise<unknown>> = {
+  async ping() { return { ok: true, version: "supabase-1.0", time: nowIso() }; },
+
+  async card(p) {
+    const key = p.id || p.cardId || p.athid;
+    if (!key) throw new UserError("Card ID is required.");
+    const c = await findCard(key);
+    if (!c || c.status !== "Active" || c.publicVisible === "FALSE" || licenseExpired(c)) throw new UserError("Card not found.");
+    await db.from("cards").update({ views: (Number(c.views) || 0) + 1 }).eq("cardId", c.cardId);   // not atomic; fine for a counter
+    return publicCard(c);
+  },
+
+  async ownerLogin(p) {
+    const key = String(p.key ?? "").trim().toUpperCase();
+    if (!/^AK-[A-Z0-9]{8,}$/.test(key)) throw new UserError("That key is not valid.");
+    const { data } = await db.from("cards").select("*").eq("keyHash", await hashSecret("owner|" + key)).limit(1);
+    const c = data?.[0];
+    if (!c) throw new UserError("That key is not valid.");
+    if (c.status !== "Active") throw new UserError("This card is not active. Contact support@artibytte.com.");
+    const remember = p.remember === true || String(p.remember) === "true";
+    const hrs = remember ? REMEMBER_DAYS * 24 : SESSION_HOURS;
+    const token = randHex(40), expiresAt = new Date(Date.now() + hrs * 3600e3).toISOString();
+    await db.from("sessions").insert({ tokenHash: await hashSecret("sess|" + token), cardId: c.cardId, createdAt: nowIso(), expiresAt, revoked: "FALSE" });
+    await db.from("cards").update({ lastLoginAt: nowIso() }).eq("cardId", c.cardId);
+    return { token, expiresAt, card: ownerCard(c) };
+  },
+
+  async ownerLogout(p) {
+    const tok = String(p.token ?? "").trim();
+    if (/^[a-f0-9]{40}$/.test(tok)) await db.from("sessions").update({ revoked: "TRUE" }).eq("tokenHash", await hashSecret("sess|" + tok));
+    return { ok: true };
+  },
+
+  async ownerGetCard(p) { return ownerCard(await session(p)); },
+
+  async ownerUpdateCard(p) {
+    const c = await session(p), f = p.fields || {}, patch: Record<string, unknown> = {};
+    if ("name" in f) patch.name = str(f.name, 80, "Name", true);
+    if ("position" in f) patch.position = str(f.position, 120, "Position");
+    if ("company" in f) patch.company = str(f.company, 120, "Company");
+    if ("phone" in f) patch.phone = phone(f.phone);
+    if ("email" in f) patch.email = f.email ? email(f.email) : "";
+    if ("website" in f) patch.website = url(f.website);
+    if ("linkedin" in f) patch.linkedin = url(f.linkedin);
+    if ("theme" in f) patch.theme = slug(f.theme);
+    if ("colorway" in f) patch.colorway = slug(f.colorway);
+    if ("mascotId" in f) patch.mascotId = slug(f.mascotId);
+    if ("photo" in f) {
+      const ph = String(f.photo || "");
+      if (ph && (ph.length > 45000 || !/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(ph))) throw new UserError("Photo is too large or invalid.");
+      patch.photo = ph;
+    }
+    for (const k of ["publicVisible", "showPhone", "showEmail"]) if (k in f) patch[k] = (f[k] === false || String(f[k]).toUpperCase() === "FALSE") ? "FALSE" : "TRUE";
+    patch.updatedAt = nowIso();
+    await db.from("cards").update(patch).eq("cardId", c.cardId);
+    return ownerCard({ ...c, ...patch });
+  },
+
+  async saveLead(p) {
+    const cardId = p.cardId ? String(p.cardId).trim().toUpperCase() : "";
+    if (cardId) {
+      const hc = await findCard(cardId);
+      if (!hc || hc.status !== "Active" || licenseExpired(hc)) throw new UserError("This card is not accepting submissions.");
+    }
+    const lead = {
+      leadId: "LD-" + randHex(8).toUpperCase(), createdAt: nowIso(), cardId,
+      name: str(p.name, 120, "Name", true), title: str(p.title, 160, "Title"), email: email(p.email), mobile: phone(p.mobile),
+      source: "connect", status: "New", notes: str(p.notes, 1000, "Notes"),
+    };
+    await db.from("leads").insert(lead);
+    return { leadId: lead.leadId };
+  },
+
+  async ownerListLeads(p) {
+    const c = await session(p);
+    const { data } = await db.from("leads").select("*").eq("cardId", c.cardId);
+    return data ?? [];
+  },
+
+  async saveFeedback(p) {
+    const type = String(p.type || "feedback").toLowerCase();
+    if (!["feedback", "bug", "feature"].includes(type)) throw new UserError("Invalid type.");
+    let stars = 0;
+    if (p.stars !== undefined && p.stars !== "" && p.stars !== null) { stars = Number(p.stars); if (!(stars >= 0 && stars <= 5)) throw new UserError("Invalid rating."); }
+    const rec = {
+      feedbackId: "FB-" + randHex(8).toUpperCase(), createdAt: nowIso(), type,
+      context: str(p.context, 30, "Context"), category: str(p.category, 60, "Category"),
+      athId: str(p.athId || p.athid, 40, "ATH ID"), name: str(p.name, 120, "Name"), stars,
+      remarks: str(p.remarks, 1000, "Remarks"), clientTs: str(p.clientTs || p.ts, 40, "Timestamp"), status: "New", adminNotes: "",
+    };
+    if (type === "feedback" && !stars && !rec.remarks) throw new UserError("Please add a rating or a comment.");
+    if (type !== "feedback" && !rec.remarks) throw new UserError("Please describe it first.");
+    await db.from("feedback").insert(rec);
+    return { feedbackId: rec.feedbackId };
+  },
+
+  async ownerGetContacts(p) {
+    const c = await session(p);
+    const { data } = await db.from("contacts").select("contactId,json").eq("cardId", c.cardId);
+    let exists = false; const contacts: unknown[] = [];
+    for (const r of data ?? []) {
+      if (r.contactId === "__sync__") { exists = true; continue; }
+      try { contacts.push(JSON.parse(r.json)); } catch { /* skip bad row */ }
+    }
+    return { exists, contacts };
+  },
+
+  async ownerSaveContacts(p) {
+    const c = await session(p);
+    if (!Array.isArray(p.contacts) || p.contacts.length > 5000) throw new UserError("Invalid contacts.");
+    const now = nowIso();
+    const rows: any[] = [{ cardId: c.cardId, contactId: "__sync__", json: "", updatedAt: now }];
+    for (const ct of p.contacts) {
+      if (!ct || ct.id == null) continue;
+      const j = JSON.stringify(ct);
+      if (j.length < 45000) rows.push({ cardId: c.cardId, contactId: String(ct.id), json: j, updatedAt: now });
+    }
+    // upsert first, then prune what is no longer in the list (safer than delete-then-insert)
+    for (let i = 0; i < rows.length; i += 500) await db.from("contacts").upsert(rows.slice(i, i + 500), { onConflict: "cardId,contactId" });
+    const keep = rows.map((r) => r.contactId);
+    const { data: all } = await db.from("contacts").select("contactId").eq("cardId", c.cardId);
+    const stale = (all ?? []).map((r) => r.contactId).filter((id) => !keep.includes(id));
+    for (let i = 0; i < stale.length; i += 200) await db.from("contacts").delete().eq("cardId", c.cardId).in("contactId", stale.slice(i, i + 200));
+    return { saved: rows.length - 1 };
+  },
+
+  // NOT ported on purpose (need Calendar + Gmail, keep these routed to Apps Script):
+  // saveMeeting, availability, guestLookup, guestCancel, ownerListMeetings, ownerCreateMeeting,
+  // ownerEditMeeting, ownerUpdateMeetingStatus, redeemCode, ownerRotateKey, ownerDeleteAccount, admin*
+};
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+  try {
+    const body = await req.json();
+    const fn = H[String(body?.action ?? "")];
+    if (!fn) throw new UserError("Unknown action.");
+    return json({ success: true, data: await fn(body.payload || {}) });
+  } catch (e) {
+    if (e instanceof UserError) return json({ success: false, error: e.message });
+    console.error(e);
+    return json({ success: false, error: "Something went wrong. Please try again." });
+  }
+});
