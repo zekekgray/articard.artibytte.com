@@ -3579,6 +3579,16 @@ body.public-mode .back-mascot-btn{display:none !important;}
   }, true);
 })();
 </script>
+<script>
+window.AC_CONFIG = {
+  mode: 'appscript',              // default: walang magbabago
+  supabaseUrl: 'https://YOURPROJECT.supabase.co',
+  supabaseKey: 'YOUR_ANON_OR_PUBLISHABLE_KEY',
+  routes: {},                     // sa baba ang halimbawa
+  dualLogin: false
+};
+</script>
+<script src="/assets/articardd-sdk.js"></script>
 <!-- === END: RESCUE + DIAGNOSTIC SCRIPT === -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -4612,27 +4622,12 @@ function fillConnectPreview() {
   })();
   /* === START: API CONNECTOR === */
   /* === START: API URL (new deployment) === */
-  const API_URL = 'https://script.google.com/macros/s/AKfycbyTm9JJ00m2UlC3Px0Ri6_YFdOz8YfvA4FgOBhlJlKrHKK7JPrrY-Vh3xq-QHCjNGOp/exec';
+  const API_URL = 'https://sxvsurhtnfbrsyqadyyy.supabase.co/functions/v1/bright-responder';
   /* === END: API URL (new deployment) === */
 
-  async function apiPost(action, payload) {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action, payload: payload || {} })
-    });
-    const j = await res.json();
-    if (!j.success) throw new Error(j.error || 'Request failed');
-    return j.data;
-  }
-
-  async function apiGet(action, params) {
-    const qs = new URLSearchParams(Object.assign({ action }, params || {})).toString();
-    const res = await fetch(API_URL + '?' + qs);
-    const j = await res.json();
-    if (!j.success) throw new Error(j.error || 'Request failed');
-    return j.data;
-  }
+  ACSDK.configure({ appscriptUrl: API_URL });
+  function apiPost(action, payload) { return ACSDK.call(action, payload); }
+  function apiGet(action, params)   { return ACSDK.call(action, params); }
   /* === END: API CONNECTOR === */
   const SHEET_URL = API_URL;
   let entries = [], currentEntry = null;
@@ -12812,7 +12807,7 @@ function syncCardOnBoot(owner, id) {
 /* === END: REMOTE CARD SYNC === */
 
 /* === START: REMEMBER DEVICE === */
-window.forgetDevice = function () { try { localStorage.removeItem('athna-owner-remember'); } catch (e) {} };
+window.forgetDevice = function () { try { localStorage.removeItem('athna-owner-remember'); } catch (e) {} if (window.ACSDK) ACSDK.clearTokens(); };
 (function () {
   try {
     if (sessionStorage.getItem('athna-owner-token')) return;
