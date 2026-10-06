@@ -1,0 +1,1358 @@
+/**
+ * ARTIMEET + ARTICARDD — Complete Apps Script backend  (Code.gs)  v1.0.0
+ *
+ * Serves BOTH frontends from one deployment:
+ *   • Card app  : GET  ?type=feedback|bug|feature ...   ?athid&name&position&no&qrLink   ?action=card&id=
+ *                 POST {action:'ownerLogin'|'saveLead'|...}
+ *   • Artimeet  : POST {action:'saveMeeting'|'getAllMeetings'|'updateMeetingStatus', payload}
+ *
+ * Tabs (auto-created): Cards, Meetings, Leads, Feedback, Sessions, Logs, Settings, Dashboard
+ * Menu: "Artimeet Admin" (onOpen).  Triggers: onEdit (simple) + installable onEdit, hourly reminders, daily maintenance.
+ */
+
+/* ============================== 1. CONTRACT / CONSTANTS ============================== */
+const VERSION = '1.0.0';
+
+const STATUSES = ['Requested', 'Reviewing', 'Confirmed', 'Reschedule Requested', 'Cancelled'];
+const STATUS_COLORS = { 'Requested': '#fff1c9', 'Reviewing': '#e3ecf9', 'Confirmed': '#e3f5e5', 'Reschedule Requested': '#f1e6fa', 'Cancelled': '#eeeeee' };
+const MEETING_TYPES = ['Business / Partnership', 'Product Demo', 'Client Meeting', 'Technical Discussion', 'Career / Hiring',
+  'Sales Consultation', 'Project Kickoff', 'Project Status Update', 'Contract / Proposal Review', 'Investor Pitch',
+  'Vendor / Supplier Meeting', 'Onboarding Session', 'Training / Workshop', 'Strategy Planning', 'Budget / Finance Review',
+  'Marketing Consultation', 'Design Review', 'Legal Consultation', 'HR / Performance Review', 'Customer Support / Troubleshooting',
+  'Networking / Introduction', 'Mentorship / Coaching', 'Media / Press Interview', 'Speaking Engagement / Event',
+  'Real Estate Consultation', 'Financial Advisory', 'Medical / Health Consultation', 'Academic / Research Discussion',
+  'Volunteer / Community Meeting', 'Other'];
+const LOCATIONS = ['Videocall / Virtual Call', 'Phone Call', 'In Person'];
+const DURATIONS = ['30 min', '45 min', '60 min', 'Flexible'];
+const RECURRENCES = ['One-time', 'Weekly', 'Monthly', 'Quarterly'];
+const RRULES = { 'Weekly': 'RRULE:FREQ=WEEKLY', 'Monthly': 'RRULE:FREQ=MONTHLY', 'Quarterly': 'RRULE:FREQ=MONTHLY;INTERVAL=3' };
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+/* Fields the Artimeet admin screen reads from getAllMeetings (checked by diagnostics). */
+const ADMIN_FIELDS = ['meetingId', 'date', 'time', 'guestName', 'guestOrg', 'type', 'location', 'recurrence', 'requestStatus', 'meetingLink', 'createdAt'];
+
+/* Column names ending with # are numeric; everything else is stored as plain TEXT (so "=1+1" can never run as a formula). */
+const SCHEMA = {
+  Cards: 'cardId,athId,no#,name,position,company,phone,email,website,linkedin,qrLink,keyHash,status,plan,licenseExpiry,publicVisible,showPhone,showEmail,theme,colorway,mascotId,views#,createdAt,updatedAt,lastLoginAt,notes,photo',
+  Meetings: 'meetingId,hostHandle,cardId,createdAt,updatedAt,guestName,guestEmail,guestOrg,guestPhone,notes,type,date,time,duration,recurrence,location,locationAddress,timezone,meetingLink,requestStatus,calendarStatus,calendarEventId,notifiedStatus,reminderSentAt,source,hostNotes',
+  Leads: 'leadId,createdAt,cardId,name,title,email,mobile,source,status,notes',
+  Feedback: 'feedbackId,createdAt,type,context,category,athId,name,stars#,remarks,clientTs,status,adminNotes',
+  Sessions: 'tokenHash,cardId,createdAt,expiresAt,revoked',
+  Logs: 'ts,level,action,message,detail',
+  Settings: 'key,value,description',
+  Referrals: 'referralId,createdAt,updatedAt,referrerCardId,referrerName,buyerName,buyerEmail,buyerMobile,status,activatedAt,releaseAfter,rewardSentAt,rewardRef,notes',
+  Codes: 'code,plan,days#,status,redeemedBy,redeemedAt,createdAt,notes',
+  Contacts: 'cardId,contactId,json,updatedAt'
+};
+
+const DEFAULT_SETTINGS = [
+  ['BRAND_NAME', 'Artimeet', 'Name shown in emails'],
+  ['HOST_NAME', 'ArtiByte', 'Default host display name'],
+  ['HOST_EMAIL', '', 'Default host email. Blank = the Google account that owns this script'],
+  ['ADMIN_EMAIL', '', 'Receives bug reports and low-rating alerts. Blank = HOST_EMAIL'],
+  ['SUPPORT_EMAIL', 'support@artibytte.com', 'Shown in email footers'],
+  ['HOST_TIMEZONE', 'Asia/Manila', 'Timezone of the slots below (used when the guest sends no timezone)'],
+  ['BASE_URL', 'https://articardd.com', 'Card site (used for QR links)'],
+  ['ARTIMEET_URL', 'https://artimeet.artibytte.com', 'Artimeet site'],
+  ['SLOTS', '9:00 AM,10:00 AM,11:00 AM,1:00 PM,2:00 PM,3:00 PM,4:00 PM', 'Bookable start times (same as the app)'],
+  ['WORK_DAYS', 'Mon,Tue,Wed,Thu,Fri,Sat,Sun', 'Only used by the availability action'],
+  ['CALENDAR_ID', 'primary', 'Calendar that receives events'],
+  ['CREATE_CALENDAR_EVENTS', 'TRUE', 'Create tentative events + Google Meet links (needs the Calendar advanced service)'],
+  ['NOTIFY_GUEST', 'TRUE', 'Email the guest on request and on every status change'],
+  ['NOTIFY_HOST', 'TRUE', 'Email the host on new requests and leads'],
+  ['EMAIL_GUEST_ON_REQUEST', 'FALSE', 'Email the guest right when they request (can be abused to email strangers). Guests still get emails on confirm / cancel'],
+  ['SEND_REMINDERS', 'TRUE', 'Hourly job emails a reminder before Confirmed meetings'],
+  ['REMINDER_HOURS', '24', 'How many hours before the meeting'],
+  ['ENFORCE_ADMIN_TOKEN', 'TRUE', 'Require the admin token for getAllMeetings / updateMeetingStatus'],
+  ['ALLOW_LEGACY_CARD_CREATE', 'FALSE', 'Allow the old unauthenticated GET ?athid=&name= card creation. Keep FALSE unless you use the setup screen'],
+  ['SESSION_HOURS', '12', 'Owner session length'],
+  ['REMEMBER_DAYS', '30', 'Session length when owner ticks "Remember this device"'],
+  ['MAX_REQUESTS_PER_EMAIL_HOUR', '5', 'Meeting requests per email per hour'],
+  ['MAX_REQUESTS_GLOBAL_HOUR', '200', 'Meeting requests per hour, all guests'],
+  ['MAX_LOGIN_FAILS_15MIN', '100', 'Failed owner/admin logins per 15 min before lockout (global)'],
+  ['LOG_RETENTION_DAYS', '30', 'Logs older than this are purged daily'],
+  ['REFERRAL_ENABLED', 'TRUE', 'ArtiStar Rewards on/off'],
+  ['REFERRAL_HOLD_DAYS', '14', 'Days after license activation before the reward can be sent'],
+  ['REFERRAL_REWARD_TEXT', '₱1,000 Starbucks e-Gift Card', 'Reward name used in emails']
+];
+const DEFAULTS = (function () { const o = {}; DEFAULT_SETTINGS.forEach(function (r) { o[r[0]] = r[1]; }); return o; })();
+
+class UserError extends Error {}
+
+/* ============================== 2. UTILITIES + VALIDATORS ============================== */
+const props_ = function () { return PropertiesService.getScriptProperties(); };
+const pad_ = function (n) { return (n < 10 ? '0' : '') + n; };
+const nowIso_ = function () { return new Date().toISOString(); };
+
+function esc_(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+function oneLine_(s) { return String(s == null ? '' : s).replace(/[\r\n\t]+/g, ' ').trim(); }
+function randHex_(n) { let s = ''; while (s.length < n) s += Utilities.getUuid().replace(/-/g, ''); return s.slice(0, n); }
+function randCode_(n) { const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; for (let i = 0; i < n; i++) s += A.charAt(Math.floor(Math.random() * A.length)); return s; }
+function sha_(s) { return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, String(s), Utilities.Charset.UTF_8).map(function (b) { return ('0' + (b & 0xff).toString(16)).slice(-2); }).join(''); }
+function colLetter_(n) { let s = ''; while (n > 0) { const m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = Math.floor((n - 1) / 26); } return s; }
+
+function str_(v, max, label, required) {
+  const s = String(v == null ? '' : v).replace(/[\u0000-\u001f\u007f]+/g, ' ').replace(/\s+/g, ' ').trim();
+  if (required && !s) throw new UserError(label + ' is required.');
+  if (s.length > max) throw new UserError(label + ' is too long.');
+  return s;
+}
+function text_(v, max, label) {
+  const s = String(v == null ? '' : v).replace(/\r\n?/g, '\n').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, '').trim();
+  if (s.length > max) throw new UserError(label + ' is too long.');
+  return s;
+}
+function email_(v) {
+  const s = String(v == null ? '' : v).trim().toLowerCase();
+  if (!s || s.length > 254 || !/^[^\s@,;]+@[^\s@,;]+\.[^\s@.,;]{2,}$/.test(s) || s.indexOf('..') >= 0) throw new UserError('Enter a valid email address.');
+  return s;
+}
+function phone_(v) {
+  const s = String(v == null ? '' : v).trim();
+  if (!s) return '';
+  if (!/^[+\d\s().-]{5,40}$/.test(s)) throw new UserError('Enter a valid phone number.');
+  return s;
+}
+function url_(v) {
+  const s = String(v == null ? '' : v).trim();
+  if (!s) return '';
+  if (s.length > 200 || /\s/.test(s) || (/^[a-z][a-z0-9+.-]*:/i.test(s) && !/^https?:/i.test(s))) throw new UserError('Enter a valid link.');
+  return s;
+}
+function slug_(v) { const s = String(v == null ? '' : v).trim().toLowerCase(); if (!/^[a-z0-9-]{0,40}$/.test(s)) throw new UserError('Invalid value.'); return s; }
+function oneOf_(v, list, label) { const s = String(v == null ? '' : v).trim(); if (list.indexOf(s) < 0) throw new UserError('Invalid ' + label + '.'); return s; }
+function tzName_(v) {
+  const s = String(v == null ? '' : v).trim();
+  if (!s || !/^[A-Za-z_]+(\/[A-Za-z_+\-0-9]+){0,2}$/.test(s)) return '';
+  try { Utilities.formatDate(new Date(), s, 'z'); return s; } catch (e) { return ''; }
+}
+function hostHandle_(v) { const s = String(v || 'artibyte').trim().toLowerCase(); if (!/^[a-z0-9_-]{1,40}$/.test(s)) throw new UserError('Invalid host.'); return s; }
+function normCardId_(v) {
+  let s = String(v == null ? '' : v).trim().toUpperCase().replace(/[^A-Z0-9-]/g, '');
+  if (s && s.indexOf('C-') !== 0) s = 'C-' + s;
+  if (!/^C-[A-Z0-9]{4,10}$/.test(s)) throw new UserError('Invalid Card ID.');
+  return s;
+}
+
+/* ---- date / time (the app sends "September 30, 2026" and "9:15 AM") ---- */
+function parseDateStr_(s) {
+  const m = /^([A-Za-z]+) (\d{1,2}), (\d{4})$/.exec(String(s || '').trim());
+  if (!m) throw new UserError('Invalid date.');
+  const name = m[1].charAt(0).toUpperCase() + m[1].slice(1).toLowerCase(), mi = MONTHS.indexOf(name), y = +m[3], d = +m[2];
+  if (mi < 0) throw new UserError('Invalid date.');
+  const chk = new Date(Date.UTC(y, mi, d));
+  if (chk.getUTCMonth() !== mi || chk.getUTCDate() !== d) throw new UserError('Invalid date.');
+  return { y: y, m: mi, d: d };
+}
+function parseTimeStr_(s) {
+  const m = /^(1[0-2]|[1-9]):([0-5]\d) (AM|PM)$/.exec(String(s || '').trim());
+  if (!m) throw new UserError('Invalid time.');
+  let h = (+m[1]) % 12; if (m[3] === 'PM') h += 12;
+  return { h: h, min: +m[2] };
+}
+function startOf_(dateStr, timeStr, tz) {
+  const d = parseDateStr_(dateStr), t = parseTimeStr_(timeStr);
+  return Utilities.parseDate(d.y + '-' + pad_(d.m + 1) + '-' + pad_(d.d) + ' ' + pad_(t.h) + ':' + pad_(t.min), tz, 'yyyy-MM-dd HH:mm');
+}
+function durMins_(d) { const n = parseInt(d, 10); return isNaN(n) ? 60 : n; }
+function endTimeStr_(time, dur) {
+  const t = parseTimeStr_(time), tot = t.h * 60 + t.min + durMins_(dur), h = Math.floor(tot / 60) % 24, mi = tot % 60;
+  return ((h % 12) || 12) + ':' + pad_(mi) + ' ' + (h >= 12 ? 'PM' : 'AM');
+}
+
+/* ============================== 3. SHEET LAYER ============================== */
+let _SS = null;
+function ss_() {
+  if (_SS) return _SS;
+  const id = props_().getProperty('SHEET_ID');
+  _SS = id ? SpreadsheetApp.openById(id) : SpreadsheetApp.getActiveSpreadsheet();
+  if (!_SS) throw new Error('No spreadsheet. Open this script from the Sheet (Extensions → Apps Script) or set the SHEET_ID script property.');
+  return _SS;
+}
+function specOf_(name) { return SCHEMA[name].split(',').map(function (c) { return c.slice(-1) === '#' ? { name: c.slice(0, -1), num: true } : { name: c, num: false }; }); }
+function specMap_(name) { const m = {}; specOf_(name).forEach(function (c) { m[c.name] = c.num ? 'n' : 't'; }); return m; }
+function headers_(sh) { const n = sh.getLastColumn(); return n ? sh.getRange(1, 1, 1, n).getValues()[0].map(String) : []; }
+function sheet_(name) { return ss_().getSheetByName(name) || ensureSheet_(name); }
+
+function fmtTextCols_(sh, name, fromRow, numRows) {
+  if (numRows < 1) return;
+  const hdr = headers_(sh), spec = specMap_(name);
+  hdr.forEach(function (h, i) { if (spec[h] === 't') sh.getRange(fromRow, i + 1, numRows, 1).setNumberFormat('@'); });
+}
+
+function ensureSheet_(name) {
+  const ss = ss_();
+  let sh = ss.getSheetByName(name) || ss.insertSheet(name);
+  const want = specOf_(name).map(function (c) { return c.name; });
+  let hdr = headers_(sh).filter(function (h) { return h !== ''; });
+  const missing = want.filter(function (w) { return hdr.indexOf(w) < 0; });
+  if (missing.length) {
+    const need = hdr.length + missing.length;
+    if (sh.getMaxColumns() < need) sh.insertColumnsAfter(sh.getMaxColumns(), need - sh.getMaxColumns());
+    sh.getRange(1, hdr.length + 1, 1, missing.length).setValues([missing]);
+    hdr = hdr.concat(missing);
+  }
+  sh.getRange(1, 1, 1, hdr.length).setFontWeight('bold').setBackground('#1c1c1e').setFontColor('#ffffff');
+  sh.setFrozenRows(1);
+  fmtTextCols_(sh, name, 2, sh.getMaxRows() - 1);
+  return sh;
+}
+
+function table_(name) {
+  const sh = sheet_(name), hdr = headers_(sh), last = sh.getLastRow(), rows = [];
+  if (last >= 2 && hdr.length) {
+    sh.getRange(2, 1, last - 1, hdr.length).getValues().forEach(function (r, i) {
+      if (r.every(function (v) { return v === ''; })) return;
+      const o = { _row: i + 2 };
+      hdr.forEach(function (h, j) { o[h] = r[j] instanceof Date ? r[j].toISOString() : r[j]; });
+      rows.push(o);
+    });
+  }
+  return { sh: sh, hdr: hdr, rows: rows };
+}
+
+function appendObj_(name, obj) {               // call inside withLock_
+  const sh = sheet_(name), hdr = headers_(sh), row = Math.max(sh.getLastRow(), 1) + 1;
+  if (row > sh.getMaxRows()) { const old = sh.getMaxRows(); sh.insertRowsAfter(old, 500); fmtTextCols_(sh, name, old + 1, 500); }
+  sh.getRange(row, 1, 1, hdr.length).setValues([hdr.map(function (h) { return obj[h] == null ? '' : obj[h]; })]);
+  return row;
+}
+function updateRow_(sh, hdr, row, patch) {     // call inside withLock_
+  const cur = sh.getRange(row, 1, 1, hdr.length).getValues()[0];
+  if (hdr.indexOf('updatedAt') >= 0 && !('updatedAt' in patch)) patch = Object.assign({ updatedAt: nowIso_() }, patch);
+  Object.keys(patch).forEach(function (k) { const i = hdr.indexOf(k); if (i >= 0) cur[i] = patch[k] == null ? '' : patch[k]; });
+  sh.getRange(row, 1, 1, hdr.length).setValues([cur]);
+  return true;
+}
+function updateRowById_(name, keyCol, keyVal, patch) {   // call inside withLock_
+  const sh = sheet_(name), hdr = headers_(sh), kc = hdr.indexOf(keyCol) + 1, last = sh.getLastRow();
+  if (!kc || last < 2) return false;
+  const keys = sh.getRange(2, kc, last - 1, 1).getValues();
+  for (let i = 0; i < keys.length; i++) if (String(keys[i][0]) === String(keyVal)) return updateRow_(sh, hdr, i + 2, patch);
+  return false;
+}
+function rewriteRows_(name, keep) {
+  const t = table_(name), last = t.sh.getLastRow();
+  if (last >= 2) t.sh.getRange(2, 1, last - 1, t.hdr.length).clearContent();
+  if (keep.length) t.sh.getRange(2, 1, keep.length, t.hdr.length).setValues(keep.map(function (r) { return t.hdr.map(function (h) { return r[h]; }); }));
+}
+function withLock_(fn) {
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(20000)) throw new UserError('The server is busy. Please try again in a moment.');
+  try { return fn(); } finally { lock.releaseLock(); }
+}
+function log_(level, action, message, detail) {   // never call inside withLock_
+  try {
+    const lock = LockService.getScriptLock();
+    if (!lock.tryLock(3000)) return;
+    try { appendObj_('Logs', { ts: nowIso_(), level: level, action: action, message: String(message || '').slice(0, 500), detail: String(detail || '').slice(0, 1500) }); }
+    finally { lock.releaseLock(); }
+  } catch (e) { /* logging must never break a request */ }
+}
+
+/* ============================== 4. SETTINGS ============================== */
+let _settings = null;
+function settings_() {
+  if (_settings) return _settings;
+  const cache = CacheService.getScriptCache(), c = cache.get('settings');
+  if (c) { _settings = JSON.parse(c); return _settings; }
+  const o = {};
+  table_('Settings').rows.forEach(function (r) { if (r.key) o[String(r.key)] = String(r.value); });
+  cache.put('settings', JSON.stringify(o), 300);
+  _settings = o;
+  return o;
+}
+function setting_(k) { const v = settings_()[k]; return (v === undefined || v === '') ? (DEFAULTS[k] || '') : v; }
+function flag_(k) { return String(setting_(k)).toUpperCase() === 'TRUE'; }
+function num_(k) { return Number(setting_(k)) || 0; }
+function hostEmail_() { return setting_('HOST_EMAIL') || Session.getEffectiveUser().getEmail(); }
+function adminEmail_() { return setting_('ADMIN_EMAIL') || hostEmail_(); }
+
+/* ============================== 5. SECURITY ============================== */
+function pepper_() { let p = props_().getProperty('PEPPER'); if (!p) { p = randHex_(32); props_().setProperty('PEPPER', p); } return p; }
+function hashSecret_(s) { return sha_(pepper_() + '|' + s); }
+
+function rlCount_(b) { return Number(CacheService.getScriptCache().get('rl:' + sha_(b).slice(0, 32)) || 0); }
+function rlBump_(b, ttl) { const c = CacheService.getScriptCache(), k = 'rl:' + sha_(b).slice(0, 32); c.put(k, String(Number(c.get(k) || 0) + 1), ttl); }
+function rate_(b, limit, ttl, msg) {
+  if (rlCount_(b) >= (limit || 1e9)) throw new UserError(msg || 'Too many requests. Please try again later.');
+  rlBump_(b, ttl);
+}
+
+function newAdminToken_() { const t = 'AT-' + randHex_(24).toUpperCase(); props_().setProperty('ADMIN_HASH', hashSecret_('admin|' + t)); return t; }
+function requireAdmin_(p) {
+  if (!flag_('ENFORCE_ADMIN_TOKEN')) return;
+  const stored = props_().getProperty('ADMIN_HASH');
+  if (!stored) throw new UserError('Admin token is not set up. Run "Initialize / repair all sheets" from the sheet menu.');
+  if (rlCount_('adminfail') >= (num_('MAX_LOGIN_FAILS_15MIN') || 10)) throw new UserError('Too many failed attempts. Try again later.');
+  const tok = String(p.adminToken || '').trim();
+  if (!tok || hashSecret_('admin|' + tok) !== stored) { rlBump_('adminfail', 900); throw new UserError('Unauthorized.'); }
+}
+
+function newSession_(cardId, remember) {
+  const hrs = remember ? (Number(setting_('REMEMBER_DAYS')) || 30) * 24 : (Number(setting_('SESSION_HOURS')) || 12);
+  const token = randHex_(40), exp = new Date(Date.now() + hrs * 3600e3).toISOString();
+  withLock_(function () { appendObj_('Sessions', { tokenHash: hashSecret_('sess|' + token), cardId: cardId, createdAt: nowIso_(), expiresAt: exp, revoked: 'FALSE' }); });
+  return { token: token, expiresAt: exp };
+}
+function session_(p) {
+  const tok = String(p.token || '').trim();
+  if (!/^[a-f0-9]{40}$/.test(tok)) throw new UserError('Please sign in again.');
+  const h = hashSecret_('sess|' + tok), cache = cacheservice.getscriptcache();
+  let cid = '';
+  const hit = cache.get('s:' + h);
+  if (hit) {
+    try {
+      const j = json.parse(hit), rv = number(cache.get('rv:' + j.c) || 0);
+      if (date.parse(j.e) > date.now() && !(rv && rv >= j.t)) cid = j.c;   // revoked after caching = ignore cache
+    } catch (e) { }
+  }
+  if (!cid) {   // cache miss: verify against the sessions sheet
+    const s = table_('Sessions').rows.find(function (r) { return r.tokenHash === h; });
+    if (!s || s.revoked === 'TRUE' || Date.parse(s.expiresAt) < Date.now()) throw new UserError('Your session has expired. Please sign in again.');
+    cid = s.cardId;
+    cache.put('s:' + h, JSON.stringify({ c: cid, e: s.expiresAt, t: Date.now() }), 600);
+  }
+  let c = null;
+  const sc = cache.get('sc:' + cid);
+  if (sc) { try { c = JSON.parse(sc); } catch (e) { } }
+  if (!c) {
+    const full = findCard_(cid);
+    if (full) {
+      c = {}; Object.keys(full).forEach(function (k) { if (k !== 'photo' && k !== 'keyHash') c[k] = full[k]; });   // slim: no photo/key (100KB cache limit)
+      cache.put('sc:' + cid, JSON.stringify(c), 120);
+    }
+  }
+  if (!c || c.status !== 'Active') throw new UserError('This card is not active.');
+  return c;
+}
+function revokeSessions_(cardId) {
+  CacheService.getScriptCache().put('rv:' + cardId, String(Date.now()), 1800);
+  CacheService.getScriptCache().remove('sc:' + cardId);
+  withLock_(function () {
+    const t = table_('Sessions'), rc = t.hdr.indexOf('revoked') + 1;
+    t.rows.forEach(function (r) { if (r.cardId === cardId && r.revoked !== 'TRUE') t.sh.getRange(r._row, rc).setValue('TRUE'); });
+  });
+}
+
+/* ============================== 6. HTTP ENTRY ============================== */
+const ROUTES = {
+  ping:                 { fn: actPing_, get: true },
+  card:                 { fn: actCard_, get: true },
+  availability:         { fn: actAvailability_, get: true },
+  saveMeeting:          { fn: actSaveMeeting_ },
+  guestLookup:          { fn: actGuestLookup_ },
+  guestCancel:          { fn: actGuestCancel_ },
+  saveLead:             { fn: actSaveLead_ },
+  saveFeedback:         { fn: actSaveFeedback_ },
+  ownerLogin:           { fn: actOwnerLogin_ },
+  ownerLogout:          { fn: actOwnerLogout_ },
+  ownerGetCard:         { fn: actOwnerGetCard_ },
+  ownerUpdateCard:      { fn: actOwnerUpdateCard_ },
+  ownerListMeetings:    { fn: actOwnerListMeetings_ },
+  ownerCreateMeeting:   { fn: actOwnerCreateMeeting_ },
+  ownerEditMeeting:     { fn: actOwnerEditMeeting_ },
+  ownerUpdateMeetingStatus: { fn: actOwnerUpdateMeetingStatus_ },
+  ownerListLeads:       { fn: actOwnerListLeads_ },
+  ownerGetContacts:     { fn: actOwnerGetContacts_ },
+  ownerSaveContacts:    { fn: actOwnerSaveContacts_ },
+  ownerRotateKey:       { fn: actOwnerRotateKey_ },
+  redeemCode:           { fn: actRedeemCode_ },
+  ownerDeleteAccount:   { fn: actOwnerDeleteAccount_ },
+  getAllMeetings:       { fn: actGetAllMeetings_ },
+  updateMeetingStatus:  { fn: actUpdateMeetingStatus_ },
+  adminStats:           { fn: actAdminStats_ }
+};
+
+function ok_(data) { return { success: true, data: data }; }
+function fail_(err) {
+  if (err instanceof UserError) return { success: false, error: err.message };
+  const ref = randHex_(6).toUpperCase();
+  log_('ERROR', 'unhandled', err && err.message, ((err && err.stack) || '') + ' ref=' + ref);
+  return { success: false, error: 'Something went wrong. Please try again. (ref ' + ref + ')' };
+}
+function run_(fn) { try { return fn(); } catch (e) { return fail_(e); } }
+function respond_(obj, cb) {
+  const json = JSON.stringify(obj);
+  if (cb && /^[A-Za-z_$][\w$.]{0,63}$/.test(cb)) return ContentService.createTextOutput(cb + '(' + json + ');').setMimeType(ContentService.MimeType.JAVASCRIPT);
+  return ContentService.createTextOutput(json).setMimeType(ContentService.MimeType.JSON);
+}
+function dispatch_(action, payload, viaGet) {
+  const r = ROUTES[action];
+  if (!r) throw new UserError('Unknown action.');
+  if (viaGet && !r.get) throw new UserError('This action requires POST.');
+  return ok_(r.fn(payload || {}));
+}
+
+function doGet(e) {
+  const p = (e && e.parameter) || {};
+  const out = run_(function () {
+    if (p.action) return dispatch_(String(p.action), p, true);
+    if (p.type || (p.athid && p.name)) return legacy_(p);       // card app (no-cors GETs)
+    return ok_({ service: 'Artimeet / Articardd backend', version: VERSION, time: nowIso_() });
+  });
+  return respond_(out, p.callback);
+}
+function doPost(e) {
+  const out = run_(function () {
+    const raw = (e && e.postData && e.postData.contents) || '';
+    if (!raw || raw.length > 4000000) throw new UserError('Invalid request.');
+    let body; try { body = JSON.parse(raw); } catch (x) { throw new UserError('Invalid JSON.'); }
+    return dispatch_(String((body && body.action) || ''), body && body.payload, false);
+  });
+  return respond_(out);
+}
+function legacy_(p) {
+  const t = String(p.type || '').toLowerCase();
+  if (['feedback', 'bug', 'feature'].indexOf(t) >= 0) {
+    return ok_(saveFeedbackImpl_({ type: t, context: p.context, category: p.category, athId: p.athid, name: p.name, stars: p.stars, remarks: p.remarks, clientTs: p.ts }));
+  }
+  if (p.athid && p.name) return ok_(legacyCard_(p));
+  throw new UserError('Unknown request.');
+}
+
+/* ============================== 7. PUBLIC ACTIONS ============================== */
+function actPing_() { return { ok: true, version: VERSION, time: nowIso_() }; }
+
+/* ---- cards ---- */
+function findCard_(id) {
+  id = String(id || '').trim().toUpperCase();
+  if (!id) return null;
+  const rows = table_('Cards').rows;
+  return rows.find(function (r) { return String(r.cardId).toUpperCase() === id; }) || rows.find(function (r) { return String(r.athId).toUpperCase() === id; }) || null;
+}
+function licenseExpired_(c) { return c.plan !== 'Lifetime' && c.licenseExpiry && (Date.parse(c.licenseExpiry) + 864e5) < Date.now(); }
+function publicCard_(c) {
+  return {
+    cardId: c.cardId, athId: c.athId, name: c.name, position: c.position, company: c.company,
+    phone: c.showPhone === 'FALSE' ? '' : c.phone, email: c.showEmail === 'FALSE' ? '' : c.email,
+    website: c.website, linkedin: c.linkedin, theme: c.theme, colorway: c.colorway, mascotId: c.mascotId, qrLink: c.qrLink,
+    bookingUrl: setting_('ARTIMEET_URL') + '?id=' + encodeURIComponent(c.cardId),
+    photo: c.photo || ''
+  };
+}
+function licenseOf_(c) {
+  if (String(c.plan) === 'Lifetime') return { status: 'lifetime', start: '', end: '' };
+  const end = c.licenseExpiry ? String(c.licenseExpiry).slice(0, 10) : '';
+  if (!end) return { status: 'none', start: '', end: '' };
+  return { status: 'active', start: String(c.createdAt || '').slice(0, 10), end: end };
+}
+function ownerCard_(c) { const o = Object.assign({}, c); delete o.keyHash; delete o._row; o.license = licenseOf_(c); return o; }
+function bumpViews_(c) {
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(1500)) return;
+  try {
+    const sh = sheet_('Cards'), col = headers_(sh).indexOf('views') + 1;
+    if (col) sh.getRange(c._row, col).setValue((Number(sh.getRange(c._row, col).getValue()) || 0) + 1);
+  } catch (e) { } finally { lock.releaseLock(); }
+}
+function actCard_(p) {
+  const key = p.id || p.cardId || p.athid;
+  if (!key) throw new UserError('Card ID is required.');
+  const ck = 'card:' + String(key).trim().toUpperCase(), cache = CacheService.getScriptCache(), hit = cache.get(ck);
+  if (hit) return JSON.parse(hit);
+  const c = findCard_(String(key).trim());
+  if (!c || c.status !== 'Active' || c.publicVisible === 'FALSE' || licenseExpired_(c)) throw new UserError('Card not found.');
+  bumpViews_(c);
+  const out = publicCard_(c);
+  cache.put(ck, JSON.stringify(out), 120);
+  return out;
+}
+function createCard_(d) {
+  return withLock_(function () {
+    const cards = table_('Cards').rows;
+    let cardId = d.cardId;
+    if (cardId) { if (cards.some(function (r) { return r.cardId === cardId; })) throw new UserError('That Card ID already exists.'); }
+    else { do { cardId = 'C-' + randCode_(6); } while (cards.some(function (r) { return r.cardId === cardId; })); }
+    let n;
+    if (d.athId) n = Number(d.no || 0);
+    else { n = (Number(props_().getProperty('CARD_COUNTER')) || 0) + 1; props_().setProperty('CARD_COUNTER', String(n)); }
+    const athId = d.athId || ('ARTICARD-' + ('000000' + n).slice(-6));
+    if (cards.some(function (r) { return String(r.athId).toUpperCase() === athId.toUpperCase(); })) throw new UserError('That ATH ID already exists.');
+    const key = d.noKey ? '' : 'AK-' + randHex_(16).toUpperCase();
+    const plan = d.plan || 'Trial', now = nowIso_();
+    const days = plan === 'Trial' ? 7 : plan === 'Annual' ? 365 : 0;
+    const expiry = days ? Utilities.formatDate(new Date(Date.now() + days * 864e5), setting_('HOST_TIMEZONE'), 'yyyy-MM-dd') : '';
+    const rec = {
+      cardId: cardId, athId: athId, no: n, name: d.name, position: d.position || '', company: d.company || '', phone: d.phone || '', email: d.email || '',
+      website: '', linkedin: '', qrLink: setting_('BASE_URL') + '/?c=' + cardId, keyHash: key ? hashSecret_('owner|' + key) : '',
+      status: 'Active', plan: plan, licenseExpiry: expiry, publicVisible: 'TRUE', showPhone: 'TRUE', showEmail: 'TRUE',
+      theme: '', colorway: '', views: 0, createdAt: now, updatedAt: now, lastLoginAt: '', notes: d.notes || ''
+    };
+    appendObj_('Cards', rec);
+    return { card: rec, ownerKey: key };
+  });
+}
+function legacyCard_(p) {
+  if (!flag_('ALLOW_LEGACY_CARD_CREATE')) throw new UserError('Card registration through this endpoint is disabled.');
+  rate_('legacycard', 30, 3600);
+  const athId = str_(p.athid, 30, 'ATH ID', true).toUpperCase();
+  if (!/^[A-Z0-9-]{3,30}$/.test(athId)) throw new UserError('Invalid ATH ID.');
+  if (findCard_(athId)) return { created: false, reason: 'exists' };   // never overwrites an existing card
+  const r = createCard_({ name: str_(p.name, 80, 'Name', true), position: str_(p.position, 120, 'Position'), athId: athId, no: Number(p.no) || 0, plan: 'Trial', noKey: true });
+  log_('INFO', 'legacyCard', r.card.cardId, athId);
+  return { created: true, cardId: r.card.cardId };
+}
+
+/* ---- availability ---- */
+function hostKey_(cardId, handle) { return cardId ? 'c:' + cardId : 'h:' + handle; }
+function confirmedBlocks_(key, exceptId) {
+  const out = [];
+  table_('Meetings').rows.forEach(function (r) {
+    if (r.requestStatus !== 'Confirmed' || hostKey_(r.cardId, r.hostHandle) !== key || r.meetingId === exceptId) return;
+    try { const s = startOf_(r.date, r.time, r.timezone || setting_('HOST_TIMEZONE')).getTime(); out.push({ start: s, end: s + durMins_(r.duration) * 60000 }); } catch (e) { }
+  });
+  return out;
+}
+function clashes_(startMs, mins, blocks) { const endMs = startMs + mins * 60000; return blocks.some(function (b) { return startMs < b.end && b.start < endMs; }); }
+
+function actAvailability_(p) {
+  /* === START: AVAILABILITY TZ + RATE === */
+  rate_('avail:global', 600, 3600);
+  const tz = tzName_(p.timezone) || setting_('HOST_TIMEZONE'), dateStr = str_(p.date, 30, 'Date', true), d = parseDateStr_(dateStr);
+  /* === END: AVAILABILITY TZ + RATE === */
+  const dow = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date(Date.UTC(d.y, d.m, d.d)).getUTCDay()];
+  const days = setting_('WORK_DAYS').split(',').map(function (s) { return s.trim(); });
+  const cardId = p.cardId ? normCardId_(p.cardId) : '';
+  const blocks = confirmedBlocks_(hostKey_(cardId, hostHandle_(p.hostHandle)));
+  const mins = DURATIONS.indexOf(p.duration) >= 0 ? durMins_(p.duration) : 30;
+  const slots = days.indexOf(dow) < 0 ? [] : setting_('SLOTS').split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+  const times = slots.filter(function (t) { try { const s = startOf_(dateStr, t, tz).getTime(); return s > Date.now() && !clashes_(s, mins, blocks); } catch (e) { return false; } });
+  return { date: dateStr, timezone: tz, times: times };
+}
+
+/* ---- meetings ---- */
+function meetingOut_(r) {
+  return {
+    meetingId: r.meetingId, hostHandle: r.hostHandle, cardId: r.cardId, createdAt: r.createdAt, date: r.date, time: r.time, duration: r.duration,
+    type: r.type, recurrence: r.recurrence || 'One-time', location: r.location, locationAddress: r.locationAddress, timezone: r.timezone,
+    meetingLink: r.meetingLink, requestStatus: r.requestStatus, calendarStatus: r.calendarStatus,
+    guestName: r.guestName, guestOrg: r.guestOrg, guestEmail: r.guestEmail, guestPhone: r.guestPhone, notes: r.notes
+  };
+}
+function resolveHost_(v) {
+  let c = null;
+  if (v.cardId) { c = findCard_(v.cardId); if (c && c.status !== 'Active') c = null; }
+  return { cardId: c ? c.cardId : '', name: (c && c.name) || setting_('HOST_NAME'), email: (c && c.email) || hostEmail_() };
+}
+function nextMeetingId_() {
+  const n = (Number(props_().getProperty('MTG_COUNTER')) || 0) + 1;
+  props_().setProperty('MTG_COUNTER', String(n));
+  return 'MT-' + ('000000' + n).slice(-6);
+}
+
+function actSaveMeeting_(p) {
+  const hostTz = setting_('HOST_TIMEZONE');
+  const v = {
+    hostHandle: hostHandle_(p.hostHandle), cardId: p.cardId ? normCardId_(p.cardId) : '',
+    guestName: str_(p.name, 120, 'Name', true), guestEmail: email_(p.email), guestOrg: str_(p.org, 120, 'Organization'),
+    guestPhone: phone_(p.phone), notes: text_(p.notes, 2000, 'Notes'),
+    type: oneOf_(p.type, MEETING_TYPES, 'meeting type'),
+    date: str_(p.date, 30, 'Date', true), time: str_(p.time, 12, 'Time', true),
+    duration: oneOf_(p.duration || '30 min', DURATIONS, 'duration'),
+    recurrence: oneOf_(p.recurrence || 'One-time', RECURRENCES, 'recurrence'),
+    location: oneOf_(p.location, LOCATIONS, 'location'),
+    locationAddress: str_(p.locationAddress, 200, 'Address')
+  };
+  const tz = tzName_(p.timezone) || hostTz;                 // the time is read in the guest's timezone when sent
+  const start = startOf_(v.date, v.time, tz);
+  if (start.getTime() < Date.now()) throw new UserError('That time has already passed. Please pick a later time.');
+  if (start.getTime() > Date.now() + 730 * 864e5) throw new UserError('Please choose a date within the next 2 years.');
+  if (v.cardId) {
+    const hc = findCard_(v.cardId);
+    if (!hc || hc.status !== 'Active' || licenseExpired_(hc)) throw new UserError('This card is not accepting meeting requests.');
+  }
+  rate_('mail:' + v.guestEmail, num_('MAX_REQUESTS_PER_EMAIL_HOUR'), 3600, 'You have sent several requests recently. Please try again later.');
+  rate_('global:save', num_('MAX_REQUESTS_GLOBAL_HOUR'), 3600, 'We are receiving many requests. Please try again shortly.');
+  rate_('global:save6h', 100, 21600, 'We are receiving many requests. Please try again later.');
+  rate_('card:save:' + (v.cardId || v.hostHandle), 30, 3600, 'This card is receiving many requests. Please try again later.');
+  const host = resolveHost_(v), key = hostKey_(host.cardId || v.cardId, v.hostHandle);
+
+  const rec = withLock_(function () {
+    if (clashes_(start.getTime(), durMins_(v.duration), confirmedBlocks_(key))) throw new UserError('That time slot is no longer available. Please pick another time.');
+    const now = nowIso_();
+    const r = Object.assign({}, v, {
+      meetingId: nextMeetingId_(), cardId: host.cardId || v.cardId, createdAt: now, updatedAt: now, timezone: tz,
+      meetingLink: '', requestStatus: 'Requested', calendarStatus: 'Not synced', calendarEventId: '',
+      notifiedStatus: 'Requested', reminderSentAt: '', source: p.source ? str_(p.source, 30, 'Source') : 'artimeet', hostNotes: ''
+    });
+    appendObj_('Meetings', r);
+    return r;
+  });
+
+  // side effects run OUTSIDE the lock; a failure here never loses the saved request
+  let cal = { status: 'Not synced', link: '', eventId: '' };
+  try { cal = createCalendarEvent_(rec); } catch (e) { cal = { status: 'Failed', link: '', eventId: '' }; log_('WARN', 'calendar', e.message, rec.meetingId); }
+  if (cal.status !== 'Not synced') {
+    rec.meetingLink = cal.link; rec.calendarStatus = cal.status; rec.calendarEventId = cal.eventId;
+    withLock_(function () { updateRowById_('Meetings', 'meetingId', rec.meetingId, { meetingLink: cal.link, calendarStatus: cal.status, calendarEventId: cal.eventId }); });
+  }
+  try { if (flag_('NOTIFY_GUEST') && flag_('EMAIL_GUEST_ON_REQUEST')) notifyGuestRequested_(rec, host); if (flag_('NOTIFY_HOST')) notifyHostRequested_(rec, host); }
+  catch (e) { log_('WARN', 'mail', e.message, rec.meetingId); }
+  log_('INFO', 'saveMeeting', rec.meetingId, rec.guestEmail);
+  return { meetingId: rec.meetingId, meetingLink: rec.meetingLink, requestStatus: 'Requested', calendarStatus: rec.calendarStatus };
+}
+
+function guestMeeting_(p) {
+  rate_('lookup', 60, 3600);
+  const id = str_(p.meetingId, 20, 'Reference', true).toUpperCase(), em = email_(p.email);
+  const m = table_('Meetings').rows.find(function (r) { return String(r.meetingId).toUpperCase() === id && String(r.guestEmail).toLowerCase() === em; });
+  if (!m) throw new UserError('We could not find that meeting.');
+  return m;
+}
+function actGuestLookup_(p) {
+  const m = guestMeeting_(p);
+  return { meetingId: m.meetingId, date: m.date, time: m.time, type: m.type, location: m.location, requestStatus: m.requestStatus, meetingLink: m.requestStatus === 'Confirmed' ? m.meetingLink : '' };
+}
+function actGuestCancel_(p) {
+  const m = guestMeeting_(p);
+  if (m.requestStatus !== 'Cancelled') applyStatusChange_(m, 'Cancelled', 'guest');
+  return { meetingId: m.meetingId, requestStatus: 'Cancelled' };
+}
+
+/* ---- leads (Connect form) ---- */
+function actSaveLead_(p) {
+  const lead = {
+    leadId: 'LD-' + randHex_(8).toUpperCase(), createdAt: nowIso_(), cardId: p.cardId ? normCardId_(p.cardId) : '',
+    name: str_(p.name, 120, 'Name', true), title: str_(p.title, 160, 'Title'), email: email_(p.email), mobile: phone_(p.mobile),
+    source: 'connect', status: 'New', notes: text_(p.notes, 1000, 'Notes')
+  };
+  if (lead.cardId) {
+    const hc = findCard_(lead.cardId);
+    if (!hc || hc.status !== 'Active' || licenseExpired_(hc)) throw new UserError('This card is not accepting submissions.');
+  }
+  rate_('lead:' + lead.email, 5, 3600, 'Too many submissions. Please try again later.');
+  rate_('lead:global', 100, 3600);
+  rate_('lead:card:' + (lead.cardId || 'none'), 20, 3600, 'This card is receiving many submissions. Please try again later.');
+  withLock_(function () { appendObj_('Leads', lead); });
+  try {
+    const host = resolveHost_({ cardId: lead.cardId });
+    if (flag_('NOTIFY_HOST')) sendMail_(host.email, 'New connection: ' + lead.name,
+      mailShell_('New connection', '<table style="width:100%">' + kv_('Name', esc_(lead.name)) + kv_('Title', esc_(lead.title)) + kv_('Email', esc_(lead.email)) + kv_('Mobile', esc_(lead.mobile)) + '</table>'), lead.email);
+  } catch (e) { log_('WARN', 'mail', e.message, lead.leadId); }
+  return { leadId: lead.leadId };
+}
+
+/* ---- feedback (card app: feedback / bug / feature) ---- */
+function saveFeedbackImpl_(p) {
+  const type = oneOf_(String(p.type || 'feedback').toLowerCase(), ['feedback', 'bug', 'feature'], 'type');
+  const athId = str_(p.athId || p.athid, 40, 'ATH ID');
+  rate_('fb:' + (athId || 'anon'), 20, 3600, 'Too many submissions. Please try again later.');
+  let stars = 0;
+  if (p.stars !== undefined && p.stars !== '' && p.stars !== null) { stars = Number(p.stars); if (!(stars >= 0 && stars <= 5)) throw new UserError('Invalid rating.'); }
+  const rec = {
+    feedbackId: 'FB-' + randHex_(8).toUpperCase(), createdAt: nowIso_(), type: type, context: str_(p.context, 30, 'Context'), category: str_(p.category, 60, 'Category'),
+    athId: athId, name: str_(p.name, 120, 'Name'), stars: stars, remarks: text_(p.remarks, 1000, 'Remarks'), clientTs: str_(p.clientTs || p.ts, 40, 'Timestamp'),
+    status: 'New', adminNotes: ''
+  };
+  if (type === 'feedback' && !stars && !rec.remarks) throw new UserError('Please add a rating or a comment.');
+  if (type !== 'feedback' && !rec.remarks) throw new UserError('Please describe it first.');
+  withLock_(function () { appendObj_('Feedback', rec); });
+  try {
+    if (type !== 'feedback' || (stars > 0 && stars <= 2)) sendMail_(adminEmail_(), '[' + type + '] ' + (rec.name || rec.athId || 'anonymous'),
+      mailShell_('New ' + type, '<table style="width:100%">' + kv_('From', esc_(rec.name + ' ' + rec.athId)) + kv_('Rating', stars ? esc_(stars + ' / 5') : '—') + kv_('Context', esc_(rec.context + ' ' + rec.category)) + kv_('Remarks', esc_(rec.remarks).replace(/\n/g, '<br>')) + '</table>'));
+  } catch (e) { log_('WARN', 'mail', e.message, rec.feedbackId); }
+  return { feedbackId: rec.feedbackId };
+}
+function actSaveFeedback_(p) { return saveFeedbackImpl_(p); }
+
+/* ============================== 8. OWNER ACTIONS (session token) ============================== */
+function actOwnerLogin_(p) {
+  const key = String(p.key || '').trim().toUpperCase(), lim = num_('MAX_LOGIN_FAILS_15MIN') || 10;
+  if (rlCount_('ownerfail') >= lim) throw new UserError('Too many attempts. Please try again in a few minutes.');
+  if (!/^AK-[A-Z0-9]{8,}$/.test(key)) throw new UserError('That key is not valid.');
+  const h = hashSecret_('owner|' + key);
+  const c = table_('Cards').rows.find(function (r) { return r.keyHash && r.keyHash === h; });
+  if (!c) { rlBump_('ownerfail', 900); log_('WARN', 'ownerLogin', 'bad key', ''); throw new UserError('That key is not valid.'); }
+  if (c.status !== 'Active') throw new UserError('This card is not active. Contact ' + setting_('SUPPORT_EMAIL') + '.');
+  /* expired owners can still sign in to renew; their public card is hidden instead */
+  const s = newSession_(c.cardId, p.remember === true || String(p.remember) === 'true');
+  withLock_(function () { updateRowById_('Cards', 'cardId', c.cardId, { lastLoginAt: nowIso_() }); });
+  log_('INFO', 'ownerLogin', c.cardId, '');
+  return { token: s.token, expiresAt: s.expiresAt, card: ownerCard_(c) };
+}
+function actOwnerLogout_(p) {
+  const tok = String(p.token || '').trim();
+  if (!/^[a-f0-9]{40}$/.test(tok)) return { ok: true };
+  const h = hashSecret_('sess|' + tok);
+  withLock_(function () { updateRowById_('Sessions', 'tokenHash', h, { revoked: 'TRUE' }); });
+  CacheService.getScriptCache().remove('s:' + h);
+  return { ok: true };
+}
+function actOwnerGetCard_(p) { return ownerCard_(findCard_(session_(p).cardId)); }
+function actOwnerUpdateCard_(p) {
+  const c = session_(p), f = p.fields || {}, patch = {};
+  if ('name' in f) patch.name = str_(f.name, 80, 'Name', true);
+  if ('position' in f) patch.position = str_(f.position, 120, 'Position');
+  if ('company' in f) patch.company = str_(f.company, 120, 'Company');
+  if ('phone' in f) patch.phone = phone_(f.phone);
+  if ('email' in f) patch.email = f.email ? email_(f.email) : '';
+  if ('website' in f) patch.website = url_(f.website);
+  if ('linkedin' in f) patch.linkedin = url_(f.linkedin);
+  if ('theme' in f) patch.theme = slug_(f.theme);
+  if ('colorway' in f) patch.colorway = slug_(f.colorway);
+  if ('mascotId' in f) patch.mascotId = slug_(f.mascotId);
+  if ('photo' in f) {
+    const ph = String(f.photo || '');
+    if (ph && (ph.length > 45000 || !/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(ph))) throw new UserError('Photo is too large or invalid.');
+    patch.photo = ph;
+  }
+  ['publicVisible', 'showPhone', 'showEmail'].forEach(function (k) { if (k in f) patch[k] = (f[k] === false || String(f[k]).toUpperCase() === 'FALSE') ? 'FALSE' : 'TRUE'; });
+  withLock_(function () { updateRowById_('Cards', 'cardId', c.cardId, patch); });
+  CacheService.getScriptCache().removeAll(['card:' + String(c.cardId).toUpperCase(), 'card:' + String(c.athId).toUpperCase()]);
+  CacheService.getScriptCache().remove('sc:' + c.cardId);
+  return ownerCard_(Object.assign({}, c, patch));
+}
+function toHostTz_(m) {
+  try {
+    const tz = setting_('HOST_TIMEZONE');
+    if (!m.timezone || m.timezone === tz) return m;
+    const s = startOf_(m.date, m.time, m.timezone);
+    const date = MONTHS[+Utilities.formatDate(s, tz, 'M') - 1] + ' ' + (+Utilities.formatDate(s, tz, 'd')) + ', ' + Utilities.formatDate(s, tz, 'yyyy');
+    return Object.assign({}, m, { date: date, time: Utilities.formatDate(s, tz, 'h:mm a'), timezone: tz });
+  } catch (e) { return m; }
+}
+function actOwnerListMeetings_(p) {
+  const c = session_(p);
+  return table_('Meetings').rows.filter(function (r) { return r.cardId === c.cardId; }).map(function (r) { return meetingOut_(toHostTz_(r)); });
+}
+function actOwnerUpdateMeetingStatus_(p) {
+  const c = session_(p), status = oneOf_(p.status, STATUSES, 'status');
+  const m = table_('Meetings').rows.find(function (r) { return r.meetingId === String(p.meetingId || '') && r.cardId === c.cardId; });
+  if (!m) throw new UserError('Meeting not found.');
+  if (m.requestStatus !== status) applyStatusChange_(m, status, 'owner');
+  return { meetingId: m.meetingId, requestStatus: status, calendarStatus: m.calendarStatus };
+}
+function actOwnerListLeads_(p) {
+  const c = session_(p);
+  return table_('Leads').rows.filter(function (r) { return r.cardId === c.cardId; }).map(function (r) { const o = Object.assign({}, r); delete o._row; return o; });
+}
+function actOwnerRotateKey_(p) {
+  const c = session_(p), key = 'AK-' + randHex_(16).toUpperCase();
+  withLock_(function () { updateRowById_('Cards', 'cardId', c.cardId, { keyHash: hashSecret_('owner|' + key) }); });
+  revokeSessions_(c.cardId);
+  log_('INFO', 'rotateKey', c.cardId, '');
+  return { ownerKey: key, note: 'Store this key now. All sessions were signed out.' };
+}
+
+/* === START: CONTACTS CLOUD (owner) === */
+/* Isang row bawat contact (JSON). Ang '__sync__' row ang marker na may naka-save nang address book. */
+function actOwnerGetContacts_(p) {
+  const c = session_(p);
+  let exists = false;
+  const contacts = [];
+  table_('Contacts').rows.forEach(function (r) {
+    if (String(r.cardId) !== String(c.cardId)) return;
+    if (String(r.contactId) === '__sync__') { exists = true; return; }
+    try { contacts.push(JSON.parse(r.json)); } catch (e) { }
+  });
+  return { exists: exists, contacts: contacts };
+}
+
+function actOwnerSaveContacts_(p) {
+  const c = session_(p);
+  rate_('contacts:save:' + c.cardId, 120, 3600, 'Too many contact syncs. Please try again later.');
+  if (!Array.isArray(p.contacts) || p.contacts.length > 5000) throw new UserError('Invalid contacts.');
+  const now = nowIso_(), mine = [{ cardId: c.cardId, contactId: '__sync__', json: '', updatedAt: now }];
+  p.contacts.forEach(function (ct) {
+    if (!ct || ct.id == null) return;
+    const j = JSON.stringify(ct);
+    if (j.length < 45000) mine.push({ cardId: c.cardId, contactId: String(ct.id), json: j, updatedAt: now });
+  });
+  withLock_(function () {
+    const keep = table_('Contacts').rows.filter(function (r) { return String(r.cardId) !== String(c.cardId); });
+    rewriteRows_('Contacts', keep.concat(mine));
+  });
+  return { saved: mine.length - 1 };
+}
+/* === END: CONTACTS CLOUD (owner) === */
+
+/* ---- owner-created / owner-edited meetings (ATH•NA Calendar) ---- */
+function ownerMeetingFields_(p) {
+  const v = {
+    guestName: str_(p.name, 120, 'Name', true),
+    type: oneOf_(p.type, MEETING_TYPES, 'meeting type'),
+    date: str_(p.date, 30, 'Date', true),
+    time: str_(p.time, 12, 'Time', true)
+  };
+  startOf_(v.date, v.time, setting_('HOST_TIMEZONE'));   // validates format
+  return v;
+}
+function actOwnerCreateMeeting_(p) {
+  const c = session_(p), v = ownerMeetingFields_(p), tz = setting_('HOST_TIMEZONE');
+  const duration   = oneOf_(p.duration || '30 min', DURATIONS, 'duration');
+  const location   = oneOf_(p.location || 'Videocall / Virtual Call', LOCATIONS, 'location');
+  const recurrence = oneOf_(p.recurrence || 'One-time', RECURRENCES, 'recurrence');
+  const extra = {
+    guestEmail: p.guestEmail ? email_(p.guestEmail) : '',
+    guestOrg: str_(p.guestOrg, 120, 'Organization'),
+    guestPhone: phone_(p.guestPhone),
+    notes: text_(p.notes, 2000, 'Notes'),
+    locationAddress: str_(p.locationAddress, 200, 'Address')
+  };
+  const start = startOf_(v.date, v.time, tz), key = hostKey_(c.cardId, 'artibyte');
+  if (start.getTime() < Date.now()) throw new UserError('That time has already passed. Please pick a later time.');
+  const rec = withLock_(function () {
+    if (clashes_(start.getTime(), durMins_(duration), confirmedBlocks_(key))) throw new UserError('You already have a confirmed meeting at that time.');
+    const now = nowIso_();
+    const r = Object.assign({}, v, extra, {
+      meetingId: nextMeetingId_(), hostHandle: 'artibyte', cardId: c.cardId, createdAt: now, updatedAt: now,
+      duration: duration, recurrence: recurrence, location: location, timezone: tz, meetingLink: '',
+      requestStatus: 'Confirmed', calendarStatus: 'Not synced', calendarEventId: '', notifiedStatus: 'Confirmed',
+      reminderSentAt: '', source: p.rebookOf ? 'rebook' : 'owner', hostNotes: p.rebookOf ? 'Rebook of ' + str_(p.rebookOf, 20, 'Ref') : ''
+    });
+    appendObj_('Meetings', r);
+    return r;
+  });
+  try {
+    const cal = createCalendarEvent_(rec);
+    if (cal.eventId) {
+      Object.assign(rec, { calendarEventId: cal.eventId, meetingLink: cal.link, calendarStatus: cal.status });
+      const s = syncCalendar_(rec, 'Confirmed') || {};   // may add guest attendee + RRULE
+      const patch = { calendarEventId: cal.eventId, meetingLink: s.meetingLink || cal.link, calendarStatus: s.calendarStatus || cal.status };
+      withLock_(function () { updateRowById_('Meetings', 'meetingId', rec.meetingId, patch); });
+      Object.assign(rec, patch);
+    }
+  } catch (e) { log_('WARN', 'calendar', e.message, rec.meetingId); }
+  try { if (rec.guestEmail && flag_('NOTIFY_GUEST')) notifyGuestStatus_(rec, 'Confirmed'); }
+  catch (e) { log_('WARN', 'mail', e.message, rec.meetingId); }
+  log_('INFO', 'ownerCreateMeeting', rec.meetingId, c.cardId);
+  return meetingOut_(rec);
+}
+function actOwnerEditMeeting_(p) {
+  const c = session_(p), v = ownerMeetingFields_(p), tz = setting_('HOST_TIMEZONE');
+  const m = table_('Meetings').rows.find(function (r) { return r.meetingId === String(p.meetingId || '') && r.cardId === c.cardId; });
+  if (!m) throw new UserError('Meeting not found.');
+  if (m.requestStatus === 'Cancelled') throw new UserError('This meeting was cancelled.');
+  const start = startOf_(v.date, v.time, tz);
+  withLock_(function () {
+    if (m.requestStatus === 'Confirmed' && clashes_(start.getTime(), durMins_(m.duration), confirmedBlocks_(hostKey_(m.cardId, m.hostHandle), m.meetingId)))
+      throw new UserError('You already have a confirmed meeting at that time.');
+    updateRowById_('Meetings', 'meetingId', m.meetingId, { guestName: v.guestName, type: v.type, date: v.date, time: v.time, timezone: tz, reminderSentAt: '' });
+  });
+  try {
+    if (m.calendarEventId && flag_('CREATE_CALENDAR_EVENTS') && typeof Calendar !== 'undefined') {
+      const end = new Date(start.getTime() + durMins_(m.duration) * 60000);
+      Calendar.Events.patch({ start: { dateTime: start.toISOString(), timeZone: tz }, end: { dateTime: end.toISOString(), timeZone: tz } },
+        setting_('CALENDAR_ID') || 'primary', m.calendarEventId, { sendUpdates: 'none' });
+    }
+  } catch (e) { log_('WARN', 'calendar', e.message, m.meetingId); }
+  return meetingOut_(Object.assign({}, m, v, { timezone: tz }));
+}
+
+function actRedeemCode_(p) {
+  const c = session_(p);
+  rate_('redeem:' + c.cardId, 10, 3600, 'Too many attempts. Please try again later.');
+  const code = str_(p.code, 40, 'Code', true).toUpperCase();
+  const lic = withLock_(function () {
+    const row = table_('Codes').rows.find(function (r) { return String(r.code).toUpperCase() === code; });
+    if (!row || String(row.status) !== 'Available') throw new UserError('That code is not valid or was already used.');
+    const fresh = findCard_(c.cardId);
+    if (String(fresh.plan) === 'Lifetime') throw new UserError('This card already has a lifetime license.');
+    let patch;
+    if (String(row.plan) === 'Lifetime') patch = { plan: 'Lifetime', licenseExpiry: '' };
+    else {
+      const days = Number(row.days) || 365;
+      const cur = fresh.licenseExpiry ? Date.parse(fresh.licenseExpiry) : 0;
+      const base = Math.max(Date.now(), cur || 0);
+      patch = { plan: 'Annual', licenseExpiry: Utilities.formatDate(new Date(base + days * 864e5), setting_('HOST_TIMEZONE'), 'yyyy-MM-dd') };
+    }
+    updateRowById_('Codes', 'code', row.code, { status: 'Redeemed', redeemedBy: c.cardId, redeemedAt: nowIso_() });
+    updateRowById_('Cards', 'cardId', c.cardId, patch);
+    return licenseOf_(Object.assign({}, fresh, patch));
+  });
+  CacheService.getScriptCache().removeAll(['card:' + String(c.cardId).toUpperCase(), 'card:' + String(c.athId).toUpperCase()]);
+  log_('INFO', 'redeemCode', c.cardId, code);
+  return { license: lic };
+}
+
+function actOwnerDeleteAccount_(p) {
+  const c = session_(p);
+  if (String(p.confirm || '') !== 'DELETE') throw new UserError('Confirmation required.');
+  table_('Meetings').rows.filter(function (r) { return r.cardId === c.cardId; }).forEach(function (m) {
+    if (m.calendarEventId && typeof Calendar !== 'undefined') {
+      try { Calendar.Events.remove(setting_('CALENDAR_ID') || 'primary', m.calendarEventId, { sendUpdates: 'none' }); } catch (e) { }
+    }
+  });
+  withLock_(function () {
+    rewriteRows_('Meetings', table_('Meetings').rows.filter(function (r) { return r.cardId !== c.cardId; }));
+    rewriteRows_('Leads', table_('Leads').rows.filter(function (r) { return r.cardId !== c.cardId; }));
+    rewriteRows_('Contacts', table_('Contacts').rows.filter(function (r) { return String(r.cardId) !== String(c.cardId); }));
+    updateRowById_('Cards', 'cardId', c.cardId, { status: 'Deleted', name: 'Deleted', position: '', company: '', phone: '', email: '', website: '', linkedin: '', photo: '', keyHash: '', publicVisible: 'FALSE', notes: 'Deleted by owner ' + nowIso_() });
+  });
+  revokeSessions_(c.cardId);
+  CacheService.getScriptCache().removeAll(['card:' + String(c.cardId).toUpperCase(), 'card:' + String(c.athId).toUpperCase()]);
+  log_('INFO', 'deleteAccount', c.cardId, '');
+  return { ok: true };
+}
+
+/* ============================== 9. ADMIN ACTIONS (Artimeet ?internal=1) ============================== */
+function actGetAllMeetings_(p) {
+  requireAdmin_(p);
+  const rows = table_('Meetings').rows.map(meetingOut_);
+  return p.limit ? rows.slice(-Math.max(1, Number(p.limit))) : rows;
+}
+function actUpdateMeetingStatus_(p) {
+  requireAdmin_(p);
+  const status = oneOf_(p.status, STATUSES, 'status');
+  const m = table_('Meetings').rows.find(function (r) { return r.meetingId === String(p.meetingId || ''); });
+  if (!m) throw new UserError('Meeting not found.');
+  if (m.requestStatus !== status) applyStatusChange_(m, status, 'admin');
+  return { meetingId: m.meetingId, requestStatus: status, calendarStatus: m.calendarStatus };
+}
+function actAdminStats_(p) {
+  requireAdmin_(p);
+  const by = {}; STATUSES.forEach(function (s) { by[s] = 0; });
+  const ms = table_('Meetings').rows; ms.forEach(function (r) { if (by[r.requestStatus] !== undefined) by[r.requestStatus]++; });
+  return { meetings: ms.length, byStatus: by, cards: table_('Cards').rows.length, leads: table_('Leads').rows.length, feedback: table_('Feedback').rows.length };
+}
+
+/* ============================== 10. MEETING ENGINE (calendar + status) ============================== */
+function createCalendarEvent_(m) {
+  const none = { status: 'Not synced', link: '', eventId: '' };
+  if (!flag_('CREATE_CALENDAR_EVENTS') || typeof Calendar === 'undefined') return none;
+  const calId = setting_('CALENDAR_ID') || 'primary', tz = m.timezone || setting_('HOST_TIMEZONE');
+  const start = startOf_(m.date, m.time, tz), end = new Date(start.getTime() + durMins_(m.duration) * 60000);
+  const ev = {
+    summary: '[Requested] ' + m.type + ' — ' + m.guestName,
+    description: ['Reference: ' + m.meetingId, 'Guest: ' + m.guestName + (m.guestOrg ? ' (' + m.guestOrg + ')' : ''), 'Email: ' + m.guestEmail, m.guestPhone ? 'Phone: ' + m.guestPhone : '', m.notes ? 'Notes: ' + m.notes : ''].filter(Boolean).join('\n'),
+    start: { dateTime: start.toISOString(), timeZone: tz }, end: { dateTime: end.toISOString(), timeZone: tz },
+    status: 'tentative', reminders: { useDefault: true },
+    location: m.location === 'In Person' ? (m.locationAddress || 'In person') : m.location
+  };
+  if (m.location === 'Videocall / Virtual Call') ev.conferenceData = { createRequest: { requestId: m.meetingId + '-' + randHex_(6), conferenceSolutionKey: { type: 'hangoutsMeet' } } };
+  const created = Calendar.Events.insert(ev, calId, { conferenceDataVersion: 1, sendUpdates: 'none' });
+  let link = created.hangoutLink || '';
+  if (!link && ev.conferenceData) { Utilities.sleep(1200); link = Calendar.Events.get(calId, created.id).hangoutLink || ''; }
+  return { status: 'Tentative', link: link, eventId: created.id };
+}
+
+function syncCalendar_(m, status) {
+  if (!flag_('CREATE_CALENDAR_EVENTS') || typeof Calendar === 'undefined') return null;
+  const calId = setting_('CALENDAR_ID') || 'primary';
+  if (status === 'Cancelled') {
+    if (m.calendarEventId && m.calendarStatus !== 'Cancelled') { try { Calendar.Events.remove(calId, m.calendarEventId, { sendUpdates: flag_('NOTIFY_GUEST') ? 'all' : 'none' }); } catch (e) { } }
+    return { calendarStatus: 'Cancelled' };
+  }
+  let eventId = m.calendarStatus === 'Cancelled' ? '' : m.calendarEventId, link = m.meetingLink;
+  if (!eventId) { const c = createCalendarEvent_(m); if (!c.eventId) return { calendarStatus: c.status }; eventId = c.eventId; link = c.link; }
+  const prefix = { 'Requested': '[Requested] ', 'Reviewing': '[Reviewing] ', 'Reschedule Requested': '[Reschedule] ', 'Confirmed': '' }[status];
+  const patch = { summary: prefix + m.type + ' — ' + m.guestName, status: status === 'Confirmed' ? 'confirmed' : 'tentative' };
+  if (status === 'Confirmed') {
+    if (m.guestEmail) patch.attendees = [{ email: m.guestEmail, displayName: m.guestName }];
+    if (RRULES[m.recurrence]) patch.recurrence = [RRULES[m.recurrence]];   // "repeats on the calendar event once confirmed"
+  }
+  Calendar.Events.patch(patch, calId, eventId, { sendUpdates: (status === 'Confirmed' && flag_('NOTIFY_GUEST')) ? 'all' : 'none' });
+  return { calendarStatus: status === 'Confirmed' ? 'Synced' : 'Tentative', meetingLink: link, calendarEventId: eventId };
+}
+
+function applyStatusChange_(m, status, source) {   // never call inside withLock_
+  const patch = { requestStatus: status, notifiedStatus: status };
+  let cal = null;
+  try { cal = syncCalendar_(m, status); } catch (e) { log_('WARN', 'calendar', e.message, m.meetingId); cal = { calendarStatus: 'Failed' }; }
+  if (cal) {
+    patch.calendarStatus = cal.calendarStatus;
+    if (cal.meetingLink) patch.meetingLink = cal.meetingLink;
+    if (cal.calendarEventId) patch.calendarEventId = cal.calendarEventId;
+  }
+  if (status !== 'Confirmed') patch.reminderSentAt = '';
+  withLock_(function () { updateRowById_('Meetings', 'meetingId', m.meetingId, patch); });
+  Object.assign(m, patch);
+  try {
+    if (flag_('NOTIFY_GUEST') && status !== 'Requested') notifyGuestStatus_(m, status);
+    if (source === 'guest' && flag_('NOTIFY_HOST')) sendMail_(resolveHost_(m).email, 'Guest cancelled ' + m.meetingId, mailShell_('Guest cancelled', detailsHtml_(m)), m.guestEmail);
+  } catch (e) { log_('WARN', 'mail', e.message, m.meetingId); }
+  log_('INFO', 'status', m.meetingId + ' → ' + status, source);
+  return m;
+}
+
+/* ============================== 11. EMAIL ============================== */
+function sendMail_(to, subject, html, replyTo) {
+  if (!to) return;
+  if (MailApp.getRemainingDailyQuota() < 1) { log_('WARN', 'mail', 'daily quota exhausted', ''); return; }
+  const o = { to: to, subject: oneLine_(subject), htmlBody: html, name: setting_('BRAND_NAME') };
+  if (replyTo) o.replyTo = replyTo;
+  MailApp.sendEmail(o);
+}
+function mailShell_(title, inner) {
+  return '<div style="background:#f2f2f7;padding:24px 12px;font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif"><div style="max-width:520px;margin:0 auto;background:#fff;border:1px solid #e8e2d7;border-radius:20px;padding:26px">' +
+    '<div style="font-weight:800;font-size:18px;color:#1c1c1e;margin-bottom:14px">' + esc_(setting_('BRAND_NAME')) + '</div>' +
+    '<h2 style="margin:0 0 12px;font-size:22px;color:#000">' + esc_(title) + '</h2>' + inner +
+    '<div style="margin-top:22px;color:#8e8e93;font-size:12px">Questions? Contact ' + esc_(setting_('SUPPORT_EMAIL')) + '</div></div></div>';
+}
+function kv_(label, valueHtml) { return '<tr><td style="padding:8px 0;color:#8e8e93;font-size:13px;width:110px;vertical-align:top">' + esc_(label) + '</td><td style="padding:8px 0;font-size:14px;font-weight:600;color:#1c1c1e">' + valueHtml + '</td></tr>'; }
+function btn_(href, label) { return /^https:\/\//.test(href || '') ? '<p style="margin:18px 0 0"><a href="' + esc_(href) + '" style="background:#1c1c1e;color:#fff;text-decoration:none;padding:12px 20px;border-radius:999px;font-weight:700;font-size:14px;display:inline-block">' + esc_(label) + '</a></p>' : ''; }
+function whenText_(m) {
+  const tz = String(m.timezone || setting_('HOST_TIMEZONE')).replace(/_/g, ' ');
+  return m.date + ', ' + m.time + (m.duration === 'Flexible' ? ' (duration to be agreed)' : ' – ' + endTimeStr_(m.time, m.duration)) + ' (' + tz + ')';
+}
+function detailsHtml_(m) {
+  return '<table style="width:100%;border-top:1px solid #e5e5ea;margin-top:8px">' + kv_('Reference', esc_(m.meetingId)) + kv_('When', esc_(whenText_(m))) + kv_('Type', esc_(m.type)) +
+    (m.recurrence && m.recurrence !== 'One-time' ? kv_('Repeats', esc_(m.recurrence)) : '') +
+    kv_('Location', esc_(m.location) + (m.locationAddress ? '<br>' + esc_(m.locationAddress) : '')) +
+    kv_('Guest', esc_(m.guestName) + (m.guestOrg ? ' · ' + esc_(m.guestOrg) : '')) + '</table>';
+}
+function notifyGuestRequested_(m, host) {
+  if (MailApp.getRemainingDailyQuota() < 25) return;   // keep quota for host + confirmations
+  sendMail_(m.guestEmail, 'We received your meeting request (' + m.meetingId + ')',
+    mailShell_('Meeting requested', '<p style="color:#555;line-height:1.6">Hi ' + esc_(m.guestName) + ', thanks for your request. We will email you once it is confirmed.</p>' + detailsHtml_(m)), host.email);
+}
+function notifyHostRequested_(m, host) {
+  const notes = m.notes ? '<p style="color:#555"><b>Notes:</b><br>' + esc_(m.notes).replace(/\n/g, '<br>') + '</p>' : '';
+  sendMail_(host.email, 'New meeting request ' + m.meetingId + ' — ' + m.guestName,
+    mailShell_('New meeting request', detailsHtml_(m) + '<p style="color:#555">' + esc_(m.guestEmail) + (m.guestPhone ? ' · ' + esc_(m.guestPhone) : '') + '</p>' + notes +
+      /* === START: REQUEST MANAGER LINK === */
+btn_(setting_('BASE_URL') + '/?requests=1', 'Open request manager')
+/* === END: REQUEST MANAGER LINK === */), m.guestEmail);
+}
+const STATUS_COPY = {
+  'Confirmed': ['Your meeting is confirmed', 'Great news — your meeting has been confirmed. A calendar invite is on its way too.'],
+  'Reviewing': ['We are reviewing your request', 'Your request is being reviewed. We will get back to you soon.'],
+  'Reschedule Requested': ['Let\'s find another time', 'The host would like to reschedule. Please reply to this email with a few times that work for you.'],
+  'Cancelled': ['Your meeting was cancelled', 'This meeting has been cancelled. You are welcome to submit a new request anytime.']
+};
+function notifyGuestStatus_(m, status) {
+  const c = STATUS_COPY[status]; if (!c) return;
+  const link = status === 'Confirmed' && m.location === 'Videocall / Virtual Call' ? btn_(m.meetingLink, 'Join Google Meet') : '';
+  sendMail_(m.guestEmail, c[0] + ' (' + m.meetingId + ')', mailShell_(c[0], '<p style="color:#555;line-height:1.6">Hi ' + esc_(m.guestName) + ', ' + esc_(c[1]) + '</p>' + detailsHtml_(m) + link), resolveHost_(m).email);
+}
+function notifyReminder_(m) {
+  const link = m.location === 'Videocall / Virtual Call' ? btn_(m.meetingLink, 'Join Google Meet') : '';
+  const host = resolveHost_(m);
+  sendMail_(m.guestEmail, 'Reminder: your meeting on ' + m.date, mailShell_('Meeting reminder', '<p style="color:#555">Hi ' + esc_(m.guestName) + ', this is a reminder of your upcoming meeting.</p>' + detailsHtml_(m) + link), host.email);
+  if (flag_('NOTIFY_HOST')) sendMail_(host.email, 'Reminder: ' + m.guestName + ' — ' + m.date, mailShell_('Upcoming meeting', detailsHtml_(m) + link), m.guestEmail);
+}
+
+/* ============================== 12. TRIGGERS ============================== */
+/** Simple trigger: stamps updatedAt and refreshes the settings cache. Cannot send mail (Google restriction). */
+function onEdit(e) {
+  try {
+    if (!e || !e.range) return;
+    const sh = e.range.getSheet(), name = sh.getName();
+    if (name === 'Settings') { CacheService.getScriptCache().remove('settings'); return; }
+    if (!SCHEMA[name] || name === 'Logs' || name === 'Sessions' || e.range.getRow() < 2) return;
+    const u = headers_(sh).indexOf('updatedAt') + 1;
+    if (!u || (e.range.getNumColumns() === 1 && e.range.getColumn() === u)) return;
+    sh.getRange(e.range.getRow(), u, Math.min(e.range.getNumRows(), 500), 1).setValue(nowIso_());
+  } catch (err) { }
+}
+
+/** Installable trigger (installTriggers): a manual status change in the sheet gets the same calendar + email treatment as the API. */
+function onEditInstallable(e) {
+  try {
+    if (!e || !e.range) return;
+    const name = e.range.getSheet().getName();
+    if (name === 'Meetings') syncMeetingEdits_(e.range);
+    else if (name === 'Cards') syncCardEdits_(e.range);
+  } catch (err) { log_('ERROR', 'onEdit', err.message, err.stack); }
+}
+function syncMeetingEdits_(range) {
+  const t = table_('Meetings'), sc = t.hdr.indexOf('requestStatus') + 1;
+  if (!sc || range.getColumn() > sc || range.getLastColumn() < sc) return;
+  const r0 = Math.max(range.getRow(), 2), r1 = range.getLastRow();
+  t.rows.forEach(function (r) {
+    if (r._row < r0 || r._row > r1) return;
+    const st = String(r.requestStatus).trim();
+    if (STATUSES.indexOf(st) < 0 || st === r.notifiedStatus) return;
+    applyStatusChange_(r, st, 'sheet');
+  });
+}
+function syncCardEdits_(range) {
+  const t = table_('Cards'), r0 = Math.max(range.getRow(), 2), r1 = range.getLastRow();
+  t.rows.forEach(function (r) { if (r._row >= r0 && r._row <= r1 && r.status && r.status !== 'Active') revokeSessions_(r.cardId); });
+}
+
+function sendReminders() {
+  if (!flag_('SEND_REMINDERS')) return;
+  const hrs = Number(setting_('REMINDER_HOURS')) || 24;
+  table_('Meetings').rows.forEach(function (m) {
+    if (m.requestStatus !== 'Confirmed' || m.reminderSentAt) return;
+    let start; try { start = startOf_(m.date, m.time, m.timezone || setting_('HOST_TIMEZONE')); } catch (e) { return; }
+    const ms = start.getTime() - Date.now();
+    if (ms > 0 && ms <= hrs * 3600e3) {
+      try { notifyReminder_(m); withLock_(function () { updateRowById_('Meetings', 'meetingId', m.meetingId, { reminderSentAt: nowIso_() }); }); }
+      catch (e) { log_('WARN', 'reminder', e.message, m.meetingId); }
+    }
+  });
+}
+function purgeSessions_() {
+  const t = table_('Sessions'), now = Date.now();
+  const keep = t.rows.filter(function (r) { return r.revoked !== 'TRUE' && Date.parse(r.expiresAt) > now; });
+  if (keep.length !== t.rows.length) withLock_(function () { rewriteRows_('Sessions', keep); });
+  return t.rows.length - keep.length;
+}
+function purgeLogs_() {
+  const cutoff = Date.now() - (num_('LOG_RETENTION_DAYS') || 30) * 864e5, t = table_('Logs');
+  const keep = t.rows.filter(function (r) { return Date.parse(r.ts) >= cutoff; });
+  if (keep.length !== t.rows.length) withLock_(function () { rewriteRows_('Logs', keep); });
+  return t.rows.length - keep.length;
+}
+function dailyMaintenance() { const a = purgeSessions_(), b = purgeLogs_(); log_('INFO', 'maintenance', 'sessions purged ' + a + ', logs purged ' + b, ''); try { notifyDueReferrals_(); } catch (e) { log_('WARN', 'referral', e.message, ''); } return { sessions: a, logs: b }; }
+
+function weeklyBackup() {
+  const ss = ss_(), prefix = ss.getName() + ' — backup ';
+  DriveApp.getFileById(ss.getId()).makeCopy(prefix + Utilities.formatDate(new Date(), setting_('HOST_TIMEZONE'), 'yyyy-MM-dd'));
+  const it = DriveApp.searchFiles("title contains '" + prefix.replace(/'/g, "\\'") + "' and trashed = false"), list = [];
+  while (it.hasNext()) list.push(it.next());
+  list.sort(function (a, b) { return a.getName() < b.getName() ? 1 : -1; });   // newest first
+  list.slice(8).forEach(function (f) { f.setTrashed(true); });                  // keep last 8
+}
+
+function installTriggers() {
+  const ours = ['onEditInstallable', 'sendReminders', 'dailyMaintenance', 'weeklyBackup'];
+  ScriptApp.getProjectTriggers().forEach(function (t) { if (ours.indexOf(t.getHandlerFunction()) >= 0) ScriptApp.deleteTrigger(t); });
+  ScriptApp.newTrigger('onEditInstallable').forSpreadsheet(ss_()).onEdit().create();
+  ScriptApp.newTrigger('sendReminders').timeBased().everyHours(1).create();
+  ScriptApp.newTrigger('dailyMaintenance').timeBased().atHour(3).everyDays(1).create();
+  ScriptApp.newTrigger('weeklyBackup').timeBased().onWeekDay(ScriptApp.WeekDay.SUNDAY).atHour(2).create();
+  return 'Installed: onEditInstallable, sendReminders (hourly), dailyMaintenance (daily ~3am).';
+}
+
+/* ============================== 13. SETUP ============================== */
+function initializeAllSheets() {
+  const lines = [];
+  Object.keys(SCHEMA).forEach(function (n) { ensureSheet_(n); lines.push('✔ sheet ' + n); });
+
+  // settings: add missing defaults, never overwrite what you edited
+  const st = table_('Settings'), have = {}; st.rows.forEach(function (r) { have[r.key] = 1; });
+  withLock_(function () { DEFAULT_SETTINGS.forEach(function (d) { if (!have[d[0]]) appendObj_('Settings', { key: d[0], value: d[1], description: d[2] }); }); });
+  CacheService.getScriptCache().remove('settings'); _settings = null;
+  lines.push('✔ settings (' + DEFAULT_SETTINGS.length + ' keys)');
+
+  applyValidations_(); lines.push('✔ dropdowns + status colors');
+  pepper_();
+
+  // counters follow existing rows
+  const mx = table_('Meetings').rows.reduce(function (a, r) { const n = Number(String(r.meetingId).replace(/\D/g, '')) || 0; return Math.max(a, n); }, 0);
+  if (mx > (Number(props_().getProperty('MTG_COUNTER')) || 0)) props_().setProperty('MTG_COUNTER', String(mx));
+
+  let adminToken = '', seedKey = '';
+  if (!props_().getProperty('ADMIN_HASH')) { adminToken = newAdminToken_(); lines.push('✔ admin token created'); }
+  if (table_('Cards').rows.length === 0) {       // seed the card that is hardcoded in the app so the gate works end-to-end
+    const r = createCard_({ cardId: 'C-7F82KQ', athId: 'ARTICARD-000000', no: 0, name: 'Ephraim Nasser E. Tambiga', position: 'CEO', company: 'ArtiByte Apostrophe Inc.', plan: 'Lifetime' });
+    seedKey = r.ownerKey; lines.push('✔ seeded card C-7F82KQ');
+  }
+  buildDashboard_(); lines.push('✔ dashboard');
+  try { lines.push('✔ ' + installTriggers()); } catch (e) { lines.push('✖ triggers: ' + e.message); }
+
+  let out = lines.join('\n');
+  if (adminToken) out += '\n\nADMIN TOKEN (shown once, paste it into the Artimeet admin prompt):\n' + adminToken;
+  if (seedKey) out += '\n\nOWNER KEY for C-7F82KQ (shown once):\n' + seedKey;
+  Logger.log(out);
+  return out;
+}
+
+function applyValidations_() {
+  const dd = function (sheetName, col, list) {
+    const sh = sheet_(sheetName), i = headers_(sh).indexOf(col); if (i < 0) return;
+    sh.getRange(2, i + 1, Math.max(sh.getMaxRows() - 1, 1), 1).setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(list, true).setAllowInvalid(false).build());
+  };
+  dd('Meetings', 'requestStatus', STATUSES); dd('Meetings', 'duration', DURATIONS); dd('Meetings', 'recurrence', RECURRENCES); dd('Meetings', 'location', LOCATIONS);
+  dd('Cards', 'status', ['Active', 'Suspended', 'Revoked', 'Deleted']); dd('Cards', 'plan', ['Trial', 'Annual', 'Monthly', 'Lifetime']);
+  dd('Codes', 'status', ['Available', 'Redeemed', 'Void']); dd('Codes', 'plan', ['Annual', 'Lifetime']);
+  ['publicVisible', 'showPhone', 'showEmail'].forEach(function (c) { dd('Cards', c, ['TRUE', 'FALSE']); });
+  dd('Leads', 'status', ['New', 'Contacted', 'Qualified', 'Closed']);
+  dd('Feedback', 'status', ['New', 'Reviewed', 'Resolved']); dd('Feedback', 'type', ['feedback', 'bug', 'feature']);
+  dd('Referrals', 'status', ['Pending', 'Eligible', 'Sent', 'Void']);
+  const sh = sheet_('Meetings'), i = headers_(sh).indexOf('requestStatus') + 1;
+  const rng = sh.getRange(2, i, Math.max(sh.getMaxRows() - 1, 1), 1);
+  sh.setConditionalFormatRules(STATUSES.map(function (s) { return SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo(s).setBackground(STATUS_COLORS[s]).setRanges([rng]).build(); }));
+}
+
+function buildDashboard_() {
+  const ss = ss_(), sh = ss.getSheetByName('Dashboard') || ss.insertSheet('Dashboard', 0);
+  sh.clear();
+  const M = function (name, col) { const L = colLetter_(headers_(sheet_(name)).indexOf(col) + 1); return name + '!' + L + '2:' + L; };
+  const rows = [
+    ['Cards — total', '=COUNTA(' + M('Cards', 'cardId') + ')'],
+    ['Cards — active', '=COUNTIF(' + M('Cards', 'status') + ',"Active")'],
+    ['Card views (all time)', '=SUM(' + M('Cards', 'views') + ')'],
+    ['Meeting requests — total', '=COUNTA(' + M('Meetings', 'meetingId') + ')']
+  ].concat(STATUSES.map(function (s) { return ['    ' + s, '=COUNTIF(' + M('Meetings', 'requestStatus') + ',"' + s + '")']; })).concat([
+    ['Requests — last 7 days', '=SUMPRODUCT(ARRAYFORMULA(--(IFERROR(DATEVALUE(LEFT(' + M('Meetings', 'createdAt') + ',10)),0)>=TODAY()-7)))'],
+    ['Leads — total', '=COUNTA(' + M('Leads', 'leadId') + ')'],
+    ['Feedback — total', '=COUNTA(' + M('Feedback', 'feedbackId') + ')'],
+    ['Feedback — average stars', '=IFERROR(AVERAGE(' + M('Feedback', 'stars') + '),0)'],
+    ['Bugs — open', '=COUNTIFS(' + M('Feedback', 'type') + ',"bug",' + M('Feedback', 'status') + ',"<>Resolved")']
+  ]);
+  sh.getRange(1, 1).setValue('Artimeet / Articardd Dashboard').setFontSize(16).setFontWeight('bold');
+  sh.getRange(2, 1, 1, 2).setValues([['Last refreshed', '=NOW()']]);
+  sh.getRange(4, 1, rows.length, 2).setValues(rows);
+  sh.setColumnWidth(1, 260); sh.setColumnWidth(2, 120);
+}
+
+/* ============================== 13b. REFERRALS (ArtiStar Rewards) ============================== */
+function phoneKey_(s) { const d = String(s || '').replace(/\D/g, ''); return d.length >= 10 ? d.slice(-10) : d; }
+
+function logReferral_(d) {
+  if (!flag_('REFERRAL_ENABLED')) throw new UserError('Referrals are turned off (REFERRAL_ENABLED).');
+  const code = normCardId_(d.code), ref = findCard_(code);
+  if (!ref || ref.status !== 'Active') throw new UserError('No active card for code ' + code + '.');
+  const buyerName = str_(d.buyerName, 120, 'Buyer name', true), buyerEmail = email_(d.buyerEmail), buyerMobile = phone_(d.buyerMobile);
+  if (String(ref.email).toLowerCase() === buyerEmail || (buyerMobile && ref.phone && phoneKey_(ref.phone) === phoneKey_(buyerMobile)))
+    throw new UserError('Self-referral: the buyer matches the referrer\'s email or mobile.');
+  const rec = withLock_(function () {
+    const dup = table_('Referrals').rows.find(function (r) {
+      return r.status !== 'Void' && (String(r.buyerEmail).toLowerCase() === buyerEmail || (buyerMobile && phoneKey_(r.buyerMobile) === phoneKey_(buyerMobile)));
+    });
+    if (dup) throw new UserError('Duplicate: ' + dup.referralId + ' already covers this buyer.');
+    const now = nowIso_();
+    const r = { referralId: 'RF-' + randHex_(6).toUpperCase(), createdAt: now, updatedAt: now, referrerCardId: ref.cardId, referrerName: ref.name,
+      buyerName: buyerName, buyerEmail: buyerEmail, buyerMobile: buyerMobile, status: 'Pending', activatedAt: '', releaseAfter: '', rewardSentAt: '', rewardRef: '', notes: str_(d.notes, 300, 'Notes') };
+    appendObj_('Referrals', r);
+    return r;
+  });
+  log_('INFO', 'referral', rec.referralId, ref.cardId);
+  return rec;
+}
+function selectedReferral_() {
+  const sh = ss_().getActiveSheet();
+  if (sh.getName() !== 'Referrals') throw new UserError('Select a row on the Referrals sheet first.');
+  const row = sh.getActiveRange().getRow(); if (row < 2) throw new UserError('Select a referral row, not the header.');
+  const r = table_('Referrals').rows.find(function (x) { return x._row === row; });
+  if (!r) throw new UserError('That row is empty.');
+  return r;
+}
+function menuLogReferral() {
+  guard_(function () {
+    const ui = SpreadsheetApp.getUi();
+    const ask = function (q, req) { const r = ui.prompt('Log referral', q, ui.ButtonSet.OK_CANCEL); if (r.getSelectedButton() !== ui.Button.OK) throw new UserError('Cancelled.'); const v = r.getResponseText().trim(); if (req && !v) throw new UserError('Required.'); return v; };
+    const r = logReferral_({ code: ask('Referral code (referrer Card ID, e.g. C-BY5FK3)', true), buyerName: ask('Buyer full name', true), buyerEmail: ask('Buyer email', true), buyerMobile: ask('Buyer mobile (optional)'), notes: ask('Notes (optional)') });
+    alert_('Referral logged', r.referralId + '\nReferrer: ' + r.referrerName + '\nStatus: Pending');
+  });
+}
+function menuReferralVerified() {
+  guard_(function () {
+    const r = selectedReferral_();
+    if (r.status !== 'Pending') throw new UserError('Only Pending referrals can be verified (this one is ' + r.status + ').');
+    const days = Number(setting_('REFERRAL_HOLD_DAYS')) || 14, now = Date.now();
+    withLock_(function () { updateRowById_('Referrals', 'referralId', r.referralId, { status: 'Eligible', activatedAt: new Date(now).toISOString(), releaseAfter: new Date(now + days * 864e5).toISOString() }); });
+    log_('INFO', 'referral', r.referralId + ' → Eligible', '');
+    alert_('Referral ' + r.referralId, 'Eligible. e-Gift can be sent after ' + days + ' days.');
+  });
+}
+function menuReferralSent() {
+  guard_(function () {
+    const r = selectedReferral_();
+    if (r.status !== 'Eligible') throw new UserError('Only Eligible referrals can be marked as sent (this one is ' + r.status + ').');
+    if (r.releaseAfter && Date.parse(r.releaseAfter) > Date.now()) throw new UserError('Still in the hold period until ' + r.releaseAfter.slice(0, 10) + '.');
+    const ui = SpreadsheetApp.getUi(), a = ui.prompt('e-Gift sent', 'Reference (e.g. GCash/GLife txn no.). Do NOT paste the gift card code.', ui.ButtonSet.OK_CANCEL);
+    if (a.getSelectedButton() !== ui.Button.OK) throw new UserError('Cancelled.');
+    withLock_(function () { updateRowById_('Referrals', 'referralId', r.referralId, { status: 'Sent', rewardSentAt: nowIso_(), rewardRef: str_(a.getResponseText(), 80, 'Reference') }); });
+    try { notifyReferrerSent_(r); } catch (e) { log_('WARN', 'mail', e.message, r.referralId); }
+    log_('INFO', 'referral', r.referralId + ' → Sent', '');
+    alert_('Referral ' + r.referralId, 'Marked as Sent. The referrer was emailed if their card has an email.');
+  });
+}
+function menuReferralVoid() {
+  guard_(function () {
+    const r = selectedReferral_();
+    if (r.status === 'Sent') throw new UserError('Already sent. Edit the row manually if you must.');
+    const ui = SpreadsheetApp.getUi(), a = ui.prompt('Void referral', 'Reason (refund, cancelled, duplicate, self-referral…)', ui.ButtonSet.OK_CANCEL);
+    if (a.getSelectedButton() !== ui.Button.OK) throw new UserError('Cancelled.');
+    withLock_(function () { updateRowById_('Referrals', 'referralId', r.referralId, { status: 'Void', notes: (r.notes ? r.notes + ' | ' : '') + 'Void: ' + str_(a.getResponseText(), 200, 'Reason') }); });
+    log_('INFO', 'referral', r.referralId + ' → Void', '');
+    alert_('Referral ' + r.referralId, 'Voided.');
+  });
+}
+function notifyReferrerSent_(r) {
+  const c = findCard_(r.referrerCardId), reward = setting_('REFERRAL_REWARD_TEXT');
+  if (!c || !c.email) return;
+  sendMail_(c.email, 'Your ' + reward + ' is on its way',
+    mailShell_('ArtiStar Reward', '<p style="color:#555;line-height:1.6">Hi ' + esc_(c.name) + ', thank you for referring ' + esc_(r.buyerName) + '. Your ' + esc_(reward) + ' has been sent.</p>'), hostEmail_());
+}
+function notifyDueReferrals_() {
+  if (!flag_('REFERRAL_ENABLED')) return 0;
+  const due = table_('Referrals').rows.filter(function (r) { return r.status === 'Eligible' && r.releaseAfter && Date.parse(r.releaseAfter) <= Date.now(); });
+  if (!due.length) return 0;
+  sendMail_(adminEmail_(), due.length + ' referral reward(s) ready to send',
+    mailShell_('Rewards ready', '<table style="width:100%">' + due.map(function (r) { return kv_(r.referralId, esc_(r.referrerName + ' → ' + r.buyerName)); }).join('') + '</table>'));
+  return due.length;
+}
+
+/* ============================== 14. MENU + DIAGNOSTICS ============================== */
+function alert_(title, msg) { try { const ui = SpreadsheetApp.getUi(); ui.alert(title, msg, ui.ButtonSet.OK); } catch (e) { Logger.log(title + '\n' + msg); } }
+function guard_(fn) { try { fn(); } catch (e) { alert_('Error', e instanceof UserError ? e.message : String(e && e.message)); } }
+
+function onOpen() {
+  try {
+    SpreadsheetApp.getUi().createMenu('Artimeet Admin')
+      .addItem('Initialize / repair all sheets', 'menuInitialize')
+      .addItem('Rebuild dashboard', 'menuRebuildDashboard')
+      .addSeparator()
+      .addItem('Issue new card…', 'menuIssueCard')
+      .addItem('Reset owner key (selected card row)', 'menuResetKey')
+      .addItem('Suspend selected card', 'menuSuspend')
+      .addItem('Activate selected card', 'menuActivate')
+      .addSeparator()
+      .addItem('Log referral…', 'menuLogReferral')
+      .addItem('Referral: payment verified (selected row)', 'menuReferralVerified')
+      .addItem('Referral: e-Gift sent (selected row)', 'menuReferralSent')
+      .addItem('Referral: void (selected row)', 'menuReferralVoid')
+      .addSeparator()
+      .addItem('Regenerate admin token', 'menuAdminToken')
+      .addItem('Send test email', 'menuTestEmail')
+      .addItem('Install triggers', 'menuInstallTriggers')
+      .addItem('Purge expired sessions + old logs', 'menuPurge')
+      .addItem('Run diagnostics', 'menuDiagnostics')
+      .addItem('Show web app URL', 'menuShowUrl')
+      .addToUi();
+  } catch (e) { }
+}
+function menuInitialize() { guard_(function () { alert_('Initialize', initializeAllSheets()); }); }
+function menuRebuildDashboard() { guard_(function () { buildDashboard_(); alert_('Dashboard', 'Rebuilt.'); }); }
+function menuIssueCard() {
+  guard_(function () {
+    const ui = SpreadsheetApp.getUi();
+    const ask = function (q, req) { const r = ui.prompt('Issue new card', q, ui.ButtonSet.OK_CANCEL); if (r.getSelectedButton() !== ui.Button.OK) throw new UserError('Cancelled.'); const v = r.getResponseText().trim(); if (req && !v) throw new UserError('Required.'); return v; };
+    const d = { name: str_(ask('Full name', true), 80, 'Name', true), position: str_(ask('Position / title (optional)'), 120, 'Position'), company: str_(ask('Company (optional)'), 120, 'Company') };
+    const em = ask('Email (optional)'); d.email = em ? email_(em) : ''; d.phone = phone_(ask('Phone (optional)')); d.plan = 'Annual';
+    const r = createCard_(d);
+    alert_('Card issued', 'Card ID: ' + r.card.cardId + '\nATH ID: ' + r.card.athId + '\nQR link: ' + r.card.qrLink + '\n\nOWNER KEY (shown once):\n' + r.ownerKey);
+  });
+}
+function selectedCard_() {
+  const sh = ss_().getActiveSheet();
+  if (sh.getName() !== 'Cards') throw new UserError('Select a row on the Cards sheet first.');
+  const row = sh.getActiveRange().getRow(); if (row < 2) throw new UserError('Select a card row, not the header.');
+  const c = table_('Cards').rows.find(function (r) { return r._row === row; });
+  if (!c) throw new UserError('That row is empty.');
+  return c;
+}
+function menuResetKey() {
+  guard_(function () {
+    const c = selectedCard_(), key = 'AK-' + randHex_(16).toUpperCase();
+    withLock_(function () { updateRowById_('Cards', 'cardId', c.cardId, { keyHash: hashSecret_('owner|' + key) }); });
+    revokeSessions_(c.cardId); log_('INFO', 'resetKey', c.cardId, 'menu');
+    alert_('New owner key for ' + c.cardId, key + '\n\nShown once. All sessions were signed out.');
+  });
+}
+function setSelectedStatus_(st) { const c = selectedCard_(); withLock_(function () { updateRowById_('Cards', 'cardId', c.cardId, { status: st }); }); if (st !== 'Active') revokeSessions_(c.cardId); alert_('Card ' + c.cardId, 'Status: ' + st); }
+function menuSuspend() { guard_(function () { setSelectedStatus_('Suspended'); }); }
+function menuActivate() { guard_(function () { setSelectedStatus_('Active'); }); }
+function menuAdminToken() { guard_(function () { alert_('New admin token (shown once)', newAdminToken_() + '\n\nPaste it in the Artimeet admin prompt. The old token no longer works.'); }); }
+function menuTestEmail() { guard_(function () { sendMail_(hostEmail_(), 'Artimeet test email', mailShell_('It works', '<p>Mail is configured. Remaining daily quota: ' + MailApp.getRemainingDailyQuota() + '</p>')); alert_('Test email', 'Sent to ' + hostEmail_()); }); }
+function menuInstallTriggers() { guard_(function () { alert_('Triggers', installTriggers()); }); }
+function menuPurge() { guard_(function () { const r = dailyMaintenance(); alert_('Purged', 'Sessions: ' + r.sessions + '\nLogs: ' + r.logs); }); }
+function menuShowUrl() { guard_(function () { alert_('Web app URL', ScriptApp.getService().getUrl() || 'Not deployed yet. Deploy → New deployment → Web app.'); }); }
+function menuDiagnostics() { guard_(function () { alert_('Diagnostics', runDiagnostics_().join('\n')); }); }
+
+function runDiagnostics_() {
+  const out = [], chk = function (label, ok, detail) { out.push((ok ? '✅ ' : '❌ ') + label + (detail ? ' — ' + detail : '')); };
+  Object.keys(SCHEMA).forEach(function (n) {
+    const sh = ss_().getSheetByName(n), hdr = sh ? headers_(sh) : [];
+    const miss = specOf_(n).map(function (c) { return c.name; }).filter(function (c) { return hdr.indexOf(c) < 0; });
+    chk('Sheet ' + n, !!sh && !miss.length, !sh ? 'missing' : miss.length ? 'missing columns: ' + miss.join(', ') : '');
+  });
+  const sample = meetingOut_({}), lacking = ADMIN_FIELDS.filter(function (f) { return !(f in sample); });
+  chk('Admin screen contract (getAllMeetings fields)', !lacking.length, lacking.join(', '));
+  chk('Admin token set', !!props_().getProperty('ADMIN_HASH'), flag_('ENFORCE_ADMIN_TOKEN') ? 'enforced' : 'NOT enforced');
+  chk('Calendar advanced service', typeof Calendar !== 'undefined', typeof Calendar === 'undefined' ? 'enable it (manifest) or set CREATE_CALENDAR_EVENTS=FALSE' : '');
+  chk('Mail quota', MailApp.getRemainingDailyQuota() > 0, MailApp.getRemainingDailyQuota() + ' left today');
+  const h = ScriptApp.getProjectTriggers().map(function (t) { return t.getHandlerFunction(); });
+  ['onEditInstallable', 'sendReminders', 'dailyMaintenance', 'weeklyBackup'].forEach(function (n) { chk('Trigger ' + n, h.indexOf(n) >= 0, h.indexOf(n) < 0 ? 'run Install triggers' : ''); });
+  chk('Web app deployed', !!ScriptApp.getService().getUrl(), ScriptApp.getService().getUrl() || '');
+  chk('Host email', !!hostEmail_(), hostEmail_());
+  chk('Active cards', table_('Cards').rows.some(function (r) { return r.status === 'Active'; }), '');
+  return out;
+}
