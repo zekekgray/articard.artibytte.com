@@ -4612,7 +4612,7 @@ function fillConnectPreview() {
   })();
   /* === START: API CONNECTOR === */
   /* === START: API URL (new deployment) === */
-  const API_URL = 'https://script.google.com/macros/s/AKfycbxys08ZY9fBHjBKLd7Zi0Y2lFxMOUG6yw0IEKbbhSeyn3HsGeo4Ix8KTx-exwazDXDy/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbyTm9JJ00m2UlC3Px0Ri6_YFdOz8YfvA4FgOBhlJlKrHKK7JPrrY-Vh3xq-QHCjNGOp/exec';
   /* === END: API URL (new deployment) === */
 
   async function apiPost(action, payload) {
@@ -12073,7 +12073,7 @@ function copyPIAthId() {
       Promise.resolve(abCloudFlush().catch(function () {})).then(function () { return tok ? apiPost('ownerLogout', { token: tok }).catch(function () {}) : null; }).then(function () {
         window.forgetDevice && window.forgetDevice();
         try { localStorage.removeItem('athna-card-cache-v1:owner'); localStorage.removeItem('athna:card-cache-owner'); } catch (e) {}
-        try { window.storage.delete(AB_STORE_KEY, false); window.storage.delete(AB_LEGACY_KEY, false); abSetDirty(false); localStorage.removeItem(AB_OWNER_KEY); } catch (e) {}
+        /* contacts + owner marker + dirty flag stay: instant render on next login, unsynced edits are not lost */
         sessionStorage.removeItem('athna-owner-token'); sessionStorage.removeItem('athna-owner-session');
         location.replace(location.pathname);
       });
@@ -13054,8 +13054,9 @@ function meetingRebook(id) {
 }
 /* alisin ang lumang local dataset (kasama ang sample na Juan/Carlo/Pio) */
 try { window.storage.delete('upcoming-meetings', false); } catch (e) {}
-document.addEventListener('visibilitychange', () => { if (!document.hidden && rmToken()) { loadMeetings(); syncLeads(); } });
-setInterval(() => { if (!document.hidden && rmToken()) loadMeetings(); }, 60000);
+let _mtgLast = 0;
+document.addEventListener('visibilitychange', () => { if (!document.hidden && rmToken() && Date.now() - _mtgLast > 60000) { _mtgLast = Date.now(); loadMeetings(); syncLeads(); } });
+setInterval(() => { if (!document.hidden && rmToken()) { _mtgLast = Date.now(); loadMeetings(); } }, 300000);
 /* === END: UNIFIED MEETINGS === */
 /* === START: TRUE REBOOK === */
 let _rebookCtx = null;
