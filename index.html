@@ -4636,8 +4636,46 @@ function fillConnectPreview() {
     timeoutMs: 30000
   });
   /* === END: SDK CONFIG (SUPABASE) === */
-  function apiPost(action, payload) { return ACSDK.call(action, payload); }
-  function apiGet(action, params)   { return ACSDK.call(action, params); }
+    /* === START: DEBUG RED BOX (alisin pag okay na) === */
+  function dbgBox(lines) {
+    let b = document.getElementById('dbgBox');
+    if (!b) {
+      b = document.createElement('div'); b.id = 'dbgBox';
+      b.style.cssText = 'position:fixed;left:8px;right:8px;bottom:8px;z-index:2147483647;background:#FF453A;color:#fff;font:12px/1.45 monospace;padding:12px;border-radius:12px;white-space:pre-wrap;word-break:break-word;max-height:55vh;overflow:auto;';
+      b.onclick = () => b.remove();
+      document.body.appendChild(b);
+    }
+    b.textContent = 'DEBUG (tap to close)\n' + lines.join('\n');
+  }
+  async function dbgProbe(action, err) {
+    const c = ACSDK.config, url = c.supabaseUrl.replace(/\/$/, '') + '/functions/v1/' + c.functionName;
+    const out = ['action: ' + action, 'error: ' + (err && err.name) + ': ' + (err && err.message),
+                 'page origin: ' + location.origin, 'url: ' + url];
+    dbgBox(out.concat('probing…'));
+    /* 1) OPTIONS (preflight): nakikita lang ang status kung may CORS */
+    try {
+      const r = await fetch(url, { method: 'OPTIONS', headers: { 'Access-Control-Request-Method': 'POST', 'Access-Control-Request-Headers': 'authorization,apikey,content-type' } });
+      out.push('OPTIONS: ' + r.status + ' | allow-origin: ' + r.headers.get('access-control-allow-origin'));
+    } catch (e) { out.push('OPTIONS: BLOCKED (' + e.message + ')'); }
+    /* 2) no-cors ping: kung natuloy, abot ang server, kaya CORS/JWT ang sira. Kung nag-fail, network/404/di naka-deploy */
+    try {
+      await fetch(url, { method: 'POST', mode: 'no-cors', body: '{}' });
+      out.push('no-cors POST: REACHED server → CORS o Verify JWT ang problema');
+    } catch (e) { out.push('no-cors POST: FAILED → function hindi abot (maling pangalan / di naka-deploy / network / CSP)'); }
+    /* 3) buong POST ping, kasama ang auth headers */
+    try {
+      const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: c.supabaseKey, Authorization: 'Bearer ' + c.supabaseKey }, body: JSON.stringify({ action: 'ping', payload: {} }) });
+      out.push('POST ping: ' + r.status + ' ' + (await r.text()).slice(0, 200));
+    } catch (e) { out.push('POST ping: BLOCKED (' + e.message + ')'); }
+    out.push('key starts: ' + String(c.supabaseKey).slice(0, 14) + '…  mode: ' + c.mode);
+    dbgBox(out);
+  }
+  function dbgWrap(p, action) {
+    return p.catch(e => { if (e && (e.network || /fetch|network|abort/i.test(String(e.message)))) dbgProbe(action, e); throw e; });
+  }
+  function apiPost(action, payload) { return dbgWrap(ACSDK.call(action, payload), action); }
+  function apiGet(action, params)   { return dbgWrap(ACSDK.call(action, params), action); }
+  /* === END: DEBUG RED BOX === */
   /* === END: API CONNECTOR === */
   const SHEET_URL = API_URL;
   let entries = [], currentEntry = null;
