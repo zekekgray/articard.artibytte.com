@@ -4625,7 +4625,17 @@ function fillConnectPreview() {
   const API_URL = 'https://sxvsurhtnfbrsyqadyyy.supabase.co/functions/v1/bright-responder';
   /* === END: API URL (new deployment) === */
 
-  ACSDK.configure({ appscriptUrl: API_URL });
+  /* === START: SDK CONFIG (SUPABASE) === */
+  ACSDK.configure({
+    mode: 'supabase',
+    supabaseUrl: 'https://sxvsurhtnfbrsyqadyyy.supabase.co',
+    supabaseKey: 'sb_publishable_JJ2noP-kKRH0xprsO5-Y7w_e4W7rAfn',
+    functionName: 'bright-responder',
+    fallback: false,
+    dualLogin: false,
+    timeoutMs: 30000
+  });
+  /* === END: SDK CONFIG (SUPABASE) === */
   function apiPost(action, payload) { return ACSDK.call(action, payload); }
   function apiGet(action, params)   { return ACSDK.call(action, params); }
   /* === END: API CONNECTOR === */
@@ -12842,7 +12852,7 @@ window.forgetDevice = function () { try { localStorage.removeItem('athna-owner-r
       sessionStorage.setItem('athna-owner-token', d.token);
       try { localStorage.setItem('athna-owner-remember', JSON.stringify({ token: d.token, expiresAt: d.expiresAt })); } catch (e) {}
       window.__OWNER_CARD__ = d.card; applyRemoteCard(d.card, true); return true;
-    } catch (e) {}
+    } catch (e) { console.error('ownerLogin failed:', e); window.__KEYERR__ = (e && e.message) || ''; }
     return false;
   }
 
@@ -12906,7 +12916,7 @@ window.forgetDevice = function () { try { localStorage.removeItem('athna-owner-r
         history.replaceState(null, '', '?c=' + encodeURIComponent(v));
         setPublic(true);
       } else {
-        if (!(await verifyOwnerKey(v))) { fail('That key is not valid.'); return; }
+        if (!(await verifyOwnerKey(v))) { fail(window.__KEYERR__ || 'That key is not valid.'); return; }
         sessionStorage.setItem(SESSION, '1');
         /* === START: RM OPEN AFTER LOGIN === */
         if (window.__OPEN_RM__) { window.__OPEN_RM__ = false; setTimeout(openRequestManager, 700); }
